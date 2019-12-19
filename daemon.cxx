@@ -30,7 +30,7 @@ int main( int argc, char** argv ) {
 
 	//check to make sure
 	if( argc < 2 ) {
-		fprintf( stderr, "This isn't how to start this script...\n" );
+		fprintf( stderr, "=> this isn't how to start this script...\n" );
 		return 1;
 	}
 
@@ -43,7 +43,7 @@ int main( int argc, char** argv ) {
 
 		else if( arg == "--hw-info" ) {
 			//TODO: show information about hardware plugged in
-			cout << "=> Hardware information" << endl;
+			cout << "=> hardware information" << endl;
 		}
 		
 		else if( arg == "--start" ) start_daemon = true;

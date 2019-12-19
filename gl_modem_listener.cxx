@@ -356,6 +356,7 @@ void gl_modem_listener(string func_name) {
 			//printf("%s=> found [%lu] modems...\n", func_name.c_str(), modem_indexes.size());
 
 			/* For each modem create modem folder, extract the information and store modem in MODEM_POOL */
+			//TODO: after each scan, make sure work is rightly distributed - use a margin
 			for(auto i : modem_indexes) {
 				//printf("%s=> working with index - %s\n", func_name.c_str(), i.c_str());
 				try {
