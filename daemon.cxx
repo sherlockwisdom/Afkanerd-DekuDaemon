@@ -23,22 +23,44 @@ bool check_system_folders() {
 	return true;
 }
 
-int main() {
-	//TODO: thread a listener that creates a dir when a new modem is plugged in and updates system modem pool - done
-	//TODO: thread a listener that listens for changes to request files and calculate work load and distributes to modems - done
-	//TODO: thread listeners that listen to each modem folder and executes jobs for specific modem alone
-	//main process spins of threads and manages them
-	
-	//checks and create defaults before begining the threads
-	if( !check_system_folders()) {
+int main( int argc, char** argv ) {
+
+	// Determines if script should run
+	bool start_daemon = false;
+
+	//check to make sure
+	if( argc < 2 ) {
+		fprintf( stderr, "This isn't how to start this script...\n" );
 		return 1;
 	}
 
+	for( int i = 1; i < argc ; ++i) {
+		string arg = argv[i];
+		if( arg == "--stats" ) { 
+			//TODO: show stats and kill the script
+			cout << "=> statistics------" << endl;
+		}
+
+		else if( arg == "--hw-info" ) {
+			//TODO: show information about hardware plugged in
+			cout << "=> Hardware information" << endl;
+		}
+		
+		else if( arg == "--start" ) start_daemon = true;
+	}
+
+	if( !start_daemon ) return 0;
+
+	if( !check_system_folders() ) {
+		return 1;
+	}
 
 	std::thread tr_modem_listener(gl_modem_listener, "Master Modem Listener");
+
 	std::thread tr_request_listener(gl_request_queue_listener, "Request Queue Listener");
+
 	tr_modem_listener.join();
 	tr_request_listener.join();
 			
-	return 1;
+	return 0;
 }
