@@ -41,7 +41,7 @@ int main() {
 	else {
 		cout << "Testing=> Passed..." << endl;
 		cout << "processed request = " << test_gl_request_queue_listener.size() <<endl;
-		cout << "expected request = " << helpers::read_file( test_request_file).size() << endl;
+		cout << "expected request = " << helpers::read_file( it_test_gl_request_queue_listener->first ).size() << endl;
 
 		if( test_gl_request_queue_listener.size() == 0 ) {
 			cout << "Testing=> Failed..." << endl;
