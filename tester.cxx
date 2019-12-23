@@ -7,7 +7,7 @@ using namespace std;
 
 
 string test_request_file = string( getenv("HOME")) + "/deku/test_request.txt";
-string sample_request_string = "number=0000000,message=\"sample request message\"";
+string sample_request_string = "number=0000000,message=\"sample request\nmessage\"";
 
 int main() {
 	CURRENT_SYSTEM_STATE = "TESTING";
