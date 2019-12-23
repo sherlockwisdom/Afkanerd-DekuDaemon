@@ -182,7 +182,11 @@ map<string, string[2]> gl_request_queue_listener( string path_request_file ) {
 	if( rename( path_request_file.c_str() , tmp_rand_filename.c_str() ) == -1) {
 		helpers::logger(func_name, "random request filename: " + tmp_rand_filename +"\n");
 		helpers::logger_errno( errno );
+		return processed_request;
 	}
+
+	vector<string> request = helpers::read_file( tmp_rand_filename );
+	helpers::logger(func_name, to_string( request.size() ) + " requested\n" );
 
 
 	//goto statement here because sometimes shit has to continue from where it stopped
