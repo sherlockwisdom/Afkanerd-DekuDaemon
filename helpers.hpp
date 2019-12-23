@@ -7,6 +7,16 @@ using namespace std;
 
 namespace helpers {
 
+	//XXX
+	void logger( string func_name, string output, string output_stream = "stdout" ) {
+		if( output.empty() || CURRENT_SYSTEM_STATE == "production" || CURRENT_SYSTEM_STATE == "PRODUCTION") return;
+
+		if( output_stream == "stdout" || output_stream == "STDOUT" ) {
+			cout << "[logger.info] - " << func_name << "=> " << output << endl;
+		}
+		else cerr << "[logger.error] - LOGGER DOESN'T HAVE THAT STATE YET" << endl;
+	}
+
 	vector<string> read_file( string filename ) {
 		// TODO: add variable to read into string not vector, change return type to auto when this happens
 		ifstream readfile( filename.c_str() );

@@ -19,6 +19,8 @@
 
 using namespace std;
 
+string CURRENT_SYSTEM_STATE = "development";
+
 /* GLOBAL SYSTEM DECLARATIONS */
 bool GL_MODEM_LISTENER_STATE = true;
 bool GL_SYSTEM_READY = false;

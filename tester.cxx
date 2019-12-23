@@ -9,6 +9,8 @@ using namespace std;
 string test_request_file = string( getenv("HOME")) + "/deku/test_request.txt";
 
 int main() {
+	CURRENT_SYSTEM_STATE = "TESTING";
+	//CURRENT_SYSTEM_STATE = "PRODUCTION";
 
 	cout << "Testing=> gl_request_queue_listener => ";
 	// input = filename, output = stats

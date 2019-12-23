@@ -172,6 +172,7 @@ map<string, string[2]> gl_request_queue_listener( string path_request_file ) {
 	/// Checks if file is available at path
 	if( struct stat buffer;!( stat(path_request_file.c_str(), &buffer) == 0) ) {
 		/// cout << func_name << "=> no request file, thus no request yet..." << endl;
+		helpers::logger(func_name, "no request file, thus no request yet...", "stdout");
 		return processed_request;
 	}
 
