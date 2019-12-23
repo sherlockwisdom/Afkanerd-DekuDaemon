@@ -45,17 +45,6 @@ auto parser( string string_to_parse ) {
 	return request_tuple;
 }
 
-vector<map<string,string>> dequeue_from_request_file( string path_request_file ) { //TODO: make filename an arg
-	vector<map<string,string>> request_tuple_container;
-	for( auto tmp_ln_buffer : helpers::read_file( path_request_file )) {
-		if(tmp_ln_buffer.empty() or tmp_ln_buffer[0] == '#') continue;
-
-		map<string,string> request_tuple = parser( tmp_ln_buffer);
-		if( !request_tuple.empty()) 
-			request_tuple_container.push_back(request_tuple);
-	}
-	return request_tuple_container;
-}
 
 
 auto determine_isp_for_request(vector<map<string,string>> request_tuple_container) {
@@ -185,4 +174,16 @@ map<string, string> gl_request_queue_listener( string path_request_file ) {
 	processed_request.insert(make_pair( tmp_rand_filename, request[0] ) ); //XXX: Always 1 request per file
 	
 	return processed_request;
+}
+
+vector<map<string,string>> dequeue_from_request_file( string path_request_file ) { //TODO: make filename an arg
+	vector<map<string,string>> request_tuple_container;
+	for( auto tmp_ln_buffer : helpers::read_file( path_request_file )) {
+		if(tmp_ln_buffer.empty() or tmp_ln_buffer[0] == '#') continue;
+
+		map<string,string> request_tuple = parser( tmp_ln_buffer);
+		if( !request_tuple.empty()) 
+			request_tuple_container.push_back(request_tuple);
+	}
+	return request_tuple_container;
 }

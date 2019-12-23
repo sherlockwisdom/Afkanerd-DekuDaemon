@@ -65,6 +65,8 @@ int main() {
 				       cout << "Testing=> Passed..." << endl;
 				       cout << "Contents match test sample..." << endl;
 				       //TODO: ISP Distribution
+				       
+				       vector< map<string,string>> dequeued_request = dequeue_from_request_file( filename ); 
 				}
 				else {
 					cout << "Testing=> Failed..." << endl;
