@@ -8,13 +8,25 @@ using namespace std;
 namespace helpers {
 
 	//XXX
-	void logger( string func_name, string output, string output_stream = "stdout" ) {
-		if( output.empty() || CURRENT_SYSTEM_STATE == "production" || CURRENT_SYSTEM_STATE == "PRODUCTION") return;
+	void logger( string func_name, string output, string output_stream = "stdout", bool show_production = false) {
+		if( (output.empty() || CURRENT_SYSTEM_STATE == "production" || CURRENT_SYSTEM_STATE == "PRODUCTION") and !show_production) return;
 
 		if( output_stream == "stdout" || output_stream == "STDOUT" ) {
-			cout << "[logger.info] - " << func_name << "=> " << output << endl;
+			cout << "[logger.info] - " << func_name << "=> " << output;
 		}
+		else if( output_stream == "stderr" || output_stream == "STDERR" ) {
+			cerr << "[logger.error] - " << func_name << "=> " << output;
+		}
+
 		else cerr << "[logger.error] - LOGGER DOESN'T HAVE THAT STATE YET" << endl;
+	}
+
+
+	void logger_errno( auto t_errno ) {
+		char str_error[256];
+		string error_message = strerror_r( t_errno, str_error, 256);
+		cout << "[logger_errno] - ERRNO: " << t_errno << endl;
+		cout << "[logger_errno] - MESSAGE: " << error_message << "=> " << endl;
 	}
 
 	vector<string> read_file( string filename ) {

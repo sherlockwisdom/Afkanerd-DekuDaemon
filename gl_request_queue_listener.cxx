@@ -172,12 +172,18 @@ map<string, string[2]> gl_request_queue_listener( string path_request_file ) {
 	/// Checks if file is available at path
 	if( struct stat buffer;!( stat(path_request_file.c_str(), &buffer) == 0) ) {
 		/// cout << func_name << "=> no request file, thus no request yet..." << endl;
-		helpers::logger(func_name, "no request file, thus no request yet...", "stdout");
+		helpers::logger(func_name, "no request file, thus no request yet\n", "stdout");
 		return processed_request;
 	}
 
 	string tmp_rand_filename = "/tmp/" + helpers::random_string();
-	rename( path_request_file.c_str() , tmp_rand_filename.c_str() );
+	helpers::logger(func_name, "random request filename: " + tmp_rand_filename +"\n");
+
+	if( rename( path_request_file.c_str() , tmp_rand_filename.c_str() ) != 0) {
+		helpers::logger_errno( errno );
+	}
+
+
 	//goto statement here because sometimes shit has to continue from where it stopped
 	/*
 	DEQUEUE_JOBS: 
