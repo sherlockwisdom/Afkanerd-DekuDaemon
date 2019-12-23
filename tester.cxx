@@ -13,7 +13,7 @@ int main() {
 	CURRENT_SYSTEM_STATE = "TESTING";
 	//CURRENT_SYSTEM_STATE = "PRODUCTION";
 	cout << "Testing=> write_file => " << endl;
-	helpers::write_file( test_request_file, sample_request_string, ios::trunc, true );
+	helpers::write_file( test_request_file, sample_request_string, true, ios::trunc );
 	vector<string> readfile = helpers::read_file( test_request_file );
 	if( readfile.size() == 1) {
 		cout << "Testing=> Matching number of lines..." << endl;
@@ -61,10 +61,9 @@ int main() {
 				cout << "Testing=> Passed..." << endl;
 				cout << "File created in tmp/ ..." << endl;
 				
-				if( content == sample_request_string ) {
+				if( helpers::unescape_string( content ) == sample_request_string ) {
 				       cout << "Testing=> Passed..." << endl;
 				       cout << "Contents match test sample..." << endl;
-
 
 				       //TODO: ISP Distribution
 				}
