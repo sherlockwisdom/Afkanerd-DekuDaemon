@@ -37,7 +37,7 @@ int main() {
 	string filename = it_test_gl_request_queue_listener->first;
 
 	size_t request_queue_size = test_gl_request_queue_listener.size();
-	size_t read_tmp_file_size = helper::read_file( filename ).size();
+	size_t read_tmp_file_size = helpers::read_file( filename ).size();
 
 	if( request_queue_size != read_tmp_file_size ) {
 		cout << "Testing=> Failed...." << endl;
