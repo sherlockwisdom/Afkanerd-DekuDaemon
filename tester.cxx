@@ -61,7 +61,7 @@ int main() {
 				cout << "Testing=> Passed..." << endl;
 				cout << "File created in tmp/ ..." << endl;
 				
-				if( helpers::unescape_string( content ) == sample_request_string ) {
+				if( helpers::unescape_string( content ) == helpers::unescape_string( sample_request_string) ) {
 				       cout << "Testing=> Passed..." << endl;
 				       cout << "Contents match test sample..." << endl;
 				       //TODO: ISP Distribution
