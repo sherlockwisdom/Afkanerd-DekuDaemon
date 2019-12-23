@@ -6,8 +6,17 @@
 using namespace std;
 
 namespace helpers {
+	string unescape_string( string input ) {
+		for(size_t i=0;i<input.size();++i) {
+			if( input[i] == '\n' ) {
+				input.erase(i, 1);
+				input.insert(i, "\\n");
+			}
+		}
+		return input;
+	}
 
-	//XXX
+
 	void logger( string func_name, string output, string output_stream = "stdout", bool show_production = false) {
 		if( (output.empty() || CURRENT_SYSTEM_STATE == "production" || CURRENT_SYSTEM_STATE == "PRODUCTION") and !show_production) return;
 
@@ -29,7 +38,8 @@ namespace helpers {
 		cout << "[logger_errno] - MESSAGE: " << error_message << "=> " << endl;
 	}
 
-	void write_file( string path_filename, auto input, ios_base::openmode mode = ios::app ) { //TODO: what about auto
+	void write_file( string path_filename, auto input, ios_base::openmode mode = ios::app, bool escape_string = true ) { //TODO: what about auto
+		if( !escape_string ) input = unescape_string( input );
 		ofstream writefile( path_filename.c_str(), mode );
 		writefile << input;
 		writefile.close();
@@ -190,15 +200,6 @@ namespace helpers {
 		return total_count;
 	}
 
-	string escape_string( string input ) {
-		for(size_t i=0;i<input.size();++i) {
-			if( input[i] == '\n' ) {
-				input.erase(i, 1);
-				input.insert(i, "\\n");
-			}
-		}
-		return input;
-	}
 
 
 	string remove_carriage( string input, char location = 'B' ) {
@@ -217,7 +218,7 @@ namespace helpers {
 		if( message.empty() or number.empty() ) return;
 		ofstream write_to_request_file(SYS_REQUEST_FILE, ios::app);
 		printf("%s=> message[%s] : number [%s]\n", func_name.c_str(), message.c_str(), number.c_str());
-		write_to_request_file << "number=" << number << ",message=\"" << escape_string( remove_carriage( message )) << "\"" << endl;
+		write_to_request_file << "number=" << number << ",message=\"" << unescape_string( remove_carriage( message )) << "\"" << endl;
 		write_to_request_file.close();	
 	}
 

@@ -76,7 +76,7 @@ auto determine_isp_for_request(vector<map<string,string>> request_tuple_containe
 		}
 		else {
 			cout << func_name << "=> Could not determine ISP... writing back to request file" << endl;
-			string message = helpers::escape_string( helpers::remove_carriage( request["message"] ) );
+			string message = helpers::unescape_string( helpers::remove_carriage( request["message"] ) );
 			string number = request["number"];
 			helpers::write_to_request_file( message, number );
 		}
@@ -98,7 +98,7 @@ void isp_distribution(string func_name, string isp, vector<map<string, string>> 
 	if(MODEM_DAEMON.empty()) {
 		cout << func_name << "=> No modem found, writing back to request file..." << endl;
 		for(auto request_container : isp_request) {
-			string message = helpers::escape_string( request_container["message"] );
+			string message = helpers::unescape_string( request_container["message"] );
 			string number = request_container["number"];
 			helpers::write_to_request_file( message, number );
 		}
@@ -127,7 +127,7 @@ void isp_distribution(string func_name, string isp, vector<map<string, string>> 
 		std::this_thread::sleep_for(std::chrono::seconds(10));
 
 		for(auto request_container : isp_request) {
-			string message = helpers::escape_string( request_container["message"] );
+			string message = helpers::unescape_string( request_container["message"] );
 			string number = request_container["number"];
 			helpers::write_to_request_file( message, number );
 		}
@@ -188,10 +188,9 @@ map<string, string[2]> gl_request_queue_listener( string path_request_file ) {
 	vector<string> request = helpers::read_file( tmp_rand_filename );
 	helpers::logger(func_name, to_string( request.size() ) + " requested\n", "stdout", true);
 
-	//goto statement here because sometimes shit has to continue from where it stopped
 	/*
-	DEQUEUE_JOBS: 
 	vector<map<string,string>> request_tuple_container = de_queue_from_request_file();
+
 	cout << func_name << "=> Job file contains: " << request_tuple_container.size() << " request..." << endl;
 
 	//File is done reading so we can remove it
