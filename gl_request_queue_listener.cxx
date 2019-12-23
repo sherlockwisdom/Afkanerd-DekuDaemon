@@ -170,16 +170,17 @@ map<string, string[2]> gl_request_queue_listener( string path_request_file ) {
 	map<string, string[2]> processed_request;
 
 	/// Checks if file is available at path
-	if( struct stat buffer;!( stat(path_request_file.c_str(), &buffer) == 0) ) {
+	if( struct stat buffer; stat(path_request_file.c_str(), &buffer) == -1) {
 		/// cout << func_name << "=> no request file, thus no request yet..." << endl;
+		helpers::logger_errno( errno ) ;
 		helpers::logger(func_name, "no request file, thus no request yet\n", "stdout");
 		return processed_request;
 	}
 
-	string tmp_rand_filename = helpers::random_string();
-	helpers::logger(func_name, "random request filename: " + tmp_rand_filename +"\n");
+	string tmp_rand_filename = "/tmp/" + helpers::random_string();
 
-	if( rename( path_request_file.c_str() , tmp_rand_filename.c_str() ) != 0) {
+	if( rename( path_request_file.c_str() , tmp_rand_filename.c_str() ) == -1) {
+		helpers::logger(func_name, "random request filename: " + tmp_rand_filename +"\n");
 		helpers::logger_errno( errno );
 	}
 

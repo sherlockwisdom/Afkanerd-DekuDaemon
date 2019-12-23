@@ -29,6 +29,12 @@ namespace helpers {
 		cout << "[logger_errno] - MESSAGE: " << error_message << "=> " << endl;
 	}
 
+	void write_file( string path_filename, auto input, ios_base::openmode mode = ios::app ) { //TODO: what about auto
+		ofstream writefile( path_filename.c_str(), mode );
+		writefile << input;
+		writefile.close();
+	}
+
 	vector<string> read_file( string filename ) {
 		// TODO: add variable to read into string not vector, change return type to auto when this happens
 		ifstream readfile( filename.c_str() );

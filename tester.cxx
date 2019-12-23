@@ -7,6 +7,7 @@ using namespace std;
 
 
 string test_request_file = string( getenv("HOME")) + "/deku/test_request.txt";
+string sample_request_string = "number=0000000,message=\"sample request message\"";
 
 int main() {
 	CURRENT_SYSTEM_STATE = "TESTING";
@@ -14,8 +15,9 @@ int main() {
 
 	cout << "Testing=> gl_request_queue_listener => ";
 	// input = filename, output = stats
-	map<string, string[2] > test_gl_request_queue_listener = gl_request_queue_listener( test_request_file.c_str() );
-	if( test_gl_request_queue_listener.size() != helpers::read_file( test_request_file ).size() ) {
+	helpers::write_file( test_request_file, sample_request_string, ios::trunc);
+
+	if( map<string, string[2] > test_gl_request_queue_listener = gl_request_queue_listener( test_request_file.c_str() ); test_gl_request_queue_listener.size() != helpers::read_file( test_request_file ).size() ) {
 		cout << "Failed...." << endl;
 		cout << "processed request = " << test_gl_request_queue_listener.size() <<endl;
 		cout << "expected request = " << helpers::read_file( test_request_file).size() << endl;
