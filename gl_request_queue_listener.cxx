@@ -186,24 +186,4 @@ map<string, string> gl_request_queue_listener( string path_request_file ) {
 	processed_request.insert(make_pair( tmp_rand_filename, request[0] ) ); //XXX: Always 1 request per file
 	
 	return processed_request;
-
-	/*
-	vector<map<string,string>> request_tuple_container = de_queue_from_request_file();
-
-	cout << func_name << "=> Job file contains: " << request_tuple_container.size() << " request..." << endl;
-
-	//File is done reading so we can remove it
-	remove(SYS_JOB_FILE.c_str());
-	
-	//Determine the ISP from here
-	map<string, vector<map<string, string>>> isp_sorted_request_container = determine_isp_for_request(request_tuple_container);
-	
-	for(auto i : isp_sorted_request_container) {
-		printf("%s=> For ISP[%s]----\n", func_name.c_str(), i.first.c_str());
-
-		//TODO: Thread this!! No need sitting and waiting for one ISP before using the other
-		std::thread tr_isp_distribution(isp_distribution, "ISP Distribution", i.first, i.second);
-		tr_isp_distribution.detach();
-	}	
-	*/
 }
