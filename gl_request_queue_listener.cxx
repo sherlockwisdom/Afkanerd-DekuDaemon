@@ -186,8 +186,7 @@ map<string, string[2]> gl_request_queue_listener( string path_request_file ) {
 	}
 
 	vector<string> request = helpers::read_file( tmp_rand_filename );
-	helpers::logger(func_name, to_string( request.size() ) + " requested\n" );
-
+	helpers::logger(func_name, to_string( request.size() ) + " requested\n", "stdout", true);
 
 	//goto statement here because sometimes shit has to continue from where it stopped
 	/*
