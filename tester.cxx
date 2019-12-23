@@ -32,7 +32,8 @@ int main() {
 
 	//TODO: Build a tester function, not this manual method
 	cout << "\nTesting=> gl_request_queue_listener => " << endl;
-	if( map<string, string > test_gl_request_queue_listener = gl_request_queue_listener( test_request_file.c_str() ); test_gl_request_queue_listener.size() != helpers::read_file( test_request_file ).size() ) {
+	map<string, string > test_gl_request_queue_listener = gl_request_queue_listener( test_request_file.c_str() );
+	if( auto it_test_gl_request_queue_listener = test_gl_request_queue_listener.begin(); test_gl_request_queue_listener.size() != helpers::read_file( it_test_gl_request_queue_listener->first ).size() ) {
 		cout << "Testing=> Failed...." << endl;
 		cout << "processed request = " << test_gl_request_queue_listener.size() <<endl;
 		cout << "expected request = " << helpers::read_file( test_request_file).size() << endl;
