@@ -177,7 +177,7 @@ map<string, string[2]> gl_request_queue_listener( string path_request_file ) {
 		return processed_request;
 	}
 
-	string tmp_rand_filename = "tmp/" + helpers::random_string();
+	string tmp_rand_filename = "tmp/" + helpers::random_string(); //TODO, move dir to global dir
 
 	if( rename( path_request_file.c_str() , tmp_rand_filename.c_str() ) == -1) {
 		helpers::logger(func_name, "random request filename: " + tmp_rand_filename +"\n");

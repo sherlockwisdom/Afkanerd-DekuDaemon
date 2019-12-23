@@ -1,3 +1,5 @@
 daemon
 tester
 tmp/
+*.swp
+*.swa

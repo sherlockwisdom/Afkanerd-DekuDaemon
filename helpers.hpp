@@ -29,7 +29,7 @@ namespace helpers {
 		cout << "[logger_errno] - MESSAGE: " << error_message << "=> " << endl;
 	}
 
-	void write_file( string path_filename, auto input, ios_base::openmode mode = ios::app ) { //TODO: what about auto
+	void write_file( string path_filename, int input, ios_base::openmode mode = ios::app ) { //TODO: what about auto
 		ofstream writefile( path_filename.c_str(), mode );
 		writefile << input;
 		writefile.close();
