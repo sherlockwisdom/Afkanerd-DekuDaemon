@@ -182,6 +182,11 @@ map<string, string> gl_request_queue_listener( string path_request_file ) {
 	vector<string> request = helpers::read_file( tmp_rand_filename );
 	helpers::logger(func_name, to_string( request.size() ) + " requested\n", "stdout", true);
 
+
+	processed_request.insert(make_pair( tmp_rand_filename, request[0] ) ); //XXX: Always 1 request per file
+	
+	return processed_request;
+
 	/*
 	vector<map<string,string>> request_tuple_container = de_queue_from_request_file();
 
@@ -200,6 +205,5 @@ map<string, string> gl_request_queue_listener( string path_request_file ) {
 		std::thread tr_isp_distribution(isp_distribution, "ISP Distribution", i.first, i.second);
 		tr_isp_distribution.detach();
 	}	
-	std::this_thread::sleep_for(std::chrono::seconds(GL_TR_SLEEP_TIME));
 	*/
 }

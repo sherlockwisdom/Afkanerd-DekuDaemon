@@ -63,6 +63,10 @@ namespace helpers {
 		return stat( path_filename.c_str(), &buffer) == 0;
 	}
 
+	void sleep_thread( int duration ) {
+		std::this_thread::sleep_for(std::chrono::seconds( duration ));
+	}
+
 	string terminal_stdout(string command) {
 		string data;
 		FILE * stream;
