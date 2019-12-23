@@ -17,7 +17,7 @@ int main() {
 	vector<string> readfile = helpers::read_file( test_request_file );
 	if( readfile.size() == 1) {
 		cout << "Testing=> Matching number of lines..." << endl;
-		if( readfile[0] == sample_request_string ) {
+		if( readfile[0] == helpers::unescape_string( sample_request_string ) ) {
 			cout << "Testing=> Passed...." << endl;
 		}
 		else {
@@ -31,7 +31,7 @@ int main() {
 	}
 
 	//TODO: Build a tester function, not this manual method
-	cout << "Testing=> gl_request_queue_listener => " << endl;
+	cout << "\nTesting=> gl_request_queue_listener => " << endl;
 	if( map<string, string[2] > test_gl_request_queue_listener = gl_request_queue_listener( test_request_file.c_str() ); test_gl_request_queue_listener.size() != helpers::read_file( test_request_file ).size() ) {
 		cout << "Testing=> Failed...." << endl;
 		cout << "processed request = " << test_gl_request_queue_listener.size() <<endl;
