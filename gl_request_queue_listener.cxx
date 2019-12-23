@@ -77,7 +77,7 @@ void curl_server( string TCP_HOST, string TCP_PORT, string URL, string message) 
 	string terminal_output = helpers::terminal_stdout( command );
 }
 
-map<string, vector<map<string,string>>> isp_distribution(vector<map<string, string>> isp_request) {
+void isp_distribution(string isp, vector<map<string, string>> isp_request) {
 	string func_name = "isp_distribution";
 	if(MODEM_DAEMON.empty()) {
 		cout << func_name << "=> No modem found, writing back to request file..." << endl;
