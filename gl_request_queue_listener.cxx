@@ -45,14 +45,8 @@ auto parser( string string_to_parse ) {
 	return request_tuple;
 }
 
-vector<map<string,string>> de_queue_from_request_file( ) { //TODO: make filename an arg
-
-	string tmp_ln_buffer;
-	ifstream sys_request_file_read(SYS_JOB_FILE.c_str());
-
-	//XXX: Container contains maps which have keys as number and message
-	vector<map<string,string>> request_tuple_container;
-	while(getline(sys_request_file_read, tmp_ln_buffer)) {
+vector<map<string,string>> de_queue_from_request_file( string path_request_file ) { //TODO: make filename an arg
+	for( auto tmp_ln_buffer : helpers::read_file( path_request_file )) {
 		if(tmp_ln_buffer.empty() or tmp_ln_buffer[0] == '#') continue;
 
 		map<string,string> request_tuple = parser( tmp_ln_buffer);

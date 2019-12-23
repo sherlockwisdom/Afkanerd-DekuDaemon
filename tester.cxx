@@ -41,6 +41,26 @@ int main() {
 		cout << "Testing=> Passed..." << endl;
 		cout << "processed request = " << test_gl_request_queue_listener.size() <<endl;
 		cout << "expected request = " << helpers::read_file( test_request_file).size() << endl;
+
+		if( test_gl_request_queue_listener.size() == 0 ) {
+			cout << "Testing=> Failed..." << endl;
+			cout << "Empty request from listener..." << endl;
+		}
+		else {
+			cout << "\nTesting=> dequeu_from_request_file => " << endl;
+			auto it_test_gl_request_queue_listener = test_gl_request_queue_listener;
+			string filename = it_test_gl_request_queue_listener->first;
+			string content = it_test_gl_request_queue_listener->second;
+			
+			if( helpers::file_exist( filename ) ) {
+				cout << "Testing=> Passed..." << endl;
+				cout << "File created in tmp/ ..." << endl;
+				
+				if( content == sample_request_string ) {
+				       cout << "Testing=> Passed..." << endl;
+				       cout << "Contents match test sample..." << endl;
+				}
+
 	}
 
 
