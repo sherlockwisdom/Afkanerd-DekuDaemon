@@ -53,7 +53,7 @@ map<string, vector<map<string,string>>> determine_isp_for_request(vector<map<str
 	for(int i=0;i<request_tuple_container.size();++i) {
 		map<string, string> request = request_tuple_container[i];
 		string number= request["number"];
-		string isp = helpers::ISPFinder(number);
+		string isp = helpers::ISPFinder(number); //TODO: Make ISP finder a config file, not code - parser pending
 		if(!isp.empty()) {
 			isp_sorted_request_container[isp].push_back(request);
 		}
