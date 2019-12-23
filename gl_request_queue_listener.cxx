@@ -47,7 +47,7 @@ auto parser( string string_to_parse ) {
 
 
 
-auto determine_isp_for_request(vector<map<string,string>> request_tuple_container) {
+map<string, vector<map<string,string>>> determine_isp_for_request(vector<map<string,string>> request_tuple_container) {
 	string func_name = "determine_isp_for_request" ;
 	map<string,vector<map<string,string>>> isp_sorted_request_container; //ISP=>container of messages
 	for(int i=0;i<request_tuple_container.size();++i) {
@@ -58,7 +58,7 @@ auto determine_isp_for_request(vector<map<string,string>> request_tuple_containe
 			isp_sorted_request_container[isp].push_back(request);
 		}
 		else {
-			cout << func_name << "=> Could not determine ISP... writing back to request file" << endl;
+			helpers::logger( func_name, "Could not determine ISP\n", "stderr" );
 			string message = helpers::unescape_string( helpers::remove_carriage( request["message"] ) );
 			string number = request["number"];
 			helpers::write_to_request_file( message, number );
@@ -77,7 +77,8 @@ void curl_server( string TCP_HOST, string TCP_PORT, string URL, string message) 
 	string terminal_output = helpers::terminal_stdout( command );
 }
 
-void isp_distribution(string func_name, string isp, vector<map<string, string>> isp_request) {
+map<string, vector<map<string,string>>> isp_distribution(vector<map<string, string>> isp_request) {
+	string func_name = "isp_distribution";
 	if(MODEM_DAEMON.empty()) {
 		cout << func_name << "=> No modem found, writing back to request file..." << endl;
 		for(auto request_container : isp_request) {
