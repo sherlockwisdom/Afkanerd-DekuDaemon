@@ -32,7 +32,7 @@ int main() {
 
 	//TODO: Build a tester function, not this manual method
 	cout << "\nTesting=> gl_request_queue_listener => " << endl;
-	if( map<string, string[2] > test_gl_request_queue_listener = gl_request_queue_listener( test_request_file.c_str() ); test_gl_request_queue_listener.size() != helpers::read_file( test_request_file ).size() ) {
+	if( map<string, string > test_gl_request_queue_listener = gl_request_queue_listener( test_request_file.c_str() ); test_gl_request_queue_listener.size() != helpers::read_file( test_request_file ).size() ) {
 		cout << "Testing=> Failed...." << endl;
 		cout << "processed request = " << test_gl_request_queue_listener.size() <<endl;
 		cout << "expected request = " << helpers::read_file( test_request_file).size() << endl;
@@ -60,7 +60,16 @@ int main() {
 				       cout << "Testing=> Passed..." << endl;
 				       cout << "Contents match test sample..." << endl;
 				}
-
+				else {
+					cout << "Testing=> Failed..." << endl;
+					cout << "Contents don't match sample..." << endl;
+				}
+			}
+			else {
+				cout << "Testing=> Failed.." << endl;
+				cout << "File does not exist in tmp/ ..." << endl;
+			}
+		}
 	}
 
 

@@ -45,7 +45,8 @@ auto parser( string string_to_parse ) {
 	return request_tuple;
 }
 
-vector<map<string,string>> de_queue_from_request_file( string path_request_file ) { //TODO: make filename an arg
+vector<map<string,string>> dequeue_from_request_file( string path_request_file ) { //TODO: make filename an arg
+	vector<map<string,string> request_tuple_container;
 	for( auto tmp_ln_buffer : helpers::read_file( path_request_file )) {
 		if(tmp_ln_buffer.empty() or tmp_ln_buffer[0] == '#') continue;
 
@@ -159,7 +160,7 @@ void isp_distribution(string func_name, string isp, vector<map<string, string>> 
 
 /// Listens to the request file for incoming queues
 /// Input = filename, output = <stats for processed request>
-map<string, string[2]> gl_request_queue_listener( string path_request_file ) {
+map<string, string> gl_request_queue_listener( string path_request_file ) {
 	string func_name = "gl_request_queue_listener";
 	map<string, string[2]> processed_request;
 
