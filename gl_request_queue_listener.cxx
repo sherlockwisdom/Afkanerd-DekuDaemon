@@ -59,9 +59,9 @@ map<string, vector<map<string,string>>> determine_isp_for_request(vector<map<str
 		}
 		else {
 			helpers::logger( func_name, "Could not determine ISP\n", "stderr" );
-			string message = helpers::unescape_string( helpers::remove_carriage( request["message"] ) );
+			string message = request["message"];
 			string number = request["number"];
-			helpers::write_to_request_file( message, number );
+			isp_sorted_request_container["unknown"].push_back( request );
 		}
 	}
 
