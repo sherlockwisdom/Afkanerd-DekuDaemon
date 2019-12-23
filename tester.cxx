@@ -48,7 +48,7 @@ int main() {
 		}
 		else {
 			cout << "\nTesting=> dequeu_from_request_file => " << endl;
-			auto it_test_gl_request_queue_listener = test_gl_request_queue_listener;
+			auto it_test_gl_request_queue_listener = test_gl_request_queue_listener.begin();
 			string filename = it_test_gl_request_queue_listener->first;
 			string content = it_test_gl_request_queue_listener->second;
 			

@@ -58,6 +58,11 @@ namespace helpers {
 		return file_contents;
 	}
 
+	bool file_exist( string path_filename ) {
+		struct stat buffer; 
+		return stat( path_filename.c_str(), &buffer) == 0;
+	}
+
 	string terminal_stdout(string command) {
 		string data;
 		FILE * stream;

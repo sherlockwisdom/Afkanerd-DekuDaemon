@@ -46,7 +46,7 @@ auto parser( string string_to_parse ) {
 }
 
 vector<map<string,string>> dequeue_from_request_file( string path_request_file ) { //TODO: make filename an arg
-	vector<map<string,string> request_tuple_container;
+	vector<map<string,string>> request_tuple_container;
 	for( auto tmp_ln_buffer : helpers::read_file( path_request_file )) {
 		if(tmp_ln_buffer.empty() or tmp_ln_buffer[0] == '#') continue;
 
@@ -54,7 +54,6 @@ vector<map<string,string>> dequeue_from_request_file( string path_request_file )
 		if( !request_tuple.empty()) 
 			request_tuple_container.push_back(request_tuple);
 	}
-	sys_request_file_read.close();
 	return request_tuple_container;
 }
 
@@ -162,7 +161,7 @@ void isp_distribution(string func_name, string isp, vector<map<string, string>> 
 /// Input = filename, output = <stats for processed request>
 map<string, string> gl_request_queue_listener( string path_request_file ) {
 	string func_name = "gl_request_queue_listener";
-	map<string, string[2]> processed_request;
+	map<string, string> processed_request;
 
 	/// Checks if file is available at path
 	if( struct stat buffer; stat(path_request_file.c_str(), &buffer) == -1) {
