@@ -22,7 +22,7 @@ namespace helpers {
 	}
 
 
-	void logger_errno( auto t_errno ) {
+	void logger_errno( int t_errno ) {
 		char str_error[256];
 		string error_message = strerror_r( t_errno, str_error, 256);
 		cout << "[logger_errno] - ERRNO: " << t_errno << endl;
