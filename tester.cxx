@@ -67,6 +67,19 @@ int main() {
 				       //TODO: ISP Distribution
 				       
 				       vector< map<string,string>> dequeued_request = dequeue_from_request_file( filename ); 
+				       size_t dequeued_request_size = dequeued_request.size();
+				       if( dequeued_request_size == request_queue_size ) {
+					       cout << "Testing==> Passed..." << endl;
+					       cout << "Number of request in memory matches number of request in file" << endl;
+					       //TODO: ISP Distribution
+					       
+				       }
+				       else {
+					       cout << "Testing=> Failed..." << endl;
+					       cout << "Request in mem doesn't match number in file" << endl;
+					       cout << "Request in mem: " << dequeued_request_size << endl;
+					       cout << "Request in file: " << request_queue_size << endl;
+				       }
 				}
 				else {
 					cout << "Testing=> Failed..." << endl;
