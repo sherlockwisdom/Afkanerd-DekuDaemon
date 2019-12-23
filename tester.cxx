@@ -33,15 +33,21 @@ int main() {
 	//TODO: Build a tester function, not this manual method
 	cout << "\nTesting=> gl_request_queue_listener => " << endl;
 	map<string, string > test_gl_request_queue_listener = gl_request_queue_listener( test_request_file.c_str() );
-	if( auto it_test_gl_request_queue_listener = test_gl_request_queue_listener.begin(); test_gl_request_queue_listener.size() != helpers::read_file( it_test_gl_request_queue_listener->first ).size() ) {
+	auto it_test_gl_request_queue_listener = test_gl_request_queue_listener.begin();
+	string filename = it_test_gl_request_queue_listener->first;
+
+	size_t request_queue_size = test_gl_request_queue_listener.size();
+	size_t read_tmp_file_size = helper::read_file( filename ).size();
+
+	if( request_queue_size != read_tmp_file_size ) {
 		cout << "Testing=> Failed...." << endl;
-		cout << "processed request = " << test_gl_request_queue_listener.size() <<endl;
-		cout << "expected request = " << helpers::read_file( test_request_file).size() << endl;
+		cout << "processed request = " << request_queue_size << endl;
+		cout << "expected request = " << read_tmp_file_size << endl;
 	}
 	else {
 		cout << "Testing=> Passed..." << endl;
-		cout << "processed request = " << test_gl_request_queue_listener.size() <<endl;
-		cout << "expected request = " << helpers::read_file( it_test_gl_request_queue_listener->first ).size() << endl;
+		cout << "processed request = " << request_queue_size << endl;
+		cout << "expected request = " << read_tmp_file_size << endl;
 
 		if( test_gl_request_queue_listener.size() == 0 ) {
 			cout << "Testing=> Failed..." << endl;
@@ -49,8 +55,6 @@ int main() {
 		}
 		else {
 			cout << "\nTesting=> dequeu_from_request_file => " << endl;
-			auto it_test_gl_request_queue_listener = test_gl_request_queue_listener.begin();
-			string filename = it_test_gl_request_queue_listener->first;
 			string content = it_test_gl_request_queue_listener->second;
 			
 			if( helpers::file_exist( filename ) ) {
