@@ -6,6 +6,20 @@
 using namespace std;
 
 namespace helpers {
+
+	vector<string> read_file( string filename ) {
+		// TODO: add variable to read into string not vector, change return type to auto when this happens
+		ifstream readfile( filename.c_str() );
+		vector<string> file_contents;
+		if( !readfile.good() ) return file_contents;
+
+		string tmp;
+		while(getline(readfile, tmp)) file_contents.push_back( tmp );
+		readfile.close();
+		
+		return file_contents;
+	}
+
 	string terminal_stdout(string command) {
 		string data;
 		FILE * stream;
@@ -175,7 +189,7 @@ namespace helpers {
 		if( message.empty() or number.empty() ) return;
 		ofstream write_to_request_file(SYS_REQUEST_FILE, ios::app);
 		printf("%s=> message[%s] : number [%s]\n", func_name.c_str(), message.c_str(), number.c_str());
-		write_to_request_file << "number=" << number << ",message=\"" << remove_carriage( message ) << "\"" << endl;
+		write_to_request_file << "number=" << number << ",message=\"" << escape_string( remove_carriage( message )) << "\"" << endl;
 		write_to_request_file.close();	
 	}
 
