@@ -64,7 +64,8 @@ int main() {
 				if( helpers::unescape_string( content ) == sample_request_string ) {
 				       cout << "Testing=> Passed..." << endl;
 				       cout << "Contents match test sample..." << endl;
-
+				       cout << "Content: " << content << endl;
+				       cout << "Sample: " << sample_request_string << endl;
 				       //TODO: ISP Distribution
 				}
 				else {
