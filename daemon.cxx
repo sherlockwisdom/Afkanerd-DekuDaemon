@@ -54,7 +54,8 @@ int main( int argc, char** argv ) {
 		}
 	}
 
-	//TODO: show some information about the state the system is running in
+	logger::logger("STARTUP INFO", "\nlogger-state: " + logger::show_state + "\n\n", "stdout", true);
+
 
 	if( !start_daemon ) return 0;
 
