@@ -4,6 +4,7 @@
 #include <random>
 #include <fstream>
 #include <thread>
+#include <map>
 #include "logger.hpp"
 using namespace std;
 
@@ -188,6 +189,47 @@ namespace helpers {
 		string command = "curl -X POST -H \"Content-Type: text/plain\" " + TCP_HOST + ":" + TCP_PORT + "/" + URL + " -d \"" + message + "\"";
 		cout << func_name << "=> command [" << command << "]" << endl;
 		string terminal_output = helpers::terminal_stdout( command );
+	}
+
+	auto one_line_parser( string string_to_parse ) {
+		string tmp_string_buffer = "";
+		string tmp_key = "";
+		map<string, string> request_tuple;
+		bool ignore = false;
+		bool safe = false;
+		for(auto i : string_to_parse) {
+			if(i == 'n' and safe and ignore) {
+				tmp_string_buffer += '\n';
+				safe = false;
+				continue;
+			}
+			if(i == '=' and !ignore) {
+				tmp_key = tmp_string_buffer;
+				tmp_string_buffer = "";
+				continue;
+			}
+			if(i == ',' and !ignore) {
+				request_tuple.insert(make_pair(tmp_key, tmp_string_buffer));
+				tmp_key = "";
+				tmp_string_buffer = "";
+				continue;
+			}
+			if(i == '"') {
+				ignore = !ignore;
+				continue;
+			}
+			if(i == '\\' and ignore) {
+				safe = true;
+				continue;
+			}
+			tmp_string_buffer += i;
+		}
+
+		if(!tmp_key.empty() and !tmp_string_buffer.empty()) {
+			request_tuple.insert(make_pair(tmp_key, tmp_string_buffer));
+		}
+
+		return request_tuple;
 	}
 }
 

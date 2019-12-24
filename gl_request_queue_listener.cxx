@@ -7,46 +7,6 @@
 #include <map>
 #include <vector>
 
-auto parser( string string_to_parse ) {
-	string tmp_string_buffer = "";
-	string tmp_key = "";
-	map<string, string> request_tuple;
-	bool ignore = false;
-	bool safe = false;
-	for(auto i : string_to_parse) {
-		if(i == 'n' and safe and ignore) {
-			tmp_string_buffer += '\n';
-			safe = false;
-			continue;
-		}
-		if(i == '=' and !ignore) {
-			tmp_key = tmp_string_buffer;
-			tmp_string_buffer = "";
-			continue;
-		}
-		if(i == ',' and !ignore) {
-			request_tuple.insert(make_pair(tmp_key, tmp_string_buffer));
-			tmp_key = "";
-			tmp_string_buffer = "";
-			continue;
-		}
-		if(i == '"') {
-			ignore = !ignore;
-			continue;
-		}
-		if(i == '\\' and ignore) {
-			safe = true;
-			continue;
-		}
-		tmp_string_buffer += i;
-	}
-
-	if(!tmp_key.empty() and !tmp_string_buffer.empty()) {
-		request_tuple.insert(make_pair(tmp_key, tmp_string_buffer));
-	}
-
-	return request_tuple;
-}
 
 
 
@@ -86,7 +46,7 @@ vector<map<string,string>> dequeue_from_request_file( string path_request_file )
 	for( auto tmp_ln_buffer : helpers::read_file( path_request_file )) {
 		if(tmp_ln_buffer.empty() or tmp_ln_buffer[0] == '#') continue;
 
-		map<string,string> request_tuple = parser( tmp_ln_buffer);
+		map<string,string> request_tuple = helpers::one_line_parser( tmp_ln_buffer);
 		if( !request_tuple.empty()) 
 			request_tuple_container.push_back(request_tuple);
 	}
