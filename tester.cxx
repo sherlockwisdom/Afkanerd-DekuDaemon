@@ -79,6 +79,7 @@ int main() {
 					       string isp = it_isp_distribution_data->first;
 					       map<string,string> request = it_isp_distribution_data->second[0];
 					       
+					       cout << "\nTesting=> mapper keys for message and number..." << endl;
 					       if( request.find("message") != request.end() ) {
 						       cout << "Testing=> Passed..." << endl;
 						       cout << "Message key found..." << endl;
@@ -89,6 +90,7 @@ int main() {
 							       string message = request["message"];
 							       string number = request["number"];
 
+							       cout << "\nTesting=> Testing if mapped items actually match what's required...." << endl;
 							       if( helpers::unescape_string( message ) == helpers::unescape_string( sample_single_message ) ) {
 								       cout << "Testing=> Passed..." << endl;
 								       cout << "Message distributed matches requested message..." << endl;
@@ -117,9 +119,14 @@ int main() {
 						       cout << "Message key not found..." << endl;
 						}
 
+					       cout << "\nTesting if ISP is extracted correctly..." << endl;
 					       if( isp == "unknown" ) {
 						       cout << "Testing=> Passed..." << endl;
 						       cout << "ISP matches test ISP..." << endl;
+						}
+					       else {
+						       cout << "Testing=> Failed..." << endl;
+						       cout << "ISP doesn't match test ISP..." << endl;
 						}
 				       }
 				       else {
