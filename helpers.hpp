@@ -41,7 +41,7 @@ namespace helpers {
 	void make_dir( string path_dirname ) {
 		string func_name = "make_dir";
 		if( mkdir( path_dirname.c_str(), 0777 ) == -1) {
-			logger_errno( errno );
+			if( errno != 17 ) logger_errno( errno );
 		}
 		
 		return;
