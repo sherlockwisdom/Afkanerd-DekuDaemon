@@ -47,26 +47,6 @@ auto parser( string string_to_parse ) {
 
 
 
-map<string, vector<map<string,string>>> determine_isp_for_request(vector<map<string,string>> request_tuple_container) {
-	string func_name = "determine_isp_for_request" ;
-	map<string,vector<map<string,string>>> isp_sorted_request_container; //ISP=>container of messages
-	for(int i=0;i<request_tuple_container.size();++i) {
-		map<string, string> request = request_tuple_container[i];
-		string number= request["number"];
-		string isp = helpers::ISPFinder(number); //TODO: Make ISP finder a config file, not code - parser pending
-		if(!isp.empty()) {
-			isp_sorted_request_container[isp].push_back(request);
-		}
-		else {
-			helpers::logger( func_name, "Could not determine ISP\n", "stderr" );
-			string message = request["message"];
-			string number = request["number"];
-			isp_sorted_request_container["unknown"].push_back( request );
-		}
-	}
-
-	return isp_sorted_request_container;
-}
 
 
 
@@ -187,4 +167,25 @@ vector<map<string,string>> dequeue_from_request_file( string path_request_file )
 			request_tuple_container.push_back(request_tuple);
 	}
 	return request_tuple_container;
+}
+
+map<string, vector<map<string,string>>> determine_isp_for_request(vector<map<string,string>> request_tuple_container) {
+	string func_name = "determine_isp_for_request" ;
+	map<string,vector<map<string,string>>> isp_sorted_request_container; //ISP=>container of messages
+	for(int i=0;i<request_tuple_container.size();++i) {
+		map<string, string> request = request_tuple_container[i];
+		string number= request["number"];
+		string isp = helpers::ISPFinder(number); //TODO: Make ISP finder a config file, not code - parser pending
+		if(!isp.empty()) {
+			isp_sorted_request_container[isp].push_back(request);
+		}
+		else {
+			helpers::logger( func_name, "Could not determine ISP\n", "stderr" );
+			string message = request["message"];
+			string number = request["number"];
+			isp_sorted_request_container["unknown"].push_back( request );
+		}
+	}
+
+	return isp_sorted_request_container;
 }
