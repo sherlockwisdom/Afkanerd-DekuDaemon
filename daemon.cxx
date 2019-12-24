@@ -47,7 +47,14 @@ int main( int argc, char** argv ) {
 		}
 		
 		else if( arg == "--start" ) start_daemon = true;
+
+		else if( arg == "--state" ) {
+			logger::show_state = argv[i+1];
+			++i;
+		}
 	}
+
+	//TODO: show some information about the state the system is running in
 
 	if( !start_daemon ) return 0;
 
