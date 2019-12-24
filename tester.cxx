@@ -7,7 +7,9 @@ using namespace std;
 
 
 string test_request_file = string( getenv("HOME")) + "/deku/test_request.txt";
-string sample_request_string = "number=0000000,message=\"sample request\nmessage\"";
+string sample_single_message = "sample request\nmessage";
+string sample_single_number = "0000000";
+string sample_request_string = "number=" + sample_single_number + ",message=\"" + sample_single_message + "\"";
 
 int main() {
 	CURRENT_SYSTEM_STATE = "TESTING";
@@ -73,6 +75,51 @@ int main() {
 					       cout << "Number of request in memory matches number of request in file" << endl;
 					       //TODO: ISP Distribution
 					       map<string, vector<map<string,string>>> isp_distribution_data = determine_isp_for_request( dequeued_request);
+					       auto it_isp_distribution_data = isp_distribution_data.begin();
+					       string isp = it_isp_distribution_data->first;
+					       map<string,string> request = it_isp_distribution_data->first[0];
+					       
+					       if( request.find("message") != request.end() ) {
+						       cout << "Testing=> Passed..." << endl;
+						       cout << "Message key found..." << endl;
+						       if( request.find( "number") != request.end() ) {
+							       cout << "Testing=> Passed..." << endl;
+							       cout << "Number key found..." << endl;
+
+							       string message = request["message"];
+							       string number = request["number"];
+
+							       if( helpers::unescape_string( message ) == helpers::unescape_string( sample_single_message ) ) {
+								       cout << "Testing=> Passed..." << endl;
+								       cout < "Message distributed matches requested message..." << endl;
+								       
+								       if( sample_single_number == number) {
+									       cout << "Testing=> Passed..." << endl;
+									       cout << "Number distributed matches requested number..." << endl;
+									}
+								       else {
+									       cout << "Testing=> Failed..." << endl;
+									       cout << "Number distributed doesn't match requested number..." << endl;
+									}
+								}
+							       else {
+								       cout << "Testing=> Failed..." << endl;
+								       cout << "Message distributed doesn't match requested message..." << endl;
+								}
+							}
+						       else {
+							       cout << "Testing=> Failed..." << endl;
+							       cout << "Number key not found..." << endl;
+							}
+						}
+					       else {
+						       cout << "Testing=> Failed..." << endl; 
+						       cout << "Message key not found..." << endl;
+						}
+
+					       if( isp == "unknown" ) {
+						       cout << "Testing=> Passed..." << endl;
+						       cout << "ISP matches test ISP..." << endl;
 				       }
 				       else {
 					       cout << "Testing=> Failed..." << endl;
