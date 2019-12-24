@@ -55,8 +55,8 @@ int main( int argc, char** argv ) {
 		return 1;
 	}
 
-	while( 1 ) {
-		gl_request_queue_listener( SYS_REQUEST_FILE );	
+	std::thread start_services( daemon_function_for_threading );
+	start_services.join();
 
 	//std::thread tr_modem_listener(gl_modem_listener, "Master Modem Listener");
 

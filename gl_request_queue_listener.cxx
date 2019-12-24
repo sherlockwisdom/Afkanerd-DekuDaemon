@@ -74,8 +74,8 @@ map<string, string> gl_request_queue_listener( string path_request_file ) {
 	/// Checks if file is available at path
 	if( struct stat buffer; stat(path_request_file.c_str(), &buffer) == -1) {
 		/// cout << func_name << "=> no request file, thus no request yet..." << endl;
-		helpers::logger_errno( errno ) ;
 		helpers::logger(func_name, "no request file, thus no request yet\n", "stdout");
+		helpers::logger_errno( errno ) ;
 		return processed_request;
 	}
 
@@ -90,7 +90,8 @@ map<string, string> gl_request_queue_listener( string path_request_file ) {
 	vector<string> request = helpers::read_file( tmp_rand_filename );
 	helpers::logger(func_name, to_string( request.size() ) + " requested\n", "stdout", true);
 
-	processed_request.insert(make_pair( tmp_rand_filename, request[0] ) ); //XXX: Always 1 request per file
+	for( auto s_request : request) 
+		processed_request.insert(make_pair( tmp_rand_filename, s_request ) ); //XXX: Always 1 request per file
 	
 	return processed_request;
 }
@@ -124,4 +125,18 @@ map<string, vector<map<string,string>>> determine_isp_for_request(vector<map<str
 	}
 
 	return isp_sorted_request_container;
+}
+
+void daemon_function_for_threading() {
+	string func_name = "daemon_function_for_threading";
+	auto incoming_request = gl_request_queue_listener( SYS_REQUEST_FILE ); //map<string,string> filename, message
+	for( auto request : incoming_request ) {
+		string request_filename = request.first;
+		//vector<map<string,string>> dequeued_request = dequeue_from_request_file( filename );
+		map<string, vector<map<string,string>>> isp_for_request = determine_isp_for_request ( dequeue_from_request_file( request_filename ) );
+		
+		for( auto stats_request : isp_for_request ) {
+			helpers::logger( func_name, stats_request.first + " = " + to_string( stats_request.second.size() ) + "\n" );
+		}
+	}
 }
