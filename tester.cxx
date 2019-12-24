@@ -77,7 +77,7 @@ int main() {
 					       map<string, vector<map<string,string>>> isp_distribution_data = determine_isp_for_request( dequeued_request);
 					       auto it_isp_distribution_data = isp_distribution_data.begin();
 					       string isp = it_isp_distribution_data->first;
-					       map<string,string> request = it_isp_distribution_data->first[0];
+					       map<string,string> request = it_isp_distribution_data->second[0];
 					       
 					       if( request.find("message") != request.end() ) {
 						       cout << "Testing=> Passed..." << endl;
@@ -91,7 +91,7 @@ int main() {
 
 							       if( helpers::unescape_string( message ) == helpers::unescape_string( sample_single_message ) ) {
 								       cout << "Testing=> Passed..." << endl;
-								       cout < "Message distributed matches requested message..." << endl;
+								       cout << "Message distributed matches requested message..." << endl;
 								       
 								       if( sample_single_number == number) {
 									       cout << "Testing=> Passed..." << endl;
@@ -120,6 +120,7 @@ int main() {
 					       if( isp == "unknown" ) {
 						       cout << "Testing=> Passed..." << endl;
 						       cout << "ISP matches test ISP..." << endl;
+						}
 				       }
 				       else {
 					       cout << "Testing=> Failed..." << endl;
