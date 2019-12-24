@@ -14,7 +14,6 @@ auto parser( string string_to_parse ) {
 	bool ignore = false;
 	bool safe = false;
 	for(auto i : string_to_parse) {
-		//XXX: checks for seperator
 		if(i == 'n' and safe and ignore) {
 			tmp_string_buffer += '\n';
 			safe = false;
