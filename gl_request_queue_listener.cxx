@@ -45,25 +45,7 @@ auto parser( string string_to_parse ) {
 	return request_tuple;
 }
 
-void curl_server( string TCP_HOST, string TCP_PORT, string URL, string message) {
-	string func_name = "curl_server";
-	string command = "curl -X POST -H \"Content-Type: text/plain\" " + TCP_HOST + ":" + TCP_PORT + "/" + URL + " -d \"" + message + "\"";
-	cout << func_name << "=> command [" << command << "]" << endl;
-	string terminal_output = helpers::terminal_stdout( command );
-}
 
-void isp_distribution(string isp, vector<map<string, string>> isp_request) {
-	string func_name = "isp_distribution";
-	helpers::make_dir( SYS_ISP_DISTRIBUTION + "/" + helpers::to_upper( isp ) );	
-	for(auto request : isp_request ) {
-		map<string, string> s_request = request;
-		string filename = helpers::random_string();
-		string message = request["message"];
-		string number = request["number"];
-		string c_request = number + "\n" + message;
-		helpers::write_file( SYS_ISP_DISTRIBUTION + "/" + helpers::to_upper( isp ) + "/" + filename, c_request, ios::trunc);
-	}
-}
 
 /// Listens to the request file for incoming queues
 /// Input = filename, output = <stats for processed request>
@@ -127,6 +109,20 @@ map<string, vector<map<string,string>>> determine_isp_for_request(vector<map<str
 	return isp_sorted_request_container;
 }
 
+
+void isp_distribution(string isp, vector<map<string, string>> isp_request) {
+	string func_name = "isp_distribution";
+	helpers::make_dir( SYS_ISP_DISTRIBUTION + "/" + helpers::to_upper( isp ) );	
+	for(auto request : isp_request ) {
+		map<string, string> s_request = request;
+		string filename = helpers::random_string();
+		string message = request["message"];
+		string number = request["number"];
+		string c_request = number + "\n" + message;
+		helpers::write_file( SYS_ISP_DISTRIBUTION + "/" + helpers::to_upper( isp ) + "/" + filename, c_request, ios::trunc);
+	}
+}
+
 void daemon_function_for_threading() {
 	string func_name = "daemon_function_for_threading";
 	auto incoming_request = gl_request_queue_listener( SYS_REQUEST_FILE ); //map<string,string> filename, message
@@ -137,6 +133,7 @@ void daemon_function_for_threading() {
 		
 		for( auto stats_request : isp_for_request ) {
 			helpers::logger( func_name, stats_request.first + " = " + to_string( stats_request.second.size() ) + "\n" );
+			isp_distribution( stats_request.first, stats_request.second );
 		}
 	}
 }

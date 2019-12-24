@@ -248,6 +248,14 @@ namespace helpers {
 		job_write << number << "\n" << remove_carriage( message );
 		job_write.close();
 	}
+
+
+	void curl_server( string TCP_HOST, string TCP_PORT, string URL, string message) {
+		string func_name = "curl_server";
+		string command = "curl -X POST -H \"Content-Type: text/plain\" " + TCP_HOST + ":" + TCP_PORT + "/" + URL + " -d \"" + message + "\"";
+		cout << func_name << "=> command [" << command << "]" << endl;
+		string terminal_output = helpers::terminal_stdout( command );
+	}
 }
 
 #endif
