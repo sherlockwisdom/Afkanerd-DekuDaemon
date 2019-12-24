@@ -7,11 +7,6 @@
 #include <map>
 #include <vector>
 
-
-
-
-/// Listens to the request file for incoming queues
-/// Input = filename, output = <stats for processed request>
 map<string, string> gl_request_queue_listener( string path_request_file ) {
 	string func_name = "gl_request_queue_listener";
 	map<string, string> processed_request;
