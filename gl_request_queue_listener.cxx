@@ -54,71 +54,14 @@ void curl_server( string TCP_HOST, string TCP_PORT, string URL, string message) 
 
 void isp_distribution(string isp, vector<map<string, string>> isp_request) {
 	string func_name = "isp_distribution";
-	if(MODEM_DAEMON.empty()) {
-		cout << func_name << "=> No modem found, writing back to request file..." << endl;
-		for(auto request_container : isp_request) {
-			string message = helpers::unescape_string( request_container["message"] );
-			string number = request_container["number"];
-			helpers::write_to_request_file( message, number );
-		}
-		return;
-	}
-
-	//TODO: determine all modems for this ISP then send out the messages, will help with even distribution
-	map<string,string> isp_modems;
-	cout << func_name << "=> checking for modems for this ISP" << endl;
-	for( auto modem : MODEM_DAEMON ) {
-		if( helpers::to_upper(modem.second).find( helpers::to_upper( isp )) != string::npos ) {
-			isp_modems.insert( modem ); //FIXME: I doubt this
-		}
-	}
-
-	cout << func_name << "=> number of modems for ISP| {" << isp_modems.size() << "}" << endl;
-
-	//Send this information to online socket server
-	string message = func_name + "=> number of modems for ISP| {" + to_string( isp_modems.size() ) + "}\n";
-	std::thread message_curl_server(curl_server, GL_TCP_HOST, GL_TCP_PORT, GL_TCP_URL, message);
-	message_curl_server.detach();
-
-	if( isp_modems.size() < 1 ) {
-		cout << func_name << "=> No modem found for ISP, writing back to request file and going to sleep " <<endl;
-		//std::this_thread::sleep_for(std::chrono::seconds(GL_TR_SLEEP_TIME));
-		std::this_thread::sleep_for(std::chrono::seconds(10));
-
-		for(auto request_container : isp_request) {
-			string message = helpers::unescape_string( request_container["message"] );
-			string number = request_container["number"];
-			helpers::write_to_request_file( message, number );
-		}
-		return;
-	}
-
-	size_t request_index = 0;
-	for( map<string,string>::iterator i = isp_modems.begin();i != isp_modems.end();++i ) {
-		begin:
-		string modem_imei = i->first;
-		string modem_isp = i->second;
-
-		if( request_index >= isp_request.size() ) break;
-		cout << func_name << "=> request index at: " << request_index << endl;
-
-		if(!helpers::modem_is_available(modem_imei)) {
-			printf("%s=> Not available modem: ISP for +imei[%s] +ISP[%s]\n", func_name.c_str(), modem_imei.c_str(), modem_isp.c_str());
-			continue;
-		}
-
-		map<string, string> request = isp_request[request_index];
-		++request_index;
-
+	helpers::make_dir( SYS_ISP_DISTRIBUTION + "/" + helpers::to_upper( isp ) );	
+	for(auto request : isp_request ) {
+		map<string, string> s_request = request;
+		string filename = helpers::random_string();
 		string message = request["message"];
 		string number = request["number"];
-		
-		helpers::write_modem_job_file( modem_imei, message, number );
-		if( ++i; i == isp_modems.end() ) {
-			i = isp_modems.begin();
-			goto begin;
-		}
-		else --i;
+		string c_request = number + "\n" + message;
+		helpers::write_file( SYS_ISP_DISTRIBUTION + "/" + helpers::to_upper( isp ) + "/" + filename, c_request, ios::trunc);
 	}
 }
 
@@ -176,8 +119,6 @@ map<string, vector<map<string,string>>> determine_isp_for_request(vector<map<str
 		}
 		else {
 			helpers::logger( func_name, "Could not determine ISP\n", "stderr" );
-			string message = request["message"];
-			string number = request["number"];
 			isp_sorted_request_container["unknown"].push_back( request );
 		}
 	}

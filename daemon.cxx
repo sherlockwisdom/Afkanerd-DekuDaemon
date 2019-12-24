@@ -12,8 +12,8 @@ bool check_system_folders() {
 		return false;
 	}
 
-	result = mkdir(SYS_FOLDER_MODEMS.c_str(), STD_DIR_MODE);
-	if(result == 0 || errno == EEXIST) cout << "check_system_folder=> $HOME/deku/modems = DONE" << endl;
+	result = mkdir(SYS_ISP_DISTRIBUTION.c_str(), STD_DIR_MODE);
+	if(result == 0 || errno == EEXIST) cout << "check_system_folder=> " << SYS_ISP_DISTRIBUTION<< " = DONE" << endl;
 	else {
 		char str_error[256];
 		string error_message = strerror_r( errno, str_error, 256);
@@ -55,12 +55,15 @@ int main( int argc, char** argv ) {
 		return 1;
 	}
 
-	std::thread tr_modem_listener(gl_modem_listener, "Master Modem Listener");
+	while( 1 ) {
+		gl_request_queue_listener( SYS_REQUEST_FILE );	
 
-	std::thread tr_request_listener(gl_request_queue_listener, "Request Queue Listener");
+	//std::thread tr_modem_listener(gl_modem_listener, "Master Modem Listener");
 
-	tr_modem_listener.join();
-	tr_request_listener.join();
+	//std::thread tr_request_listener(gl_request_queue_listener, "Request Queue Listener");
+
+	//tr_modem_listener.join();
+	//tr_request_listener.join();
 			
 	return 0;
 }

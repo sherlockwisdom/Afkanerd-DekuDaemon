@@ -34,6 +34,7 @@ string GL_TCP_URL = "deku_daemon/message";
 string ENV_HOME = getenv("HOME");
 string SYS_FOLDER = ENV_HOME + "/deku";
 string SYS_FOLDER_MODEMS = SYS_FOLDER + "/modems";
+string SYS_ISP_DISTRIBUTION = SYS_FOLDER + "/isp_load_distribution";
 string SYS_REQUEST_FILE = SYS_FOLDER + "/request_queue.dat";
 string SYS_JOB_FILE = SYS_FOLDER + "/current_job.dat";
 

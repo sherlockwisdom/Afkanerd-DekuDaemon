@@ -13,5 +13,6 @@ string sample_request_string = "number=" + sample_single_number + ",message=\"" 
 
 int main() {
 
+	helpers::make_dir( "load_distribution" );
 	return 0;
 }

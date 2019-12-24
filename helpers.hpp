@@ -38,6 +38,14 @@ namespace helpers {
 		cout << "[logger_errno] - MESSAGE: " << error_message << "=> " << endl;
 	}
 
+	void make_dir( string path_dirname ) {
+		string func_name = "make_dir";
+		if( mkdir( path_dirname.c_str(), 0777 ) == -1) {
+			logger_errno( errno );
+		}
+		
+		return;
+	}
 	void write_file( string path_filename, auto input, bool b_unescape_string, ios_base::openmode mode = ios::app ) { //TODO: what about auto
 		if( b_unescape_string ) input = unescape_string( input );
 		ofstream writefile( path_filename.c_str(), mode );
