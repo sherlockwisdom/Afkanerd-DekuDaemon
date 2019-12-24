@@ -2,14 +2,9 @@
 #define DECLARATIONS_H_INCLUDED_
 
 #include <iostream>
-#include <thread>
 #include <cstdio> //Testing if threads work in same dir
 #include <vector>
 #include <chrono>
-#include <stdio.h>
-#include <sys/stat.h> //mkdir
-#include <errno.h>
-#include <string.h>
 #include <map>
 #include <fstream>
 #include <string>

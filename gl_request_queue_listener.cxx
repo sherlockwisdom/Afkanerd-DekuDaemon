@@ -1,7 +1,11 @@
 /* THREAD LISTENING FOR INCOMING REQUEST */
 
+#include "helpers.hpp"
+#include "logger.hpp"
 #include "declarations.hpp"
 
+#include <map>
+#include <vector>
 
 auto parser( string string_to_parse ) {
 	string tmp_string_buffer = "";
@@ -56,21 +60,21 @@ map<string, string> gl_request_queue_listener( string path_request_file ) {
 	/// Checks if file is available at path
 	if( struct stat buffer; stat(path_request_file.c_str(), &buffer) == -1) {
 		/// cout << func_name << "=> no request file, thus no request yet..." << endl;
-		helpers::logger(func_name, "no request file, thus no request yet\n", "stdout");
-		helpers::logger_errno( errno ) ;
+		logger::logger(func_name, "no request file, thus no request yet\n", "stdout");
+		logger::logger_errno( errno ) ;
 		return processed_request;
 	}
 
 	string tmp_rand_filename = "tmp/" + helpers::random_string(); //TODO, move dir to global dir
 
 	if( rename( path_request_file.c_str() , tmp_rand_filename.c_str() ) == -1) {
-		helpers::logger(func_name, "random request filename: " + tmp_rand_filename +"\n");
-		helpers::logger_errno( errno );
+		logger::logger(func_name, "random request filename: " + tmp_rand_filename +"\n");
+		logger::logger_errno( errno );
 		return processed_request;
 	}
 
 	vector<string> request = helpers::read_file( tmp_rand_filename );
-	helpers::logger(func_name, to_string( request.size() ) + " requested\n", "stdout", true);
+	logger::logger(func_name, to_string( request.size() ) + " requested\n", "stdout", true);
 
 	for( auto s_request : request) 
 		processed_request.insert(make_pair( tmp_rand_filename, s_request ) ); //XXX: Always 1 request per file
@@ -101,7 +105,7 @@ map<string, vector<map<string,string>>> determine_isp_for_request(vector<map<str
 			isp_sorted_request_container[isp].push_back(request);
 		}
 		else {
-			helpers::logger( func_name, "Could not determine ISP\n", "stderr" );
+			logger::logger( func_name, "Could not determine ISP\n", "stderr" );
 			isp_sorted_request_container["unknown"].push_back( request );
 		}
 	}
@@ -132,7 +136,7 @@ void daemon_function_for_threading() {
 		map<string, vector<map<string,string>>> isp_for_request = determine_isp_for_request ( dequeue_from_request_file( request_filename ) );
 		
 		for( auto stats_request : isp_for_request ) {
-			helpers::logger( func_name, stats_request.first + " = " + to_string( stats_request.second.size() ) + "\n" );
+			logger::logger( func_name, stats_request.first + " = " + to_string( stats_request.second.size() ) + "\n" );
 			isp_distribution( stats_request.first, stats_request.second );
 		}
 	}

@@ -2,7 +2,9 @@
 #define HELPERS_H_INCLUDED_
 #include <algorithm>
 #include <random>
-#include "declarations.hpp"
+#include <fstream>
+#include <thread>
+#include "logger.hpp"
 using namespace std;
 
 namespace helpers {
@@ -17,31 +19,10 @@ namespace helpers {
 	}
 
 
-	void logger( string func_name, string output, string output_stream = "stdout", bool show_production = false) {
-		if( (output.empty() || CURRENT_SYSTEM_STATE == "production" || CURRENT_SYSTEM_STATE == "PRODUCTION") and !show_production) return;
-
-		if( output_stream == "stdout" || output_stream == "STDOUT" ) {
-			cout << "[logger.info] - " << func_name << "=> " << output;
-		}
-		else if( output_stream == "stderr" || output_stream == "STDERR" ) {
-			cerr << "[logger.error] - " << func_name << "=> " << output;
-		}
-
-		else cerr << "[logger.error] - LOGGER DOESN'T HAVE THAT STATE YET" << endl;
-	}
-
-
-	void logger_errno( int t_errno ) {
-		char str_error[256];
-		string error_message = strerror_r( t_errno, str_error, 256);
-		cout << "[logger_errno] - ERRNO: " << t_errno << endl;
-		cout << "[logger_errno] - MESSAGE: " << error_message << "=> " << endl;
-	}
-
 	void make_dir( string path_dirname ) {
 		string func_name = "make_dir";
 		if( mkdir( path_dirname.c_str(), 0777 ) == -1) {
-			if( errno != 17 ) logger_errno( errno );
+			if( errno != 17 ) logger::logger_errno( errno );
 		}
 		
 		return;
@@ -175,7 +156,6 @@ namespace helpers {
 		return str;
 	}
 
-
 	//Customized just to work for those needing tools to continue working on deku
 	bool modem_is_available(string modem_imei) {
 		string list_of_modem_indexes = helpers::terminal_stdout("./modem_information_extraction.sh list");
@@ -192,27 +172,6 @@ namespace helpers {
 		return false;
 	}
 
-	//TODO: Make work load checking functional
-	int read_log_calculate_work_load(string modem_path) {
-		string func_name = "Read Log Calculate Workload";
-		//cout << func_name << "=> started calculating work load" << endl;
-		ifstream modem_log_read(modem_path.c_str());
-		//XXX: Assumption is the file is good if it's passed in here
-		string tmp_buffer;
-		int total_count = 0;
-		while(getline(modem_log_read, tmp_buffer)) {
-			//XXX: timestamp:count
-			string timestamp = helpers::split(tmp_buffer, ':', true)[0];
-			string count = helpers::split(tmp_buffer, ':', true)[1];
-			total_count += atoi(count.c_str());
-		}
-		modem_log_read.close();
-		//cout << func_name << "=> calculating work load ended..." << endl;
-		return total_count;
-	}
-
-
-
 	string remove_carriage( string input, char location = 'B' ) {
 		//TODO: Make location determine where it takes the input file from
 		size_t space_location = input.find('\n');
@@ -223,32 +182,6 @@ namespace helpers {
 
 		return input;
 	}
-
-	void write_to_request_file( string message, string number ) {
-		string func_name = "write_to_request_file";
-		if( message.empty() or number.empty() ) return;
-		ofstream write_to_request_file(SYS_REQUEST_FILE, ios::app);
-		printf("%s=> message[%s] : number [%s]\n", func_name.c_str(), message.c_str(), number.c_str());
-		write_to_request_file << "number=" << number << ",message=\"" << unescape_string( remove_carriage( message )) << "\"" << endl;
-		write_to_request_file.close();	
-	}
-
-
-	void write_modem_job_file( string modem_imei, string message, string number ) {
-		if( message.empty() or number.empty() ) return;
-		string func_name = "write_modem_job_file";
-		printf("%s=> \tJob for modem with info: IMEI: %s\n", func_name.c_str(), modem_imei.c_str());
-
-		string rand_filename = helpers::random_string();
-		rand_filename = rand_filename.erase(rand_filename.size() -1, 1);
-		rand_filename += ".jb";
-
-		printf("%s=> \tCreating job with filename - %s\n", func_name.c_str(), rand_filename.c_str());
-		ofstream job_write((char*)(SYS_FOLDER_MODEMS + "/" + modem_imei + "/" + rand_filename).c_str());
-		job_write << number << "\n" << remove_carriage( message );
-		job_write.close();
-	}
-
 
 	void curl_server( string TCP_HOST, string TCP_PORT, string URL, string message) {
 		string func_name = "curl_server";
