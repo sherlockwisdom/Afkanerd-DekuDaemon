@@ -45,11 +45,6 @@ auto parser( string string_to_parse ) {
 	return request_tuple;
 }
 
-
-
-
-
-
 void curl_server( string TCP_HOST, string TCP_PORT, string URL, string message) {
 	string func_name = "curl_server";
 	string command = "curl -X POST -H \"Content-Type: text/plain\" " + TCP_HOST + ":" + TCP_PORT + "/" + URL + " -d \"" + message + "\"";
