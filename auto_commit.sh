@@ -8,5 +8,5 @@ git commit -m "$COMMIT_MESSAGE"
 
 if make
 	git push origin master
-	echo "Pushed successfully!"
+	echo "Pushed successfully"
 fi
