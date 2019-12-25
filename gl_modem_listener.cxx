@@ -6,9 +6,6 @@ void write_for_urgent_transmission(string,string,string);
 
 using namespace std;
 /*
-bool is_ssh_modem( string ip ) {
-	return ip.find( GL_SSH_IP_GATEWAY ) != string::npos;
-}
 
 void modem_cleanse( string imei ) {
 	map<string,string>::iterator it_modem_daemon = MODEM_DAEMON.find(imei);
@@ -343,6 +340,9 @@ void modem_extractor(string func_name, string modem_index ) {
 
 */
 
+bool is_ssh_modem( string ip ) {
+	return ip.find( GL_SSH_IP_GATEWAY ) != string::npos;
+}
 
 string modem_information_extraction( string arg ) {
 	string func_name = "modem_information_extraction";
@@ -351,7 +351,11 @@ string modem_information_extraction( string arg ) {
 	logger::logger(func_name, ex_command + "\n");
 
 	return ex_command;
-}	
+}
+
+string get_modem_type( string modem_index ) {
+	return is_ssh( modem_index ) ? "ssh" : "mmcli";
+}
 
 vector<map<string,string>> gl_modem_listener( ) {
 	string func_name = "gl_modem_listener";
@@ -367,7 +371,10 @@ vector<map<string,string>> gl_modem_listener( ) {
 	else {
 		vector<string> modem_indexes = helpers::split( str_stdout, '\n', true);
 		for( auto modem_index : modem_indexes ) {
-			map<string,string> modem_information = {{"index", modem_index }};
+			map<string,string> modem_information = {
+				{"index", modem_index},
+				{"type", get_modem_type( modem_index )}
+			};
 			
 			list_of_modems.push_back( modem_information );
 		}
