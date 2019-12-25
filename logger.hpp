@@ -32,6 +32,20 @@ namespace logger {
 		cout << "[logger_errno] - ERRNO: " << t_errno << endl;
 		cout << "[logger_errno] - MESSAGE: " << error_message << "=> " << endl;
 	}
+
+
+	void logger_tester( string func_name, string output, string output_stream = "stdout" ) {
+		if( output.empty() ) return;
+
+		if( output_stream == "stdout" || output_stream == "STDOUT" ) {
+			cout << "[tester.info] - " << func_name << "=> " << std::boolalpha << output;
+		}
+		else if( output_stream == "stderr" || output_stream == "STDERR" ) {
+			cerr << "[tester.error] - " << func_name << "=> " << std::boolalpha << output;
+		}
+
+		else cerr << "[tester.error] - LOGGER DOESN'T HAVE THAT STATE YET" << endl;
+	}
 }
 
 

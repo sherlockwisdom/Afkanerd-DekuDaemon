@@ -4,7 +4,7 @@ bool ssh_send(string,string,string);
 void write_for_urgent_transmission(string,string,string);
 
 using namespace std;
-
+/*
 bool is_ssh_modem( string ip ) {
 	return ip.find( GL_SSH_IP_GATEWAY ) != string::npos;
 }
@@ -340,9 +340,11 @@ void modem_extractor(string func_name, string modem_index ) {
 	}
 }
 
+*/
+
 
 string modem_information_extraction( string arg ) {
-	string ex_command = MODEM_INFORMATION_EXTRACTION[ SYSTEM_STATE ];
+	string ex_command = MODEM_INFORMATION_EXTRACTION_SCRIPT[ SYSTEM_STATE ];
 	return ex_command + " " + arg;
 }	
 

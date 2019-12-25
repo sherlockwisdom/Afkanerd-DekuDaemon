@@ -20,6 +20,8 @@ map<string,string> MODEM_INFORMATION_EXTRACTION_SCRIPT = {
 	{"PRODUCTION", "./modem_information_extraction.sh"}
 };
 
+string SYSTEM_STATE = "DEVELOPMENT";
+
 /* GLOBAL SYSTEM DECLARATIONS */
 bool GL_MODEM_LISTENER_STATE = true;
 bool GL_SYSTEM_READY = false;
