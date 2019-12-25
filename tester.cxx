@@ -31,7 +31,7 @@ int main() {
 	size_t s_list_of_modems = list_of_modems.size();
 	int expected_value = 2;
 	logger::logger_tester("Tester", size_t_tester.equal_values( s_list_of_modems, expected_value ) );
-	logger::logger(func_name, "\nvalue1: " + to_string( s_list_of_modems ) + "\nvalue2: " + to_string( expected_value ) + "\n");
+	logger::logger("Tester", "\nvalue1: " + to_string( s_list_of_modems ) + "\nvalue2: " + to_string( expected_value ) + "\n");
 
 	return 0;
 }

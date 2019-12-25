@@ -358,32 +358,15 @@ vector<map<string,string>> gl_modem_listener( ) {
 	vector<map<string,string>> list_of_modems;
 
 	string str_stdout = helpers::terminal_stdout( modem_information_extraction( "list" ));
+	logger::logger( func_name, str_stdout );
 
 	if(str_stdout.empty()) {
 		logger::logger(func_name, "No modems found!", "stderr" );
 		return list_of_modems;
 	}
 	else {
-		/*
-		vector<string> modem_indexes = helpers::split(str_stdout, '\n', true);
-		logger::logger(func_name, "[" + to_string(modem_indexes.size()) + "] modems found");
-		for(auto i : modem_indexes) {
-			try {
-				if( is_ssh_modem( i )) {
-					printf("%s=> found SSH MODEM :[%s]\n", func_name.c_str(), i.c_str());
-					std::thread tr_ssh_extractor(ssh_extractor, i);
-					tr_ssh_extractor.detach();
-					continue;
-				}
-				
-				std::thread tr_modem_extractor(modem_extractor, "Modem Extractor", i);
-				tr_modem_extractor.detach();
+		vector<string> modem_indexes = helpers::split( str_stdout, "\n" );
 
-			}
-			catch(exception& exception) {
-				cout << func_name << "=> exception thrown here: " << exception.what() << endl;
-			}
-		}*/
 	}
 
 	return list_of_modems;
