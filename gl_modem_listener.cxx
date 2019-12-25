@@ -370,7 +370,8 @@ vector<map<string,string>> gl_modem_listener( ) {
 	}
 	else {
 		vector<string> modem_indexes = helpers::split( str_stdout, '\n', true);
-		for( auto modem_index : modem_indexes ) {
+		for( auto& modem_index : modem_indexes ) {
+			modem_index = helpers::remove_char( modem_index, ' ', 'E');
 			map<string,string> modem_information = {
 				{"index", modem_index},
 				{"type", get_modem_type( modem_index )}
