@@ -27,7 +27,7 @@ string test_request_file = string( getenv("HOME")) + "/deku/test_request.txt";
 
 int main() {
 
-	SYSTEM_STATE = "TESTING";
+	SYSTEM_STATE = "DEVELOPMENT";
 	Test<size_t> size_t_tester;
 
 	auto list_of_modems = gl_modem_listener();
