@@ -341,48 +341,50 @@ void modem_extractor(string func_name, string modem_index ) {
 }
 
 
-void gl_modem_listener(string func_name) {
-	//XXX: Make sure only 1 instance of this thread is running always
-	cout << func_name << "=> listener called" << endl;
-	int iteration_counter = 0;
-	
-	while(GL_MODEM_LISTENER_STATE) {
-		string str_stdout = helpers::terminal_stdout("./modem_information_extraction.sh list");
-		//cout << func_name << "terminal_stdout: " << str_stdout << endl;
+string modem_information_extraction( string arg ) {
+	string ex_command = MODEM_INFORMATION_EXTRACTION[ SYSTEM_STATE ];
+	return ex_command + " " + arg;
+}	
 
-		if(str_stdout.empty()) cout << func_name << "=> no modems found!" << endl;
-		else {
-			vector<string> modem_indexes = helpers::split(str_stdout, '\n', true);
-			//printf("%s=> found [%lu] modems...\n", func_name.c_str(), modem_indexes.size());
+vector<map<string,string>> gl_modem_listener( ) {
+	string func_name = "gl_modem_listener";
+	vector<map<string,string>> list_of_modems;
 
-			/* For each modem create modem folder, extract the information and store modem in MODEM_POOL */
-			//TODO: after each scan, make sure work is rightly distributed - use a margin
-			for(auto i : modem_indexes) {
-				//printf("%s=> working with index - %s\n", func_name.c_str(), i.c_str());
-				try {
-					if( is_ssh_modem( i )) {
-						printf("%s=> found SSH MODEM :[%s]\n", func_name.c_str(), i.c_str());
-						std::thread tr_ssh_extractor(ssh_extractor, i);
-						tr_ssh_extractor.detach();
-						continue;
-					}
-					
-					std::thread tr_modem_extractor(modem_extractor, "Modem Extractor", i);
-					tr_modem_extractor.detach();
+	string str_stdout = helpers::terminal_stdout( modem_information_extraction( "list" ));
 
-				}
-				catch(exception& exception) {
-					cout << func_name << "=> exception thrown here: " << exception.what() << endl;
-				}
-			}
-		}
-
-		//XXX: Sleep thread for some seconds
-		//cout << func_name << "=> sleeping thread..." << flush;
-		std::this_thread::sleep_for(std::chrono::seconds(10)); //XXX: Change this to a const isn't the best to have it as it is
-		++iteration_counter;
-		if(iteration_counter == 3) GL_SYSTEM_READY = true;
-		//MODEM_POOL.clear();
-		//cout << " [done]" << endl;
+	if(str_stdout.empty()) {
+		logger::logger(func_name, "No modems found!", "stderr" );
+		return list_of_modems;
 	}
+	else {
+		/*
+		vector<string> modem_indexes = helpers::split(str_stdout, '\n', true);
+		logger::logger(func_name, "[" + to_string(modem_indexes.size()) + "] modems found");
+		for(auto i : modem_indexes) {
+			try {
+				if( is_ssh_modem( i )) {
+					printf("%s=> found SSH MODEM :[%s]\n", func_name.c_str(), i.c_str());
+					std::thread tr_ssh_extractor(ssh_extractor, i);
+					tr_ssh_extractor.detach();
+					continue;
+				}
+				
+				std::thread tr_modem_extractor(modem_extractor, "Modem Extractor", i);
+				tr_modem_extractor.detach();
+
+			}
+			catch(exception& exception) {
+				cout << func_name << "=> exception thrown here: " << exception.what() << endl;
+			}
+		}*/
+	}
+
+	return list_of_modems;
 }
+
+/*
+void daemon_start_modem_listener() {
+	vector<map<string,string>> list_of_modems = gl_modem_listener();
+	
+}
+*/

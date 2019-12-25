@@ -14,7 +14,11 @@
 
 using namespace std;
 
-string CURRENT_SYSTEM_STATE = "development";
+map<string,string> MODEM_INFORMATION_EXTRACTION_SCRIPT = {
+	{"DEVELOPMENT", "./modem_information_extraction.sh"}, 
+	{"TESTING", "./modem_information_mimic.sh"},
+	{"PRODUCTION", "./modem_information_extraction.sh"}
+};
 
 /* GLOBAL SYSTEM DECLARATIONS */
 bool GL_MODEM_LISTENER_STATE = true;
