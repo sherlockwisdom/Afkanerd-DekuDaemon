@@ -34,7 +34,7 @@ namespace logger {
 	}
 
 
-	void logger_tester( string func_name, string output, string output_stream = "stdout" ) {
+	void logger_tester( string func_name, bool output, string output_stream = "stdout" ) {
 		if( output.empty() ) return;
 
 		if( output_stream == "stdout" || output_stream == "STDOUT" ) {

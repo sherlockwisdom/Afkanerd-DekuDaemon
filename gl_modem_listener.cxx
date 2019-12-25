@@ -1,4 +1,5 @@
 #include "helpers.hpp"
+#include "declarations.hpp"
 
 bool ssh_send(string,string,string);
 void write_for_urgent_transmission(string,string,string);

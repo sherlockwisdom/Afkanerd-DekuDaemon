@@ -22,9 +22,9 @@ string test_request_file = string( getenv("HOME")) + "/deku/test_request.txt";
 int main() {
 
 	SYSTEM_STATE = "TESTING";
-	Test<auto> test;
+	Test<size_t> size_t_tester;
 
 	auto list_of_modems = gl_modem_listener();
-	logger::logger_tester("Tester", test.equals_values( list_of_modems.size(), 2 ) );
+	logger::logger_tester("Tester", size_t_tester.equal_values( list_of_modems.size(), 2 ) );
 	return 0;
 }
