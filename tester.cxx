@@ -35,6 +35,36 @@ int main() {
 	if( !test) {
 		logger::logger("Tester", "\nvalue1: " + to_string( s_list_of_modems ) + "\nvalue2: " + to_string( expected_value ) + "\n");
 	}
+	else {
+		if( list_of_modems[0]["index"] == "0") {
+			logger::logger("Tester", "\nMMCLI Index matches");
+			
+			if( list_of_modems[1]["index"] == "192.168.8.1" ) {
+				logger::logger("Tester", "\nSSH index matches" );
+
+				if( list_of_modems[0]["type"] == "mmcli" ) {
+					logger::logger("Tester", "\nMMCLI type matches" );
+
+					if( list_of_modems[1]["type"] == "ssh" ) {
+						logger::logger("Tester", "\nSSH type matches" );
+					}
+					else {
+						logger::logger("Tester", "\nSSH type doesn't match", "stderr");
+					}
+				}
+				else {
+					logger::logger("Tester", "\nMMCLI type doesn't match", "stderr");
+				}
+			}
+			else {
+				logger::logger("Tester", "\nSSH index doesn't match", "stderr");
+			}
+		}
+		else {
+			logger::logger("Tester", "\nMMCLI index doesn't match", "stderr");
+		}
+	}
+
 
 	return 0;
 }

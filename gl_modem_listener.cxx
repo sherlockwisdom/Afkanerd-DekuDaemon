@@ -354,7 +354,7 @@ string modem_information_extraction( string arg ) {
 }
 
 string get_modem_type( string modem_index ) {
-	return is_ssh( modem_index ) ? "ssh" : "mmcli";
+	return is_ssh_modem( modem_index ) ? "ssh" : "mmcli";
 }
 
 vector<map<string,string>> gl_modem_listener( ) {
