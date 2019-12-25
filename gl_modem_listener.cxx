@@ -367,9 +367,9 @@ vector<map<string,string>> gl_modem_listener( ) {
 	else {
 		vector<string> modem_indexes = helpers::split( str_stdout, '\n' );
 		for( auto modem_index : modem_indexes ) {
-			modem_indexes.insert(make_pair( "index", modem_index ));
+			map<string,string> modem_information.insert(make_pair( "index", modem_index ));
 			
-			list_of_modems.push_back( modem_indexes );
+			list_of_modems.push_back( modem_information );
 		}
 	}
 
