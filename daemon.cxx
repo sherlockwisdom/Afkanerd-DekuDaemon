@@ -1,4 +1,4 @@
-//#include "gl_modem_listener.cxx"
+#include "gl_modem_listener.cxx"
 #include "gl_request_queue_listener.cxx"
 using namespace std;
 
@@ -63,7 +63,7 @@ int main( int argc, char** argv ) {
 		return 1;
 	}
 
-	std::thread start_services( daemon_function_for_threading );
+	std::thread start_services( daemon_start_request_listener );
 	start_services.join();
 
 	//std::thread tr_modem_listener(gl_modem_listener, "Master Modem Listener");
