@@ -175,9 +175,11 @@ namespace helpers {
 
 	string remove_carriage( string input, char location = 'B' ) {
 		//TODO: Make location determine where it takes the input file from
+		size_t check_pos = 0;
+		if( location == 'E' ) check_pos = input.size() -1;
 		size_t space_location = input.find('\n');
-		while( space_location != string::npos and space_location == 0) {
-			input.erase( 0, 1);
+		while( space_location != string::npos and space_location == check_pos) {
+			input.erase( check_pos, 1);
 			space_location = input.find('\n');
 		}
 
