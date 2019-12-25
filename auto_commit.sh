@@ -7,5 +7,7 @@ git add .
 git commit -m "$COMMIT_MESSAGE"
 
 if make
+then
 	git push origin master
 	echo "Pushed successfully"
+fi
