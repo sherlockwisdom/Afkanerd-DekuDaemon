@@ -345,7 +345,9 @@ void modem_extractor(string func_name, string modem_index ) {
 
 
 string modem_information_extraction( string arg ) {
+	string func_name = "modem_information_extraction";
 	string ex_command = MODEM_INFORMATION_EXTRACTION_SCRIPT[ SYSTEM_STATE ];
+	logger::logger(func_name, ex_command);
 	return ex_command + " " + arg;
 }	
 
