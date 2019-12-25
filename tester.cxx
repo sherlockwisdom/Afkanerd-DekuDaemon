@@ -12,6 +12,7 @@ class Test {
 	public:
 		bool equal_values( Generic_Type value1, Generic_Type value2 ) const {
 			if( typeid( value1).name() != typeid( value2).name() ) return false;
+			assert( value1 == value2 );
 			return value1 == value2;
 		}
 };
@@ -25,6 +26,6 @@ int main() {
 	Test<size_t> size_t_tester;
 
 	auto list_of_modems = gl_modem_listener();
-	logger::logger_tester("Tester", size_t_tester.equal_values( list_of_modems.size(), 2 ) );
+	logger::logger_tester<bool>("Tester", size_t_tester.equal_values( list_of_modems.size(), 2 ) );
 	return 0;
 }

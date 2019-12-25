@@ -33,9 +33,10 @@ namespace logger {
 		cout << "[logger_errno] - MESSAGE: " << error_message << "=> " << endl;
 	}
 
-
-	void logger_tester( string func_name, bool output, string output_stream = "stdout" ) {
-		if( output.empty() ) return;
+	template <class Generic_Type>
+	void logger_tester( string func_name, Generic_Type output, string output_stream = "stdout" ) {
+		if( typeid( output).name() == typeid( string ).name() ) 
+				if( output.empty() ) return;
 
 		if( output_stream == "stdout" || output_stream == "STDOUT" ) {
 			cout << "[tester.info] - " << func_name << "=> " << std::boolalpha << output;
