@@ -3,14 +3,15 @@
 #include "declarations.hpp"
 #include "gl_request_queue_listener.cxx"
 #include "gl_modem_listener.cxx"
-
+#include <typeinfo>
 
 using namespace std;
 
-
+template <class Generic_Type>
 class Test {
 	public:
-		bool equals( auto value1, auto value2 ) {
+		bool equal_values( Generic_Type value1, Generic_Type value2 ) const {
+			if( typeid( value1).name() != typeid( value2).name() ) return false;
 			return value1 == value2;
 		}
 };
