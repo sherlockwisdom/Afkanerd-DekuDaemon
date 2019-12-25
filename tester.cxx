@@ -4,6 +4,7 @@
 #include "gl_request_queue_listener.cxx"
 #include "gl_modem_listener.cxx"
 #include <typeinfo>
+#include <cassert>
 
 using namespace std;
 
@@ -26,6 +27,6 @@ int main() {
 	Test<size_t> size_t_tester;
 
 	auto list_of_modems = gl_modem_listener();
-	logger::logger_tester<bool>("Tester", size_t_tester.equal_values( list_of_modems.size(), 2 ) );
+	logger::logger_tester("Tester", size_t_tester.equal_values( list_of_modems.size(), 2 ) );
 	return 0;
 }
