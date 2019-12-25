@@ -10,9 +10,13 @@ using namespace std;
 
 template <class Generic_Type>
 class Test {
+	private:
+		string class_name = "Test";
 	public:
 		bool equal_values( Generic_Type value1, Generic_Type value2 ) const {
+			string func_name = this->class_name + ":equal_values";
 			if( typeid( value1).name() != typeid( value2).name() ) return false;
+			logger::logger(func_name, "value1: " + to_string( value1 ) + "\nvalue2: " + to_string( value2) + "\n");
 			assert( value1 == value2 );
 			return value1 == value2;
 		}
