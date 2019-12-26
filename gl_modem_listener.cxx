@@ -282,7 +282,7 @@ vector<string> extract_modem_details ( string modem_imei ) {
 */
 
 string read_modem_details( string modem_imei ) {
-	return helpers::read_file( SYS_FOLDER_MODEM + "/" + modem_imei + "/.details.dek" )[0];
+	return helpers::read_file( SYS_FOLDER_MODEMS + "/" + modem_imei + "/.details.dek" )[0];
 }
 
 string modem_information_extraction( string arg ) {
@@ -296,7 +296,7 @@ string modem_information_extraction( string arg ) {
 
 map<string,string> modem_extractor( string modem_index ) {
 	string func_name = "modem_extractor";
-	string str_stdout = modem_information_extraction( "list" );
+	string str_stdout = helpers::terminal_stdout( GET_MODEM_INFO() + " extract " + modem_index );
 	string modem_service_provider = "";
 
 	vector<string> modem_information = helpers::split(str_stdout, '\n', true);
@@ -306,7 +306,7 @@ map<string,string> modem_extractor( string modem_index ) {
 	map<string, string> modem_info = {
 		{ "imei", modem_imei },
 		{ "signal_quality", modem_sig_quality }
-	}
+	};
 
 	if(modem_information.size() != 3) {
 		std::this_thread::sleep_for(std::chrono::seconds(GL_TR_SLEEP_TIME));
@@ -319,6 +319,10 @@ map<string,string> modem_extractor( string modem_index ) {
 		else {
 			logger::logger( func_name, "No detail file, manually create if needed", "stdout", true);
 		}
+	}
+	else {
+		modem_service_provider = helpers::split(modem_information[2], ':', true)[1];
+		modem_info.insert( make_pair( "isp", modem_service_provider ));
 	}
 
 	return modem_info;
@@ -360,10 +364,11 @@ vector<map<string,string>> gl_modem_listener( ) {
 	return list_of_modems;
 }
 
-void modem_listener( vector<string> modem_info ) {
+void modem_listener( map<string,string> modem_info ) {
+	/*
 	//printf("%s=> modem information... [%s]\n", func_name.c_str(), modem_information[2].c_str());
 	//XXX: Check if another an instance of the modem is already running
-	if(MODEM_DAEMON.find(modem_imei) != MODEM_DAEMON.end()) {
+	if(MODEM_DAEMON.find(modem_info["imei"]) != MODEM_DAEMON.end()) {
 		cout << func_name << "=> Instance of Modem already running... watch dog reset!" << endl;
 		std::this_thread::sleep_for(std::chrono::seconds(GL_TR_SLEEP_TIME));
 		return;
@@ -380,6 +385,7 @@ void modem_listener( vector<string> modem_info ) {
 		std::thread tr_modem_listener(modem_listener, "\tModem Listener", modem_imei, modem_index, modem_service_provider, true, "MMCLI");
 		tr_modem_listener.detach();
 	}
+	*/
 }
 
 /*

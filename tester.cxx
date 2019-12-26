@@ -51,6 +51,9 @@ int main() {
 
 					if( list_of_modems[1]["type"] == "ssh" ) {
 						logger::logger("Tester", "\nSSH type matches" );
+
+						if( map<string,string> modem_info = modem_extractor( list_of_modems[0]["index"] ); !modem_info.empty()) {
+						}
 					}
 					else {
 						logger::logger("Tester", "\nSSH type doesn't match", "stderr");

@@ -17,14 +17,14 @@ using namespace std;
 
 string SYSTEM_STATE = "DEVELOPMENT";
 
-string GET_MODEM_INFO = [](){
+auto GET_MODEM_INFO = [](){
 	map<string,string> MODEM_INFORMATION_EXTRACTION_SCRIPT = {
 		{"DEVELOPMENT", "./modem_information_extraction.sh"}, 
 		{"TESTING", "./modem_information_mimic.sh"},
 		{"PRODUCTION", "./modem_information_extraction.sh"}
 	};
 	return MODEM_INFORMATION_EXTRACTION_SCRIPT[ SYSTEM_STATE ];
-}
+};
 
 /* GLOBAL SYSTEM DECLARATIONS */
 bool GL_MODEM_LISTENER_STATE = true;
