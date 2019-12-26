@@ -55,4 +55,4 @@ void modem_instance( map<string,string> modem_info ) {
 }
 
 
-void daemon_modem_instance_listener() {}
+void daemon_start_modem_instance_listeners() {}
