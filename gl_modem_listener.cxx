@@ -107,7 +107,7 @@ void modem_instance( map<string,string> modem_info, vector<map<string,string>>& 
 				}
 				else {
 					logger::logger( func_name, "mmcli message failed...", "stderr" );
-					resume_a_job( isp, filename );
+					resume_a_job( isp, job_filename );
 				}
 			}
 			else if ( type == "ssh" and !message.empty() and !number.empty()) {
@@ -117,12 +117,12 @@ void modem_instance( map<string,string> modem_info, vector<map<string,string>>& 
 				}
 				else {
 					logger::logger( func_name, "mmcli message failed...", "stderr");
-					resume_a_job( isp, filename );
+					resume_a_job( isp, job_filename );
 				}
 			}
 			else {
 				logger::logger( func_name, "type, message or number is empty.. not good", "stderr", true);
-				delete_a_job( isp, filename );
+				delete_a_job( isp, job_filename );
 			}
 		}
 		else {
