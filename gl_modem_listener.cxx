@@ -279,10 +279,10 @@ vector<string> extract_modem_details ( string modem_imei ) {
 	
 	return file_details;
 }
+*/
 
-
-void modem_extractor(string func_name, string modem_index ) {
-	string str_stdout = helpers::terminal_stdout((string)("./modem_information_extraction.sh extract " + modem_index));
+map<string,string> modem_extractor(string func_name, string modem_index ) {
+	string str_stdout = helpers::MODEM_INFORMATION_EXTRACTION_SCRIPT[
 	string modem_service_provider = "";
 
 	vector<string> modem_information = helpers::split(str_stdout, '\n', true);

@@ -24,7 +24,7 @@ string test_request_file = string( getenv("HOME")) + "/deku/test_request.txt";
 
 int main() {
 
-	SYSTEM_STATE = "TESTING";
+	SYSTEM_STATE = "DEVELOPMENT";
 	logger::show_state = SYSTEM_STATE;
 
 	Test<size_t> size_t_tester;
@@ -32,13 +32,15 @@ int main() {
 	auto list_of_modems = gl_modem_listener();
 	size_t s_list_of_modems = list_of_modems.size();
 	int expected_value = 2;
+	string test_mmcli_index = "1";
+
 	bool test = size_t_tester.equal_values( s_list_of_modems, expected_value );
 	logger::logger_tester("Tester", test);
 	if( !test) {
 		logger::logger("Tester", "\nvalue1: " + to_string( s_list_of_modems ) + "\nvalue2: " + to_string( expected_value ) + "\n");
 	}
 	else {
-		if( list_of_modems[0]["index"] == "0") {
+		if( list_of_modems[0]["index"] == test_mmcli_index) {
 			logger::logger("Tester", "\nMMCLI Index matches");
 			
 			if( list_of_modems[1]["index"] == "192.168.8.1" ) {
