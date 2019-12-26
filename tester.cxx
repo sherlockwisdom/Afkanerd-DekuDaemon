@@ -3,6 +3,7 @@
 #include "declarations.hpp"
 #include "gl_request_queue_listener.cxx"
 #include "gl_modem_listener.cxx"
+#include "gl_modem_extractor.cxx"
 #include <typeinfo>
 
 using namespace std;
