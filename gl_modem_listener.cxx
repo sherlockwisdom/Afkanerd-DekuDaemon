@@ -295,40 +295,57 @@ string modem_information_extraction( string arg ) {
 	return ex_command;
 }
 
-map<string,string> modem_extractor( string modem_index ) {
+map<string,string> modem_extractor( map<string,string> modem_meta_info ) {
 	string func_name = "modem_extractor";
-	string str_stdout = helpers::terminal_stdout( GET_MODEM_INFO() + " extract " + modem_index );
-	logger::logger( func_name, "\n" + str_stdout + "\n" );
-	string modem_service_provider = "";
+	map<string,string> modem_info;
 
-	vector<string> modem_information = helpers::split(str_stdout, '\n', true);
-	string modem_imei = helpers::split(modem_information[0], ':', true)[1];
-	string modem_sig_quality = helpers::split(modem_information[1], ':', true)[1];
-	logger::logger( func_name, "\nimei: " + modem_imei + "\nmodem_sig_qual: " + modem_sig_quality + "\n");
+	if( modem_meta_info["type"] == "mmcli" ) {
+		string str_stdout = helpers::terminal_stdout( GET_MODEM_INFO() + " extract " + modem_meta_info["index"] );
+		logger::logger( func_name, "\n" + str_stdout + "\n" );
+		string modem_service_provider = "";
 
-	map<string, string> modem_info = {
-		{ "imei", modem_imei },
-		{ "signal_quality", modem_sig_quality }
-	};
+		vector<string> modem_information = helpers::split(str_stdout, '\n', true);
+		string modem_imei = helpers::split(modem_information[0], ':', true)[1];
+		string modem_sig_quality = helpers::split(modem_information[1], ':', true)[1];
+		logger::logger( func_name, "\nimei: " + modem_imei + "\nmodem_sig_qual: " + modem_sig_quality + "\n");
 
-	if(modem_information.size() != 3 or helpers::split(modem_information[2], ':', true).size() < 2) {
-		//std::this_thread::sleep_for(std::chrono::seconds(GL_TR_SLEEP_TIME));
-		//printf("%s=> modem information extracted - incomplete [%lu]\n", func_name.c_str(), modem_information.size());
-		logger::logger(func_name, "modem information not available for extraction\n", "stderr", true);
-		if( string modem_isp = read_modem_details( modem_imei ); !modem_isp.empty() ) {
-			logger::logger( func_name, "extracting from details file..." );
-			modem_info.insert( make_pair ( "isp", modem_isp ));
+		modem_meta_info.insert(make_pair ( "imei", modem_imei ));
+		modem_meta_info.insert(make_pair ( "signal_quality", modem_sig_quality ));
+
+		if(modem_information.size() != 3 or helpers::split(modem_information[2], ':', true).size() < 2) {
+			//std::this_thread::sleep_for(std::chrono::seconds(GL_TR_SLEEP_TIME));
+			//printf("%s=> modem information extracted - incomplete [%lu]\n", func_name.c_str(), modem_information.size());
+			logger::logger(func_name, "modem information not available for extraction\n", "stderr", true);
+			if( string modem_isp = read_modem_details( modem_imei ); !modem_isp.empty() ) {
+				logger::logger( func_name, "extracting from details file..." );
+				modem_meta_info.insert( make_pair ( "isp", modem_isp ));
+			}
+			else {
+				logger::logger( func_name, "No detail file, manually create if needed", "stdout", true);
+				return modem_info;
+			}
 		}
 		else {
-			logger::logger( func_name, "No detail file, manually create if needed", "stdout", true);
+			modem_service_provider = helpers::split(modem_information[2], ':', true)[1];
+			modem_meta_info.insert( make_pair( "isp", modem_service_provider ));
 		}
 	}
-	else {
-		modem_service_provider = helpers::split(modem_information[2], ':', true)[1];
-		modem_info.insert( make_pair( "isp", modem_service_provider ));
+	else if( modem_meta_info["type"] == "ssh" ) {
+		string str_stdout = helpers::terminal_stdout( "ssh -T root@" + modem_meta_info["index"] + " deku");
+		logger::logger( func_name, "\n" + str_stdout + "\n" );
+
+		vector<string> modem_information = helpers::split(str_stdout, '\n', true);
+		if( modem_information.size() > 1 and modem_information[0] == "deku:verified:" ) {
+			modem_meta_info.insert( make_pair( "imei", modem_meta_info["index"] ));
+			modem_meta_info.insert( make_pair( "isp", modem_information[1] ));
+		}
+		else {
+			logger::logger( func_name, "could not verify SSH modem", "stderr", true);
+			return modem_info;
+		}
 	}
 
-	return modem_info;
+	return modem_meta_info;
 }
 
 bool is_ssh_modem( string ip ) {

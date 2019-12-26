@@ -27,6 +27,21 @@ int main() {
 	SYSTEM_STATE = "DEVELOPMENT";
 	logger::show_state = SYSTEM_STATE;
 
+	for( auto modems : gl_modem_listener() ) {
+		for( auto modem : modems ) {
+			cout << "=== Modem Meta Info ======" << endl;
+			cout << modem.first << " = " << modem.second << endl;
+			
+			if( modem.first == "index" ){
+				cout << "==== Modem Functional Info =====" << endl;
+				for( auto info : modem_extractor( modem ) ) {
+					cout << info.first << " = " << modem.second << endl;
+				}
+			}
+		}
+		cout << endl;
+	}
+
 
 	return 0;
 }
