@@ -282,37 +282,36 @@ vector<string> extract_modem_details ( string modem_imei ) {
 */
 
 map<string,string> modem_extractor(string func_name, string modem_index ) {
-	string str_stdout = helpers::MODEM_INFORMATION_EXTRACTION_SCRIPT[
+	string str_stdout = helpers::GET_MODEM_INFO();
 	string modem_service_provider = "";
 
 	vector<string> modem_information = helpers::split(str_stdout, '\n', true);
 	string modem_imei = helpers::split(modem_information[0], ':', true)[1];
 	string modem_sig_quality = helpers::split(modem_information[1], ':', true)[1];
 
+	map<string, string> modem_info = {
+		{ "imei", modem_imei },
+		{ "signal_quality", modem_sig_quality }
+	}
+
 	if(modem_information.size() != 3) {
 		std::this_thread::sleep_for(std::chrono::seconds(GL_TR_SLEEP_TIME));
-		printf("%s=> modem information extracted - incomplete [%lu]\n", func_name.c_str(), modem_information.size());
-		return;
-	}
-	
-	//XXX: doing something here which isn't standard - sanitation checks
-	bool sanitation_check = false;
-	for(auto j: modem_information) {
-		if(helpers::split(j, ':', true).size() != 2) {
-			cerr << func_name << "=> sanitation check failed! [" << modem_index << "]" << endl;
-			cout << func_name << "=> extracting details from details file..." << endl;
+		//printf("%s=> modem information extracted - incomplete [%lu]\n", func_name.c_str(), modem_information.size());
+		logger::logger(func_name, "modem information not available for extraction", "stderr", true);
+		// Check if modem has .detail file
 
-			if( !modem_sig_quality.empty()) {
-				vector<string> details = extract_modem_details( modem_imei );
-				//Details format [0] = ISP
-				if( !details.empty() )  modem_service_provider = details[0];
-				else sanitation_check = false;
+		if( helpers::file_exist( SYS_FOLDER_MODEMS + "/" + modem_imei + "/.details.txt" ) ) {
+			logger::logger( func_name, "extracting from details file..." );
+			if( vector<string> details_content = helpers::read_file( SYS_FOLDER_MODEMS + "/.details.txt"); !details_content.empty() ) {
+				modem_info.insert(make_pair("isp", details_content[0]));
 			}
-			else sanitation_check = false;
-
-			break;
-		} else {
-			sanitation_check = true;
+			else {
+				logger::logger(func_name, "empty detail file...", "stderr", true) ;
+			}
+		}
+		else {
+			logger::logger( func_name, "No detail file, manually create if needed", "stdout", true);
+			return modem_info;
 		}
 	}
 	
@@ -337,8 +336,6 @@ map<string,string> modem_extractor(string func_name, string modem_index ) {
 		tr_modem_listener.detach();
 	}
 }
-
-*/
 
 bool is_ssh_modem( string ip ) {
 	return ip.find( GL_SSH_IP_GATEWAY ) != string::npos;

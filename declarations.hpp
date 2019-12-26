@@ -14,15 +14,15 @@
 
 using namespace std;
 
-map<string,string> MODEM_INFORMATION_EXTRACTION_SCRIPT = {
-	{"DEVELOPMENT", "./modem_information_extraction.sh"}, 
-	{"TESTING", "./modem_information_mimic.sh"},
-	{"PRODUCTION", "./modem_information_extraction.sh"}
-};
 
 string SYSTEM_STATE = "DEVELOPMENT";
 
-string GET_MODEM_INFOR = [] {
+string GET_MODEM_INFO = [](){
+	map<string,string> MODEM_INFORMATION_EXTRACTION_SCRIPT = {
+		{"DEVELOPMENT", "./modem_information_extraction.sh"}, 
+		{"TESTING", "./modem_information_mimic.sh"},
+		{"PRODUCTION", "./modem_information_extraction.sh"}
+	};
 	return MODEM_INFORMATION_EXTRACTION_SCRIPT[ SYSTEM_STATE ];
 }
 
