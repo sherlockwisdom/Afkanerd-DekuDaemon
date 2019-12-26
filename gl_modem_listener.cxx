@@ -56,9 +56,13 @@ bool has_modem( string unique_modem_id, vector<map<string,string>> modems ) {
 	return false;
 }
 
-bool modem_state_changed(
+string request_a_job( string isp ) {}
 
-void modem_instance( map<string,string> modem_info, vector<map<string,string>>& gl_modems_listing ) {
+bool resume_a_job( string isp, string filename ) {}
+
+bool delete_a_job( string isp, string filename ) {}
+
+void modem_instance( map<string,string> modem_info, vector<map<string,string>>& gl_modems_listing, int iterate_max = 0 ) {
 	//TODO: Ideas, keep this active looking for modem information and shutdown after some tries
 
 	string index = modem_info["index"];
@@ -67,7 +71,7 @@ void modem_instance( map<string,string> modem_info, vector<map<string,string>>& 
 	string type = modem_info["type"];
 
 	int current_iterate_counter = 0;
-	while( has_modem( imei, gl_modems_listing ) and current_iterate_counter < iterate_max ) {
+	while( has_modem( imei, gl_modems_listing ) and current_iterate_counter <= iterate_max ) {
 		string job_filename = request_a_job( isp );
 
 		if( job_filename.empty() or !helpers::file_exist( job_filename ) ) {
@@ -88,17 +92,29 @@ void modem_instance( map<string,string> modem_info, vector<map<string,string>>& 
 				}
 				else {
 					logger::logger( func_name, "mmcli message failed...", "stderr" );
+					resume_a_job( isp, filename );
 				}
 			}
 			else if ( type == "ssh" ) {
 				logger::logger( func_name, "sending an ssh job" );
+				if( ssh_send( message, number, index )) {
+					logger::logger( func_name, "ssh message sent successfully...");
+				}
+				else {
+					logger::logger( func_name, "mmcli message failed...", "stderr");
+					resume_a_job( isp, filename );
+				}
 			}
 		}
 		else {
 			logger::logger( func_name, "Invalid job file...", "stderr", true );
-			delete_a_job( job_filename );
+			delete_a_job( isp, job_filename );
 		}
-		++current_iterate_counter;
+		if( iterate_max > 0) 
+			++current_iterate_counter;
+
+		helpers::sleep( 10 ); //sleep this n seconds
+	}
 }
 
 void daemon_start_modem_instance_listeners() {}
