@@ -49,10 +49,25 @@ vector<map<string,string>> gl_modem_listener( ) {
 	return list_of_modems;
 }
 
-void modem_instance( map<string,string> modem_info ) {
-	//TODO: Ideas, keep this active looking for modem information and shutdown after some tries
-	
+bool has_modem( string unique_modem_id, vector<map<string,string>> modems ) {
+	for( auto modem :  modems ) {
+		if( modem.find("imei") != modem.end() and modem["imei"] == unique_modem_id ) return true;
+	}
+	return false;
 }
 
+bool modem_state_changed(
+
+void modem_instance( map<string,string> modem_info, vector<map<string,string>>& gl_modems_listing ) {
+	//TODO: Ideas, keep this active looking for modem information and shutdown after some tries
+
+	string index = modem_info["index"];
+	string imei = modem_info["imei"];
+	string isp = modem_info["isp"];
+	string type = modem_info["type"];
+
+	while( has_modem( imei, gl_modems_listing ) ) {
+		
+}
 
 void daemon_start_modem_instance_listeners() {}
