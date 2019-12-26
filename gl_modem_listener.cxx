@@ -282,12 +282,21 @@ vector<string> extract_modem_details ( string modem_imei ) {
 */
 
 string read_modem_details( string modem_imei ) {
-	return helpers::read_file( SYS_FOLDER_MODEM + "/" + modem_imei + "/.details.txt" )[0];
+	return helpers::read_file( SYS_FOLDER_MODEM + "/" + modem_imei + "/.details.dek" )[0];
+}
+
+string modem_information_extraction( string arg ) {
+	string func_name = "modem_information_extraction";
+	string ex_command = GET_MODEM_INFO();
+	ex_command = ex_command + " " + arg;
+	logger::logger(func_name, ex_command + "\n");
+
+	return ex_command;
 }
 
 map<string,string> modem_extractor( string modem_index ) {
 	string func_name = "modem_extractor";
-	string str_stdout = helpers::terminal_stdout( helpers::GET_MODEM_INFO() );
+	string str_stdout = modem_information_extraction( "list" );
 	string modem_service_provider = "";
 
 	vector<string> modem_information = helpers::split(str_stdout, '\n', true);
@@ -319,14 +328,6 @@ bool is_ssh_modem( string ip ) {
 	return ip.find( GL_SSH_IP_GATEWAY ) != string::npos;
 }
 
-string modem_information_extraction( string arg ) {
-	string func_name = "modem_information_extraction";
-	string ex_command = GET_MODEM_INFO();
-	ex_command = ex_command + " " + arg;
-	logger::logger(func_name, ex_command + "\n");
-
-	return ex_command;
-}
 
 string get_modem_type( string modem_index ) {
 	return is_ssh_modem( modem_index ) ? "ssh" : "mmcli";
