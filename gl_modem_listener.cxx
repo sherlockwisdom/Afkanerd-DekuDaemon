@@ -341,9 +341,13 @@ map<string,string> modem_extractor( map<string,string> modem_meta_info ) {
 			modem_meta_info.insert( make_pair( "isp", modem_information[1] ));
 		}
 		else {
-			logger::logger( func_name, "could not verify SSH modem", "stderr", true);
+			logger::logger( func_name, "could not verify SSH modem\n", "stderr", true);
 			return modem_info;
 		}
+	}
+	else {
+		logger::logger( func_name, "\nnot a valid type of modem\n", "stderr", true);
+		return modem_info;
 	}
 
 	return modem_meta_info;
