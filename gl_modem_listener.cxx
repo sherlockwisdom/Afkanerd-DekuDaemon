@@ -56,6 +56,16 @@ bool has_modem( string unique_modem_id, vector<map<string,string>> modems ) {
 	return false;
 }
 
+map<string,string> extract_job( vector<string> job ) {
+	string number = job[0];
+	string message;
+
+	for( int i=1;i<job.size(); ++i) 
+		message += job[i];
+
+	return map<string,string>({{"message", message}, {"number", number});
+}
+
 string request_a_job( string isp ) {}
 
 bool resume_a_job( string isp, string filename ) {}
@@ -85,7 +95,7 @@ void modem_instance( map<string,string> modem_info, vector<map<string,string>>& 
 			string number = ex_job_request["number"];
 			string message = ex_job_request["message"];
 
-			if( type == "mmcli" ) {
+			if( type == "mmcli" and !message.empty() and !number.empty()) {
 				logger::logger( func_name, "sending a mmcli job" );
 				if( mmcli_send( message, number, index ) ) {
 					logger::logger( func_name, "mmcli message sent successfully...");
@@ -95,7 +105,7 @@ void modem_instance( map<string,string> modem_info, vector<map<string,string>>& 
 					resume_a_job( isp, filename );
 				}
 			}
-			else if ( type == "ssh" ) {
+			else if ( type == "ssh" and !message.empty() and !number.empty()) {
 				logger::logger( func_name, "sending an ssh job" );
 				if( ssh_send( message, number, index )) {
 					logger::logger( func_name, "ssh message sent successfully...");
@@ -104,6 +114,10 @@ void modem_instance( map<string,string> modem_info, vector<map<string,string>>& 
 					logger::logger( func_name, "mmcli message failed...", "stderr");
 					resume_a_job( isp, filename );
 				}
+			}
+			else {
+				logger::logger( func_name, "type, message or number is empty.. not good", "stderr", true);
+				delete_a_job( isp, filename );
 			}
 		}
 		else {
