@@ -339,6 +339,7 @@ map<string,string> modem_extractor( map<string,string> modem_meta_info ) {
 		if( modem_information.size() > 1 and modem_information[0] == "deku:verified:" ) {
 			modem_meta_info.insert( make_pair( "imei", modem_meta_info["index"] ));
 			modem_meta_info.insert( make_pair( "isp", modem_information[1] ));
+			cout << "ISP: " << modem_information[1] << endl;
 		}
 		else {
 			logger::logger( func_name, "could not verify SSH modem\n", "stderr", true);

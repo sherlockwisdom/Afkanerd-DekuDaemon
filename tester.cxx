@@ -32,18 +32,29 @@ int main() {
 		cout << "=== Modem Meta Info ======" << endl;
 		for( auto modem : modems ) {
 			cout << modem.first << " = " << modem.second << endl;
-			
-			if( modem.first == "index" ){
-				cout << "==== Modem Functional Info =====" << endl;
-				for( auto info : modem_extractor( modem_info ) ) {
-					cout << info.first << " = " << modem.second << endl;
-				}
-			}
 		}
 		cout << endl;
 	}
 
+	map<string, string> mmcli_info = {
+		{ "type" , "mmcli" },
+		{ "index" , "3" }
+	};
 
+	auto modem_mmcli_info = modem_extractor( mmcli_info );
+	for( auto modem_info : modem_mmcli_info) {
+		cout << modem_info.first << " = " << modem_info.second << endl;
+	}
+
+	map<string, string> ssh_info = {
+		{ "type" , "ssh" },
+		{ "index" , "192.168.1.1" }
+	};
+
+	auto modem_ssh_info = modem_extractor( ssh_info );
+	for( auto modem_info : modem_ssh_info ) {
+		cout << modem_info.first << " = " << modem_info.second << endl;
+	}
 
 	return 0;
 }
