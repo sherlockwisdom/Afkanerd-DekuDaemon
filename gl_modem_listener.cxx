@@ -303,13 +303,14 @@ map<string,string> modem_extractor( string modem_index ) {
 	vector<string> modem_information = helpers::split(str_stdout, '\n', true);
 	string modem_imei = helpers::split(modem_information[0], ':', true)[1];
 	string modem_sig_quality = helpers::split(modem_information[1], ':', true)[1];
+	logger::logger( func_name, "\nimei: " + modem_imei + "\nmodem_sig_qual: " + modem_sig_quality + "\n");
 
 	map<string, string> modem_info = {
 		{ "imei", modem_imei },
 		{ "signal_quality", modem_sig_quality }
 	};
 
-	if(modem_information.size() != 3) {
+	if(modem_information.size() != 3 or helpers::split(modem_information[2], ':', true).size() < 2) {
 		//std::this_thread::sleep_for(std::chrono::seconds(GL_TR_SLEEP_TIME));
 		//printf("%s=> modem information extracted - incomplete [%lu]\n", func_name.c_str(), modem_information.size());
 		logger::logger(func_name, "modem information not available for extraction", "stderr", true);
