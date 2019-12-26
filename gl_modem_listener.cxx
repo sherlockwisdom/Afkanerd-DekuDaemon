@@ -63,8 +63,12 @@ map<string,string> extract_job( vector<string> job ) {
 	for( int i=1;i<job.size(); ++i) 
 		message += job[i];
 
-	return map<string,string>({{"message", message}, {"number", number});
+	return map<string,string>({{"message", message}, {"number", number}});
 }
+
+bool mmcli_send( string message, string number, string index ) {}
+
+bool ssh_send( string message, string number, string index ) {}
 
 string request_a_job( string isp ) {}
 
@@ -73,6 +77,7 @@ bool resume_a_job( string isp, string filename ) {}
 bool delete_a_job( string isp, string filename ) {}
 
 void modem_instance( map<string,string> modem_info, vector<map<string,string>>& gl_modems_listing, int iterate_max = 0 ) {
+	string func_name = "modem_instance";
 	//TODO: Ideas, keep this active looking for modem information and shutdown after some tries
 
 	string index = modem_info["index"];
