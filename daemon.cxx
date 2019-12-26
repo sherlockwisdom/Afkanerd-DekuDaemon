@@ -1,5 +1,6 @@
 #include "gl_modem_listener.cxx"
 #include "gl_request_queue_listener.cxx"
+#include "gl_modem_extractor.cxx"
 using namespace std;
 
 bool check_system_folders() {
@@ -63,8 +64,12 @@ int main( int argc, char** argv ) {
 		return 1;
 	}
 
-	std::thread start_services( daemon_start_request_listener );
-	start_services.join();
+	std::thread start_request_listener( daemon_start_request_listener );
+	std::thread start_modem_listeners( daemon_start_modems_listener );
+	std::thread start_modem_extractors( daemon_start_modems_extractor );
+	start_request_listener.join();
+	start_modem_extractors.join();
+	start_request_listener.join();
 
 	//std::thread tr_modem_listener(gl_modem_listener, "Master Modem Listener");
 

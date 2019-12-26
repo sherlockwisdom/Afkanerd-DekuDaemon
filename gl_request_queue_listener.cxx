@@ -82,6 +82,7 @@ void isp_distribution(string isp, vector<map<string, string>> isp_request) {
 }
 
 void daemon_start_request_listener() {
+	//TODO: begin the infinitely sleepy loop
 	string func_name = "daemon_function_for_threading";
 	auto incoming_request = gl_request_queue_listener( SYS_REQUEST_FILE ); //map<string,string> filename, message
 	for( auto request : incoming_request ) {
