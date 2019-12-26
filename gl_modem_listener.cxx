@@ -302,19 +302,16 @@ map<string,string> modem_extractor(string func_name, string modem_index ) {
 		std::this_thread::sleep_for(std::chrono::seconds(GL_TR_SLEEP_TIME));
 		//printf("%s=> modem information extracted - incomplete [%lu]\n", func_name.c_str(), modem_information.size());
 		logger::logger(func_name, "modem information not available for extraction", "stderr", true);
-		// Check if modem has .detail file
-
 		if( string modem_isp = read_modem_details( modem_imei ); !modem_isp.empty() ) {
 			logger::logger( func_name, "extracting from details file..." );
 			modem_info.insert( make_pair ( "isp", modem_isp ));
 		}
 		else {
 			logger::logger( func_name, "No detail file, manually create if needed", "stdout", true);
-			return modem_info;
 		}
 	}
 
-	//TODO: start modem listeners
+	return modem_info;
 }
 
 bool is_ssh_modem( string ip ) {
@@ -323,7 +320,7 @@ bool is_ssh_modem( string ip ) {
 
 string modem_information_extraction( string arg ) {
 	string func_name = "modem_information_extraction";
-	string ex_command = MODEM_INFORMATION_EXTRACTION_SCRIPT[ SYSTEM_STATE ];
+	string ex_command = GET_MODEM_INFO();
 	ex_command = ex_command + " " + arg;
 	logger::logger(func_name, ex_command + "\n");
 
