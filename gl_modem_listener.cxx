@@ -1,6 +1,8 @@
 #include "helpers.hpp"
 #include "declarations.hpp"
 
+//TODO: if modem becomes disconnected, reiterate to find it... meaning, the check for plug and unplug is here
+
 
 void modem_listener( map<string,string> modem_info ) {
 	/*
