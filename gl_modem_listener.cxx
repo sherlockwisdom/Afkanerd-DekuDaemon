@@ -295,6 +295,7 @@ string modem_information_extraction( string arg ) {
 	return ex_command;
 }
 
+
 map<string,string> modem_extractor( map<string,string> modem_meta_info ) {
 	string func_name = "modem_extractor";
 	map<string,string> modem_info;
