@@ -71,14 +71,34 @@ void modem_instance( map<string,string> modem_info, vector<map<string,string>>& 
 		string job_filename = request_a_job( isp );
 
 		if( job_filename.empty() or !helpers::file_exist( job_filename ) ) {
-			logger::logger( func_name, "no job for modem at this time..");
+			logger::logger( func_name, "no job for modem at this time...");
 		}
 
+		vector<string> job_request = helpers::read_file( job_filename );
 		
+		if( job_request.size() > 1 ) {
+			map<string,string> ex_job_request = extract_job( job_request );
+			string number = ex_job_request["number"];
+			string message = ex_job_request["message"];
 
-		
-
-
+			if( type == "mmcli" ) {
+				logger::logger( func_name, "sending a mmcli job" );
+				if( mmcli_send( message, number, index ) ) {
+					logger::logger( func_name, "mmcli message sent successfully...");
+				}
+				else {
+					logger::logger( func_name, "mmcli message failed...", "stderr" );
+				}
+			}
+			else if ( type == "ssh" ) {
+				logger::logger( func_name, "sending an ssh job" );
+			}
+		}
+		else {
+			logger::logger( func_name, "Invalid job file...", "stderr", true );
+			delete_a_job( job_filename );
+		}
+		++current_iterate_counter;
 }
 
 void daemon_start_modem_instance_listeners() {}
