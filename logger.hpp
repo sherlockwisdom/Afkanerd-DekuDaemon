@@ -16,10 +16,10 @@ namespace logger {
 		if( output.empty() ) return;
 
 		if( output_stream == "stdout" || output_stream == "STDOUT" ) {
-			cout << "[logger.info] - " << func_name << "=> " << output;
+			cout << "[logger.info] - " << func_name << "=> " << output << endl;
 		}
 		else if( output_stream == "stderr" || output_stream == "STDERR" ) {
-			cerr << "[logger.error] - " << func_name << "=> " << output;
+			cerr << "[logger.error] - " << func_name << "=> " << output << endl;
 		}
 
 		else cerr << "[logger.error] - LOGGER DOESN'T HAVE THAT STATE YET" << endl;
