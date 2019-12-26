@@ -282,7 +282,8 @@ vector<string> extract_modem_details ( string modem_imei ) {
 */
 
 string read_modem_details( string modem_imei ) {
-	return helpers::read_file( SYS_FOLDER_MODEMS + "/" + modem_imei + "/.details.dek" )[0];
+	vector<string> info = helpers::read_file( SYS_FOLDER_MODEMS + "/" + modem_imei + "/.details.dek" );
+	return info.empty() ? "" : info[0];
 }
 
 string modem_information_extraction( string arg ) {
@@ -313,7 +314,7 @@ map<string,string> modem_extractor( string modem_index ) {
 	if(modem_information.size() != 3 or helpers::split(modem_information[2], ':', true).size() < 2) {
 		//std::this_thread::sleep_for(std::chrono::seconds(GL_TR_SLEEP_TIME));
 		//printf("%s=> modem information extracted - incomplete [%lu]\n", func_name.c_str(), modem_information.size());
-		logger::logger(func_name, "modem information not available for extraction", "stderr", true);
+		logger::logger(func_name, "modem information not available for extraction\n", "stderr", true);
 		if( string modem_isp = read_modem_details( modem_imei ); !modem_isp.empty() ) {
 			logger::logger( func_name, "extracting from details file..." );
 			modem_info.insert( make_pair ( "isp", modem_isp ));
