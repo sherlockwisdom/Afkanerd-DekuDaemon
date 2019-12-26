@@ -345,9 +345,8 @@ map<string,string> modem_extractor( map<string,string> modem_meta_info ) {
 	return modem_meta_info;
 }
 
-/*
-void daemon_start_modem_listener() {
+
+void daemon_start_modems_listener() {
 	vector<map<string,string>> list_of_modems = gl_modem_listener();
-	
 }
-*/
+

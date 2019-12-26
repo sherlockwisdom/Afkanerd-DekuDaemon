@@ -74,9 +74,5 @@ void modem_instance( map<string,string> modem_info ) {
 	*/
 }
 
-/*
-void daemon_start_modem_listener() {
-	vector<map<string,string>> list_of_modems = gl_modem_listener();
-	
-}
-*/
+
+void daemon_modem_instance_listener() {}

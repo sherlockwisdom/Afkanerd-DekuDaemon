@@ -66,17 +66,11 @@ int main( int argc, char** argv ) {
 
 	std::thread start_request_listener( daemon_start_request_listener );
 	std::thread start_modem_listeners( daemon_start_modems_listener );
-	std::thread start_modem_extractors( daemon_start_modems_extractor );
+	std::thread start_modem_instance_listeners( daemon_start_modem_instance_listeners );
+
 	start_request_listener.join();
-	start_modem_extractors.join();
-	start_request_listener.join();
-
-	//std::thread tr_modem_listener(gl_modem_listener, "Master Modem Listener");
-
-	//std::thread tr_request_listener(gl_request_queue_listener, "Request Queue Listener");
-
-	//tr_modem_listener.join();
-	//tr_request_listener.join();
+	start_modem_listeners.join();
+	start_modem_instance_listeners.join();
 			
 	return 0;
 }
