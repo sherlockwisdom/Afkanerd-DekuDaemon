@@ -66,8 +66,19 @@ void modem_instance( map<string,string> modem_info, vector<map<string,string>>& 
 	string isp = modem_info["isp"];
 	string type = modem_info["type"];
 
-	while( has_modem( imei, gl_modems_listing ) ) {
+	int current_iterate_counter = 0;
+	while( has_modem( imei, gl_modems_listing ) and current_iterate_counter < iterate_max ) {
+		string job_filename = request_a_job( isp );
+
+		if( job_filename.empty() or !helpers::file_exist( job_filename ) ) {
+			logger::logger( func_name, "no job for modem at this time..");
+		}
+
 		
+
+		
+
+
 }
 
 void daemon_start_modem_instance_listeners() {}
