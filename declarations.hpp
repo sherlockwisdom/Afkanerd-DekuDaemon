@@ -20,7 +20,7 @@ string SYSTEM_STATE = "DEVELOPMENT";
 auto GET_MODEM_INFO = [](){
 	map<string,string> MODEM_INFORMATION_EXTRACTION_SCRIPT = {
 		{"DEVELOPMENT", "./modem_information_extraction.sh"}, 
-		{"TESTING", "./modem_information_mimic.sh"},
+		{"TESTING", "./modem_informaation_extraction.sh"},
 		{"PRODUCTION", "./modem_information_extraction.sh"}
 	};
 	return MODEM_INFORMATION_EXTRACTION_SCRIPT[ SYSTEM_STATE ];

@@ -297,6 +297,7 @@ string modem_information_extraction( string arg ) {
 map<string,string> modem_extractor( string modem_index ) {
 	string func_name = "modem_extractor";
 	string str_stdout = helpers::terminal_stdout( GET_MODEM_INFO() + " extract " + modem_index );
+	logger::logger( func_name, "\n" + str_stdout + "\n" );
 	string modem_service_provider = "";
 
 	vector<string> modem_information = helpers::split(str_stdout, '\n', true);
@@ -309,7 +310,7 @@ map<string,string> modem_extractor( string modem_index ) {
 	};
 
 	if(modem_information.size() != 3) {
-		std::this_thread::sleep_for(std::chrono::seconds(GL_TR_SLEEP_TIME));
+		//std::this_thread::sleep_for(std::chrono::seconds(GL_TR_SLEEP_TIME));
 		//printf("%s=> modem information extracted - incomplete [%lu]\n", func_name.c_str(), modem_information.size());
 		logger::logger(func_name, "modem information not available for extraction", "stderr", true);
 		if( string modem_isp = read_modem_details( modem_imei ); !modem_isp.empty() ) {
