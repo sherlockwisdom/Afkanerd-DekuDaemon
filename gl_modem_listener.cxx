@@ -285,7 +285,8 @@ string read_modem_details( string modem_imei ) {
 	return helpers::read_file( SYS_FOLDER_MODEM + "/" + modem_imei + "/.details.txt" )[0];
 }
 
-map<string,string> modem_extractor(string func_name, string modem_index ) {
+map<string,string> modem_extractor( string modem_index ) {
+	string func_name = "modem_extractor";
 	string str_stdout = helpers::terminal_stdout( helpers::GET_MODEM_INFO() );
 	string modem_service_provider = "";
 
