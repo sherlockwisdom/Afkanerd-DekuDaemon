@@ -53,6 +53,16 @@ int main() {
 						logger::logger("Tester", "\nSSH type matches" );
 
 						if( map<string,string> modem_info = modem_extractor( list_of_modems[0]["index"] ); !modem_info.empty()) {
+							logger::logger("Tester", "\nModem details extracted" );
+							if( modem_info["imei"] == "860016016726544" ) {
+								logger::logger("Tester", "\nMMCLI IMEI Match" );
+							}
+							else {
+								logger::logger("Tester", "\nMMCLI does not match", "stderr");
+							}
+						}
+						else {
+							logger::logger("Tester", "\nModem information could not be extracted\n", "stderr");
 						}
 					}
 					else {
