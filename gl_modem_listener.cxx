@@ -127,7 +127,7 @@ void modem_instance( map<string,string> modem_info, vector<map<string,string>>& 
 		if( iterate_max > 0) 
 			++current_iterate_counter;
 
-		helpers::sleep( 10 ); //sleep this n seconds
+		helpers::sleep_thread( 10 ); //sleep this n seconds
 	}
 }
 
