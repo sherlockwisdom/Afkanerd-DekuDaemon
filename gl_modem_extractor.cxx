@@ -343,18 +343,18 @@ map<string,string> modem_information_extractor( auto modem_meta_info ) {
 	return modem_meta_info;
 }
 
-template <class GENERIC_TYPE>
-GENERIC_TYPE modem_extractor( GENERIC_TYPE modem_meta_info ) {
+
+vector<map<string,string>> multi_modem_extractor( vector<map<string,string>> modem_meta_info ) {
 	string func_name = "modem_extractor";
 
-	if( typeid( modem_meta_info ).name() == typeid( vector<map<string,string>> ).name() )
-		for( auto& modem : modem_meta_info ) 
-			modem = modem_information_extractor( modem );
-
-	else if( typeid( modem_meta_info ).name() == typeid( map<string,string> ).name() ) 
-		modem_meta_info = modem_information_extractor( modem_meta_info );
+	for( auto& modem : modem_meta_info ) 
+		modem = modem_information_extractor( modem );
 	
 	return modem_meta_info;
+}
+
+map<string,string> single_modem_extractor( map<string,string> modem_meta_info) {
+	return modem_information_extractor( modem_meta_info );
 }
 
 

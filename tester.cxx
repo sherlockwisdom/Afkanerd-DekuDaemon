@@ -30,7 +30,7 @@ int main() {
 	
 	vector<map<string,string>> modems = gl_modem_listener();
 	map<string,string> modem = {{"imei","192.168.1.1"}};
-	modems = modem_extractor< vector<map<string,string>> >( modems );
+	modems = multi_modem_extractor( modems );
 	cout << boolalpha << "Has modem: " << has_modem( modem["imei"], gl_modem_listener() ) << endl;
 
 	return 0;
