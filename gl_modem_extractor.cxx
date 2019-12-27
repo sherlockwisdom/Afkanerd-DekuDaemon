@@ -287,7 +287,6 @@ string read_modem_details( string modem_imei ) {
 }
 
 
-
 map<string,string> modem_extractor( map<string,string> modem_meta_info ) {
 	string func_name = "modem_extractor";
 	map<string,string> modem_info;

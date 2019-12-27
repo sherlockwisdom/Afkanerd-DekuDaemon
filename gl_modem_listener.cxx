@@ -27,7 +27,6 @@ vector<map<string,string>> gl_modem_listener( ) {
 	vector<map<string,string>> list_of_modems;
 
 	string str_stdout = helpers::terminal_stdout( modem_information_extraction( "list" ));
-	logger::logger( func_name, str_stdout + "\n" );
 
 	if(str_stdout.empty()) {
 		logger::logger(func_name, "No modems found!", "stderr" );

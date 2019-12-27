@@ -28,7 +28,10 @@ int main() {
 	SYSTEM_STATE = "DEVELOPMENT";
 	logger::show_state = SYSTEM_STATE;
 	
-	vector<map<string,string>> modems = gl_modem_listeners();
+	vector<map<string,string>> modems = gl_modem_listener();
+	map<string,string> modem = {{"imei","192.168.1.1"}};
+	cout << boolalpha << "Has modem: " << has_modem( modem["imei"], gl_modem_listener() ) << endl;
+
 	for( auto modem : modems ) {
 		modem = modem_extractor( modem );
 		modem_instance( modem, modems );
