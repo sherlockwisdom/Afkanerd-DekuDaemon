@@ -117,12 +117,12 @@ void modem_instance( map<string,string> modem_info, vector<map<string,string>>& 
 			}
 			else {
 				logger::logger( func_name, "type, message or number is empty.. not good", "stderr", true);
-				helpers::delete_file( isp, job_filename );
+				helpers::delete_file( job_filename );
 			}
 		}
 		else {
 			logger::logger( func_name, "Invalid job file...", "stderr", true );
-			helpers::delete_a_job( job_filename );
+			helpers::delete_file( job_filename );
 		}
 		if( iterate_max > 0) 
 			++current_iterate_counter;

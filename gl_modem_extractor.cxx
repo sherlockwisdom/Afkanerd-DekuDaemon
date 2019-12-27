@@ -287,7 +287,7 @@ string read_modem_details( string modem_imei ) {
 }
 
 
-map<string,string> modem_information_extractor( auto modem_meta_info ) {
+map<string,string> modem_information_extractor( map<string,string> modem_meta_info ) {
 	string func_name = "modem_information_extractor";
 	map<string,string> modem_info;
 	if( modem_meta_info["type"] == "mmcli" ) {
