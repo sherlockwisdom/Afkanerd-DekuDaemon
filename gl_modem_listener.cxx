@@ -71,10 +71,6 @@ bool ssh_send( string message, string number, string index ) {}
 
 string request_a_job( string isp ) {}
 
-bool resume_a_job( string isp, string filename ) {}
-
-bool delete_a_job( string isp, string filename ) {}
-
 void modem_instance( map<string,string> modem_info, vector<map<string,string>>& gl_modems_listing, int iterate_max = 0 ) {
 	string func_name = "modem_instance";
 	//TODO: Ideas, keep this active looking for modem information and shutdown after some tries
@@ -106,7 +102,7 @@ void modem_instance( map<string,string> modem_info, vector<map<string,string>>& 
 				}
 				else {
 					logger::logger( func_name, "mmcli message failed...", "stderr" );
-					resume_a_job( isp, job_filename );
+					helpers::rename_file( job_filename );
 				}
 			}
 			else if ( type == "ssh" and !message.empty() and !number.empty()) {
@@ -116,17 +112,17 @@ void modem_instance( map<string,string> modem_info, vector<map<string,string>>& 
 				}
 				else {
 					logger::logger( func_name, "mmcli message failed...", "stderr");
-					resume_a_job( isp, job_filename );
+					helpers::unhide_file( job_filename );
 				}
 			}
 			else {
 				logger::logger( func_name, "type, message or number is empty.. not good", "stderr", true);
-				delete_a_job( isp, job_filename );
+				helpers::delete_file( isp, job_filename );
 			}
 		}
 		else {
 			logger::logger( func_name, "Invalid job file...", "stderr", true );
-			delete_a_job( isp, job_filename );
+			helpers::delete_a_job( job_filename );
 		}
 		if( iterate_max > 0) 
 			++current_iterate_counter;

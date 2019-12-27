@@ -53,6 +53,14 @@ namespace helpers {
 		return stat( path_filename.c_str(), &buffer) == 0;
 	}
 
+	bool delete_file( string path_filename) {}
+
+	bool rename_file( string path_filename) {}
+	
+	bool unhide_file( string path_filename) {}
+
+	bool hide_file( string_path_filename) {}
+
 	void sleep_thread( int duration ) {
 		std::this_thread::sleep_for(std::chrono::seconds( duration ));
 	}
@@ -155,22 +163,6 @@ namespace helpers {
 		string str = input;
 		transform(str.begin(), str.end(),str.begin(), ::toupper);
 		return str;
-	}
-
-	//Customized just to work for those needing tools to continue working on deku
-	bool modem_is_available(string modem_imei) {
-		string list_of_modem_indexes = helpers::terminal_stdout("./modem_information_extraction.sh list");
-		vector<string> modem_indexes = helpers::split(list_of_modem_indexes, '\n', true);
-
-		for(auto modem_index : modem_indexes) {
-			if(modem_index == modem_imei && modem_imei.find("192.168") != string::npos) return true;
-			string modem_information = helpers::terminal_stdout((string)("./modem_information_extraction.sh extract " + modem_index));
-			vector<string> imei_info = helpers::split(modem_information, ':', true);
-			if(imei_info[0] == "equipment_id") {
-				if(imei_info[1].find(modem_imei) != string::npos) return true;
-			}	
-		}
-		return false;
 	}
 
 	string remove_char( string input, char value = '\n', char location = 'B' ) {
