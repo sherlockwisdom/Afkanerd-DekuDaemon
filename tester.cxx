@@ -27,36 +27,12 @@ int main() {
 
 	SYSTEM_STATE = "DEVELOPMENT";
 	logger::show_state = SYSTEM_STATE;
-
-	for( auto modems : gl_modem_listener() ) {
-		map<string,string> modem_info = modems;
-		cout << "=== Modem Meta Info ======" << endl;
-		for( auto modem : modems ) {
-			cout << modem.first << " = " << modem.second << endl;
-		}
-		cout << endl;
+	
+	vector<map<string,string>> modems = gl_modem_listeners();
+	for( auto modem : modems ) {
+		modem = modem_extractor( modem );
+		modem_instance( modem, modems );
 	}
-
-	map<string, string> mmcli_info = {
-		{ "type" , "mmcli" },
-		{ "index" , "3" }
-	};
-
-	auto modem_mmcli_info = modem_extractor( mmcli_info );
-	for( auto modem_info : modem_mmcli_info) {
-		cout << modem_info.first << " = " << modem_info.second << endl;
-	}
-
-	map<string, string> ssh_info = {
-		{ "type" , "ssh" },
-		{ "index" , "192.168.1.1" }
-	};
-
-	auto modem_ssh_info = modem_extractor( ssh_info );
-	for( auto modem_info : modem_ssh_info ) {
-		cout << modem_info.first << " = " << modem_info.second << endl;
-	}
-
 
 	return 0;
 }
