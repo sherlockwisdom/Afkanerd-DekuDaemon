@@ -29,8 +29,11 @@ int main() {
 	logger::show_state = SYSTEM_STATE;
 	
 	vector<map<string,string>> modems = gl_modem_listener();
-	map<string,string> modem = {{"imei","192.168.1.1"}};
+	map<string,string> modem = {{"imei","192.168.1.1"}, {"type", "ssh"}};
 	modems = multi_modem_extractor( modems );
+	for( auto modem : modems ) {
+		cout << "==== Meta information =====" << endl;
+		for( auto info : modem ) cout << info.first << " = " << info.second << endl;
 	cout << boolalpha << "Has modem: " << has_modem( modem["imei"], gl_modem_listener() ) << endl;
 
 	return 0;
