@@ -287,10 +287,9 @@ string read_modem_details( string modem_imei ) {
 }
 
 
-map<string,string> modem_extractor( map<string,string> modem_meta_info ) {
-	string func_name = "modem_extractor";
+map<string,string> modem_information_extractor( auto modem_meta_info ) {
+	string func_name = "modem_information_extractor";
 	map<string,string> modem_info;
-
 	if( modem_meta_info["type"] == "mmcli" ) {
 		string str_stdout = helpers::terminal_stdout( GET_MODEM_INFO() + " extract " + modem_meta_info["index"] );
 		logger::logger( func_name, "\n" + str_stdout + "\n" );
@@ -341,6 +340,20 @@ map<string,string> modem_extractor( map<string,string> modem_meta_info ) {
 		return modem_info;
 	}
 
+	return modem_meta_info;
+}
+
+template <class GENERIC_TYPE>
+GENERIC_TYPE modem_extractor( GENERIC_TYPE modem_meta_info ) {
+	string func_name = "modem_extractor";
+
+	if( typeid( modem_meta_info ).name() == typeid( vector<map<string,string>> ).name() )
+		for( auto& modem : modem_meta_info ) 
+			modem = modem_information_extractor( modem );
+
+	else if( typeid( modem_meta_info ).name() == typeid( map<string,string> ).name() ) 
+		modem_meta_info = modem_information_extractor( modem_meta_info );
+	
 	return modem_meta_info;
 }
 
