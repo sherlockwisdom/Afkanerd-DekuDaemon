@@ -34,7 +34,9 @@ int main() {
 	for( auto modem : modems ) {
 		cout << "==== Meta information =====" << endl;
 		for( auto info : modem ) cout << info.first << " = " << info.second << endl;
-	cout << boolalpha << "Has modem: " << has_modem( modem["imei"], gl_modem_listener() ) << endl;
+		cout << "=============" << endl;
+	}
+	cout << boolalpha << "Has modem: " << has_modem( modem["imei"], modems ) << endl;
 
 	return 0;
 }
