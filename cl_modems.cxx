@@ -84,12 +84,11 @@ bool Modems::is_ssh_modem( string ip ) {
 	return ip.find( GL_SSH_IP_GATEWAY ) != string::npos;
 }
 
-bool Modems::run_daemon_listener() {
+void Modems::run_daemon_listener() {
 
 	string func_name = "Modems::run_daemon_listener";
-	vector<map<string,string>> list_of_modems;
 
-	string str_stdout = helpers::terminal_stdout( modem_information_extraction( "list" ));
+	string str_stdout = helpers::terminal_stdout( this->modem_information_extraction( "list" ));
 
 	if(str_stdout.empty()) {
 		logger::logger(func_name, "No modems found!", "stderr" );
@@ -104,14 +103,62 @@ bool Modems::run_daemon_listener() {
 				{"type", get_modem_type( modem_index )}
 			};
 			
-			list_of_modems.push_back( modem_information );
+			this->modems.push_back( modem_information );
 		}
 	}
-
-	return list_of_modems;
 }
 
-string Modems::modem_information_extraction( string arg ) {}
+string Modems::modem_information_extraction( string arg ) {
+	string func_name = "Modems::modem_information_extraction";
+	string ex_command = GET_MODEM_INFO();
+	ex_command = ex_command + " " + arg;
+	logger::logger(func_name, ex_command + "\n");
 
-void Modem::start_modem_instance() {}
+	return ex_command;
+}
+
+void Modem::start_modem_instance() {
+	string func_name = "Modem::modem_instance";
+
+	int current_iterate_counter = 0;
+	while( this->is_available( this->imei) and current_iterate_counter <= iterate_max ) {
+		Job job( this->isp );
+		string job_filename = job.request_a_job( isp );
+
+		if( !job.is_job() ) {
+			logger::logger( func_name, "no job for modem at this time...");
+		}
+
+		map<string,string> ex_job_request = extract_job( job_request );
+		string number = ex_job_request["number"];
+		string message = ex_job_request["message"];
+
+		if( type == "mmcli" and !message.empty() and !number.empty()) {
+			logger::logger( func_name, "sending a mmcli job" );
+			if( mmcli_send( message, number, index ) ) {
+				logger::logger( func_name, "mmcli message sent successfully...");
+			}
+			else {
+				logger::logger( func_name, "mmcli message failed...", "stderr" );
+				helpers::rename_file( job_filename );
+			}
+		}
+		else if ( type == "ssh" and !message.empty() and !number.empty()) {
+			logger::logger( func_name, "sending an ssh job" );
+			if( ssh_send( message, number, index )) {
+				logger::logger( func_name, "ssh message sent successfully...");
+			}
+			else {
+				logger::logger( func_name, "mmcli message failed...", "stderr");
+				helpers::unhide_file( job_filename );
+			}
+		}
+		else {
+			logger::logger( func_name, "type, message or number is empty.. not good", "stderr", true);
+			helpers::delete_file( job_filename );
+		}
+
+		helpers::sleep_thread( 10 ); //sleep this n seconds
+	}
+}
 bool Modem::send_sms( string message, string number ) {}
