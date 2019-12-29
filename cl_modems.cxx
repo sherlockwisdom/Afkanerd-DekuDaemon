@@ -62,11 +62,18 @@ map<string,string> Jobs::extract_jobs() {
 	map<string,string> request = { {"number",number}, {"message", message}};
 	return request;
 }
-void Jobs::set_isp( string isp ) {}
+void Jobs::set_isp( string isp ) {
+	this->isp = isp;
+}
 
 
 
-bool Modems::is_available() {}
+bool Modems::is_available( string imei ) {
+	for( auto modem :  this->modems ) {
+		if( modem.find("imei") != modem.end() and modem["imei"] == unique_modem_id ) return true;
+	}
+	return false;
+}
 string Modems::get_modem_type() {}
 
 bool Modems::is_ssh_modem( string index ) {}

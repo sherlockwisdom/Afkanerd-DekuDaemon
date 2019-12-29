@@ -59,7 +59,9 @@ namespace helpers {
 	
 	bool unhide_file( string path_filename) {}
 
-	bool hide_file( string path_filename) {}
+	bool hide_file( string path_filename) {
+		
+	}
 
 	void sleep_thread( int duration ) {
 		std::this_thread::sleep_for(std::chrono::seconds( duration ));
