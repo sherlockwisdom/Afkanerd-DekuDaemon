@@ -35,8 +35,33 @@ class Modem : public Modems, Jobs {
 };
 
 
-string Jobs::request_a_job( ) {}
-map<string,string> Jobs::extract_jobs() {}
+void Jobs::request_a_job( ) {
+	string func_name = "Jobs::request_a_job";
+	string path_to_request_file = "";
+
+	string files_in_dir = helpers::terminal_stdout( "ls -1 " + this->path_to_jobs );
+	if( !files_in_dir.empty()) {
+		vector<string> files = helpers::split( files_in_dir, '\n', true );
+		path_to_request_file = this->path_to_jobs + "/" + files[0];
+		helpers::hide_file( path_to_request_file );
+		this->path_to_request_file;
+	}
+	else {
+		logger::logger( func_name, "No request file" );
+	}
+	this->pending_job = path_to_request_file;
+}
+
+map<string,string> Jobs::extract_jobs() {
+	string job = this->pending_job;
+	vector<string> job_content = helpers::read_file( job );
+	string number = job_content[0];
+	string message = "";
+	for( int i=1;i<job_content.size();++i)
+		message += job_content[i];
+	map<string,string> request = { {"number",number}, {"message", message}};
+	return request;
+}
 void Jobs::set_isp( string isp ) {}
 
 
