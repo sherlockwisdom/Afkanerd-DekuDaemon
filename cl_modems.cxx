@@ -11,9 +11,10 @@ class Jobs {
 class Modems {
 	protected: 
 		string modem_information_extraction( string arg );
+		vector<map<string,string>> modems;
 	private:
 		void run_daemon_listener();
-		bool is_ssh_modem( string index );
+		bool is_ssh_modem( string ip );
 	public:
 		bool is_available( string imei );
 		string get_modem_type( string index );
@@ -74,10 +75,41 @@ bool Modems::is_available( string imei ) {
 	}
 	return false;
 }
-string Modems::get_modem_type() {}
 
-bool Modems::is_ssh_modem( string index ) {}
-bool Modems::run_daemon_listener() {}
+string Modems::get_modem_type( string index ) {
+	return this->is_ssh_modem( index ) ? "ssh" : "mmcli";
+}
+
+bool Modems::is_ssh_modem( string ip ) {
+	return ip.find( GL_SSH_IP_GATEWAY ) != string::npos;
+}
+
+bool Modems::run_daemon_listener() {
+
+	string func_name = "Modems::run_daemon_listener";
+	vector<map<string,string>> list_of_modems;
+
+	string str_stdout = helpers::terminal_stdout( modem_information_extraction( "list" ));
+
+	if(str_stdout.empty()) {
+		logger::logger(func_name, "No modems found!", "stderr" );
+		return list_of_modems;
+	}
+	else {
+		vector<string> modem_indexes = helpers::split( str_stdout, '\n', true);
+		for( auto& modem_index : modem_indexes ) {
+			modem_index = helpers::remove_char( modem_index, ' ', 'E');
+			map<string,string> modem_information = {
+				{"index", modem_index},
+				{"type", get_modem_type( modem_index )}
+			};
+			
+			list_of_modems.push_back( modem_information );
+		}
+	}
+
+	return list_of_modems;
+}
 
 string Modems::modem_information_extraction( string arg ) {}
 
