@@ -30,6 +30,19 @@ namespace parsers {
 		seperated.push_back( input ); 
 		return seperated;
 	}
+
+	vector<string> general_seperate( string input, char delimeter ) {
+		vector<string> seperated;
+		size_t comma_pos = input.find(delimeter);
+		while(comma_pos != string::npos) {
+			seperated.push_back( input.substr(0, comma_pos));
+			input.erase(0, comma_pos+1);
+
+			comma_pos = input.find(delimeter);
+		}
+		seperated.push_back( input ); 
+		return seperated;
+	}
 }
 
 #endif
