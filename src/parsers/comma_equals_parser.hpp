@@ -43,6 +43,21 @@ namespace parsers {
 		seperated.push_back( input ); 
 		return seperated;
 	}
+
+
+	vector<string> in_delimeter_extract( string input, char delimeter ) {
+		vector<string> extracted;
+		size_t start_del_pos = input.find( delimeter);
+		size_t end_del_pos = input.find( delimeter, start_del_pos + 1);
+		while(start_del_pos != string::npos and end_del_pos != string::npos) {
+			extracted.push_back(input.substr(start_del_pos +1, ((end_del_pos) - (start_del_pos+1))));
+			input.erase(0, end_del_pos+1);
+
+			start_del_pos = input.find(delimeter);
+			end_del_pos = input.find(delimeter, start_del_pos + 1);
+		}
+		return extracted;
+	}
 }
 
 #endif
