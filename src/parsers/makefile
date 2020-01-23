@@ -1,4 +1,4 @@
-CC = gcc
+CC = g++
 CFLAGS = -g -Wall
 TARGET = comma_equal_parser_test
 
