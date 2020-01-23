@@ -1,0 +1,8 @@
+CC = gcc
+CFLAGS = -g -Wall
+TARGET = comma_equal_parser_test
+
+default: $(TARGET)
+
+$(TARGET): $(TARGET).c
+	$(CC) $(CFLAGS) -o $(TARGET) $(TARGET).c
