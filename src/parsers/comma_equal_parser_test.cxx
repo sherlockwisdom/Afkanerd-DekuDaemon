@@ -67,7 +67,6 @@ int main() {
 		for(auto i : parser_sample3 ) cout << i << ", ";
 	}
 
-	cout << endl;
 	cout << __FUNCTION__ << ":Testing: in_delimeter_seperate" << endl;
 	if( in_delimeter_expected_equal_sample == parser_sample31 ) {
 		cout << __FUNCTION__ << ": equal PASSED" << endl;
