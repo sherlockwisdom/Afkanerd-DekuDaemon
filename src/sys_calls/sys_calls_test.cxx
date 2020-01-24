@@ -5,8 +5,10 @@ using namespace std;
 
 
 int main() {
-	sys_calls::FILE_FLAG file_flag;
-	string file_path = "";
+	string file_path = getenv("PWD");
+	file_path += "/sys_calls_test.cxx";
+	cout << __FUNCTION__ << ":Filepath: " << file_path << endl;
+
 	string dir_path = "";
 
 	string sample_file_content = "Hello world";
