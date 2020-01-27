@@ -3,6 +3,8 @@
 using namespace std;
 
 namespace isp_determiner {
+	//TODO: Create dynamic version of get_isp
+	//TODO: Add parsers for country code values
 	string get_isp( string number ) {
 		if(number[0] == '6') {
 			switch(number[1]) {
