@@ -4,7 +4,6 @@
 #include "formatters/helpers.hpp"
 using namespace std;
 
-std::string PATH_SYS_FILE = "build_files/sys_file.txt";
 
 bool system_check( string path_to_sys_file) {
 	logger::logger( __FUNCTION__, "Running system check at: " + path_to_sys_file, "stdout", true);
@@ -30,15 +29,32 @@ bool system_check( string path_to_sys_file) {
 	}
 }
 
+map<string,string> get_system_configs( vector<string> sys_config_lines ) {
+	map<string,string> configs;
+	for(auto config_line: sys_file_contents) {
+		//TODO: put integrity check to make sure valid configs have been entered
+		vector<string> configs = helpers::split(config_line, ':');
+		configs.insert(make_pair( configs[0], configs[1]));
+	}
+	return configs;
+}
+
 
 int main(int argc, char** argv) {
+	std::string PATH_SYS_FILE = "build_files/sys_file.txt";
+
 	// Begins by running the simple beginning test
 	// TEST:
 	// 1. Checks if system files are available
 	
 	if( !system_check( PATH_SYS_FILE )) {
 		logger::logger( __FUNCTION__, "System check failed....", "stderr", true);
+		return 1;
 	}
+
+	// Then after the checks, it moves set the variables for global use
+	
+	map<string,string> configs = get_system_configs( helpers::read_file( PATH_SYS_FILE ));
 	
 	return 0;
 }
