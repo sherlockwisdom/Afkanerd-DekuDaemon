@@ -31,6 +31,7 @@ bool system_check( string path_to_sys_file) {
 }
 
 map<string,string> get_system_configs( vector<string> sys_config_lines ) {
+	//TODO: UTest this function
 	map<string,string> configs;
 	for(auto config_line: sys_config_lines) {
 		//TODO: put integrity check to make sure valid configs have been entered
@@ -54,8 +55,15 @@ int main(int argc, char** argv) {
 	}
 
 	// Then after the checks, it moves set the variables for global use
-	
 	map<string,string> configs = get_system_configs( helpers::read_file( PATH_SYS_FILE ));
+
+	// Begin listening for input (request file)
+	//thread tr_request_distribution_listener( request_distribution_listener, configs);
+	// Begin listening for request (modems)
+	//thread tr_request_execution_listener( request_execution_listener, configs);
+
+	tr_request_distribution_listener.join();
+	tr_request_execution_listener.join();
 	
 	return 0;
 }
