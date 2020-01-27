@@ -1,7 +1,7 @@
 // Purpose: Starts all the functions that monitor the hardware and monitors the request files
 
 #include <iostream>
-#include "formatters/logger.hpp"
+#include "formatters/helpers.hpp"
 using namespace std;
 
 std::string PATH_SYS_FILE = "build_files/sys_file.txt";
