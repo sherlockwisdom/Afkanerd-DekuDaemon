@@ -48,7 +48,7 @@ namespace isp_determiner {
 				break;
 			}
 		}
-		return "unknown";
+		return "UNKNOWN";
 	}
 }
 
