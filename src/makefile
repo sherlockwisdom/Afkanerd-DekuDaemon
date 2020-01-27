@@ -6,3 +6,6 @@ default: $(TARGET)
 
 $(TARGET): $(TARGET).cxx
 	$(CC) $(CFLAGS) -o $(TARGET) $(TARGET).cxx
+
+epoll: epoll.cxx
+	$(CC) $(CFLAGS) -o epoll epoll.cxx
