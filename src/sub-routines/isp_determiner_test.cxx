@@ -4,6 +4,6 @@
 using namespace std;
 
 int main() {
-	vector<string> mtn_numbers = {"652156811", "671932990", "673095628", "680946031", "672560060"};
-	vector<string> orange_numbers = {"691979004", "699282830", "658470379", "694629225", "698665381"};
-	vector<string> nextel_numbers = {"667737750"};
+	vector<string> mtn_numbers = {"652000000", "671000000", "673000000", "680000000", "672000000"};
+	vector<string> orange_numbers = {"691000000", "699000000", "6580000000", "6940000000", "698000000"};
+	vector<string> nextel_numbers = {"667000000"};
