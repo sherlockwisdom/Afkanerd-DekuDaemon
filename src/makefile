@@ -12,3 +12,6 @@ epoll: epoll.cxx
 
 inotify: inotify.cxx
 	$(CC) $(CFLAGS) -o inotify inotify.cxx
+
+utest: UTest.cxx
+	$(CC) $(CFLAGS) -o utest UTest.cxx
