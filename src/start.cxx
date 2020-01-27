@@ -7,7 +7,7 @@ using namespace std;
 std::string PATH_SYS_FILE = "build_files/sys_file.txt";
 
 bool system_check( string path_to_sys_file) {
-	logger::logger( "Running system check at: " + path_to_sys_file, "stdout", true);
+	logger::logger( __FUNCTION__, "Running system check at: " + path_to_sys_file, "stdout", true);
 }
 
 
@@ -17,7 +17,7 @@ int main(int argc, char** argv) {
 	// 1. Checks if system files are available
 	
 	if( !system_check( PATH_SYS_FILE )) {
-		logger::logger( "System check failed....", "stderr", true);
+		logger::logger( __FUNCTION__, "System check failed....", "stderr", true);
 	}
 	
 	return 0;
