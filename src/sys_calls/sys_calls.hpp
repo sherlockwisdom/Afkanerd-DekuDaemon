@@ -9,6 +9,7 @@ namespace sys_calls {
 
 	template<class T>
 	T file_handlers( string file_path, FILE_FLAG flag) {
+		//TODO: can it check if dir exist??
 		switch( flag ) {
 			case EXIST:
 				struct stat buffer; 

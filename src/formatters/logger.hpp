@@ -16,10 +16,10 @@ namespace logger {
 		if( output.empty() ) return;
 
 		if( output_stream == "stdout" || output_stream == "STDOUT" ) {
-			cout << "[logger.info] - " << func_name << "=> " << output << endl;
+			cout << "[logger.info] - " << __FUNCTION__ << "=> " << output << endl;
 		}
 		else if( output_stream == "stderr" || output_stream == "STDERR" ) {
-			cerr << "[logger.error] - " << func_name << "=> " << output << endl;
+			cerr << "[logger.error] - " << __FUNCTION__ << "=> " << output << endl;
 		}
 
 		else cerr << "[logger.error] - LOGGER DOESN'T HAVE THAT STATE YET" << endl;
@@ -35,10 +35,10 @@ namespace logger {
 
 	void logger_tester( string func_name, bool output, string output_stream = "stdout" ) {
 		if( output_stream == "stdout" || output_stream == "STDOUT" ) {
-			cout << "[tester.info] - " << func_name << "=> " << std::boolalpha << output << endl;
+			cout << "[tester.info] - " << __FUNCTION__ << "=> " << std::boolalpha << output << endl;
 		}
 		else if( output_stream == "stderr" || output_stream == "STDERR" ) {
-			cerr << "[tester.error] - " << func_name << "=> " << std::boolalpha << output << endl;
+			cerr << "[tester.error] - " << __FUNCTION__ << "=> " << std::boolalpha << output << endl;
 		}
 
 		else cerr << "[tester.error] - LOGGER DOESN'T HAVE THAT STATE YET" << endl;
