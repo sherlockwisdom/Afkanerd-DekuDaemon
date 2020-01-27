@@ -1,9 +1,9 @@
 #include <sys/epoll.h>
+#include <fcntl.h> //Allows open()
 #include <iostream>
 #include "formatters/helpers.hpp"
 
 using namespace std;
-
 
 int main() {
 	int epoll_fd = epoll_create1(0);
@@ -17,9 +17,13 @@ int main() {
 	struct epoll_event event;
 
 	event.events = EPOLLIN;
-	event.data.fd = 0;
+	int custom_fd = open("epoll.cxx", O_RDONLY);
+	if(custom_fd < 0) {
+		perror("open");
+	}
+	//event.data.fd = custom_fd;
 
-	if(epoll_ctl(epoll_fd, EPOLL_CTL_ADD, 0, &event) == -1) {
+	if(epoll_ctl(epoll_fd, EPOLL_CTL_ADD, custom_fd, &event) == -1) {
 		cout << "Failed to add new interest list to epoll's libs..." << endl;
 		logger::logger_errno( errno );
 	}
