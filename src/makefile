@@ -9,3 +9,6 @@ $(TARGET): $(TARGET).cxx
 
 epoll: epoll.cxx
 	$(CC) $(CFLAGS) -o epoll epoll.cxx
+
+inotify: inotify.cxx
+	$(CC) $(CFLAGS) -o inotify inotify.cxx
