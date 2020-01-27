@@ -3,6 +3,8 @@
 #include <iostream>
 #include <map>
 #include "formatters/helpers.hpp"
+#include "sub-routines/request_distribution_listener.cxx"
+#include "sub-routines/request_execution_listener.cxx"
 using namespace std;
 
 
@@ -62,8 +64,8 @@ int main(int argc, char** argv) {
 	// Begin listening for request (modems)
 	//thread tr_request_execution_listener( request_execution_listener, configs);
 
-	tr_request_distribution_listener.join();
-	tr_request_execution_listener.join();
+	//tr_request_distribution_listener.join();
+	//tr_request_execution_listener.join();
 	
 	return 0;
 }
