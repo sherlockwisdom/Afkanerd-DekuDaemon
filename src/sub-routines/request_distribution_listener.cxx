@@ -19,7 +19,8 @@ void request_distribution_listener( map<string, string> configs ) {
 		return;
 	}
 
-	PATH_REQUEST_FILE = configs["DIR_REQUEST_FILE"] + "/REQUEST_FILE.txt";
+	PATH_REQUEST_FILE = configs["DIR_REQUEST_FILE"] + "/" + configs["STD_NAME_REQUEST_FILE"];
+	//TODO: Add an event listener - libevents, epoll or just do polling ( yish )
 }
 
 
