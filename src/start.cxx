@@ -1,6 +1,7 @@
 // Purpose: Starts all the functions that monitor the hardware and monitors the request files
 
 #include <iostream>
+#include <map>
 #include "formatters/helpers.hpp"
 using namespace std;
 
@@ -31,10 +32,10 @@ bool system_check( string path_to_sys_file) {
 
 map<string,string> get_system_configs( vector<string> sys_config_lines ) {
 	map<string,string> configs;
-	for(auto config_line: sys_file_contents) {
+	for(auto config_line: sys_config_lines) {
 		//TODO: put integrity check to make sure valid configs have been entered
-		vector<string> configs = helpers::split(config_line, ':');
-		configs.insert(make_pair( configs[0], configs[1]));
+		vector<string> tmp_configs = helpers::split(config_line, ':');
+		configs.insert(make_pair( tmp_configs[0], tmp_configs[1]));
 	}
 	return configs;
 }
