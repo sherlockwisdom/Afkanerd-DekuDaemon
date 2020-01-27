@@ -6,7 +6,7 @@
 using namespace std;
 
 int main() {
-	int epoll_fd = epoll_create1(0);
+	int epoll_fd = epoll_create(256);
 
 	if(epoll_fd == -1) {
 		cout << "Failed to create epoll descriptor" << endl;
