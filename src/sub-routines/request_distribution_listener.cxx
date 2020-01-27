@@ -40,7 +40,8 @@ void request_distribution_listener( map<string, string> configs ) {
 						if( component[0] == "number" ) number = component[1];
 						else if(component[0] == "message" ) message = component[1];
 					}
-					
+					string isp = isp_determiner::get_isp( number );
+					//TODO: check if ISP folder exist....
 				}
 			//TODO: send new file to isp distributor
 			//TODO: isp distributor parses file and share among isp folders
