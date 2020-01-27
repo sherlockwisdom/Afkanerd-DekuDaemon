@@ -1,4 +1,5 @@
 #include <iostream>
+#include "../formatters/helpers.hpp"
 #include <vector>
 #include "isp_determiner.hpp"
 
@@ -19,7 +20,7 @@ int main() {
 	}
 	cout << __FUNCTION__ << ": Testing Orange Numbers: " << endl;
 	for(auto number : mtn_numbers) {
-		if( isp_determiner::get_isp( number) != "Orange" ) {
+		if( isp_determiner::get_isp( number) != helpers::to_upper("Orange") ) {
 			cout << "FAILED" << endl;
 			cout << number << " is not an Orange number" << endl;
 		}
