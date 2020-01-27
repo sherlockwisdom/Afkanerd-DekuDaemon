@@ -23,6 +23,31 @@ void request_distribution_listener( map<string, string> configs ) {
 	//TODO: Add an event listener - libevents, epoll or just do polling ( yish )
 	//TODO: if isp for request does not have a dir, to keep the required input, create this
 	
+
+	while( 1 ) {
+		if( helpers::check_file( PATH_REQUEST_FILE ) ) {
+			//TODO: rename file and parse it
+			string random_name = config["DIR_REQUEST_FILE"] + "/" + helpers::random_string();
+			if( !helpers::rename_file( PATH_REQUEST_FILE, random_name )) {
+				logger::logger_errno(errno);
+			}
+			else {
+				vector<string> requests = helpers::read_file(random_name);
+				for(auto request : requests) {
+					vector<string> request_extract = parsers::comma_seperation( request );
+					for(auto r_entity : request_extract ) {
+						vector<string> component = parsers::equal_seperate( r_entity );
+						if( component[0] == "number" ) number = component[1];
+						else if(component[0] == "message" ) message = component[1];
+					}
+					
+				}
+			//TODO: send new file to isp distributor
+			//TODO: isp distributor parses file and share among isp folders
+			//TODO: sends confirmation message and begins again
+		}
+
+	}
 	
 }
 
