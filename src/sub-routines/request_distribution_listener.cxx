@@ -46,12 +46,14 @@ void request_distribution_listener( map<string, string> configs ) {
 					if( !helpers::file_exist( config["DIR_ISP"] + "/" + isp + "/" ) ) {
 						helpers::make_dir(config["DIR_ISP"] + "/" + isp);
 					}
-					
+					//TODO: send new file to isp distributor
+					//TODO: isp distributor parses file and share among isp folders
+					//TODO: sends confirmation message and begins again
+
+					//TODO: Moving file to the ISP folder
+					helpers::rename( random_name, config["DIR_ISP"] + "/" + isp + "/" + helpers::random_string());
 				}
 			}
-			//TODO: send new file to isp distributor
-			//TODO: isp distributor parses file and share among isp folders
-			//TODO: sends confirmation message and begins again
 		}
 
 	}
