@@ -15,3 +15,5 @@ inotify: inotify.cxx
 
 utest: UTest.cxx
 	$(CC) $(CFLAGS) -o utest UTest.cxx
+clean:
+	rm -rf test_dir epoll inotify utest $(TARGET)
