@@ -9,6 +9,11 @@ using namespace std;
 
 bool configs_check( map<string,string> configs ) {
 	//TODO: put the things one needs to check in here
+	return (
+			configs.find("DIR_ISP") != configs.end() and 
+			configs.find("DIR_REQUEST_FILE") != configs.end() and 
+			configs.find("STD_NAME_REQUEST_FILE") != configs.end()
+	);
 }
 
 string isp_distributor( string message, string number, map<string,string> config ) {
@@ -17,7 +22,7 @@ string isp_distributor( string message, string number, map<string,string> config
 	if( !helpers::file_exist( config["DIR_ISP"] + "/" + isp + "/" ) ) {
 		helpers::make_dir(config["DIR_ISP"] + "/" + isp);
 	}
-	helpers::write_file( config["DIR_ISP"] + "/" + isp + "/" + helpers::random_string(), request, true, ios::trunc);
+	helpers::write_file( config["DIR_ISP"] + "/" + isp + "/" + helpers::random_string(), request, false, ios::trunc);
 	return isp;
 }
 
@@ -44,13 +49,8 @@ void request_distribution_listener( map<string, string> configs ) {
 						//TODO: critical... if equals is in message, it will parse through the message
 						vector<string> component = parsers::equal_seperate( r_entity );
 						if( component[0] == "number" ) number = component[1];
-						else if(component[0] == "message" ) message = helpers::unescape(component[1]);
+						else if(component[0] == "message" ) message = component[1];
 					}
-					string isp = isp_determiner::get_isp( number );
-
-					//TODO: check if ISP folder exist...
-
-					//TODO: Moving file to the ISP folder
 					isp_distributor( random_name, isp, configs );
 				}
 			}
