@@ -1,15 +1,9 @@
 // Purpose: Starts all the functions that monitor the hardware and monitors the request files
-
-#include <iostream>
-#include <map>
 #include "start_routines.hpp"
 #include "formatters/helpers.hpp"
 #include "sub-routines/request_distribution_listener.cxx"
 //#include "sub-routines/request_execution_listener.cxx"
 using namespace std;
-
-
-
 
 int main(int argc, char** argv) {
 	std::string PATH_SYS_FILE = "build_files/sys_file.txt";
