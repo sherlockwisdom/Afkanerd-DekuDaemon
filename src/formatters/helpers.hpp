@@ -55,7 +55,7 @@ namespace helpers {
 
 	bool delete_file( string path_filename) {}
 
-	bool rename_file( string path_filename) {}
+	bool rename_file( string path_filename, string new_path_filename) {}
 	
 	bool unhide_file( string path_filename) {}
 
