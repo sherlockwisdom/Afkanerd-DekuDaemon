@@ -1,10 +1,9 @@
 //TODO: Keeps event listener for changes to request file
 //TODO: Parses request file
 //TODO: send parsed content to isp distributor
-
-
-#include "request_distribution_listener.hpp"
-
+#include <map>
+#include "../formatters/helpers.hpp"
+#include "../sub-routines/isp_determiner.hpp"
 using namespace std;
 
 
@@ -13,8 +12,8 @@ bool configs_check( map<string,string> configs ) {
 }
 
 string isp_distributor( string message, string number, map<string,string> config ) {
-	string isp = helpers::isp_determiner( number );
-	helpers::rename( random_name, config["DIR_ISP"] + "/" + isp + "/" + helpers::random_string());
+	string isp = isp_determiner::get_isp( number );
+	helpers::rename_file( random_name, config["DIR_ISP"] + "/" + isp + "/" + helpers::random_string());
 	return isp;
 }
 
@@ -54,7 +53,7 @@ void request_distribution_listener( map<string, string> configs ) {
 					}
 
 					//TODO: Moving file to the ISP folder
-					isp_distributor( random_name, isp );
+					isp_distributor( random_name, isp, configs );
 				}
 			}
 		}
