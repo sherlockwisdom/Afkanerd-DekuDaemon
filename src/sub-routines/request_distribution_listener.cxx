@@ -13,7 +13,11 @@ bool configs_check( map<string,string> configs ) {
 
 string isp_distributor( string message, string number, map<string,string> config ) {
 	string isp = isp_determiner::get_isp( number );
-	helpers::rename_file( random_name, config["DIR_ISP"] + "/" + isp + "/" + helpers::random_string());
+	string request = "number="+number+",message=\""+message+"\";
+	if( !helpers::file_exist( config["DIR_ISP"] + "/" + isp + "/" ) ) {
+		helpers::make_dir(config["DIR_ISP"] + "/" + isp);
+	}
+	helpers::write_file( config["DIR_ISP"] + "/" + isp + "/" + helpers::random_string(), request, true, ios::trunc);
 	return isp;
 }
 
@@ -25,10 +29,6 @@ void request_distribution_listener( map<string, string> configs ) {
 	}
 
 	PATH_REQUEST_FILE = configs["DIR_REQUEST_FILE"] + "/" + configs["STD_NAME_REQUEST_FILE"];
-	//TODO: Add an event listener - libevents, epoll or just do polling ( yish )
-	//TODO: if isp for request does not have a dir, to keep the required input, create this
-	
-
 	while( 1 ) {
 		if( helpers::check_file( PATH_REQUEST_FILE ) ) {
 			//TODO: rename file and parse it
@@ -44,13 +44,11 @@ void request_distribution_listener( map<string, string> configs ) {
 						//TODO: critical... if equals is in message, it will parse through the message
 						vector<string> component = parsers::equal_seperate( r_entity );
 						if( component[0] == "number" ) number = component[1];
-						else if(component[0] == "message" ) message = component[1];
+						else if(component[0] == "message" ) message = helpers::unescape(component[1]);
 					}
 					string isp = isp_determiner::get_isp( number );
+
 					//TODO: check if ISP folder exist...
-					if( !helpers::file_exist( config["DIR_ISP"] + "/" + isp + "/" ) ) {
-						helpers::make_dir(config["DIR_ISP"] + "/" + isp);
-					}
 
 					//TODO: Moving file to the ISP folder
 					isp_distributor( random_name, isp, configs );
