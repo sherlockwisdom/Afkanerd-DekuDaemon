@@ -12,6 +12,12 @@ bool configs_check( map<string,string> configs ) {
 	//TODO: put the things one needs to check in here
 }
 
+string isp_distributor( string message, string number, map<string,string> config ) {
+	string isp = helpers::isp_determiner( number );
+	helpers::rename( random_name, config["DIR_ISP"] + "/" + isp + "/" + helpers::random_string());
+	return isp;
+}
+
 void request_distribution_listener( map<string, string> configs ) {
 	//TODO: run system checks here
 	if( !configs_check(configs)) {
@@ -46,16 +52,14 @@ void request_distribution_listener( map<string, string> configs ) {
 					if( !helpers::file_exist( config["DIR_ISP"] + "/" + isp + "/" ) ) {
 						helpers::make_dir(config["DIR_ISP"] + "/" + isp);
 					}
-					//TODO: send new file to isp distributor
-					//TODO: isp distributor parses file and share among isp folders
-					//TODO: sends confirmation message and begins again
 
 					//TODO: Moving file to the ISP folder
-					helpers::rename( random_name, config["DIR_ISP"] + "/" + isp + "/" + helpers::random_string());
+					isp_distributor( random_name, isp );
 				}
 			}
 		}
 
+		helpers::sleep_thread( 10 ); //Stops CPU from running on overclock
 	}
 	
 }
