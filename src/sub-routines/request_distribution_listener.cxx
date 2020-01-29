@@ -27,6 +27,20 @@ string isp_distributor( string message, string number, map<string,string> config
 	return isp;
 }
 
+map<string,string> request_parser(string request) {
+	map<sgtring, string> extracted_request;
+	vector<string> request_extract = parsers::comma_seperate( request );
+	string message, number;
+	for(auto r_entity : request_extract ) {
+		//TODO: critical... if equals is in message, it will parse through the message
+		vector<string> component = parsers::equal_seperate( r_entity );
+		if( component[0] == "number" ) extracted_request.insert(make_pair("number", component[1]));
+		else if(component[0] == "message" ) extracted_request.insert(make_pair("message", component[1]));
+	}
+
+	return extracted_request;
+}
+
 void request_distribution_listener( map<string, string> configs ) {
 	//TODO: run system checks here
 	if( !configs_check(configs)) {
@@ -45,14 +59,9 @@ void request_distribution_listener( map<string, string> configs ) {
 			else {
 				vector<string> requests = helpers::read_file(random_name);
 				for(auto request : requests) {
-					vector<string> request_extract = parsers::comma_seperate( request );
-					string message, number;
-					for(auto r_entity : request_extract ) {
-						//TODO: critical... if equals is in message, it will parse through the message
-						vector<string> component = parsers::equal_seperate( r_entity );
-						if( component[0] == "number" ) number = component[1];
-						else if(component[0] == "message" ) message = component[1];
-					}
+					map<string,string> extracted_request = request_parser( request );
+					string number = extracted_request["number"];
+					string message = extracted_request["message"];
 					isp_distributor( message, number, configs );
 				}
 			}
