@@ -19,7 +19,7 @@ int main() {
 	string request = "message=\"Hello world\\nNew line\",number=67000";
 	map<string,string> parsed_request = request_parser( request );
 
-	if(parsed_request.find("message") != parsed_request.end() and parsed_request.find("number") != parsed_request.end()) {
+	if(parsed_request.find("message") != parsed_request.end() and parsed_request.find("number") != parsed_request.end() and parsed_request["message"] == "Hello world\\nNew line" and parsed_request["number"] == "67000") {
 		cout << "Parsed request PASSED..." << endl;
 	}
 	else {
