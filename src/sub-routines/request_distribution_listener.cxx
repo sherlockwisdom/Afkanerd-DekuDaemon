@@ -28,7 +28,7 @@ string isp_distributor( string message, string number, map<string,string> config
 }
 
 map<string,string> request_parser(string request) {
-	map<sgtring, string> extracted_request;
+	map<string, string> extracted_request;
 	vector<string> request_extract = parsers::comma_seperate( request );
 	string message, number;
 	for(auto r_entity : request_extract ) {

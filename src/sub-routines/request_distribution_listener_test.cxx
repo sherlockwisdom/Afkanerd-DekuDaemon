@@ -16,10 +16,17 @@ int main() {
 		cout << "Configs check PASSED" << endl;
 	}
 
-	string message = "Hello world\\nNew line";
-	string number = "67000";
+	string request = "message=\"Hello world\\nNew line\",number=67000";
+	map<string,string> parsed_request = request_parser( request );
 
-	if( isp_distributor( message, number, configs ) != "MTN" ) {
+	if(parsed_request.find("message") != parsed_request.end() and parsed_request.find("number") != parsed_request.end()) {
+		cout << "Parsed request PASSED..." << endl;
+	}
+	else {
+		cout << "Parsed request FAILED..." << endl;
+	}
+
+	if( isp_distributor( parsed_request["message"], parsed_request["number"], configs ) != "MTN" ) {
 		cout << "ISP distribution Failed..." << endl;
 	}
 	else {
