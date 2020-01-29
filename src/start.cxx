@@ -6,7 +6,32 @@
 using namespace std;
 
 int main(int argc, char** argv) {
-	std::string PATH_SYS_FILE = "build_files/sys_file.txt";
+	//std::string PATH_SYS_FILE = "build_files/sys_file.txt";
+	
+	string PATH_SYS_FILE;
+	if(argc < 2 ) {
+		logger::logger(__FUNCTION__, "Usage: -c <path_to_config_file>", "stderr", true);
+		return 1;
+	}
+	else {
+		for(int i=1;i<argc;++i) {
+			if(argv[i] == "-c") {
+				if(i+1 < argc) {
+					PATH_SYS_FILE = argv[i+1];
+					++i;
+				}
+				else {
+					logger::logger(__FUNCTION__, "Usage: -c <path_to_config_file>", "stderr", true);
+					return 1;
+				}
+			}
+		}
+	}
+
+	if(PATH_SYS_FILE.empty()) {
+		logger::logger(__FUNCTION__, "Usage: -c <path_to_config_file>", "stderr", true);
+		return 1;
+	}
 
 	// Begins by running the simple beginning test
 	// TEST:
