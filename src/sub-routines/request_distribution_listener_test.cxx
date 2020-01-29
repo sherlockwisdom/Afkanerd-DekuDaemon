@@ -39,9 +39,9 @@ int main() {
 	}
 
 	if( isp_distributor( parsed_request["message"], parsed_request["number"], configs ) != "MTN" ) {
-		cout << "ISP distribution Failed..." << endl;
+		cout << "ISP distribution FAILED..." << endl;
 	}
 	else {
-		cout << "ISP distribution Passed..." << endl;
+		cout << "ISP distribution PASSED..." << endl;
 	}
 }
