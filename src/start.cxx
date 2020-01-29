@@ -15,13 +15,14 @@ int main(int argc, char** argv) {
 	}
 	else {
 		for(int i=1;i<argc;++i) {
-			if(argv[i] == "-c") {
+			if((string)argv[i]== "-c") {
+				logger::logger(__FUNCTION__, "config file arguments present", "stdout", false);
 				if(i+1 < argc) {
 					PATH_SYS_FILE = argv[i+1];
 					++i;
 				}
 				else {
-					logger::logger(__FUNCTION__, "Usage: -c <path_to_config_file>", "stderr", true);
+					logger::logger(__FUNCTION__, "Incomplete args\nUsage: -c <path_to_config_file>", "stderr", true);
 					return 1;
 				}
 			}
