@@ -23,7 +23,7 @@ int main() {
 	if(
 			parsed_request.find("message") != parsed_request.end() and 
 			parsed_request.find("number") != parsed_request.end() and 
-			parsed_request["message"] == "\""+sample_message+"\"" and 
+			parsed_request["message"] == sample_message and 
 			parsed_request["number"] == "67000"
 	) {
 		cout << "Parsed request PASSED..." << endl;

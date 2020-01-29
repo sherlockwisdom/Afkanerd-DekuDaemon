@@ -2,6 +2,8 @@
 //TODO: Parses request file
 //TODO: send parsed content to isp distributor
 #include <map>
+#include <iomanip>
+#include <sstream>
 #include "../formatters/helpers.hpp"
 #include "../parsers/comma_equals_parser.hpp"
 #include "../sub-routines/isp_determiner.hpp"
@@ -35,7 +37,11 @@ map<string,string> request_parser(string request) {
 		//TODO: critical... if equals is in message, it will parse through the message
 		vector<string> component = parsers::equal_seperate( r_entity );
 		if( component[0] == "number" ) extracted_request.insert(make_pair("number", component[1]));
-		else if(component[0] == "message" ) extracted_request.insert(make_pair("message", component[1]));
+		else if(component[0] == "message" ) {
+			std::stringstream str_message;
+			str_message << std::quoted(component[1]);
+			extracted_request.insert(make_pair("message", str_message.str()));
+		}
 	}
 
 	return extracted_request;
