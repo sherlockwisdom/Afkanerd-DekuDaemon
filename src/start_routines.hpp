@@ -24,12 +24,30 @@ bool system_check( string path_to_sys_file) {
 		vector<string> configs = helpers::split(config_line, ':');
 		if(configs[0] == "DIR_REQUEST_FILE") {
 			//TODO: check if dir exist, else create it
+			string dir_request_file = configs[1];
+			if(!helpers::file_exist( dir_request_file ) ) {
+				helpers::make_dir( dir_request_file );
+				logger::logger(__FUNCTION__, "CREATING DIR_REQUEST_FILE");
+			}
+			else logger::logger(__FUNCTION__, "DIR_REQUEST_FILE exist" );
 		}
 		else if(configs[0] == "DIR_ISP") {
 			//TODO: check if dir exist, else create it
+			string dir_isp = configs[1];
+			if(!helpers::file_exist( dir_isp ) ) {
+				helpers::make_dir( dir_isp );
+				logger::logger(__FUNCTION__, "CREATING DIR_ISP");
+			}
+			else logger::logger(__FUNCTION__, "DIR_ISP exist" );
 		}
 		else if(configs[0] == "STD_NAME_REQUEST_FILE") {
 			//TODO: this seems fine for now
+			string std_name_request_file = configs[1];
+			if(!helpers::file_exist( std_name_request_file ) ) {
+				helpers::make_dir( std_name_request_file );
+				logger::logger(__FUNCTION__, "CREATING STD_NAME_REQUEST_FILE");
+			}
+			else logger::logger(__FUNCTION__, "DIR_ISP STD_NAME_REQUEST_FILE" );
 		}
 	}
 }
