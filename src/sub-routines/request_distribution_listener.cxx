@@ -37,8 +37,8 @@ map<string,string> request_parser(string request) {
 		vector<string> component = parsers::equal_seperate( r_entity );
 		if( component[0] == "number" ) extracted_request.insert(make_pair("number", component[1]));
 		else if(component[0] == "message" ) {
-			if(component[1][0] == '\'') component[1].erase(0,1);
-			if(component[1].back() == '\'') component[1].erase(component.size()-1,1);
+			if(component[1][0] == '"') component[1].erase(0,1);
+			if(component[1][component[1].size()-1] == '"') component[1].erase(component[1].size()-1,1);
 			message = component[1];
 			extracted_request.insert(make_pair("message", message));
 		}
