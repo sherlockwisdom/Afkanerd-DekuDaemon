@@ -18,4 +18,4 @@ utest: UTest.cxx
 clean:
 	rm -rf test_dir/* epoll inotify utest $(TARGET)
 start_test: start_test.cxx
-	$(CC) $(CFLAGS) -o start_test start_test.cxx
+	$(CC) $(CFLAGS) -o -g start_test start_test.cxx

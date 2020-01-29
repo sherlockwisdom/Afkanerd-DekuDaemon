@@ -9,8 +9,10 @@ int main() {
 
 
 	vector<string> file_contents = helpers::read_file( sys_config_file );
+	logger::logger(__FUNCTION__, "Read sys config file " + to_string(file_contents.size()));
 
 	map<string,string> sample_config_file = get_system_configs( file_contents );
+	logger::logger(__FUNCTION__, "Read config file " + to_string(sample_config_file.size()));
 
 	if(
 			sample_config_file.find("DIR_ISP") != sample_config_file.end() and
