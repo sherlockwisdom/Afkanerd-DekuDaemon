@@ -1,3 +1,0 @@
-DIR_ISP:/home/sherlock/Desktop/Deku-Daemon/src/test_dir/test_config.txt
-STD_NAME_REQUEST_FILE:request_file.txt
-DIR_REQUEST_FILE:/home/sherlock/Desktop/Deku-Daemon/src/test_dir
