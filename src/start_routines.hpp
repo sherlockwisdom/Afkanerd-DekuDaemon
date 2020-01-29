@@ -39,7 +39,7 @@ map<string,string> get_system_configs( vector<string> sys_config_lines ) {
 	map<string,string> configs;
 	for(auto config_line: sys_config_lines) {
 		//TODO: put integrity check to make sure valid configs have been entered
-		vector<string> tmp_configs = helpers::split(config_line, ':');
+		vector<string> tmp_configs = helpers::split(config_line, ':', true);
 		configs.insert(make_pair( tmp_configs[0], tmp_configs[1]));
 	}
 	return configs;
