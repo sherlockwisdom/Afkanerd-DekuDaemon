@@ -43,15 +43,6 @@ bool system_check( string path_to_sys_file) {
 			}
 			else logger::logger(__FUNCTION__, "DIR_ISP exist already exist" );
 		}
-		else if(configs[0] == "STD_NAME_REQUEST_FILE") {
-			//TODO: this seems fine for now
-			string std_name_request_file = configs[1];
-			if(!helpers::file_exist( std_name_request_file ) ) {
-				helpers::make_dir( std_name_request_file );
-				logger::logger(__FUNCTION__, "CREATING STD_NAME_REQUEST_FILE");
-			}
-			else logger::logger(__FUNCTION__, "DIR_ISP STD_NAME_REQUEST_FILE already exist" );
-		}
 	}
 }
 
