@@ -30,7 +30,7 @@ bool system_check( string path_to_sys_file) {
 			string dir_request_file = configs[1];
 			if(!helpers::file_exist( dir_request_file ) ) {
 				helpers::make_dir( dir_request_file );
-				logger::logger(__FUNCTION__, "CREATING DIR_REQUEST_FILE");
+				logger::logger(__FUNCTION__, "CREATING DIR_REQUEST_FILE: "+dir_request_file);
 			}
 			else logger::logger(__FUNCTION__, "DIR_REQUEST_FILE already exist" );
 		}
@@ -39,7 +39,7 @@ bool system_check( string path_to_sys_file) {
 			string dir_isp = configs[1];
 			if(!helpers::file_exist( dir_isp ) ) {
 				helpers::make_dir( dir_isp );
-				logger::logger(__FUNCTION__, "CREATING DIR_ISP");
+				logger::logger(__FUNCTION__, "CREATING DIR_ISP: "+dir_isp);
 			}
 			else logger::logger(__FUNCTION__, "DIR_ISP exist already exist" );
 		}
