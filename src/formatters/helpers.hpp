@@ -39,6 +39,7 @@ namespace helpers {
 
 	void make_dir( string path_dirname ) {
 		vector<string> recursive_paths = helpers::split(path_dirname, '/', true);
+		//TODO: Huge issue, this causes it to use relative paths and not absolute paths
 		string make_me = recursive_paths[0];
 		for(int i=0;i<recursive_paths.size();++i) {
 			if( i!=0) make_me += "/" + recursive_paths[i];
