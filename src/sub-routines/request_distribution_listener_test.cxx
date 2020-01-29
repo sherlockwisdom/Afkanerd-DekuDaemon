@@ -19,11 +19,23 @@ int main() {
 	string request = "message=\"Hello world\\nNew line\",number=67000";
 	map<string,string> parsed_request = request_parser( request );
 
-	if(parsed_request.find("message") != parsed_request.end() and parsed_request.find("number") != parsed_request.end() and parsed_request["message"] == "Hello world\\nNew line" and parsed_request["number"] == "67000") {
+	if(
+			parsed_request.find("message") != parsed_request.end() and 
+			parsed_request.find("number") != parsed_request.end() and 
+			parsed_request["message"] == "Hello world\\nNew line" and 
+			parsed_request["number"] == "67000"
+	) {
 		cout << "Parsed request PASSED..." << endl;
 	}
 	else {
 		cout << "Parsed request FAILED..." << endl;
+		for(auto component : parsed_request ) {
+			cout << component.first << "=" << component.second << endl;
+			cout << component.first.size() << "=" << component.second.size() << endl;
+			if(component.first == "message") cout << string("message").size() << "=" << string("Hello world\\nNew line").size() << endl;
+			else if(component.first == "number") cout << string("number").size() << "=" << string("67000").size() << endl;
+			cout << endl; 
+		}
 	}
 
 	if( isp_distributor( parsed_request["message"], parsed_request["number"], configs ) != "MTN" ) {
