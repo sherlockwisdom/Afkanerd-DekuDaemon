@@ -24,11 +24,15 @@ namespace helpers {
 		string temp_string = "";
 		size_t found_count = 0;
 		for(auto _char : _string) {
-			if(_char==del and found_count >= start_pos) {
+			if(_char==del) {
+				if(found_count >= start_pos) {
+					if(strict and temp_string.empty()) continue;
+					return_value.push_back(temp_string);
+					temp_string="";
+				}
+				else 
+				temp_string+=_char;
 				++found_count;
-				if(strict and temp_string.empty()) continue;
-				return_value.push_back(temp_string);
-				temp_string="";
 			}
 			else {
 				temp_string+=_char;
