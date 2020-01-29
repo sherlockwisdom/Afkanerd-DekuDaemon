@@ -12,16 +12,19 @@ bool system_check( string path_to_sys_file) {
 
 	if( !helpers::file_exist(path_to_sys_file)) {
 		logger::logger(__FUNCTION__, "System file does not exist", "stderr", true);
+		logger::logger_errno( errno );
 		return false;
 	}
 
 	vector<string> sys_file_contents = helpers::read_file( path_to_sys_file );
 	if( sys_file_contents.size() < 1 ) {
 		//TODO: put logger statement
+		logger::logger(__FUNCTION__, "Nothing to read in config file", "stderr", true);
+		return false;
 	}
 
 	for(auto config_line: sys_file_contents) {
-		vector<string> configs = helpers::split(config_line, ':');
+		vector<string> configs = helpers::split(config_line, ':', true);
 		if(configs[0] == "DIR_REQUEST_FILE") {
 			//TODO: check if dir exist, else create it
 			string dir_request_file = configs[1];
@@ -29,7 +32,7 @@ bool system_check( string path_to_sys_file) {
 				helpers::make_dir( dir_request_file );
 				logger::logger(__FUNCTION__, "CREATING DIR_REQUEST_FILE");
 			}
-			else logger::logger(__FUNCTION__, "DIR_REQUEST_FILE exist" );
+			else logger::logger(__FUNCTION__, "DIR_REQUEST_FILE already exist" );
 		}
 		else if(configs[0] == "DIR_ISP") {
 			//TODO: check if dir exist, else create it
@@ -38,7 +41,7 @@ bool system_check( string path_to_sys_file) {
 				helpers::make_dir( dir_isp );
 				logger::logger(__FUNCTION__, "CREATING DIR_ISP");
 			}
-			else logger::logger(__FUNCTION__, "DIR_ISP exist" );
+			else logger::logger(__FUNCTION__, "DIR_ISP exist already exist" );
 		}
 		else if(configs[0] == "STD_NAME_REQUEST_FILE") {
 			//TODO: this seems fine for now
@@ -47,7 +50,7 @@ bool system_check( string path_to_sys_file) {
 				helpers::make_dir( std_name_request_file );
 				logger::logger(__FUNCTION__, "CREATING STD_NAME_REQUEST_FILE");
 			}
-			else logger::logger(__FUNCTION__, "DIR_ISP STD_NAME_REQUEST_FILE" );
+			else logger::logger(__FUNCTION__, "DIR_ISP STD_NAME_REQUEST_FILE already exist" );
 		}
 	}
 }
