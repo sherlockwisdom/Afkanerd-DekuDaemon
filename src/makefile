@@ -16,6 +16,6 @@ inotify: inotify.cxx
 utest: UTest.cxx
 	$(CC) $(CFLAGS) -o utest UTest.cxx
 clean:
-	rm -rf test_dir/* epoll inotify utest $(TARGET)
+	rm -rf test_dir*/* epoll inotify utest $(TARGET)
 start_test: start_test.cxx
 	$(CC) $(CFLAGS) -o start_test start_test.cxx
