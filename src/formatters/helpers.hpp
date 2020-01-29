@@ -19,9 +19,11 @@ namespace helpers {
 		return input;
 	}
 
-	vector<string> split(string _string, char del = ' ', bool strict = false) {
+	vector<string> split(string _string, char del = ' ', bool strict = false, size_t start_pos = 0) {
 		vector<string> return_value;
 		string temp_string = "";
+		auto _char = _string.begin();
+		_char += start_pos;
 		for(auto _char : _string) {
 			if(_char==del) {
 				if(strict and temp_string.empty()) continue;
@@ -38,7 +40,8 @@ namespace helpers {
 	}
 
 	void make_dir( string path_dirname ) {
-		vector<string> recursive_paths = helpers::split(path_dirname, '/', true);
+		size_t start_pos = path_dirname[0] == '/' ? 0 : 1;
+		vector<string> recursive_paths = helpers::split(path_dirname, '/', true, start_pos);
 		//TODO: Huge issue, this causes it to use relative paths and not absolute paths
 		string make_me = recursive_paths[0];
 		for(int i=0;i<recursive_paths.size();++i) {
