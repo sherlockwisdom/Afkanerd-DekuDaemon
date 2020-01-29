@@ -12,11 +12,17 @@ int main() {
 	if(!configs_check( configs ) ) {
 		cout << "Configs check Failed..." << endl;
 	}
+	else {
+		cout << "Configs check PASSED" << endl;
+	}
 
 	string message = "Hello world\\nNew line";
 	string number = "67000";
 
 	if( isp_distributor( message, number, configs ) != "MTN" ) {
 		cout << "ISP distribution Failed..." << endl;
+	}
+	else {
+		cout << "ISP distribution Passed..." << endl;
 	}
 }
