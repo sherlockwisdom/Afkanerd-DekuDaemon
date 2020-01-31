@@ -3,6 +3,14 @@
 
 using namespace std;
 
+//class Modem
+Modem::Modem() {}
+
+void Modem::setIMEI( string IMEI ) {}
+void Modem::setISP( string ISP ) {}
+void Modem::setIndex( string index ) {}
+
+//class Modems
 Modems::Modems() {}
 
 Modems Modems::getAll() {
