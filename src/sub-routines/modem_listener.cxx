@@ -8,7 +8,7 @@ using namespace std;
 Modem::Modem() {}
 
 void Modem::setIMEI( string IMEI ) {
-	this->IMEI = IMEI;
+	this->imei = IMEI;
 }
 void Modem::setISP( string ISP ) {
 	this->isp = ISP;

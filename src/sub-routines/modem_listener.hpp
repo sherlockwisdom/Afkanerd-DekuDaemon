@@ -17,6 +17,7 @@ class Modem {
 
 		string getIndex();
 		string getISP() const;
+		string getIMEI();
 
 		explicit operator bool() const;
 };
