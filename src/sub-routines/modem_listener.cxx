@@ -46,11 +46,8 @@ void Modems::__INIT__() {
 			}
 			else if(component[0] == "equipment_id") modem.setIMEI( component[1]);
 			else if(component[0] == "operator_name") modem.setISP( component[1]);
-			else {
-				logger::logger(__FUNCTION__, "component: " + component[1]);
-			}
 		}
-		this->modemCollection.push_back( modem );
+		if(modem) this->modemCollection.push_back( modem );
 	}
 	//logger::logger(__FUNCTION__, "Exited..");
 }
