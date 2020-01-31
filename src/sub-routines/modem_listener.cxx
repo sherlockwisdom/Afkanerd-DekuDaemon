@@ -8,7 +8,9 @@ using namespace std;
 Modem::Modem() {}
 
 void Modem::setIMEI( string IMEI ) {}
-void Modem::setISP( string ISP ) {}
+void Modem::setISP( string ISP ) {
+	this->isp = ISP;
+}
 void Modem::setIndex( string index ) {
 	this->index = index;
 }
@@ -17,8 +19,12 @@ string Modem::getIndex() {
 	return this->index.empty() ? "" : this->index;
 }
 
-string Modem::getISP() {
+string Modem::getISP() const{
 	return this->isp.empty() ? "" : this->isp;
+}
+
+Modem::operator bool() const {
+	return !this->getISP().empty();
 }
 
 //class Modems
@@ -30,7 +36,7 @@ void Modems::__INIT__() {
 	vector<string> modem_indexes = helpers::split(list_of_modem_indexes, '\n', true);
 	
 	for(auto index : modem_indexes) {
-		//logger::logger(__FUNCTION__, "working with index: " + index );
+		logger::logger(__FUNCTION__, "working with index: " + index );
 		index = helpers::remove_char( index, ' ', 'E');
 		string modem_information = sys_calls::terminal_stdout("../../scripts/modem_information_extraction.sh extract " + index );
 		vector<string> ln_modem_information = helpers::split(modem_information, '\n', true);
@@ -45,9 +51,15 @@ void Modems::__INIT__() {
 				continue;
 			}
 			else if(component[0] == "equipment_id") modem.setIMEI( component[1]);
-			else if(component[0] == "operator_name") modem.setISP( component[1]);
+			else if(component[0] == "operator_name") {
+				logger::logger(__FUNCTION__, "Setting ISP: " + component[1]);
+				modem.setISP( component[1]);
+			}
 		}
-		if(modem) this->modemCollection.push_back( modem );
+		if(modem) {
+			logger::logger(__FUNCTION__, "Adding modem to list");
+			this->modemCollection.push_back( modem );
+		}
 	}
 	//logger::logger(__FUNCTION__, "Exited..");
 }

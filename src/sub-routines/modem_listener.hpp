@@ -15,7 +15,9 @@ class Modem {
 		void setISP( string ISP );
 
 		string getIndex();
-		string getISP();
+		string getISP() const;
+
+		explicit operator bool() const;
 };
 
 class Modems {
