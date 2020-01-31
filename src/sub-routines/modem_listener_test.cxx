@@ -18,9 +18,11 @@ int main() {
 	if(modems.getAllIndexes() == list_of_test_modems) {}
 	else {}
 
-	if(modems.getAllIsp() == list_of_test_modems_isp) {}
+	if(modems.getAllISP() == list_of_test_modems_isp) {}
 	else {}
 
 	if(modems.getIMEI() == list_of_test_modems_imei) {}
 	else {}
+
+	return 0;
 }
