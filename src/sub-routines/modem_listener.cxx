@@ -9,12 +9,18 @@ Modem::Modem() {}
 
 void Modem::setIMEI( string IMEI ) {}
 void Modem::setISP( string ISP ) {}
-void Modem::setIndex( string index ) {}
+void Modem::setIndex( string index ) {
+	this->index = index;
+}
+
+string Modem::getIndex() {
+	return this->index.empty() ? "" : this->index;
+}
 
 //class Modems
 Modems::Modems() {}
 
-Modems Modems::getAll() {
+void Modems::__INIT__() {
 	Modems modems;
 	string list_of_modem_indexes = sys_calls::terminal_stdout("../../scripts/modem_information_extraction.sh list");
 	vector<string> modem_indexes = helpers::split(list_of_modem_indexes, '\n', true);
@@ -36,12 +42,15 @@ Modems Modems::getAll() {
 			if( component[0] == "signal_quality") {}
 
 		}
-		modems.modemCollection.push_back( modem );
+		this->modemCollection.push_back( modem );
 	}
-	return modems;
 }
 vector<string> Modems::getAllIndexes() {
-
+	vector<string> list;
+	for(auto modem : this->modemCollection ) {
+		list.push_back( modem.getIndex() );
+	}
+	return list;
 }
 
 vector<string> Modems::getAllISP() {}

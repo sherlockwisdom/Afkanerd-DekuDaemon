@@ -5,19 +5,22 @@
 using namespace std;
 
 class Modem {
+	string index;
 	public:
 		Modem();
 
 		void setIndex( string index );
 		void setIMEI( string IMEI );
 		void setISP( string ISP );
+
+		string getIndex();
 };
 
 class Modems {
 	vector<Modem> modemCollection;
 	public:
 		Modems();
-		Modems getAll();
+		void __INIT__();
 		
 		vector<string> getAllIndexes();
 		vector<string> getAllISP();
