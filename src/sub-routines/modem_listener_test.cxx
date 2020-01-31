@@ -15,16 +15,26 @@ int main() {
 	if(modems.getAllIndexes().size() == list_of_test_modems.size()) {
 	}
 
-	else {}
+	else {
+		logger::logger(__FUNCTION__, "Not all modems accounted", "stderr" );
+	}
 
-	if(modems.getAllIndexes() == list_of_test_modems_indexes) {}
-	else {}
+	if(modems.getAllIndexes() == list_of_test_modems_indexes) {
+	
+	}
+	else {
+		logger::logger(__FUNCTION__, "Modems indexes do not match", "stderr");
+	}
 
 	if(modems.getAllISP() == list_of_test_modems_isp) {}
-	else {}
+	else {
+		logger::logger(__FUNCTION__, "Modems ISP do not match", "stderr");
+	}
 
 	if(modems.getAllIMEI() == list_of_test_modems_imei) {}
-	else {}
+	else {
+		logger::logger(__FUNCTION__, "Modems IMEI do not match", "stderr");
+	}
 
 	return 0;
 }
