@@ -6,7 +6,7 @@ using namespace std;
 int main() {
 	vector<string> list_of_test_modems_indexes {"1"};
 	vector<string> list_of_test_modems_isp {"MTN"};
-	vector<string> list_of_test_modems_imei {"3956c86f0af850256cc1689f4ee2441d9432dbdb"};
+	vector<string> list_of_test_modems_imei {"862566021235780"};
 
 	Modems modems;
 
@@ -36,6 +36,9 @@ int main() {
 	if(modems.getAllIMEI() == list_of_test_modems_imei) {}
 	else {
 		logger::logger(__FUNCTION__, "Modems IMEI do not match", "stderr");
+		for(auto imei : modems.getAllIMEI()) {
+			logger::logger(__FUNCTION__, "imei: " + imei, "stderr");
+		}
 	}
 
 	return 0;
