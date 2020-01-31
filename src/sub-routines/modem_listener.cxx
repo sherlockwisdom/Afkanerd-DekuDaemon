@@ -31,6 +31,7 @@ void Modems::__INIT__() {
 	
 	for(auto index : modem_indexes) {
 		//logger::logger(__FUNCTION__, "working with index: " + index );
+		index = helpers::remove_char( index, ' ', 'E');
 		string modem_information = sys_calls::terminal_stdout("../../scripts/modem_information_extraction.sh extract " + index );
 		vector<string> ln_modem_information = helpers::split(modem_information, '\n', true);
 

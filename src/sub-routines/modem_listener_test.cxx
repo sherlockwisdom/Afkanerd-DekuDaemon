@@ -23,6 +23,9 @@ int main() {
 	}
 	else {
 		logger::logger(__FUNCTION__, "Modems indexes do not match", "stderr");
+		for(auto indexes : modems.getAllIndexes() ) 
+			logger::logger(__FUNCTION__, "index: " + indexes + " - " + to_string(indexes.size()), "stderr" );
+		logger::logger(__FUNCTION__, "size = " + to_string(modems.getAllIndexes().size()), "stderr");
 	}
 
 	if(modems.getAllISP() == list_of_test_modems_isp) {}
