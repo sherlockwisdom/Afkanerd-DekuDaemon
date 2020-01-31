@@ -4,10 +4,11 @@ using namespace std;
 
 
 int main() {
-	map<string, string> list_of_test_modems;
-	vector<string> list_of_test_modems_indexes;
-	vector<string> list_of_test_modems_isp;
-	vector<string> list_of_test_modems_imei;
+	map<string, string> list_of_test_modems = {{"imei","3956c86f0af850256cc1689f4ee2441d9432dbdb"}, {"index","1"}}; //FORMAT, {"imei", "index"}
+	vector<string> list_of_test_modems_indexes = {"1"};
+	vector<string> list_of_test_modems_isp = {"MTN"};
+	vector<string> list_of_test_modems_imei = {"3956c86f0af850256cc1689f4ee2441d9432dbdb"};
+
 	Modems modems;
 
 	modems = modems.getAll();
