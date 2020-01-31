@@ -4,21 +4,16 @@ using namespace std;
 
 
 int main() {
-	map<string, string> list_of_test_modems = {
-		{"imei","3956c86f0af850256cc1689f4ee2441d9432dbdb"}, 
-		{"index","1"}
-	}; //FORMAT, {"imei", "index"}
-	vector<string> list_of_test_modems_indexes {"1"};
+	vector<string> list_of_test_modems_indexes {"1", "192.168.8.1"};
 	vector<string> list_of_test_modems_isp {"MTN"};
 	vector<string> list_of_test_modems_imei {"3956c86f0af850256cc1689f4ee2441d9432dbdb"};
 
 	Modems modems;
 
 	modems.__INIT__();
-	logger::logger(__FUNCTION__, "Checking against size.." );
-	if(modems.getAllIndexes().size() == list_of_test_modems.size()) {
+	// logger::logger(__FUNCTION__, "Checking against size.." );
+	if(modems.getAllIndexes().size() == list_of_test_modems_indexes.size()) {
 	}
-
 	else {
 		logger::logger(__FUNCTION__, "Not all modems accounted", "stderr" );
 	}

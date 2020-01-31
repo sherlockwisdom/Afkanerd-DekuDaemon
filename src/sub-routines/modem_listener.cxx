@@ -17,6 +17,10 @@ string Modem::getIndex() {
 	return this->index.empty() ? "" : this->index;
 }
 
+string Modem::getISP() {
+	return this->isp.empty() ? "" : this->isp;
+}
+
 //class Modems
 Modems::Modems() {}
 
@@ -56,6 +60,12 @@ vector<string> Modems::getAllIndexes() {
 	return list;
 }
 
-vector<string> Modems::getAllISP() {}
+vector<string> Modems::getAllISP() {
+	vector<string> list;
+	for(auto modem : this->modemCollection) {
+		list.push_back( modem.getISP() );
+	}
+	return list;
+}
 
 vector<string> Modems::getAllIMEI() {}

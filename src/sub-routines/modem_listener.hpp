@@ -6,6 +6,7 @@ using namespace std;
 
 class Modem {
 	string index;
+	string isp;
 	public:
 		Modem();
 
@@ -14,6 +15,7 @@ class Modem {
 		void setISP( string ISP );
 
 		string getIndex();
+		string getISP();
 };
 
 class Modems {
