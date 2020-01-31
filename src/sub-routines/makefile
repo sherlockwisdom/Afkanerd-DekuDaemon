@@ -9,3 +9,6 @@ $(TARGET): $(TARGET).cxx
 
 request_distribution_listener_test: request_distribution_listener_test.cxx
 	$(CC) $(CFLAGS) -o request_distribution_listener_test request_distribution_listener_test.cxx
+
+modem_listener: modem_listener.cxx
+	$(CC) $(CFLAGS) -o modem_listener modem_listener.cxx
