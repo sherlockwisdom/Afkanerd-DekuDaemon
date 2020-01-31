@@ -15,6 +15,7 @@ void Modem::setIndex( string index ) {}
 Modems::Modems() {}
 
 Modems Modems::getAll() {
+	Modems modems;
 	string list_of_modem_indexes = sys_calls::terminal_stdout("../../scripts/modem_information_extraction.sh list");
 	vector<string> modem_indexes = helpers::split(list_of_modem_indexes, '\n', true);
 	
@@ -35,8 +36,9 @@ Modems Modems::getAll() {
 			if( component[0] == "signal_quality") {}
 
 		}
-		modems.push_back( modem );
+		modems.modemCollection.push_back( modem );
 	}
+	return modems;
 }
 vector<string> Modems::getAllIndexes() {
 

@@ -14,7 +14,7 @@ class Modem {
 };
 
 class Modems {
-	vector<Modem> modems;
+	vector<Modem> modemCollection;
 	public:
 		Modems();
 		Modems getAll();
