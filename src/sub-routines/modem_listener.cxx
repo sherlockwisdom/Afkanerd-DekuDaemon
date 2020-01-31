@@ -22,18 +22,18 @@ Modems::Modems() {}
 
 void Modems::__INIT__() {
 	string list_of_modem_indexes = sys_calls::terminal_stdout("../../scripts/modem_information_extraction.sh list");
-	logger::logger(__FUNCTION__, list_of_modem_indexes );
+	//logger::logger(__FUNCTION__, list_of_modem_indexes );
 	vector<string> modem_indexes = helpers::split(list_of_modem_indexes, '\n', true);
 	
 	for(auto index : modem_indexes) {
-		logger::logger(__FUNCTION__, "working with index: " + index );
+		//logger::logger(__FUNCTION__, "working with index: " + index );
 		string modem_information = sys_calls::terminal_stdout("../../scripts/modem_information_extraction.sh extract " + index );
 		vector<string> ln_modem_information = helpers::split(modem_information, '\n', true);
 
 		Modem modem;
 		modem.setIndex( index );
 		for(auto ln : ln_modem_information) {
-			logger::logger(__FUNCTION__, "line: " + ln);
+			//logger::logger(__FUNCTION__, "line: " + ln);
 			vector<string> component = helpers::split(ln, ':', true);
 			if( component[0] == "equipment_id") 
 				modem.setIMEI( component.size() != 2 ? "" : component[1] );
@@ -46,7 +46,7 @@ void Modems::__INIT__() {
 		}
 		this->modemCollection.push_back( modem );
 	}
-	logger::logger(__FUNCTION__, "Exited..");
+	//logger::logger(__FUNCTION__, "Exited..");
 }
 vector<string> Modems::getAllIndexes() {
 	vector<string> list;
