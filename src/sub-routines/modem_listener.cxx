@@ -7,7 +7,9 @@ using namespace std;
 //class Modem
 Modem::Modem() {}
 
-void Modem::setIMEI( string IMEI ) {}
+void Modem::setIMEI( string IMEI ) {
+	this->IMEI = IMEI;
+}
 void Modem::setISP( string ISP ) {
 	this->isp = ISP;
 }
@@ -21,6 +23,10 @@ string Modem::getIndex() {
 
 string Modem::getISP() const{
 	return this->isp.empty() ? "" : this->isp;
+}
+
+string Modem::getIMEI() {
+	return this->imei.empty() ? "" : this->imei;
 }
 
 Modem::operator bool() const {
@@ -79,4 +85,10 @@ vector<string> Modems::getAllISP() {
 	return list;
 }
 
-vector<string> Modems::getAllIMEI() {}
+vector<string> Modems::getAllIMEI() {
+	vector<string> list;
+	for(auto modem: this->modemCollection) {
+		list.push_back( modem.getIMEI() );
+	}
+	return list;
+}

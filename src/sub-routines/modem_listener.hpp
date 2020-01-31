@@ -7,6 +7,7 @@ using namespace std;
 class Modem {
 	string index;
 	string isp;
+	string imei;
 	public:
 		Modem();
 
