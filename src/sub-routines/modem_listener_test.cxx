@@ -4,7 +4,7 @@ using namespace std;
 
 
 int main() {
-	vector<string> list_of_test_modems_indexes {"1", "192.168.8.1"};
+	vector<string> list_of_test_modems_indexes {"1"};
 	vector<string> list_of_test_modems_isp {"MTN"};
 	vector<string> list_of_test_modems_imei {"3956c86f0af850256cc1689f4ee2441d9432dbdb"};
 

@@ -40,14 +40,15 @@ void Modems::__INIT__() {
 		for(auto ln : ln_modem_information) {
 			//logger::logger(__FUNCTION__, "line: " + ln);
 			vector<string> component = helpers::split(ln, ':', true);
-			if( component[0] == "equipment_id") 
-				modem.setIMEI( component.size() != 2 ? "" : component[1] );
-			else 
-			if( component[0] == "operator_name")
-				modem.setISP( component.size() != 2 ? "" : component[1]);
-			else
-			if( component[0] == "signal_quality") {}
-
+			if((component.size() != 2 or component[1].empty())) {
+				logger::logger(__FUNCTION__, "Incomplete data for modem", "stderr");
+				continue;
+			}
+			else if(component[0] == "equipment_id") modem.setIMEI( component[1]);
+			else if(component[0] == "operator_name") modem.setISP( component[1]);
+			else {
+				logger::logger(__FUNCTION__, "component: " + component[1]);
+			}
 		}
 		this->modemCollection.push_back( modem );
 	}
