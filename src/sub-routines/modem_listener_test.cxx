@@ -66,7 +66,7 @@ int main() {
 			logger::logger(__FUNCTION__, modem.getIMEI(), "stderr");
 		}
 
-		if( modem.start() ){}
+		if(std::find(list_of_test_modems_imei.begin(), list_of_test_modems_imei.end(), modem.start()) != list_of_test_modems_imei.end() ){}
 		else {
 			logger::logger(__FUNCTION__, "Modem failed to start...", "stderr");
 			logger::logger(__FUNCTION__, modem.getErrorLogs(), "stderr");

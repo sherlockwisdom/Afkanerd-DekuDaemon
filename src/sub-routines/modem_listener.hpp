@@ -9,6 +9,8 @@ class Modem {
 	string isp;
 	string imei;
 	string errorLogs;
+
+	bool keepAlive = false;
 	public:
 		Modem();
 
@@ -16,7 +18,7 @@ class Modem {
 		void setIMEI( string IMEI );
 		void setISP( string ISP );
 		void modem_request_listener();
-		void modem_state_listener( Modem );
+		void modem_state_listener( );
 
 		string getIndex();
 		string getISP() const;
@@ -25,7 +27,7 @@ class Modem {
 
 		explicit operator bool() const;
 
-		bool start();
+		string start();
 		bool end();
 };
 

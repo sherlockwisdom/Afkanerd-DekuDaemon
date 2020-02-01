@@ -33,10 +33,12 @@ Modem::operator bool() const {
 	return !this->getISP().empty();
 }
 
-bool Modem::start() {
+string Modem::start() {
 	std::thread tr_modem_request_listener(&Modem::modem_request_listener, this);
-	tr_modem_request_listener.join(); //TODO: change to detach
-	return false;
+	std::thread tr_modem_state_listener(&Modem::modem_state_listener, this);
+	tr_modem_request_listener.detach(); //TODO: change to detach
+	tr_modem_state_listener.detach();
+	return this->getIMEI();
 }
 
 bool Modem::end() {
@@ -49,10 +51,17 @@ string Modem::getErrorLogs() {
 
 void Modem::modem_request_listener( ) {
 	logger::logger(__FUNCTION__, this->getIMEI() + " thread started...");
+	this->keepAlive = true;
 	//TODO: https://en.cppreference.com/w/cpp/thread/mutex
+	//TODO: begin making request for task and finishing the task
+	
+	while( this->keepAlive ) {
+	}
 }
 
-void Modem::modem_state_listener( Modem modem ) {}
+void Modem::modem_state_listener( ) {
+	//TODO: listens for changes to modems state and updates appropriately
+}
 
 //class Modems
 Modems::Modems() {}
