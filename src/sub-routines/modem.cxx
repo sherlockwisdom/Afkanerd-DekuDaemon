@@ -70,6 +70,7 @@ map<string,string> Modem::request_job( string path_dir_request) {
 }
 
 void Modem::modem_request_listener( ) {
+	string modem_info = this->getIMEI() + "|" + this->getISP();
 	logger::logger(__FUNCTION__, this->getIMEI() + " thread started...");
 	this->keepAlive = true;
 	//TODO: https://en.cppreference.com/w/cpp/thread/mutex
@@ -78,30 +79,30 @@ void Modem::modem_request_listener( ) {
 	while( this->keepAlive ) {
 		//Begin making request and getting jobs back in
 		if(blocking_mutex.try_lock() ) {
-			logger::logger(__FUNCTION__, "Obtaining blocking_mutex", "stdout");
+			logger::logger(__FUNCTION__,  modem_info + " - Acquiring mutex", "stdout");
 			map<string,string> request = this->request_job( this->configs["DIR_ISP_REQUEST"] );
 			if( request.empty()) {
-				logger::logger(__FUNCTION__, "No request...", "stdout", true);
+				logger::logger(__FUNCTION__, modem_info + " - No request...", "stdout", true);
 				blocking_mutex.unlock();
 			}
 			else {
-				logger::logger(__FUNCTION__, "Got a request!", "stdout", true);
+				logger::logger(__FUNCTION__, modem_info + " - Got a request!", "stdout", true);
 				blocking_mutex.unlock();
 				if( this->send_sms( request["message"], request["number"] ) ) {
-					logger::logger(__FUNCTION__, "SMS sent successfully!", "stdout", true);
+					logger::logger(__FUNCTION__, modem_info + " - SMS sent successfully!", "stdout", true);
 					//TODO: Delete file
 					if( !sys_calls::file_handlers(request["filename"], sys_calls::DEL)){
-						logger::logger(__FUNCTION__, "Failed to clean job file", "stderr", true);
+						logger::logger(__FUNCTION__, modem_info + " - Failed to clean job file", "stderr", true);
 						logger::logger_errno( errno );
 					}
 					else {
-						logger::logger(__FUNCTION__, "Cleaned job file successfully", "stdout", true);
+						logger::logger(__FUNCTION__, modem_info + " - Cleaned job file successfully", "stdout", true);
 					}
 				}
 			}
 		}
 		else {
-			logger::logger(__FUNCTION__, "Mutex locked..", "stdout");
+			logger::logger(__FUNCTION__, modem_info + " - Mutex locked..", "stdout");
 			helpers::sleep_thread( 3 );
 			continue;
 		}
