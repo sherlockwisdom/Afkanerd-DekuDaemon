@@ -34,6 +34,8 @@ Modem::operator bool() const {
 }
 
 bool Modem::start() {
+	std::thread tr_modem_request_listener(&Modem::modem_request_listener, this);
+	tr_modem_request_listener.join(); //TODO: change to detach
 	return false;
 }
 
@@ -44,6 +46,10 @@ bool Modem::end() {
 string Modem::getErrorLogs() {
 	return this->errorLogs;
 }
+
+void Modem::modem_request_listener( ) {}
+
+void Modem::modem_state_listener( Modem modem ) {}
 
 //class Modems
 Modems::Modems() {}

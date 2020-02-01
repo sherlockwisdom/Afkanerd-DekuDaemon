@@ -1,5 +1,5 @@
 CC = g++
-CFLAGS = -g -Wall
+CFLAGS = -g -Wall -pthread
 TARGET = isp_determiner_test
 
 default: $(TARGET)
