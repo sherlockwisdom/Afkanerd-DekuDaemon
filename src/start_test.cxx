@@ -3,7 +3,7 @@
 using namespace std;
 
 int main() {
-	string sys_config_file = "test_dir/test_config.txt";
+	string sys_config_file = "test_dir/sample_config.txt";
 	if( system_check( sys_config_file ) ) cout << "System file check passed" << endl;
 	else cout << "System file check failed" << endl;
 
