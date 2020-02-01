@@ -4,19 +4,36 @@
 using namespace std;
 
 namespace sys_calls {
-	enum FILE_FLAG{EXIST};
+	enum FILE_FLAG{EXIST, READ, DEL};
 	bool file_listeners( string file_path ) {}
 
 	template<class T>
 	T file_handlers( string file_path, FILE_FLAG flag) {
 		//TODO: can it check if dir exist??
-		switch( flag ) {
-			case EXIST:
-				struct stat buffer; 
-				return stat( file_path.c_str(), &buffer) == 0;
-			break;
 
-			//TODO: Add more system calls here depending on need
+		if(typeid(T) == typeid(bool)) {
+			switch( flag ) {
+				case EXIST:
+					struct stat buffer; 
+					return stat( file_path.c_str(), &buffer) == 0;
+				break;
+
+				case DEL:
+				break;
+			}
+		}
+		else
+		if(typeid(T) == typeid(vector<string>).name()) {
+			switch(flag) {
+				case READ:
+					ifstream readfile( file_path );
+					vector<string> file_content;
+					string tmp_string;
+					while(getline(readfile, tmp_string)) file_content.push_back(tmp_string);
+					readfile.close();
+					return file_conent;
+				break;
+			}
 		}
 	}
 
