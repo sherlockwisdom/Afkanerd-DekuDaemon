@@ -50,7 +50,7 @@ int main() {
 	for(auto modem : modems.getAllModems()) {
 		if(std::find( list_of_test_modems_indexes.begin(), list_of_test_modems_indexes.end(), modem.getIndex()) != list_of_test_modems_indexes.end()) {}
 		else {
-			logger::logger(__FUNCTION__, "Modem not found in list..", "stderr");
+			logger::logger(__FUNCTION__, "Modem Index not found in list..", "stderr");
 			logger::logger(__FUNCTION__, modem.getIndex(), "stderr");
 		}
 
@@ -64,6 +64,18 @@ int main() {
 		else {
 			logger::logger(__FUNCTION__, "Modem IMEI not found in list...", "stderr");
 			logger::logger(__FUNCTION__, modem.getIMEI(), "stderr");
+		}
+
+		if( modem.start() ){}
+		else {
+			logger::logger(__FUNCTION__, "Modem failed to start...", "stderr");
+			logger::logger(__FUNCTION__, modem.getErrorLogs(), "stderr");
+		}
+		
+		if( modem.end() ) {}
+		else {
+			logger::logger(__FUNCTION__, "Modem failed to end...", "stderr");
+			logger::logger(__FUNCTION__, modem.getErrorLogs(), "stderr");
 		}
 		
 	}
