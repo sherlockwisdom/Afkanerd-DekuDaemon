@@ -27,7 +27,7 @@ bool system_check( string path_to_sys_file) {
 		logger::logger(__FUNCTION__, config_line);
 		vector<string> configs = helpers::split(config_line, '=', true);
 		if(configs[0] == "DIR_REQUEST_FILE") {
-			logger::logger(__FUNCTION__, to_string(configs.size()));
+			//logger::logger(__FUNCTION__, to_string(configs.size()));
 			//TODO: check if dir exist, else create it
 			string dir_request_file = configs[1];
 			if(!helpers::file_exist( dir_request_file ) ) {
@@ -46,6 +46,8 @@ bool system_check( string path_to_sys_file) {
 			else logger::logger(__FUNCTION__, "DIR_ISP exist already exist" );
 		}
 	}
+
+	return true;
 }
 
 map<string,string> get_system_configs( vector<string> sys_config_lines ) {
