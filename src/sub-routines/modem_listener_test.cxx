@@ -5,7 +5,7 @@ using namespace std;
 int main() {
 	vector<string> list_of_test_modems_indexes {"2"};
 	vector<string> list_of_test_modems_isp {"MTN"};
-	vector<string> list_of_test_modems_imei {"862566021235780"};
+	vector<string> list_of_test_modems_imei {"861050001177396"};
 	map<string,string> configs;
 
 	Modems modems;

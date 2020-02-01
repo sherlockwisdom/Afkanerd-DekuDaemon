@@ -40,8 +40,8 @@ Modem::operator bool() const {
 string Modem::start() {
 	std::thread tr_modem_request_listener(&Modem::modem_request_listener, this);
 	std::thread tr_modem_state_listener(&Modem::modem_state_listener, this);
-	tr_modem_request_listener.detach(); //TODO: change to detach
-	tr_modem_state_listener.detach();
+	tr_modem_request_listener.join(); //TODO: change to detach
+	tr_modem_state_listener.join();
 	return this->getIMEI();
 }
 
@@ -56,7 +56,7 @@ string Modem::getErrorLogs() {
 map<string,string> Modem::request_job( string path_dir_request) {
 	map<string,string> request;
 	string filenames = sys_calls::terminal_stdout("ls -1 "+path_dir_request);	
-	if( filenames.empty() or filenames == "" ) return request;
+	if( filenames.empty() or filenames == "" or path_dir_request.empty()) return request;
 	
 	string filename = helpers::split(filenames, '\n', true)[0];
 	if(!sys_calls::rename_file(path_dir_request + "/" + filename, path_dir_request + "/." + filename)) {
@@ -80,17 +80,23 @@ void Modem::modem_request_listener( ) {
 		if(blocking_mutex.try_lock() ) {
 			logger::logger(__FUNCTION__, "Obtaining blocking_mutex", "stdout");
 			map<string,string> request = this->request_job( this->configs["DIR_ISP_REQUEST"] );
-
-			blocking_mutex.unlock();
-			if( this->send_sms( request["message"], request["number"] ) ) {
-				logger::logger(__FUNCTION__, "SMS sent successfully!", "stdout", true);
-				//TODO: Delete file
-				if( !sys_calls::file_handlers(request["filename"], sys_calls::DEL)){
-					logger::logger(__FUNCTION__, "Failed to clean job file", "stderr", true);
-					logger::logger_errno( errno );
-				}
-				else {
-					logger::logger(__FUNCTION__, "Cleaned job file successfully", "stdout", true);
+			if( request.empty()) {
+				logger::logger(__FUNCTION__, "No request...", "stdout", true);
+				blocking_mutex.unlock();
+			}
+			else {
+				logger::logger(__FUNCTION__, "Got a request!", "stdout", true);
+				blocking_mutex.unlock();
+				if( this->send_sms( request["message"], request["number"] ) ) {
+					logger::logger(__FUNCTION__, "SMS sent successfully!", "stdout", true);
+					//TODO: Delete file
+					if( !sys_calls::file_handlers(request["filename"], sys_calls::DEL)){
+						logger::logger(__FUNCTION__, "Failed to clean job file", "stderr", true);
+						logger::logger_errno( errno );
+					}
+					else {
+						logger::logger(__FUNCTION__, "Cleaned job file successfully", "stdout", true);
+					}
 				}
 			}
 		}
