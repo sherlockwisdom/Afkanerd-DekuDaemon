@@ -48,23 +48,25 @@ int main() {
 	}
 
 	for(auto modem : modems.getAllModems()) {
-		if(list_of_test_modems_indexes.find( modem.getIndex()) != list_of_test_modems_indexes.end()) {}
+		if(std::find( list_of_test_modems_indexes.begin(), list_of_test_modems_indexes.end(), modem.getIndex()) != list_of_test_modems_indexes.end()) {}
 		else {
 			logger::logger(__FUNCTION__, "Modem not found in list..", "stderr");
 			logger::logger(__FUNCTION__, modem.getIndex(), "stderr");
 		}
 
-		if(list_of_test_modems_isp.find( modem.getISP()) != list_of_test_modems_isp.end()){}
+		if(std::find(list_of_test_modems_isp.begin(), list_of_test_modems_isp.end(), modem.getISP()) != list_of_test_modems_isp.end()){}
 		else {
 			logger::logger(__FUNCTION__, "Modem ISP not found in list...", "stderr");
 			logger::logger(__FUNCTION__, modem.getISP(), "stderr");
 		}
 
-		if(list_of_test_modems_imei.find( modem.getIMEI()) != list_of_test_modems_imei.end()){}
+		if(std::find(list_of_test_modems_imei.begin(), list_of_test_modems_imei.end(), modem.getIMEI()) != list_of_test_modems_imei.end()){}
 		else {
 			logger::logger(__FUNCTION__, "Modem IMEI not found in list...", "stderr");
 			logger::logger(__FUNCTION__, modem.getIMEI(), "stderr");
 		}
+		
+	}
 
 	return 0;
 }
