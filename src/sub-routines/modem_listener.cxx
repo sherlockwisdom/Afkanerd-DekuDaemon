@@ -47,7 +47,9 @@ string Modem::getErrorLogs() {
 	return this->errorLogs;
 }
 
-void Modem::modem_request_listener( ) {}
+void Modem::modem_request_listener( ) {
+	logger::logger(__FUNCTION__, this->getIMEI() + " thread started...");
+}
 
 void Modem::modem_state_listener( Modem modem ) {}
 
