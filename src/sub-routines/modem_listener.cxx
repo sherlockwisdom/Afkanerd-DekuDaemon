@@ -49,6 +49,7 @@ string Modem::getErrorLogs() {
 
 void Modem::modem_request_listener( ) {
 	logger::logger(__FUNCTION__, this->getIMEI() + " thread started...");
+	//TODO: https://en.cppreference.com/w/cpp/thread/mutex
 }
 
 void Modem::modem_state_listener( Modem modem ) {}
