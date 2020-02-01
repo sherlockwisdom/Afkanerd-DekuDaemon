@@ -2,7 +2,6 @@
 
 using namespace std;
 
-
 int main() {
 	vector<string> list_of_test_modems_indexes {"2"};
 	vector<string> list_of_test_modems_isp {"MTN"};
