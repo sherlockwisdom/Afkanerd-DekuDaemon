@@ -117,3 +117,5 @@ vector<string> Modems::getAllIMEI() {
 vector<Modem> Modems::getAllModems() {
 	return this->modemCollection;
 }
+
+bool Modems::start( Modem modem ) {}
