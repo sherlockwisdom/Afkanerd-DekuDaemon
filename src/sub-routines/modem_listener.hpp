@@ -31,6 +31,8 @@ class Modems {
 		vector<string> getAllIndexes();
 		vector<string> getAllISP();
 		vector<string> getAllIMEI();
+
+		vector<Modem> getAllModems();
 };
 
 #endif

@@ -92,3 +92,7 @@ vector<string> Modems::getAllIMEI() {
 	}
 	return list;
 }
+
+vector<Modem> Modems::getAllModems() {
+	return this->modemCollection;
+}

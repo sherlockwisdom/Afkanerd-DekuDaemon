@@ -4,7 +4,7 @@ using namespace std;
 
 
 int main() {
-	vector<string> list_of_test_modems_indexes {"1"};
+	vector<string> list_of_test_modems_indexes {"2"};
 	vector<string> list_of_test_modems_isp {"MTN"};
 	vector<string> list_of_test_modems_imei {"862566021235780"};
 
@@ -25,7 +25,7 @@ int main() {
 		logger::logger(__FUNCTION__, "Modems indexes do not match", "stderr");
 		for(auto indexes : modems.getAllIndexes() ) 
 			logger::logger(__FUNCTION__, "index: " + indexes + " - " + to_string(indexes.size()), "stderr" );
-		logger::logger(__FUNCTION__, "size = " + to_string(modems.getAllIndexes().size()), "stderr");
+		//logger::logger(__FUNCTION__, "size = " + to_string(modems.getAllIndexes().size()), "stderr");
 	}
 
 	if(modems.getAllISP() == list_of_test_modems_isp) {}
@@ -40,6 +40,31 @@ int main() {
 			logger::logger(__FUNCTION__, "imei: " + imei, "stderr");
 		}
 	}
+
+	if(modems.getAllModems().size() == list_of_test_modems_indexes.size()) {}
+	else {
+		logger::logger(__FUNCTION__, "Modems do not match", "stderr");
+		logger::logger(__FUNCTION__, "# of modems: " + to_string(modems.getAllModems().size()), "stderr");
+	}
+
+	for(auto modem : modems.getAllModems()) {
+		if(list_of_test_modems_indexes.find( modem.getIndex()) != list_of_test_modems_indexes.end()) {}
+		else {
+			logger::logger(__FUNCTION__, "Modem not found in list..", "stderr");
+			logger::logger(__FUNCTION__, modem.getIndex(), "stderr");
+		}
+
+		if(list_of_test_modems_isp.find( modem.getISP()) != list_of_test_modems_isp.end()){}
+		else {
+			logger::logger(__FUNCTION__, "Modem ISP not found in list...", "stderr");
+			logger::logger(__FUNCTION__, modem.getISP(), "stderr");
+		}
+
+		if(list_of_test_modems_imei.find( modem.getIMEI()) != list_of_test_modems_imei.end()){}
+		else {
+			logger::logger(__FUNCTION__, "Modem IMEI not found in list...", "stderr");
+			logger::logger(__FUNCTION__, modem.getIMEI(), "stderr");
+		}
 
 	return 0;
 }
