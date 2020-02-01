@@ -8,6 +8,7 @@ class Modem {
 	string index;
 	string isp;
 	string imei;
+	string errorLogs;
 	public:
 		Modem();
 
@@ -18,8 +19,12 @@ class Modem {
 		string getIndex();
 		string getISP() const;
 		string getIMEI();
+		string getErrorLogs();
 
 		explicit operator bool() const;
+
+		bool start();
+		bool end();
 };
 
 class Modems {

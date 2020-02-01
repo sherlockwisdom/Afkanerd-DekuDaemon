@@ -33,6 +33,18 @@ Modem::operator bool() const {
 	return !this->getISP().empty();
 }
 
+bool Modem::start() {
+	return false;
+}
+
+bool Modem::end() {
+	return false;
+}
+
+string Modem::getErrorLogs() {
+	return this->errorLogs;
+}
+
 //class Modems
 Modems::Modems() {}
 
