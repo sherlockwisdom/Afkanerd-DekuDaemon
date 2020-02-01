@@ -64,7 +64,7 @@ map<string,string> Modem::request_job( string path_dir_request) {
 		logger::logger_errno( errno );
 		return request;
 	}
-	string request_content = sys_calls::file_handlers<vector<string>>(path_dir_request + "/." + filename, sys_calls::READ)[0];
+	string request_content = helpers::read_file(path_dir_request + "/." + filename)[0];
 	request = request_distribution_listener::request_parser( request_content );
 	return request;
 }
@@ -85,7 +85,7 @@ void Modem::modem_request_listener( ) {
 			if( this->send_sms( request["message"], request["number"] ) ) {
 				logger::logger(__FUNCTION__, "SMS sent successfully!", "stdout", true);
 				//TODO: Delete file
-				if( !sys_calls::file_handlers<bool>(request["filename"], sys_calls::DEL)){
+				if( !sys_calls::file_handlers(request["filename"], sys_calls::DEL)){
 					logger::logger(__FUNCTION__, "Failed to clean job file", "stderr", true);
 					logger::logger_errno( errno );
 				}
