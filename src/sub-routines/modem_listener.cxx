@@ -9,7 +9,7 @@ std::mutex mutex;
 //class Modems
 Modems::Modems() {}
 
-void Modems::__INIT__() {
+void Modems::__INIT__( map<string, string> configs ) {
 	string list_of_modem_indexes = sys_calls::terminal_stdout("../../scripts/modem_information_extraction.sh list");
 	//logger::logger(__FUNCTION__, list_of_modem_indexes );
 	vector<string> modem_indexes = helpers::split(list_of_modem_indexes, '\n', true);
@@ -20,7 +20,7 @@ void Modems::__INIT__() {
 		string modem_information = sys_calls::terminal_stdout("../../scripts/modem_information_extraction.sh extract " + index );
 		vector<string> ln_modem_information = helpers::split(modem_information, '\n', true);
 
-		Modem modem;
+		Modem modem( configs );
 		modem.setIndex( index );
 		for(auto ln : ln_modem_information) {
 			//logger::logger(__FUNCTION__, "line: " + ln);

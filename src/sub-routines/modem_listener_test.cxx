@@ -6,10 +6,11 @@ int main() {
 	vector<string> list_of_test_modems_indexes {"2"};
 	vector<string> list_of_test_modems_isp {"MTN"};
 	vector<string> list_of_test_modems_imei {"862566021235780"};
+	map<string,string> configs;
 
 	Modems modems;
 
-	modems.__INIT__();
+	modems.__INIT__( configs );
 	// logger::logger(__FUNCTION__, "Checking against size.." );
 	if(modems.getAllIndexes().size() == list_of_test_modems_indexes.size()) {
 	}

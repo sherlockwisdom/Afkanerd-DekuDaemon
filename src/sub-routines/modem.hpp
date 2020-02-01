@@ -9,8 +9,9 @@ class Modem {
 	string errorLogs;
 
 	bool keepAlive = false;
+	map<string,string> configs;
 	public:
-		Modem();
+		Modem(map<string,string> configs);
 
 		void setIndex( string index );
 		void setIMEI( string IMEI );
@@ -22,11 +23,14 @@ class Modem {
 		string getISP() const;
 		string getIMEI();
 		string getErrorLogs();
+		string start();
 
 		explicit operator bool() const;
 
-		string start();
 		bool end();
+		bool send_sms(string message, string number);
+
+		map<string,string> request_job( string path_dir_request );
 };
 
 #endif

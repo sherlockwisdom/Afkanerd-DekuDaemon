@@ -2,11 +2,14 @@
 #include <iostream>
 #include <thread>
 #include <mutex>
-#include "../formatters/helpers.hpp"
+#include "../sys_calls/sys_calls.hpp"
+#include "request_distribution_listener.cxx"
 using namespace std;
 std::mutex blocking_mutex;
 //class Modem
-Modem::Modem() {}
+Modem::Modem(map<string,string> configs) {
+	this->configs = configs;
+}
 
 void Modem::setIMEI( string IMEI ) {
 	this->imei = IMEI;
@@ -50,6 +53,22 @@ string Modem::getErrorLogs() {
 	return this->errorLogs;
 }
 
+map<string,string> Modem::request_job( string path_dir_request) {
+	map<string,string> request;
+	string filenames = sys_calls::terminal_stdout("ls -1 "+path_dir_request);	
+	if( filenames.empty() or filenames == "" ) return request;
+	
+	string filename = helpers::split(filenames, '\n', true)[0];
+	if(!sys_calls::rename_file(path_dir_request + "/" + filename, path_dir_request + "/." + filename)) {
+		logger::logger(__FUNCTION__, "Failed renaming request file...", "stderr", true);
+		logger::logger_errno( errno );
+		return request;
+	}
+	string request_content = sys_calls::file_handlers<vector<string>>(path_dir_request + "/." + filename, sys_calls::READ)[0];
+	request = request_distribution_listener::request_parser( request_content );
+	return request;
+}
+
 void Modem::modem_request_listener( ) {
 	logger::logger(__FUNCTION__, this->getIMEI() + " thread started...");
 	this->keepAlive = true;
@@ -60,18 +79,34 @@ void Modem::modem_request_listener( ) {
 		//Begin making request and getting jobs back in
 		if(blocking_mutex.try_lock() ) {
 			logger::logger(__FUNCTION__, "Obtaining blocking_mutex", "stdout");
-			//TODO: read list of file and get job,
-			//TODO: then rename job to fit a completely different category
+			map<string,string> request = this->request_job( this->configs["DIR_ISP_REQUEST"] );
+
 			blocking_mutex.unlock();
-			//TODO: send message and get results
+			if( this->send_sms( request["message"], request["number"] ) ) {
+				logger::logger(__FUNCTION__, "SMS sent successfully!", "stdout", true);
+				//TODO: Delete file
+				if( !sys_calls::file_handlers<bool>(request["filename"], sys_calls::DEL)){
+					logger::logger(__FUNCTION__, "Failed to clean job file", "stderr", true);
+					logger::logger_errno( errno );
+				}
+				else {
+					logger::logger(__FUNCTION__, "Cleaned job file successfully", "stdout", true);
+				}
+			}
 		}
 		else {
 			logger::logger(__FUNCTION__, "Mutex locked..", "stdout");
-			//TODO: sleep for a while
+			helpers::sleep_thread( 3 );
+			continue;
 		}
+		helpers::sleep_thread( 10 );
 	}
 }
 
 void Modem::modem_state_listener( ) {
 	//TODO: listens for changes to modems state and updates appropriately
+}
+
+bool Modem::send_sms(string message, string number ) {
+	//TODO: something here to send the messages
 }

@@ -10,7 +10,7 @@ class Modems {
 	vector<Modem> modemCollection;
 	public:
 		Modems();
-		void __INIT__();
+		void __INIT__( map<string,string> configs );
 		
 		vector<string> getAllIndexes();
 		vector<string> getAllISP();
