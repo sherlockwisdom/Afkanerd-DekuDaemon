@@ -1,9 +1,10 @@
 #include "modem.hpp"
 #include <iostream>
 #include <thread>
+#include <mutex>
 #include "../formatters/helpers.hpp"
 using namespace std;
-
+std::mutex blocking_mutex;
 //class Modem
 Modem::Modem() {}
 
@@ -56,6 +57,18 @@ void Modem::modem_request_listener( ) {
 	//TODO: begin making request for task and finishing the task
 	
 	while( this->keepAlive ) {
+		//Begin making request and getting jobs back in
+		if(blocking_mutex.try_lock() ) {
+			logger::logger(__FUNCTION__, "Obtaining blocking_mutex", "stdout");
+			//TODO: read list of file and get job,
+			//TODO: then rename job to fit a completely different category
+			blocking_mutex.unlock();
+			//TODO: send message and get results
+		}
+		else {
+			logger::logger(__FUNCTION__, "Mutex locked..", "stdout");
+			//TODO: sleep for a while
+		}
 	}
 }
 

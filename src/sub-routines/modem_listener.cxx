@@ -1,9 +1,11 @@
 #include "modem_listener.hpp"
 #include "../formatters/helpers.hpp"
 #include "../sys_calls/sys_calls.hpp"
+#include <mutex>
 
 using namespace std;
 
+std::mutex mutex;
 //class Modems
 Modems::Modems() {}
 
