@@ -106,6 +106,7 @@ void modem_request_listener( Modem& modem ) {
 	}
 	logger::logger(__FUNCTION__, modem_info + " - KeepAlive died!" );
 	modem.setThreadSafety(false);
+
 }
 
 void modem_state_listener( Modem& modem ) {

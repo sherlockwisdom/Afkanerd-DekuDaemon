@@ -48,7 +48,10 @@ int main() {
 		logger::logger(__FUNCTION__, "# of modems: " + to_string(modems.getAllModems().size()), "stderr");
 	}
 
-	for(auto modem : modems.getAllModems()) {
+	
+	std::thread tr_modem_start;
+
+	for(auto& modem : modems.getAllModems()) {
 		if(std::find( list_of_test_modems_indexes.begin(), list_of_test_modems_indexes.end(), modem.getIndex()) != list_of_test_modems_indexes.end()) {}
 		else {
 			logger::logger(__FUNCTION__, "Modem Index not found in list..", "stderr");
@@ -75,20 +78,27 @@ int main() {
 		}
 		*/
 
-		std::thread tr_modem_start(&Modem::start, std::ref(modem));
-		tr_modem_start.detach();
-		helpers::sleep_thread(2);
+		tr_modem_start = std::thread(&Modem::start, std::ref(modem));
+		//tr_modem_start.detach();
+		helpers::sleep_thread(10);
+		cout << boolalpha << modem.getKeepAlive() << endl;
+		cout << &modem << endl;
+
+		cout << boolalpha << modem.getKeepAlive() << endl;
 		if(modem.getKeepAlive()){}
 		else {
 			logger::logger(__FUNCTION__, "Failed to start modem thread", "stderr");
 			logger::logger(__FUNCTION__, modem.getErrorLogs(), "stderr");
 			cout << __FUNCTION__ << ": " << &modem << endl;
 		}
-		helpers::sleep_thread( 15 );
-		
+		helpers::sleep_thread(3 );
 		modem.end();
 		while( modem.getThreadSafety()) {
 			logger::logger(__FUNCTION__, "Thread safety on");
+			helpers::sleep_thread(2);
+		}
+		while( tr_modem_start.joinable()) {
+			logger::logger(__FUNCTION__, "Joinable...");
 			helpers::sleep_thread(2);
 		}
 		if( !modem.getKeepAlive()) {}
@@ -97,8 +107,9 @@ int main() {
 			logger::logger(__FUNCTION__, modem.getErrorLogs(), "stderr");
 		}
 
-		
+		tr_modem_start.join();
 	}
 
+	logger::logger(__FUNCTION__, "finishing the program...");
 	return 0;
 }
