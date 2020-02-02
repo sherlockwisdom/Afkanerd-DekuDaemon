@@ -76,6 +76,7 @@ int main() {
 		*/
 
 		std::thread tr_modem_start(&Modem::start, std::ref(modem));
+		tr_modem_start.detach();
 		helpers::sleep_thread(2);
 		if(modem.getKeepAlive()){}
 		else {
@@ -87,6 +88,7 @@ int main() {
 		
 		modem.end();
 		while( modem.getThreadSafety()) {
+			logger::logger(__FUNCTION__, "Thread safety on");
 			helpers::sleep_thread(2);
 		}
 		if( !modem.getKeepAlive()) {}
@@ -94,6 +96,7 @@ int main() {
 			logger::logger(__FUNCTION__, "Modem failed to end...", "stderr");
 			logger::logger(__FUNCTION__, modem.getErrorLogs(), "stderr");
 		}
+
 		
 	}
 
