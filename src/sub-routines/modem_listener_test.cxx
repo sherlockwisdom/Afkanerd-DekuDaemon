@@ -74,7 +74,7 @@ int main() {
 		}
 		*/
 
-		modem.start();
+		std::thread tr_modem_start(&Modem::start, modem);
 		if(modem.getKeepAlive()){}
 		else {
 			logger::logger(__FUNCTION__, "Failed to start modem thread", "stderr");
