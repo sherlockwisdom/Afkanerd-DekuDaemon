@@ -15,9 +15,11 @@ Modem::Modem(map<string,string> configs, STATE state) {
 void Modem::setIMEI( string IMEI ) {
 	this->imei = IMEI;
 }
+
 void Modem::setISP( string ISP ) {
 	this->isp = ISP;
 }
+
 void Modem::setIndex( string index ) {
 	this->index = index;
 }
@@ -92,20 +94,27 @@ void modem_request_listener( Modem& modem ) {
 		}
 		helpers::sleep_thread( 10 );
 	}
+	logger::logger(__FUNCTION__, modem_info + " - KeepAlive died!" );
+}
+
+void modem_state_listener( Modem& modem ) {
+	//TODO: listens for changes to modems state and updates appropriately
 }
 
 string Modem::start() {
 	//std::thread tr_modem_request_listener(&Modem::modem_request_listener, this, this->configs);
-	std::thread tr_modem_request_listener = std::thread(modem_request_listener, std::ref(*this));
-	std::thread tr_modem_state_listener(&Modem::modem_state_listener, this);
+	//std::thread tr_modem_request_listener = std::thread(modem_request_listener, std::ref(*this));
+	//std::thread tr_modem_state_listener = std::thread(modem_state_listener, std::ref(*this));
 
 	//if(this->state == TEST) tr_modem_request_listener.detach(); //TODO: change to detach
-	if(this->state == TEST) tr_modem_request_listener.join(); //TODO: change to detach
-	else if(this->state == PRODUCTION) tr_modem_request_listener.join();
+	//if(this->state == TEST) tr_modem_request_listener.join(); //TODO: change to detach
+	//else if(this->state == PRODUCTION) tr_modem_request_listener.join();
+	//this->request_thread_id.push_back(tr_modem_request_listener);
 
 	//if(this->state == TEST) tr_modem_state_listener.detach();
-	if(this->state == TEST) tr_modem_state_listener.join();
-	else if(this->state == PRODUCTION) tr_modem_state_listener.join();
+	//if(this->state == TEST) tr_modem_state_listener.join();
+	//else if(this->state == PRODUCTION) tr_modem_state_listener.join();
+	this->keepAlive = true;
 	return this->getIMEI();
 }
 
@@ -133,11 +142,23 @@ map<string,string> Modem::request_job( string path_dir_request) {
 	return request;
 }
 
-
-void Modem::modem_state_listener( ) {
-	//TODO: listens for changes to modems state and updates appropriately
-}
-
 bool Modem::send_sms(string message, string number ) {
 	//TODO: something here to send the messages
+}
+
+Modem::~Modem() {
+	if(this->keepAlive) {
+		logger::logger(__FUNCTION__, "Keeping Modem as a service...");
+		std::thread tr_modem_request_listener = std::thread(modem_request_listener, std::ref(*this));
+		std::thread tr_modem_state_listener = std::thread(modem_state_listener, std::ref(*this));
+
+		//if(this->state == TEST) tr_modem_request_listener.detach(); //TODO: change to detach
+		if(this->state == TEST) tr_modem_request_listener.join(); //TODO: change to detach
+		else if(this->state == PRODUCTION) tr_modem_request_listener.join();
+
+		//if(this->state == TEST) tr_modem_state_listener.detach();
+		if(this->state == TEST) tr_modem_state_listener.join();
+		else if(this->state == PRODUCTION) tr_modem_state_listener.join();
+	}
+
 }
