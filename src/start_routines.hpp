@@ -45,6 +45,13 @@ bool system_check( string path_to_sys_file) {
 			}
 			else logger::logger(__FUNCTION__, "DIR_ISP exist already exist" );
 		}
+		else if(configs[0] == "DIR_SCRIPTS") {
+			string dir_scripts = configs[1];
+			if(!helpers::file_exist( dir_scripts )) {
+				logger::logger(__FUNCTION__, "PATH TO SCRIPT NOT VALID...", "stderr", true);
+				return false;
+			}
+		}
 	}
 
 	return true;
