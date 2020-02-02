@@ -49,6 +49,7 @@ int main() {
 	}
 
 	
+	vector<std::thread> threads;
 	std::thread tr_modem_start;
 
 	for(auto& modem : modems.getAllModems()) {
@@ -78,7 +79,7 @@ int main() {
 		}
 		*/
 
-		tr_modem_start = std::thread(&Modem::start, std::ref(modem));
+		threads.push_back( std::thread(&Modem::start, std::ref(modem)));
 		//tr_modem_start.detach();
 		helpers::sleep_thread(10);
 		cout << boolalpha << modem.getKeepAlive() << endl;
@@ -107,9 +108,11 @@ int main() {
 			logger::logger(__FUNCTION__, modem.getErrorLogs(), "stderr");
 		}
 
-		tr_modem_start.join();
 	}
 
+	for(int i=0;i<threads.size();++i) {
+		threads[i].join();
+	}
 	logger::logger(__FUNCTION__, "finishing the program...");
 	return 0;
 }
