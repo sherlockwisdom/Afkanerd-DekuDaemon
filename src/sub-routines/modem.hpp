@@ -24,12 +24,12 @@ class Modem {
 		//void modem_request_listener(map<string,string> configs={});
 		//void modem_state_listener( );
 		void setKeepAlive( bool keepAlive);
+		void start();
 
 		string getIndex();
 		string getISP() const;
 		string getIMEI();
 		string getErrorLogs();
-		string start();
 
 		explicit operator bool() const;
 
