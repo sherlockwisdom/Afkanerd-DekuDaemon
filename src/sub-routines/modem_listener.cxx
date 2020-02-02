@@ -32,20 +32,9 @@ void Modems::__INIT__( map<string, string> configs ) {
 			index = helpers::remove_char( index, ' ', 'E');
 
 		if( this->modemCollection.size() > 0 and modem_indexes.size() != this->modemCollection.size()) {
-			logger::logger(__FUNCTION__, "Changes have been made to modems");
-			for(vector<Modem>::iterator i=this->modemCollection.begin();i!=this->modemCollection.end();++i) {
-				if(std::find(modem_indexes.begin(), modem_indexes.end(), i->getIndex()) == modem_indexes.end()) {
-					cout << i->getIndex().size() << endl;
-					logger::logger(__FUNCTION__, i->getInfo() + " - Not index list, removing.." + i->getIndex());
-					this->modemCollection.erase( i );
-					--i;
-				}
-			}
-			if( modem_indexes.size() != this->modemCollection.size()) {
-				//logger::logger(__FUNCTION__, "Something has gone very wrong with checking modem changes", "stderr", true);
-			}
 		}
-		
+
+		vector<Modem> tmp_modemCollection;
 		for(auto index : modem_indexes) {
 			//logger::logger(__FUNCTION__, "working with index: " + index );
 			string modem_information = sys_calls::terminal_stdout(configs["DIR_SCRIPTS"] + "/modem_information_extraction.sh extract " + index );
@@ -72,32 +61,11 @@ void Modems::__INIT__( map<string, string> configs ) {
 			}
 			//TODO: What happens if a modem changes, but index remains
 			//TODO: what happens when a modem is completely removed
-			bool __updated = false;
 			if(std::find(this->modemCollection.begin(), this->modemCollection.end(), modem) == this->modemCollection.end()) {
-				for(auto& running_modem : this->modemCollection) {
-					logger::logger(__FUNCTION__, "Checking modem changes...");
-					if( running_modem.getIMEI() == modem.getIMEI() ){
-						logger::logger(__FUNCTION__, running_modem.getInfo() + " - Already running with same IMEI");
-						if(running_modem.getISP() == modem.getISP() ) {
-							logger::logger(__FUNCTION__, running_modem.getInfo() + " - Already running with same ISP");
-						}
-						else {
-							running_modem.setISP( modem.getISP());
-						}	
-
-						if(running_modem.getIndex() == modem.getIndex()) {
-							logger::logger(__FUNCTION__, running_modem.getInfo() + " - Already running with same Index");
-						}
-						else {
-							running_modem.setIndex( modem.getIndex() );
-						}
-						__updated = true;
-					}
-				}
-				if(modem and !__updated) {
+				if(modem) {
 					string modem_info = modem.getIMEI() + "|" + modem.getISP();
 					logger::logger(__FUNCTION__, modem_info + " - Adding modem to list");
-					this->modemCollection.push_back( modem );
+					tmp_modemCollection.push_back( modem );
 				}
 			}
 			else {
@@ -105,6 +73,7 @@ void Modems::__INIT__( map<string, string> configs ) {
 			}
 		}
 		//logger::logger(__FUNCTION__, "Exited..");
+		this->modemCollection = tmp_modemCollection;
 		helpers::sleep_thread( 10 );
 	}
 }
