@@ -75,10 +75,12 @@ int main() {
 		*/
 
 		std::thread tr_modem_start(&Modem::start, modem);
+		helpers::sleep_thread(2);
 		if(modem.getKeepAlive()){}
 		else {
 			logger::logger(__FUNCTION__, "Failed to start modem thread", "stderr");
 			logger::logger(__FUNCTION__, modem.getErrorLogs(), "stderr");
+			cout << __FUNCTION__ << ": " << &modem << endl;
 		}
 		helpers::sleep_thread( 15 );
 		

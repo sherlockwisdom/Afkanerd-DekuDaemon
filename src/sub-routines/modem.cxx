@@ -55,6 +55,7 @@ map<string,string> Modem::getConfigs() {
 void modem_request_listener( Modem& modem ) {
 	string modem_info = modem.getIMEI() + "|" + modem.getISP();
 	logger::logger(__FUNCTION__, modem.getIMEI() + " thread started...");
+	cout << __FUNCTION__ << ": " << &modem << endl;
 	modem.setKeepAlive(true);
 	//TODO: https://en.cppreference.com/w/cpp/thread/mutex
 	//TODO: begin making request for task and finishing the task
