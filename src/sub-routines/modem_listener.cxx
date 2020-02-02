@@ -26,6 +26,19 @@ void Modems::__INIT__( map<string, string> configs ) {
 		string list_of_modem_indexes = sys_calls::terminal_stdout(configs["DIR_SCRIPTS"] + "/modem_information_extraction.sh list");
 		//logger::logger(__FUNCTION__, list_of_modem_indexes );
 		vector<string> modem_indexes = helpers::split(list_of_modem_indexes, '\n', true);
+
+		if( modem_indexes.size() != this->modemCollection.size()) {
+			logger::logger(__FUNCTION__, "Changes have been made to modems");
+			for(auto modem: this->modemCollection) {
+				if(std::find(modem_indexes.begin(), modem_indexes.end(), modem.getIndex()) == modem_indexes.end()) {
+					logger::logger(__FUNCTION__, modem.getInfo() + " - Not index list, removing..");
+					this->modemCollection.erase( modem );
+				}
+			}
+			if( modem_indexes.size() != this->modemCollection.size()) {
+				logger::logger(__FUNCTION__, "Something has gone very wrong with checking modem changes", "stderr", true);
+			}
+		}
 		
 		for(auto index : modem_indexes) {
 			//logger::logger(__FUNCTION__, "working with index: " + index );
@@ -52,8 +65,31 @@ void Modems::__INIT__( map<string, string> configs ) {
 					modem.setISP( component[1]);
 				}
 			}
+			//TODO: What happens if a modem changes, but index remains
+			//TODO: what happens when a modem is completely removed
+			bool __updated = false;
 			if(std::find(this->modemCollection.begin(), this->modemCollection.end(), modem) == this->modemCollection.end()) {
-				if(modem ) {
+				for(auto& running_modem : this->modemCollection) {
+					logger::logger(__FUNCTION__, "Checking modem changes...");
+					if( running_modem.getIMEI() == modem.getIMEI() ){
+						logger::logger(__FUNCTION__, running_modem.getInfo() + " - Already running with same IMEI");
+						if(running_modem.getISP() == modem.getISP() ) {
+							logger::logger(__FUNCTION__, running_modem.getInfo() + " - Already running with same ISP");
+						}
+						else {
+							running_modem.setISP( modem.getISP());
+						}	
+
+						if(running_modem.getIndex() == modem.getIndex()) {
+							logger::logger(__FUNCTION__, running_modem.getInfo() + " - Already running with same Index");
+						}
+						else {
+							running_modem.setIndex( modem.getIndex() );
+						}
+						__updated = true;
+					}
+				}
+				if(modem and !__updated) {
 					string modem_info = modem.getIMEI() + "|" + modem.getISP();
 					logger::logger(__FUNCTION__, modem_info + " - Adding modem to list");
 					this->modemCollection.push_back( modem );
@@ -115,6 +151,14 @@ void Modems::startAllModems() {
 		}
 		for(auto i=this->threaded_modems.begin();i!=this->threaded_modems.end();++i){
 			if(i->second.joinable()) i->second.detach();
+			if(std::find(this->modemCollection.begin(), this->modemCollection.end(), i->first) == this->modemCollection.end()) {
+				logger::logger(__FUNCTION__, i->first.getInfo() + " - Modem not available, stopping thread");
+				Modem modem = i->first;
+				modem.end();
+				helpers::sleep_thread(5);
+				this->threaded_modems.erase(i);
+				--i;
+			}
 		}
 		helpers::sleep_thread( 5 );
 	}
