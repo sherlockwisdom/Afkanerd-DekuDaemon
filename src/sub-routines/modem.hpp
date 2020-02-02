@@ -10,6 +10,7 @@ class Modem {
 	string errorLogs;
 
 	bool keepAlive = false;
+	bool thread_safety = false;
 	map<string,string> configs;
 	
 	public:
@@ -25,6 +26,7 @@ class Modem {
 		//void modem_state_listener( );
 		void setKeepAlive( bool keepAlive);
 		void start();
+		void setThreadSafety( bool thread_safety );
 
 		string getIndex();
 		string getISP() const;
@@ -36,6 +38,7 @@ class Modem {
 		bool end();
 		bool send_sms(string message, string number);
 		bool getKeepAlive();
+		bool getThreadSafety();
 
 		map<string,string> request_job( string path_dir_request );
 		map<string,string> getConfigs();

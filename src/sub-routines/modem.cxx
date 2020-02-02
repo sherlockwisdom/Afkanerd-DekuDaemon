@@ -48,6 +48,14 @@ bool Modem::getKeepAlive() {
 	return this->keepAlive;
 }
 
+bool Modem::getThreadSafety() {
+	return this->thread_safety;
+}
+
+void Modem::setThreadSafety( bool thread_safety ) {
+	this->thread_safety = thread_safety;
+}
+
 map<string,string> Modem::getConfigs() {
 	return this->configs;
 }
@@ -60,6 +68,7 @@ void modem_request_listener( Modem& modem ) {
 	//TODO: https://en.cppreference.com/w/cpp/thread/mutex
 	//TODO: begin making request for task and finishing the task
 	
+	modem.setThreadSafety( false );
 	while( modem.getKeepAlive() ) {
 		//Begin making request and getting jobs back in
 		if(blocking_mutex.try_lock() ) {
@@ -96,6 +105,7 @@ void modem_request_listener( Modem& modem ) {
 		helpers::sleep_thread( 10 );
 	}
 	logger::logger(__FUNCTION__, modem_info + " - KeepAlive died!" );
+	modem.setThreadSafety(true);
 }
 
 void modem_state_listener( Modem& modem ) {

@@ -86,6 +86,9 @@ int main() {
 		helpers::sleep_thread( 15 );
 		
 		modem.end();
+		while( modem.getThreadSafety()) {
+			helpers::sleep_thread(2);
+		}
 		if( !modem.getKeepAlive()) {}
 		else {
 			logger::logger(__FUNCTION__, "Modem failed to end...", "stderr");
