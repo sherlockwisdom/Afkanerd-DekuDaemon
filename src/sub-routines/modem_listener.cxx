@@ -112,6 +112,16 @@ bool Modems::start( Modem modem ) {
 void Modems::startAllModems() {
 	while( 1 ) {  //TODO: Change this to a condition
 		logger::logger(__FUNCTION__, "Looking to start new modems...");
+		for(auto modem_thread : this->threaded_modems ) {
+			if(std::find(this->modemCollection.begin(), this->modemCollection.end(), modem_thread.first) == this->modemCollection.begin()) {
+
+				logger::logger(__FUNCTION__, modem_thread.first.getInfo() + " - Modem not available, stopping thread");
+				modem_thread.second.detach();
+				modem_thread.first.end();
+				while(!modem_thread.first.getThreadSafety()) helpers::sleep_thread(5);
+				this->threaded_modems.erase(*i);
+			}
+		}
 		for(auto& modem : this->modemCollection) {
 			//this->threaded_modems.push_back( std::thread(&Modem::start, modem));
 			if(this->threaded_modems.find(modem) == this->threaded_modems.end()) {
@@ -121,19 +131,6 @@ void Modems::startAllModems() {
 			}
 			else {
 				logger::logger(__FUNCTION__, modem.getInfo() + " - Already threaded..." );
-			}
-		}
-		for(auto i=this->threaded_modems.begin();i!=this->threaded_modems.end();++i){
-			if(i->second.joinable()) i->second.detach();
-			if(std::find(std::begin(this->modemCollection), std::end(this->modemCollection), i->first) == std::end(this->modemCollection)) {
-				logger::logger(__FUNCTION__, i->first.getInfo() + " - Modem not available, stopping thread");
-				Modem modem = i->first;
-				modem.end(); //TODO: THIS DOESN'T work well!!!
-				while(!modem.getThreadSafety()) {
-					helpers::sleep_thread(5);
-				}
-				this->threaded_modems.erase(i);
-				--i;
 			}
 		}
 		helpers::sleep_thread( 5 );
