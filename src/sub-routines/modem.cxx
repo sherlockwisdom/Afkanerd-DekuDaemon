@@ -104,9 +104,8 @@ void modem_request_listener( Modem& modem ) {
 		}
 		helpers::sleep_thread( 10 );
 	}
-	logger::logger(__FUNCTION__, modem_info + " - KeepAlive died!" );
 	modem.setThreadSafety(false);
-
+	logger::logger(__FUNCTION__, modem_info + " - KeepAlive died!" );
 }
 
 void modem_state_listener( Modem& modem ) {
@@ -173,4 +172,6 @@ Modem::~Modem() {
 		else if(this->state == PRODUCTION) tr_modem_state_listener.join();
 	}
 	*/
+
+	logger::logger(__FUNCTION__, "Destructor called...");
 }

@@ -50,7 +50,6 @@ int main() {
 
 	
 	vector<std::thread> threads;
-	std::thread tr_modem_start;
 
 	vector<Modem> all_modems = modems.getAllModems();
 
@@ -96,13 +95,19 @@ int main() {
 		}
 	}
 
-	for(auto modem : all_modems ) {
+	for(int i=0;i<threads.size();++i) {
+		threads[i].join();
+	}
+
+	for(auto& modem : all_modems ) {
 		modem.end();
 		while( modem.getThreadSafety()) {
 			logger::logger(__FUNCTION__, "Thread safety on");
 			helpers::sleep_thread(2);
 		}
-		if( !modem.getKeepAlive()) {}
+		if( !modem.getKeepAlive()) {
+			logger::logger(__FUNCTION__, "modem set for termination...");
+		}
 		else {
 			logger::logger(__FUNCTION__, "Modem failed to end...", "stderr");
 			logger::logger(__FUNCTION__, modem.getErrorLogs(), "stderr");
@@ -110,9 +115,6 @@ int main() {
 	}
 
 
-	for(int i=0;i<threads.size();++i) {
-		threads[i].join();
-	}
 	logger::logger(__FUNCTION__, "finishing the program...");
 	return 0;
 }
