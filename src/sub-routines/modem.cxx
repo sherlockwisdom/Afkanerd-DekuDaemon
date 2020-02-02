@@ -38,7 +38,7 @@ Modem::operator bool() const {
 }
 
 string Modem::start() {
-	std::thread tr_modem_request_listener(&Modem::modem_request_listener, this);
+	std::thread tr_modem_request_listener(&Modem::modem_request_listener, this, this->configs);
 	std::thread tr_modem_state_listener(&Modem::modem_state_listener, this);
 	tr_modem_request_listener.join(); //TODO: change to detach
 	tr_modem_state_listener.join();
@@ -69,7 +69,7 @@ map<string,string> Modem::request_job( string path_dir_request) {
 	return request;
 }
 
-void Modem::modem_request_listener( ) {
+void Modem::modem_request_listener( map<string,string> configs ) {
 	string modem_info = this->getIMEI() + "|" + this->getISP();
 	logger::logger(__FUNCTION__, this->getIMEI() + " thread started...");
 	this->keepAlive = true;
@@ -80,7 +80,7 @@ void Modem::modem_request_listener( ) {
 		//Begin making request and getting jobs back in
 		if(blocking_mutex.try_lock() ) {
 			logger::logger(__FUNCTION__,  modem_info + " - Acquiring mutex", "stdout");
-			map<string,string> request = this->request_job( this->configs["DIR_ISP_REQUEST"] );
+			map<string,string> request = this->request_job( configs["DIR_ISP_REQUEST"] );
 			if( request.empty()) {
 				logger::logger(__FUNCTION__, modem_info + " - No request...", "stdout", true);
 				blocking_mutex.unlock();
@@ -98,6 +98,9 @@ void Modem::modem_request_listener( ) {
 					else {
 						logger::logger(__FUNCTION__, modem_info + " - Cleaned job file successfully", "stdout", true);
 					}
+				}
+				else {
+					//TODO: SMS failed to go, release the files....
 				}
 			}
 		}

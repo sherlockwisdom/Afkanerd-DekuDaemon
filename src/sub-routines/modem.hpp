@@ -16,7 +16,7 @@ class Modem {
 		void setIndex( string index );
 		void setIMEI( string IMEI );
 		void setISP( string ISP );
-		void modem_request_listener();
+		void modem_request_listener(map<string,string> configs={});
 		void modem_state_listener( );
 
 		string getIndex();
