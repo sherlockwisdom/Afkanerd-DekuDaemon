@@ -29,10 +29,11 @@ void Modems::__INIT__( map<string, string> configs ) {
 
 		if( modem_indexes.size() != this->modemCollection.size()) {
 			logger::logger(__FUNCTION__, "Changes have been made to modems");
-			for(auto modem: this->modemCollection) {
-				if(std::find(modem_indexes.begin(), modem_indexes.end(), modem.getIndex()) == modem_indexes.end()) {
-					logger::logger(__FUNCTION__, modem.getInfo() + " - Not index list, removing..");
-					this->modemCollection.erase( modem );
+			for(vector<Modem>::iterator i=this->modemCollection.begin();i!=this->modemCollection.end();++i) {
+				if(std::find(modem_indexes.begin(), modem_indexes.end(), i->getIndex()) == modem_indexes.end()) {
+					logger::logger(__FUNCTION__, i->getInfo() + " - Not index list, removing..");
+					this->modemCollection.erase( i );
+					--i;
 				}
 			}
 			if( modem_indexes.size() != this->modemCollection.size()) {
