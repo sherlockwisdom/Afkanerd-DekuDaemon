@@ -3,12 +3,12 @@
 using namespace std;
 
 int main() {
-	vector<string> list_of_test_modems_indexes {"2"};
+	vector<string> list_of_test_modems_indexes {"4"};
 	vector<string> list_of_test_modems_isp {"MTN"};
 	vector<string> list_of_test_modems_imei {"861050001177396"};
 	map<string,string> configs;
 
-	Modems modems;
+	Modems modems( Modems::TEST );
 
 	modems.__INIT__( configs );
 	// logger::logger(__FUNCTION__, "Checking against size.." );

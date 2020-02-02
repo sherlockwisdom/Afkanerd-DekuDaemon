@@ -7,7 +7,9 @@ using namespace std;
 
 std::mutex mutex;
 //class Modems
-Modems::Modems() {}
+Modems::Modems( STATE state) {
+	this->state = state;
+}
 
 void Modems::__INIT__( map<string, string> configs ) {
 	string list_of_modem_indexes = sys_calls::terminal_stdout("../../scripts/modem_information_extraction.sh list");

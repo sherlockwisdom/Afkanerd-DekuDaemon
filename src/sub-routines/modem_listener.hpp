@@ -9,7 +9,10 @@ using namespace std;
 class Modems {
 	vector<Modem> modemCollection;
 	public:
-		Modems();
+		enum STATE{TEST, PRODUCTION};
+		STATE state;
+		Modems( STATE state);
+
 		void __INIT__( map<string,string> configs );
 		
 		vector<string> getAllIndexes();

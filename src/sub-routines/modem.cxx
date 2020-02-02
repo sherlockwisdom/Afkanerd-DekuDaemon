@@ -40,7 +40,7 @@ Modem::operator bool() const {
 string Modem::start() {
 	std::thread tr_modem_request_listener(&Modem::modem_request_listener, this, this->configs);
 	std::thread tr_modem_state_listener(&Modem::modem_state_listener, this);
-	tr_modem_request_listener.join(); //TODO: change to detach
+	tr_modem_request_listener.detach(); //TODO: change to detach
 	tr_modem_state_listener.join();
 	return this->getIMEI();
 }
