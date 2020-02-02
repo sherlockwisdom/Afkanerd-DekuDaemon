@@ -74,7 +74,7 @@ int main() {
 		}
 		*/
 
-		std::thread tr_modem_start(&Modem::start, modem);
+		std::thread tr_modem_start(&Modem::start, std::ref(modem));
 		helpers::sleep_thread(2);
 		if(modem.getKeepAlive()){}
 		else {
