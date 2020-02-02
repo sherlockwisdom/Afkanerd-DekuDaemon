@@ -55,7 +55,8 @@ int main(int argc, char** argv) {
 	//tr_request_distribution_listener.join();
 	//tr_request_execution_listener.join();
 	
-	Modems modems( Modems::PRODUCTION );
+	//Modems modems( Modems::PRODUCTION );
+	Modems modems( Modems::TEST );
 
 	std::thread listen_modems = std::thread(&Modems::__INIT__, std::ref(modems), configs);
 	listen_modems.join();

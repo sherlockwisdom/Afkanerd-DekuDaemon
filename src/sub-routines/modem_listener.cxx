@@ -8,6 +8,15 @@ using namespace std;
 //class Modems
 Modems::Modems( STATE state) {
 	this->state = state;
+	switch( state ) {
+		case TEST:
+			logger::show_state = "TESTING";
+		break;
+
+		case PRODUCTION:
+			logger::show_state = "PRODUCTION";
+		break;
+	}
 }
 
 void Modems::__INIT__( map<string, string> configs ) {
@@ -34,7 +43,7 @@ void Modems::__INIT__( map<string, string> configs ) {
 				//logger::logger(__FUNCTION__, "line: " + ln);
 				vector<string> component = helpers::split(ln, ':', true);
 				if((component.size() != 2 or component[1].empty())) {
-					logger::logger(__FUNCTION__, "Incomplete data for modem", "stderr");
+					logger::logger(__FUNCTION__, "Incomplete data for modem at index: " + index, "stderr");
 					continue;
 				}
 				else if(component[0] == "equipment_id") modem.setIMEI( component[1]);
