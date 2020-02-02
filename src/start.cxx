@@ -59,7 +59,9 @@ int main(int argc, char** argv) {
 	Modems modems( Modems::TEST );
 
 	std::thread listen_modems = std::thread(&Modems::__INIT__, std::ref(modems), configs);
+	std::thread start_modems = std::thread(&Modems::startAllModems, std::ref(modems));
 	listen_modems.join();
+	start_modems.join();
 	
 	return 0;
 }

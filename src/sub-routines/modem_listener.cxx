@@ -52,9 +52,10 @@ void Modems::__INIT__( map<string, string> configs ) {
 					modem.setISP( component[1]);
 				}
 			}
-			if(std::find(this->modemCollection.begin(), this->modemCollection.end(), modem) != this->modemCollection.end()) {
+			if(std::find(this->modemCollection.begin(), this->modemCollection.end(), modem) == this->modemCollection.end()) {
 				if(modem ) {
-					//logger::logger(__FUNCTION__, "Adding modem to list");
+					string modem_info = modem.getIMEI() + "|" + modem.getISP();
+					logger::logger(__FUNCTION__, modem_info + " - Adding modem to list");
 					this->modemCollection.push_back( modem );
 				}
 			}
