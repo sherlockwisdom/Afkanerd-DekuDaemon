@@ -32,6 +32,7 @@ class Modem {
 		string getISP() const;
 		string getIMEI() const;
 		string getErrorLogs();
+		string getInfo() const;
 
 		explicit operator bool() const;
 		bool operator==(Modem modem) const;

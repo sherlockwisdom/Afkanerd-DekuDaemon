@@ -36,6 +36,10 @@ string Modem::getIMEI() const {
 	return this->imei.empty() ? "" : this->imei;
 }
 
+string Modem::getInfo() const {
+	return this->getIMEI() + "|" + this->getISP();
+}
+
 Modem::operator bool() const {
 	return !this->getISP().empty();
 }

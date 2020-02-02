@@ -102,12 +102,17 @@ bool Modems::start( Modem modem ) {
 void Modems::startAllModems() {
 	for(auto& modem : this->modemCollection) {
 		//this->threaded_modems.push_back( std::thread(&Modem::start, modem));
-		//this->threaded_modems.insert(make_pair(modem, std::thread(&Modem::start, std::ref(modem))));
-		this->threaded_modems[modem] = std::thread(&Modem::start, std::ref(modem));
+		if(this->threaded_modems.find(modem) == this->threaded_modems.end()) {
+			this->threaded_modems.insert(make_pair(modem, std::thread(&Modem::start, std::ref(modem))));
+			logger::logger(__FUNCTION__, modem.getInfo() + " - Began thread...");
+			//this->threaded_modems[modem] = std::thread(&Modem::start, std::ref(modem));
+		}
+		else {
+			logger::logger(__FUNCTION__, modem.getInfo() + " - Already threaded..." );
+		}
 	}
-	/*
 	for(auto i=this->threaded_modems.begin();i!=this->threaded_modems.end();++i){
 		i->second.detach();
 	}
-	*/
+	
 }
