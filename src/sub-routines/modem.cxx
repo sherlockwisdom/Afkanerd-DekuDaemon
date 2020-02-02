@@ -38,14 +38,73 @@ Modem::operator bool() const {
 	return !this->getISP().empty();
 }
 
+void Modem::setKeepAlive( bool keepAlive ) {
+	this->keepAlive = keepAlive;
+}
+
+bool Modem::getKeepAlive() {
+	return this->keepAlive;
+}
+
+map<string,string> Modem::getConfigs() {
+	return this->configs;
+}
+
+void modem_request_listener( Modem& modem ) {
+	string modem_info = modem.getIMEI() + "|" + modem.getISP();
+	logger::logger(__FUNCTION__, modem.getIMEI() + " thread started...");
+	modem.setKeepAlive(true);
+	//TODO: https://en.cppreference.com/w/cpp/thread/mutex
+	//TODO: begin making request for task and finishing the task
+	
+	while( modem.getKeepAlive() ) {
+		//Begin making request and getting jobs back in
+		if(blocking_mutex.try_lock() ) {
+			logger::logger(__FUNCTION__,  modem_info + " - Acquiring mutex", "stdout");
+			map<string,string> request = modem.request_job( modem.getConfigs()["DIR_ISP_REQUEST"] );
+			if( request.empty()) {
+				logger::logger(__FUNCTION__, modem_info + " - No request...", "stdout", true);
+				blocking_mutex.unlock();
+			}
+			else {
+				logger::logger(__FUNCTION__, modem_info + " - Got a request!", "stdout", true);
+				blocking_mutex.unlock();
+				if( modem.send_sms( request["message"], request["number"] ) ) {
+					logger::logger(__FUNCTION__, modem_info + " - SMS sent successfully!", "stdout", true);
+					//TODO: Delete file
+					if( !sys_calls::file_handlers(request["filename"], sys_calls::DEL)){
+						logger::logger(__FUNCTION__, modem_info + " - Failed to clean job file", "stderr", true);
+						logger::logger_errno( errno );
+					}
+					else {
+						logger::logger(__FUNCTION__, modem_info + " - Cleaned job file successfully", "stdout", true);
+					}
+				}
+				else {
+					//TODO: SMS failed to go, release the files....
+				}
+			}
+		}
+		else {
+			logger::logger(__FUNCTION__, modem_info + " - Mutex locked..", "stdout");
+			helpers::sleep_thread( 3 );
+			continue;
+		}
+		helpers::sleep_thread( 10 );
+	}
+}
+
 string Modem::start() {
-	std::thread tr_modem_request_listener(&Modem::modem_request_listener, this, this->configs);
+	//std::thread tr_modem_request_listener(&Modem::modem_request_listener, this, this->configs);
+	std::thread tr_modem_request_listener = std::thread(modem_request_listener, std::ref(*this));
 	std::thread tr_modem_state_listener(&Modem::modem_state_listener, this);
 
-	if(this->state == TEST) tr_modem_request_listener.detach(); //TODO: change to detach
+	//if(this->state == TEST) tr_modem_request_listener.detach(); //TODO: change to detach
+	if(this->state == TEST) tr_modem_request_listener.join(); //TODO: change to detach
 	else if(this->state == PRODUCTION) tr_modem_request_listener.join();
 
-	if(this->state == TEST) tr_modem_request_listener.detach();
+	//if(this->state == TEST) tr_modem_state_listener.detach();
+	if(this->state == TEST) tr_modem_state_listener.join();
 	else if(this->state == PRODUCTION) tr_modem_state_listener.join();
 	return this->getIMEI();
 }
@@ -74,49 +133,6 @@ map<string,string> Modem::request_job( string path_dir_request) {
 	return request;
 }
 
-void Modem::modem_request_listener( map<string,string> configs ) {
-	string modem_info = this->getIMEI() + "|" + this->getISP();
-	logger::logger(__FUNCTION__, this->getIMEI() + " thread started...");
-	this->keepAlive = true;
-	//TODO: https://en.cppreference.com/w/cpp/thread/mutex
-	//TODO: begin making request for task and finishing the task
-	
-	while( this->keepAlive ) {
-		//Begin making request and getting jobs back in
-		if(blocking_mutex.try_lock() ) {
-			logger::logger(__FUNCTION__,  modem_info + " - Acquiring mutex", "stdout");
-			map<string,string> request = this->request_job( configs["DIR_ISP_REQUEST"] );
-			if( request.empty()) {
-				logger::logger(__FUNCTION__, modem_info + " - No request...", "stdout", true);
-				blocking_mutex.unlock();
-			}
-			else {
-				logger::logger(__FUNCTION__, modem_info + " - Got a request!", "stdout", true);
-				blocking_mutex.unlock();
-				if( this->send_sms( request["message"], request["number"] ) ) {
-					logger::logger(__FUNCTION__, modem_info + " - SMS sent successfully!", "stdout", true);
-					//TODO: Delete file
-					if( !sys_calls::file_handlers(request["filename"], sys_calls::DEL)){
-						logger::logger(__FUNCTION__, modem_info + " - Failed to clean job file", "stderr", true);
-						logger::logger_errno( errno );
-					}
-					else {
-						logger::logger(__FUNCTION__, modem_info + " - Cleaned job file successfully", "stdout", true);
-					}
-				}
-				else {
-					//TODO: SMS failed to go, release the files....
-				}
-			}
-		}
-		else {
-			logger::logger(__FUNCTION__, modem_info + " - Mutex locked..", "stdout");
-			helpers::sleep_thread( 3 );
-			continue;
-		}
-		helpers::sleep_thread( 10 );
-	}
-}
 
 void Modem::modem_state_listener( ) {
 	//TODO: listens for changes to modems state and updates appropriately

@@ -18,8 +18,9 @@ class Modem {
 		void setIndex( string index );
 		void setIMEI( string IMEI );
 		void setISP( string ISP );
-		void modem_request_listener(map<string,string> configs={});
+		//void modem_request_listener(map<string,string> configs={});
 		void modem_state_listener( );
+		void setKeepAlive( bool keepAlive);
 
 		string getIndex();
 		string getISP() const;
@@ -31,8 +32,10 @@ class Modem {
 
 		bool end();
 		bool send_sms(string message, string number);
+		bool getKeepAlive();
 
 		map<string,string> request_job( string path_dir_request );
+		map<string,string> getConfigs();
 };
 
 #endif
