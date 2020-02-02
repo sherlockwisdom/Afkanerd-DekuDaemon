@@ -28,12 +28,13 @@ class Modem {
 		void start();
 		void setThreadSafety( bool thread_safety );
 
-		string getIndex();
+		string getIndex() const;
 		string getISP() const;
-		string getIMEI();
+		string getIMEI() const;
 		string getErrorLogs();
 
 		explicit operator bool() const;
+		bool operator==(Modem modem) const;
 
 		bool end();
 		bool send_sms(string message, string number);

@@ -24,7 +24,7 @@ void Modem::setIndex( string index ) {
 	this->index = index;
 }
 
-string Modem::getIndex() {
+string Modem::getIndex() const {
 	return this->index.empty() ? "" : this->index;
 }
 
@@ -32,12 +32,20 @@ string Modem::getISP() const{
 	return this->isp.empty() ? "" : this->isp;
 }
 
-string Modem::getIMEI() {
+string Modem::getIMEI() const {
 	return this->imei.empty() ? "" : this->imei;
 }
 
 Modem::operator bool() const {
 	return !this->getISP().empty();
+}
+
+bool Modem::operator==( Modem modem ) const {
+	return (
+			modem.getIndex() == this->getIndex() and
+			modem.getISP() == this->getISP() and
+			modem.getIMEI() == this->getIMEI()
+	);
 }
 
 void Modem::setKeepAlive( bool keepAlive ) {

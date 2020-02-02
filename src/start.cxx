@@ -1,8 +1,9 @@
 // Purpose: Starts all the functions that monitor the hardware and monitors the request files
 #include "start_routines.hpp"
 #include "formatters/helpers.hpp"
-#include "sub-routines/request_distribution_listener.cxx"
+//#include "sub-routines/request_distribution_listener.cxx"
 //#include "sub-routines/request_execution_listener.cxx"
+#include "sub-routines/modem_listener.cxx"
 using namespace std;
 
 int main(int argc, char** argv) {
@@ -53,6 +54,11 @@ int main(int argc, char** argv) {
 
 	//tr_request_distribution_listener.join();
 	//tr_request_execution_listener.join();
+	
+	Modems modems( Modems::PRODUCTION );
+
+	std::thread listen_modems = std::thread(&Modems::__INIT__, std::ref(modems), configs);
+	listen_modems.join();
 	
 	return 0;
 }
