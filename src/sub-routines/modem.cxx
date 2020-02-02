@@ -7,8 +7,9 @@
 using namespace std;
 std::mutex blocking_mutex;
 //class Modem
-Modem::Modem(map<string,string> configs) {
+Modem::Modem(map<string,string> configs, STATE state) {
 	this->configs = configs;
+	this->state = state;
 }
 
 void Modem::setIMEI( string IMEI ) {
@@ -40,8 +41,12 @@ Modem::operator bool() const {
 string Modem::start() {
 	std::thread tr_modem_request_listener(&Modem::modem_request_listener, this, this->configs);
 	std::thread tr_modem_state_listener(&Modem::modem_state_listener, this);
-	tr_modem_request_listener.detach(); //TODO: change to detach
-	tr_modem_state_listener.join();
+
+	if(this->state == TEST) tr_modem_request_listener.detach(); //TODO: change to detach
+	else if(this->state == PRODUCTION) tr_modem_request_listener.join();
+
+	if(this->state == TEST) tr_modem_request_listener.detach();
+	else if(this->state == PRODUCTION) tr_modem_state_listener.join();
 	return this->getIMEI();
 }
 

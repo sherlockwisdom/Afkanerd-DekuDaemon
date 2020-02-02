@@ -11,7 +11,9 @@ class Modem {
 	bool keepAlive = false;
 	map<string,string> configs;
 	public:
-		Modem(map<string,string> configs);
+		enum STATE {TEST, PRODUCTION};
+		STATE state;
+		Modem(map<string,string> configs, STATE state = TEST);
 
 		void setIndex( string index );
 		void setIMEI( string IMEI );

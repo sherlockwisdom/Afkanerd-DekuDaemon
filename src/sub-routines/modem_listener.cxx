@@ -22,7 +22,11 @@ void Modems::__INIT__( map<string, string> configs ) {
 		string modem_information = sys_calls::terminal_stdout("../../scripts/modem_information_extraction.sh extract " + index );
 		vector<string> ln_modem_information = helpers::split(modem_information, '\n', true);
 
-		Modem modem( configs );
+		Modem::STATE modem_state = Modem::TEST;
+		if(this->state == TEST) modem_state = Modem::TEST; 
+		else if(this->state == PRODUCTION) modem_state = Modem::PRODUCTION;
+		
+		Modem modem( configs, modem_state);
 		modem.setIndex( index );
 		for(auto ln : ln_modem_information) {
 			//logger::logger(__FUNCTION__, "line: " + ln);
