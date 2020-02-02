@@ -23,14 +23,14 @@ void Modems::__INIT__( map<string, string> configs ) {
 
 	while( 1 ) {
 		logger::logger(__FUNCTION__, "Refreshing modem list..");
-		string list_of_modem_indexes = sys_calls::terminal_stdout("../../scripts/modem_information_extraction.sh list");
+		string list_of_modem_indexes = sys_calls::terminal_stdout(configs["DIR_SCRIPTS"] + "/modem_information_extraction.sh list");
 		//logger::logger(__FUNCTION__, list_of_modem_indexes );
 		vector<string> modem_indexes = helpers::split(list_of_modem_indexes, '\n', true);
 		
 		for(auto index : modem_indexes) {
 			//logger::logger(__FUNCTION__, "working with index: " + index );
 			index = helpers::remove_char( index, ' ', 'E');
-			string modem_information = sys_calls::terminal_stdout("../../scripts/modem_information_extraction.sh extract " + index );
+			string modem_information = sys_calls::terminal_stdout(configs["DIR_SCRIPTS"] + "/modem_information_extraction.sh extract " + index );
 			vector<string> ln_modem_information = helpers::split(modem_information, '\n', true);
 
 			Modem::STATE modem_state = Modem::TEST;
