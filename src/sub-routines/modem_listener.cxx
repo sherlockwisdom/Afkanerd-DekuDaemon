@@ -125,10 +125,10 @@ void Modems::startAllModems() {
 		}
 		for(auto i=this->threaded_modems.begin();i!=this->threaded_modems.end();++i){
 			if(i->second.joinable()) i->second.detach();
-			if(std::find(this->modemCollection.begin(), this->modemCollection.end(), i->first) == this->modemCollection.end()) {
+			if(std::find(std::begin(this->modemCollection), std::end(this->modemCollection), i->first) == std::end(this->modemCollection)) {
 				logger::logger(__FUNCTION__, i->first.getInfo() + " - Modem not available, stopping thread");
 				Modem modem = i->first;
-				modem.end();
+				modem.end(); //TODO: THIS DOESN'T work well!!!
 				while(!modem.getThreadSafety()) {
 					helpers::sleep_thread(5);
 				}
