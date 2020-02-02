@@ -37,7 +37,7 @@ string Modem::getIMEI() const {
 }
 
 string Modem::getInfo() const {
-	return this->getIMEI() + "|" + this->getISP();
+	return this->getIMEI() + "|" + this->getISP() + "|" + this->getIndex();
 }
 
 Modem::operator bool() const {
@@ -65,6 +65,8 @@ bool Modem::operator<( Modem modem ) const {
 }
 
 void Modem::setKeepAlive( bool keepAlive ) {
+	string changedKeepAlive = keepAlive ? "true" : "false";
+	logger::logger(__FUNCTION__, this->getInfo() + " - Changing keepAlive to " + changedKeepAlive);
 	this->keepAlive = keepAlive;
 }
 
@@ -152,7 +154,7 @@ void Modem::start() {
 }
 
 bool Modem::end() {
-	this->keepAlive = false;
+	this->setKeepAlive(false);
 	return true;
 }
 

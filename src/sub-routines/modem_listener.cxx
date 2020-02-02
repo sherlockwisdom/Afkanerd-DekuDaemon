@@ -26,24 +26,28 @@ void Modems::__INIT__( map<string, string> configs ) {
 		string list_of_modem_indexes = sys_calls::terminal_stdout(configs["DIR_SCRIPTS"] + "/modem_information_extraction.sh list");
 		//logger::logger(__FUNCTION__, list_of_modem_indexes );
 		vector<string> modem_indexes = helpers::split(list_of_modem_indexes, '\n', true);
+		logger::logger(__FUNCTION__, "Number of indexes: " + to_string(modem_indexes.size()));
+		logger::logger(__FUNCTION__, "Number of collected modems: " + to_string(this->modemCollection.size()));
+		for(auto& index : modem_indexes )	
+			index = helpers::remove_char( index, ' ', 'E');
 
-		if( modem_indexes.size() != this->modemCollection.size()) {
+		if( this->modemCollection.size() > 0 and modem_indexes.size() != this->modemCollection.size()) {
 			logger::logger(__FUNCTION__, "Changes have been made to modems");
 			for(vector<Modem>::iterator i=this->modemCollection.begin();i!=this->modemCollection.end();++i) {
 				if(std::find(modem_indexes.begin(), modem_indexes.end(), i->getIndex()) == modem_indexes.end()) {
-					logger::logger(__FUNCTION__, i->getInfo() + " - Not index list, removing..");
+					cout << i->getIndex().size() << endl;
+					logger::logger(__FUNCTION__, i->getInfo() + " - Not index list, removing.." + i->getIndex());
 					this->modemCollection.erase( i );
 					--i;
 				}
 			}
 			if( modem_indexes.size() != this->modemCollection.size()) {
-				logger::logger(__FUNCTION__, "Something has gone very wrong with checking modem changes", "stderr", true);
+				//logger::logger(__FUNCTION__, "Something has gone very wrong with checking modem changes", "stderr", true);
 			}
 		}
 		
 		for(auto index : modem_indexes) {
 			//logger::logger(__FUNCTION__, "working with index: " + index );
-			index = helpers::remove_char( index, ' ', 'E');
 			string modem_information = sys_calls::terminal_stdout(configs["DIR_SCRIPTS"] + "/modem_information_extraction.sh extract " + index );
 			vector<string> ln_modem_information = helpers::split(modem_information, '\n', true);
 
@@ -156,7 +160,9 @@ void Modems::startAllModems() {
 				logger::logger(__FUNCTION__, i->first.getInfo() + " - Modem not available, stopping thread");
 				Modem modem = i->first;
 				modem.end();
-				helpers::sleep_thread(5);
+				while(!modem.getThreadSafety()) {
+					helpers::sleep_thread(5);
+				}
 				this->threaded_modems.erase(i);
 				--i;
 			}
