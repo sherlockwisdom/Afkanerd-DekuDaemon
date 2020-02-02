@@ -101,10 +101,13 @@ bool Modems::start( Modem modem ) {
 
 void Modems::startAllModems() {
 	for(auto& modem : this->modemCollection) {
-		this->threaded_modems.push_back( std::thread(&Modem::start, modem));
+		//this->threaded_modems.push_back( std::thread(&Modem::start, modem));
+		//this->threaded_modems.insert(make_pair(modem, std::thread(&Modem::start, std::ref(modem))));
+		this->threaded_modems[modem] = std::thread(&Modem::start, std::ref(modem));
 	}
-
-	for(int i=0;i<this->threaded_modems.size();++i){
-		this->threaded_modems[i].detach();
+	/*
+	for(auto i=this->threaded_modems.begin();i!=this->threaded_modems.end();++i){
+		i->second.detach();
 	}
+	*/
 }

@@ -35,6 +35,8 @@ class Modem {
 
 		explicit operator bool() const;
 		bool operator==(Modem modem) const;
+		bool operator>(modem modem) const;
+		bool operator<(modem modem) const;
 
 		bool end();
 		bool send_sms(string message, string number);

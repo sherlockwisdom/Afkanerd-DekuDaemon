@@ -48,6 +48,18 @@ bool Modem::operator==( Modem modem ) const {
 	);
 }
 
+bool Modem::operator>( Modem modem ) const {
+	return (
+			this->getIMEI() > modem.getIMEI()
+	);
+}
+
+bool Modem::operator<( Modem modem ) const {
+	return (
+			this->getIMEI() < modem.getIMEI()
+	);
+}
+
 void Modem::setKeepAlive( bool keepAlive ) {
 	this->keepAlive = keepAlive;
 }

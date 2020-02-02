@@ -8,7 +8,7 @@ using namespace std;
 
 class Modems {
 	vector<Modem> modemCollection;
-	vector<std::thread> threaded_modems;
+	map<Modem, std::thread> threaded_modems;
 	public:
 		enum STATE{TEST, PRODUCTION};
 		STATE state;
