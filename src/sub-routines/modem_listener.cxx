@@ -5,7 +5,6 @@
 
 using namespace std;
 
-std::mutex mutex;
 //class Modems
 Modems::Modems( STATE state) {
 	this->state = state;

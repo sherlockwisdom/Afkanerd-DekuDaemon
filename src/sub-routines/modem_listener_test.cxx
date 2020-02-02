@@ -3,6 +3,7 @@
 using namespace std;
 
 int main() {
+	std::mutex blocking_mutex;
 	vector<string> list_of_test_modems_indexes {"4"};
 	vector<string> list_of_test_modems_isp {"MTN"};
 	vector<string> list_of_test_modems_imei {"861050001177396"};
