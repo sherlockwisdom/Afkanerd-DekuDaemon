@@ -199,5 +199,5 @@ Modem::~Modem() {
 	}
 	*/
 
-	logger::logger(__FUNCTION__, "Destructor called...");
+	logger::logger(__FUNCTION__, this->getInfo() + " - Destructor called...");
 }

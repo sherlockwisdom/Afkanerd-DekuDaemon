@@ -31,9 +31,6 @@ void Modems::__INIT__( map<string, string> configs ) {
 		for(auto& index : modem_indexes )	
 			index = helpers::remove_char( index, ' ', 'E');
 
-		if( this->modemCollection.size() > 0 and modem_indexes.size() != this->modemCollection.size()) {
-		}
-
 		vector<Modem> tmp_modemCollection;
 		for(auto index : modem_indexes) {
 			//logger::logger(__FUNCTION__, "working with index: " + index );
@@ -62,6 +59,7 @@ void Modems::__INIT__( map<string, string> configs ) {
 			//TODO: What happens if a modem changes, but index remains
 			//TODO: what happens when a modem is completely removed
 			if(std::find(this->modemCollection.begin(), this->modemCollection.end(), modem) == this->modemCollection.end()) {
+				logger::logger(__FUNCTION__, modem.getInfo() + " - Not found in list");
 				if(modem) {
 					string modem_info = modem.getIMEI() + "|" + modem.getISP();
 					logger::logger(__FUNCTION__, modem_info + " - Adding modem to list");
@@ -70,9 +68,11 @@ void Modems::__INIT__( map<string, string> configs ) {
 			}
 			else {
 				logger::logger(__FUNCTION__, "Modem already present...");
+				tmp_modemCollection = this->modemCollection;
 			}
 		}
 		//logger::logger(__FUNCTION__, "Exited..");
+		logger::logger(__FUNCTION__, "Finished refreshing with " + to_string(tmp_modemCollection.size()) + " modems");
 		this->modemCollection = tmp_modemCollection;
 		helpers::sleep_thread( 10 );
 	}
