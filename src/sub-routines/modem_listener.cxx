@@ -120,9 +120,18 @@ void Modems::startAllModems() {
 				logger::logger(__FUNCTION__, it->first->getInfo() + " - Modem not available, stopping thread");
 				if(this->threaded_modems.find(it->first) != this->threaded_modems.end()) {
 					it->first->end();
-					while(!it->first->getThreadSafety()) helpers::sleep_thread(5);
+					//while(!it->first->getThreadSafety()) helpers::sleep_thread(5);
 					this->threaded_modems.erase(it);
-					it = --this->threaded_modems.begin();
+					if(this->threaded_modems.empty()) {
+						logger::logger(__FUNCTION__, "Currently no modem threads running");
+						break;
+					}
+					else {
+						if(auto tmp_it = ++it; tmp_it != this->threaded_modems.end()) {
+							logger::logger(__FUNCTION__, "Would break the next iteration, exiting loop");
+							break;
+						}
+					}
 					logger::logger(__FUNCTION__, to_string(this->threaded_modems.size()) + " currently threaded modems");
 				}
 			}
