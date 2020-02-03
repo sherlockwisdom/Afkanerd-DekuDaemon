@@ -117,16 +117,16 @@ void Modems::startAllModems() {
 		//if modem is available, remove it
 		logger::logger(__FUNCTION__, "Looking to start new modems...");
 		for(map<Modem, std::thread>::iterator it=this->threaded_modems.begin();it!=this->threaded_modems.end();++it ) {
-			if(std::find(this->modemCollection.begin(), this->modemCollection.end(), it->first) == this->modemCollection.begin()) {
+			Modem modem = it->first;
+			if(std::find(this->modemCollection.begin(), this->modemCollection.end(), modem) == this->modemCollection.end()) {
 				logger::logger(__FUNCTION__, it->first.getInfo() + " - Modem not available, stopping thread");
 				it->second.detach();
-				Modem modem = it->first;
 				modem.end();
 				while(!modem.getThreadSafety()) helpers::sleep_thread(5);
 				this->threaded_modems.erase(it);
 			}
 		}
-		/*
+		
 		for(auto& modem : this->modemCollection) {
 			//this->threaded_modems.push_back( std::thread(&Modem::start, modem));
 			if(this->threaded_modems.find(modem) == this->threaded_modems.end()) {
@@ -137,7 +137,7 @@ void Modems::startAllModems() {
 			else {
 				logger::logger(__FUNCTION__, modem.getInfo() + " - Already threaded..." );
 			}
-		}*/
+		}
 		helpers::sleep_thread( 5 );
 	}
 	
