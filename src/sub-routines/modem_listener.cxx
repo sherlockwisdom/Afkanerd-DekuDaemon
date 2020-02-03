@@ -127,7 +127,7 @@ void Modems::startAllModems() {
 						break;
 					}
 					else {
-						if(auto tmp_it = ++it; tmp_it != this->threaded_modems.end()) {
+						if(auto tmp_it = ++it; tmp_it == this->threaded_modems.end()) {
 							logger::logger(__FUNCTION__, "Would break the next iteration, exiting loop");
 							break;
 						}

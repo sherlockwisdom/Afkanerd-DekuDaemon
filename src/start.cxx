@@ -18,8 +18,6 @@ void user_input( Modems& modems ) {
 }
 
 int main(int argc, char** argv) {
-	//std::string PATH_SYS_FILE = "build_files/sys_file.txt";
-	
 	string PATH_SYS_FILE;
 	if(argc < 2 ) {
 		logger::logger(__FUNCTION__, "Usage: -c <path_to_config_file>", "stderr", true);
@@ -45,11 +43,6 @@ int main(int argc, char** argv) {
 		logger::logger(__FUNCTION__, "Usage: -c <path_to_config_file>", "stderr", true);
 		return 1;
 	}
-
-	// Begins by running the simple beginning test
-	// TEST:
-	// 1. Checks if system files are available
-	
 	if( !system_check( PATH_SYS_FILE )) {
 		logger::logger( __FUNCTION__, "System check failed....", "stderr", true);
 		return 1;
@@ -58,14 +51,6 @@ int main(int argc, char** argv) {
 	// Then after the checks, it moves set the variables for global use
 	map<string,string> configs = get_system_configs( helpers::read_file( PATH_SYS_FILE ));
 
-	// Begin listening for input (request file)
-	//thread tr_request_distribution_listener( request_distribution_listener, configs);
-	// Begin listening for request (modems)
-	//thread tr_request_execution_listener( request_execution_listener, configs);
-
-	//tr_request_distribution_listener.join();
-	//tr_request_execution_listener.join();
-	
 	//Modems modems( Modems::PRODUCTION );
 	Modems modems( Modems::TEST );
 
