@@ -61,6 +61,16 @@ bool Modem::operator==( Modem modem ) const {
 	);
 }
 
+bool Modem::operator==( Modem* modem ) const {
+	logger::logger(__FUNCTION__, this->getInfo() + " - " + modem->getInfo());
+	return (
+			modem->getIndex() == this->getIndex() and
+			modem->getISP() == this->getISP() and
+			modem->getIMEI() == this->getIMEI()
+	);
+}
+
+
 bool Modem::operator>( Modem modem ) const {
 	return (
 			this->getIMEI() > modem.getIMEI()

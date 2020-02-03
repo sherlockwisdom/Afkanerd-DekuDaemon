@@ -37,6 +37,7 @@ class Modem {
 
 		explicit operator bool() const;
 		bool operator==(Modem modem) const;
+		bool operator==(Modem* modem) const;
 		bool operator>(Modem modem) const;
 		bool operator<(Modem modem) const;
 
