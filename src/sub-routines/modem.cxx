@@ -12,6 +12,14 @@ Modem::Modem(map<string,string> configs, STATE state) {
 	this->state = state;
 }
 
+Modem::Modem(const Modem& modem) {
+	this->imei = modem.getIMEI();
+	this->isp = modem.getISP();
+	this->index = modem.getIndex();
+	this->configs = modem.getConfigs();
+	this->state = modem.state;
+}
+
 void Modem::setIMEI( string IMEI ) {
 	this->imei = IMEI;
 }
@@ -82,7 +90,7 @@ void Modem::setThreadSafety( bool thread_safety ) {
 	this->thread_safety = thread_safety;
 }
 
-map<string,string> Modem::getConfigs() {
+map<string,string> Modem::getConfigs() const {
 	return this->configs;
 }
 

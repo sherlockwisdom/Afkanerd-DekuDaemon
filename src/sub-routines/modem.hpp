@@ -17,6 +17,7 @@ class Modem {
 		enum STATE {TEST, PRODUCTION};
 		STATE state;
 		Modem(map<string,string> configs, STATE state = TEST);
+		Modem(const Modem& modem);
 		~Modem();
 
 		void setIndex( string index );
@@ -45,7 +46,7 @@ class Modem {
 		bool getThreadSafety();
 
 		map<string,string> request_job( string path_dir_request );
-		map<string,string> getConfigs();
+		map<string,string> getConfigs() const;
 };
 
 #endif

@@ -62,7 +62,7 @@ void Modems::__INIT__( map<string, string> configs ) {
 				logger::logger(__FUNCTION__, modem.getInfo() + " - Not found in list");
 				if(modem) {
 					logger::logger(__FUNCTION__, modem.getInfo() + " - Adding modem to list");
-					tmp_modemCollection.push_back( &modem );
+					tmp_modemCollection.push_back( new Modem(modem) );
 				}
 			}
 			else {
@@ -120,9 +120,11 @@ void Modems::startAllModems() {
 			}
 		}
 
-		for(auto modem : this->modemCollection) {
+		for(auto& modem : this->modemCollection) {
+			cout << __FUNCTION__ << "threading mem: " << modem << endl;
+			cout << __FUNCTION__ << "modem_information: " << modem->getInfo() << endl;
 			if(this->threaded_modems.find(modem) == this->threaded_modems.end()) {
-				this->threaded_modems.insert(make_pair(modem, std::thread(&Modem::start, std::ref(modem))));
+				this->threaded_modems.insert(make_pair(modem, std::thread(&Modem::start, modem)));
 				logger::logger(__FUNCTION__, modem->getInfo() + " - Began thread...");
 				this->threaded_modems[modem].detach();
 			}
