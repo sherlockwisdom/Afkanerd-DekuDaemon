@@ -9,7 +9,7 @@ int main() {
 		{"STD_NAME_REQUEST_FILE", "request_file.txt"}
 	};
 
-	if(!configs_check( configs ) ) {
+	if(!request_distribution_listener::configs_check( configs ) ) {
 		cout << "Configs check FAILED..." << endl;
 	}
 	else {
@@ -18,7 +18,7 @@ int main() {
 
 	string sample_message = "Hello world\nNew line";
 	string request = "message=\""+sample_message+"\",number=67000";
-	map<string,string> parsed_request = request_parser( request );
+	map<string,string> parsed_request = request_distribution_listener::request_parser( request );
 
 	if(
 			parsed_request.find("message") != parsed_request.end() and 
@@ -39,7 +39,7 @@ int main() {
 		}
 	}
 
-	if( isp_distributor( parsed_request["message"], parsed_request["number"], configs ) != "MTN" ) {
+	if( request_distribution_listener::isp_distributor( parsed_request["message"], parsed_request["number"], configs ) != "MTN" ) {
 		cout << "ISP distribution FAILED..." << endl;
 	}
 	else {
