@@ -110,10 +110,6 @@ bool Modems::start( Modem modem ) {
 
 void Modems::startAllModems() {
 	while( 1 ) {  //TODO: Change this to a condition
-		//Starts all modems and register their thread against their modem name
-		//if modem is already started, keep it goind
-		//if modem is started start it
-		//if modem is available, remove it
 		logger::logger(__FUNCTION__, "Looking to start new modems...");
 		for(map<Modem*, std::thread>::iterator it=this->threaded_modems.begin();it!=this->threaded_modems.end();++it ) {
 			if(std::find(this->modemCollection.begin(), this->modemCollection.end(), it->first) == this->modemCollection.end()) {

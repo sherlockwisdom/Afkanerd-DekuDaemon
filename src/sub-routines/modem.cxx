@@ -86,14 +86,14 @@ map<string,string> Modem::getConfigs() {
 	return this->configs;
 }
 
-void modem_request_listener( Modem& modem ) {
-	string modem_info = modem.getIMEI() + "|" + modem.getISP();
-	logger::logger(__FUNCTION__, modem.getIMEI() + " thread started...");
-	cout << __FUNCTION__ << ": " << &modem << endl;
-	modem.setKeepAlive(true);
+void modem_request_listener( Modem* modem ) {
+	logger::logger(__FUNCTION__, modem->getInfo() + " thread started...");
+	//cout << __FUNCTION__ << ": " << &modem << endl;
+	modem->setKeepAlive(true);
 	//TODO: https://en.cppreference.com/w/cpp/thread/mutex
 	//TODO: begin making request for task and finishing the task
 	
+	/*	
 	modem.setThreadSafety( true );
 	while( modem.getKeepAlive() ) {
 		//Begin making request and getting jobs back in
@@ -132,6 +132,7 @@ void modem_request_listener( Modem& modem ) {
 	}
 	modem.setThreadSafety(false);
 	logger::logger(__FUNCTION__, modem_info + " - KeepAlive died!" );
+	*/
 }
 
 void modem_state_listener( Modem& modem ) {
@@ -140,7 +141,8 @@ void modem_state_listener( Modem& modem ) {
 
 void Modem::start() {
 	//std::thread tr_modem_request_listener(&Modem::modem_request_listener, this, this->configs);
-	std::thread tr_modem_request_listener = std::thread(modem_request_listener, std::ref(*this));
+	cout << __FUNCTION__ << "mem address before start: " << &*this << endl;
+	std::thread tr_modem_request_listener = std::thread(modem_request_listener, &*this);
 	std::thread tr_modem_state_listener = std::thread(modem_state_listener, std::ref(*this));
 
 	//if(this->state == TEST) tr_modem_request_listener.detach(); //TODO: change to detach
