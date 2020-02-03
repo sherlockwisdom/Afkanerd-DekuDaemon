@@ -120,7 +120,7 @@ void Modems::startAllModems() {
 				logger::logger(__FUNCTION__, it->first->getInfo() + " - Modem not available, stopping thread");
 				if(this->threaded_modems.find(it->first) != this->threaded_modems.end()) {
 					it->first->end();
-					//while(!it->first->getThreadSafety()) helpers::sleep_thread(5);
+					//while(!it->first->getThreadSafety()) helpers::sleep_thread(5); //TODO: remove this part from the code all together... nothing can kill a detached thread except OS exceptions or the thread dies off
 					this->threaded_modems.erase(it);
 					if(this->threaded_modems.empty()) {
 						logger::logger(__FUNCTION__, "Currently no modem threads running");
@@ -138,8 +138,6 @@ void Modems::startAllModems() {
 		}
 
 		for(auto& modem : this->modemCollection) {
-			cout << __FUNCTION__ << "threading mem: " << modem << endl;
-			cout << __FUNCTION__ << "modem_information: " << modem->getInfo() << endl;
 			if(this->threaded_modems.find(modem) == this->threaded_modems.end()) {
 				this->threaded_modems.insert(make_pair(modem, std::thread(&Modem::start, modem)));
 				logger::logger(__FUNCTION__, modem->getInfo() + " - Began thread...");

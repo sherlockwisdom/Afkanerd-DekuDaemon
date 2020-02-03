@@ -6,6 +6,17 @@
 #include "sub-routines/modem_listener.cxx"
 using namespace std;
 
+
+void user_input( Modems& modems ) {
+	while( 1 ) {
+		cout << __FUNCTION__ << ": ";
+		string input;
+		getline(cin, input);
+
+		cout << __FUNCTION__<< " = " << input << endl;
+	}
+}
+
 int main(int argc, char** argv) {
 	//std::string PATH_SYS_FILE = "build_files/sys_file.txt";
 	
@@ -60,8 +71,10 @@ int main(int argc, char** argv) {
 
 	std::thread listen_modems = std::thread(&Modems::__INIT__, std::ref(modems), configs);
 	std::thread start_modems = std::thread(&Modems::startAllModems, std::ref(modems));
+	std::thread tr_user_input = std::thread(user_input, std::ref(modems));
 	listen_modems.join();
 	start_modems.join();
+	tr_user_input.join();
 	
 	return 0;
 }

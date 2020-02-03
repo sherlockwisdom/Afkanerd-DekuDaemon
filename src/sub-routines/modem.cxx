@@ -108,7 +108,7 @@ map<string,string> Modem::getConfigs() const {
 
 void modem_request_listener( Modem* modem ) {
 	logger::logger(__FUNCTION__, modem->getInfo() + " thread started...");
-	cout << __FUNCTION__ << ": " << modem << endl;
+	//cout << __FUNCTION__ << ": " << modem << endl;
 	modem->setKeepAlive(true);
 	//TODO: https://en.cppreference.com/w/cpp/thread/mutex
 	//TODO: begin making request for task and finishing the task
@@ -159,7 +159,7 @@ void modem_state_listener( Modem& modem ) {
 
 void Modem::start() {
 	//std::thread tr_modem_request_listener(&Modem::modem_request_listener, this, this->configs);
-	cout << __FUNCTION__ << "mem address before start: " << &*this << endl;
+	//cout << __FUNCTION__ << "mem address before start: " << &*this << endl;
 	std::thread tr_modem_request_listener = std::thread(modem_request_listener, &*this);
 	//std::thread tr_modem_state_listener = std::thread(modem_state_listener, std::ref(*this));
 
