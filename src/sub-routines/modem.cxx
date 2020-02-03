@@ -151,12 +151,13 @@ void Modem::start() {
 	//std::thread tr_modem_request_listener(&Modem::modem_request_listener, this, this->configs);
 	cout << __FUNCTION__ << "mem address before start: " << &*this << endl;
 	std::thread tr_modem_request_listener = std::thread(modem_request_listener, &*this);
-	std::thread tr_modem_state_listener = std::thread(modem_state_listener, std::ref(*this));
+	//std::thread tr_modem_state_listener = std::thread(modem_state_listener, std::ref(*this));
 
 	//if(this->state == TEST) tr_modem_request_listener.detach(); //TODO: change to detach
-	if(this->state == TEST) tr_modem_request_listener.join(); //TODO: change to detach
-	else if(this->state == PRODUCTION) tr_modem_request_listener.join();
+	//if(this->state == TEST) tr_modem_request_listener.join(); //TODO: change to detach
+	//else if(this->state == PRODUCTION) tr_modem_request_listener.join();
 	//this->request_thread_id.push_back(tr_modem_request_listener);
+	tr_modem_request_listener.join();
 
 	//if(this->state == TEST) tr_modem_state_listener.detach();
 	//if(this->state == TEST) tr_modem_state_listener.join();
