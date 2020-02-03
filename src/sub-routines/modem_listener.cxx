@@ -114,7 +114,6 @@ void Modems::startAllModems() {
 		for(map<Modem*, std::thread>::iterator it=this->threaded_modems.begin();it!=this->threaded_modems.end();++it ) {
 			if(std::find(this->modemCollection.begin(), this->modemCollection.end(), it->first) == this->modemCollection.end()) {
 				logger::logger(__FUNCTION__, it->first->getInfo() + " - Modem not available, stopping thread");
-				it->second.detach();
 				it->first->end();
 				while(!it->first->getThreadSafety()) helpers::sleep_thread(5);
 				this->threaded_modems.erase(it);
@@ -122,11 +121,10 @@ void Modems::startAllModems() {
 		}
 
 		for(auto modem : this->modemCollection) {
-			//this->threaded_modems.push_back( std::thread(&Modem::start, modem));
 			if(this->threaded_modems.find(modem) == this->threaded_modems.end()) {
 				this->threaded_modems.insert(make_pair(modem, std::thread(&Modem::start, std::ref(modem))));
 				logger::logger(__FUNCTION__, modem->getInfo() + " - Began thread...");
-				//this->threaded_modems[modem] = std::thread(&Modem::start, std::ref(modem));
+				this->threaded_modems[modem].detach();
 			}
 			else {
 				logger::logger(__FUNCTION__, modem->getInfo() + " - Already threaded..." );

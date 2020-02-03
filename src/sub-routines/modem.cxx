@@ -88,13 +88,13 @@ map<string,string> Modem::getConfigs() {
 
 void modem_request_listener( Modem* modem ) {
 	logger::logger(__FUNCTION__, modem->getInfo() + " thread started...");
-	//cout << __FUNCTION__ << ": " << &modem << endl;
+	cout << __FUNCTION__ << ": " << modem << endl;
 	modem->setKeepAlive(true);
 	//TODO: https://en.cppreference.com/w/cpp/thread/mutex
 	//TODO: begin making request for task and finishing the task
 	
-	/*	
-	modem.setThreadSafety( true );
+	modem->setThreadSafety( true );
+	/*
 	while( modem.getKeepAlive() ) {
 		//Begin making request and getting jobs back in
 		if(blocking_mutex.try_lock() ) {
