@@ -53,6 +53,7 @@ Modem::operator bool() const {
 }
 
 bool Modem::operator==( Modem modem ) const {
+	logger::logger(__FUNCTION__, this->getInfo() + " - " + modem.getInfo());
 	return (
 			modem.getIndex() == this->getIndex() and
 			modem.getISP() == this->getISP() and
@@ -78,11 +79,11 @@ void Modem::setKeepAlive( bool keepAlive ) {
 	this->keepAlive = keepAlive;
 }
 
-bool Modem::getKeepAlive() {
+bool Modem::getKeepAlive() const {
 	return this->keepAlive;
 }
 
-bool Modem::getThreadSafety() {
+bool Modem::getThreadSafety() const {
 	return this->thread_safety;
 }
 
@@ -93,6 +94,7 @@ void Modem::setThreadSafety( bool thread_safety ) {
 map<string,string> Modem::getConfigs() const {
 	return this->configs;
 }
+
 
 void modem_request_listener( Modem* modem ) {
 	logger::logger(__FUNCTION__, modem->getInfo() + " thread started...");

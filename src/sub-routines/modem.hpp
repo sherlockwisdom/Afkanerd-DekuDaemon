@@ -42,8 +42,8 @@ class Modem {
 
 		bool end();
 		bool send_sms(string message, string number);
-		bool getKeepAlive();
-		bool getThreadSafety();
+		bool getKeepAlive() const;
+		bool getThreadSafety() const;
 
 		map<string,string> request_job( string path_dir_request );
 		map<string,string> getConfigs() const;

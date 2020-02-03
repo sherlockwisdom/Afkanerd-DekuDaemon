@@ -58,7 +58,7 @@ void Modems::__INIT__( map<string, string> configs ) {
 			}
 			//TODO: What happens if a modem changes, but index remains
 			//TODO: what happens when a modem is completely removed
-			if(std::find(this->modemCollection.begin(), this->modemCollection.end(), &modem) == this->modemCollection.end()) {
+			if(std::find_if(this->modemCollection.begin(), this->modemCollection.end(), [&](Modem* modem1){ return *modem1 == modem; }) == this->modemCollection.end()) {
 				logger::logger(__FUNCTION__, modem.getInfo() + " - Not found in list");
 				if(modem) {
 					logger::logger(__FUNCTION__, modem.getInfo() + " - Adding modem to list");
