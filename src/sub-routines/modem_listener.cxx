@@ -31,7 +31,7 @@ void Modems::__INIT__( map<string, string> configs ) {
 		for(auto& index : modem_indexes )	
 			index = helpers::remove_char( index, ' ', 'E');
 
-		vector<Modem> tmp_modemCollection;
+		vector<Modem*> tmp_modemCollection;
 		for(auto index : modem_indexes) {
 			//logger::logger(__FUNCTION__, "working with index: " + index );
 			string modem_information = sys_calls::terminal_stdout(configs["DIR_SCRIPTS"] + "/modem_information_extraction.sh extract " + index );
@@ -58,16 +58,15 @@ void Modems::__INIT__( map<string, string> configs ) {
 			}
 			//TODO: What happens if a modem changes, but index remains
 			//TODO: what happens when a modem is completely removed
-			if(std::find(this->modemCollection.begin(), this->modemCollection.end(), modem) == this->modemCollection.end()) {
+			if(std::find(this->modemCollection.begin(), this->modemCollection.end(), &modem) == this->modemCollection.end()) {
 				logger::logger(__FUNCTION__, modem.getInfo() + " - Not found in list");
 				if(modem) {
-					string modem_info = modem.getIMEI() + "|" + modem.getISP();
-					logger::logger(__FUNCTION__, modem_info + " - Adding modem to list");
-					tmp_modemCollection.push_back( modem );
+					logger::logger(__FUNCTION__, modem.getInfo() + " - Adding modem to list");
+					tmp_modemCollection.push_back( &modem );
 				}
 			}
 			else {
-				logger::logger(__FUNCTION__, "Modem already present...");
+				logger::logger(__FUNCTION__, modem.getInfo() + " - Modem already present...");
 				tmp_modemCollection = this->modemCollection;
 			}
 		}
@@ -80,7 +79,7 @@ void Modems::__INIT__( map<string, string> configs ) {
 vector<string> Modems::getAllIndexes() {
 	vector<string> list;
 	for(auto modem : this->modemCollection ) {
-		list.push_back( modem.getIndex() );
+		list.push_back( modem->getIndex() );
 	}
 	return list;
 }
@@ -88,7 +87,7 @@ vector<string> Modems::getAllIndexes() {
 vector<string> Modems::getAllISP() {
 	vector<string> list;
 	for(auto modem : this->modemCollection) {
-		list.push_back( modem.getISP() );
+		list.push_back( modem->getISP() );
 	}
 	return list;
 }
@@ -96,12 +95,12 @@ vector<string> Modems::getAllISP() {
 vector<string> Modems::getAllIMEI() {
 	vector<string> list;
 	for(auto modem: this->modemCollection) {
-		list.push_back( modem.getIMEI() );
+		list.push_back( modem->getIMEI() );
 	}
 	return list;
 }
 
-vector<Modem> Modems::getAllModems() {
+vector<Modem*> Modems::getAllModems() {
 	return this->modemCollection;
 }
 
@@ -116,28 +115,29 @@ void Modems::startAllModems() {
 		//if modem is started start it
 		//if modem is available, remove it
 		logger::logger(__FUNCTION__, "Looking to start new modems...");
-		for(map<Modem, std::thread>::iterator it=this->threaded_modems.begin();it!=this->threaded_modems.end();++it ) {
-			Modem modem = it->first;
-			if(std::find(this->modemCollection.begin(), this->modemCollection.end(), modem) == this->modemCollection.end()) {
-				logger::logger(__FUNCTION__, it->first.getInfo() + " - Modem not available, stopping thread");
+		for(map<Modem*, std::thread>::iterator it=this->threaded_modems.begin();it!=this->threaded_modems.end();++it ) {
+			if(std::find(this->modemCollection.begin(), this->modemCollection.end(), it->first) == this->modemCollection.end()) {
+				logger::logger(__FUNCTION__, it->first->getInfo() + " - Modem not available, stopping thread");
 				it->second.detach();
-				modem.end();
-				while(!modem.getThreadSafety()) helpers::sleep_thread(5);
+				it->first->end();
+				while(!it->first->getThreadSafety()) helpers::sleep_thread(5);
 				this->threaded_modems.erase(it);
 			}
 		}
-		
+
+		/*
 		for(auto& modem : this->modemCollection) {
 			//this->threaded_modems.push_back( std::thread(&Modem::start, modem));
 			if(this->threaded_modems.find(modem) == this->threaded_modems.end()) {
-				this->threaded_modems.insert(make_pair(modem, std::thread(&Modem::start, std::ref(modem))));
-				logger::logger(__FUNCTION__, modem.getInfo() + " - Began thread...");
+				this->threaded_modems.insert(make_pair(&modem, std::thread(&Modem::start, std::ref(modem))));
+				logger::logger(__FUNCTION__, modem->getInfo() + " - Began thread...");
 				//this->threaded_modems[modem] = std::thread(&Modem::start, std::ref(modem));
 			}
 			else {
-				logger::logger(__FUNCTION__, modem.getInfo() + " - Already threaded..." );
+				logger::logger(__FUNCTION__, modem->getInfo() + " - Already threaded..." );
 			}
 		}
+		*/
 		helpers::sleep_thread( 5 );
 	}
 	
