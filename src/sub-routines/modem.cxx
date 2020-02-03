@@ -104,28 +104,27 @@ void modem_request_listener( Modem* modem ) {
 	//TODO: begin making request for task and finishing the task
 	
 	modem->setThreadSafety( true );
-	/*
-	while( modem.getKeepAlive() ) {
+	while( modem->getKeepAlive() ) {
 		//Begin making request and getting jobs back in
 		if(blocking_mutex.try_lock() ) {
-			logger::logger(__FUNCTION__,  modem_info + " - Acquiring mutex", "stdout");
-			map<string,string> request = modem.request_job( modem.getConfigs()["DIR_ISP_REQUEST"] );
+			logger::logger(__FUNCTION__,  modem->getInfo() + " - Acquiring mutex", "stdout");
+			map<string,string> request = modem->request_job( modem->getConfigs()["DIR_ISP_REQUEST"] );
 			if( request.empty()) {
-				logger::logger(__FUNCTION__, modem_info + " - No request...", "stdout", true);
+				logger::logger(__FUNCTION__, modem->getInfo() + " - No request...", "stdout", true);
 				blocking_mutex.unlock();
 			}
 			else {
-				logger::logger(__FUNCTION__, modem_info + " - Got a request!", "stdout", true);
+				logger::logger(__FUNCTION__, modem->getInfo() + " - Got a request!", "stdout", true);
 				blocking_mutex.unlock();
-				if( modem.send_sms( request["message"], request["number"] ) ) {
-					logger::logger(__FUNCTION__, modem_info + " - SMS sent successfully!", "stdout", true);
+				if( modem->send_sms( request["message"], request["number"] ) ) {
+					logger::logger(__FUNCTION__, modem->getInfo() + " - SMS sent successfully!", "stdout", true);
 					//TODO: Delete file
 					if( !sys_calls::file_handlers(request["filename"], sys_calls::DEL)){
-						logger::logger(__FUNCTION__, modem_info + " - Failed to clean job file", "stderr", true);
+						logger::logger(__FUNCTION__, modem->getInfo() + " - Failed to clean job file", "stderr", true);
 						logger::logger_errno( errno );
 					}
 					else {
-						logger::logger(__FUNCTION__, modem_info + " - Cleaned job file successfully", "stdout", true);
+						logger::logger(__FUNCTION__, modem->getInfo() + " - Cleaned job file successfully", "stdout", true);
 					}
 				}
 				else {
@@ -134,15 +133,14 @@ void modem_request_listener( Modem* modem ) {
 			}
 		}
 		else {
-			logger::logger(__FUNCTION__, modem_info + " - Mutex locked..", "stdout");
+			logger::logger(__FUNCTION__, modem->getInfo() + " - Mutex locked..", "stdout");
 			helpers::sleep_thread( 3 );
 			continue;
 		}
 		helpers::sleep_thread( 10 );
 	}
-	modem.setThreadSafety(false);
-	logger::logger(__FUNCTION__, modem_info + " - KeepAlive died!" );
-	*/
+	modem->setThreadSafety(false);
+	logger::logger(__FUNCTION__, modem->getInfo() + " - KeepAlive died!" );
 }
 
 void modem_state_listener( Modem& modem ) {
