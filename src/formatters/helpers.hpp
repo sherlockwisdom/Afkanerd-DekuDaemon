@@ -19,6 +19,19 @@ namespace helpers {
 		return input;
 	}
 
+	string find_and_replace( string str_find, string str_replace, string input ) {
+		string return_string = "";
+		size_t start_pos = 0;
+		size_t find_pos = input.find(str_find);
+		while(find_pos != string::npos) {
+			return_string += input.substr(start_pos, find_pos);
+			return_string += str_replace;
+			input.erase(start_pos, (find_pos) + str_find.size() );
+			find_pos = input.find(str_find);
+		}
+		return return_string;
+	}
+
 	vector<string> split(string _string, char del = ' ', bool strict = false, size_t start_pos = 0) {
 		vector<string> return_value;
 		string temp_string = "";
