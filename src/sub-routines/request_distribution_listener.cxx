@@ -1,6 +1,3 @@
-//TODO: Keeps event listener for changes to request file
-//TODO: Parses request file
-//TODO: send parsed content to isp distributor
 #include <map>
 #include <algorithm>
 #include "../formatters/helpers.hpp"

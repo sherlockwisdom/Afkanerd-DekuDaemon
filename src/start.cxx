@@ -8,6 +8,15 @@ using namespace std;
 
 
 void user_input( Modems& modems ) {
+	/* TODO: commands to introduce...
+
+	isp stats = provide information about all isp
+	"isp" stats = provide information about "isp"
+
+	isp stats pending/locked = provide information about pending/locked jobs for all isp
+	"isp" stats pending/locked = provide information about pending/locked jobs for "isp"
+	*/
+
 	while( 1 ) {
 		cout << __FUNCTION__ << ": ";
 		string input;
