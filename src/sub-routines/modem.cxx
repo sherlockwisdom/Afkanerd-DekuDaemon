@@ -51,7 +51,7 @@ string Modem::getInfo() const {
 }
 
 Modem::TYPE Modem::getType() const {
-	return this->getType();
+	return this->type;
 }
 
 Modem::operator bool() const {
