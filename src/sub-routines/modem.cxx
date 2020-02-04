@@ -205,11 +205,11 @@ map<string,string> Modem::request_job( string path_dir_request) {
 
 bool Modem::mmcli_send_sms( string message, string number ) {
 	logger::logger(__FUNCTION__, "SENDING - [" + message + "] - [" + number + "]");
-	string sms_results = sys_calls::terminal_stdout(this->configs["DIR_SCRIPTS"] + "/modem_information_extraction sms send " + message + " " + number + " " + this->getIndex());
+	string sms_results = sys_calls::terminal_stdout(this->configs["DIR_SCRIPTS"] + "/modem_information_extraction.sh sms send \"" + message + "\" " + number + " " + this->getIndex());
 	sms_results = helpers::to_lowercase( sms_results );
 	if( sms_results.find("successfully") != string::npos ) return true;
 	else {
-		logger::logger(__FUNCTION__, "SMS Failed log: ", "stderr", true);
+		logger::logger(__FUNCTION__, "SMS Failed log: " + sms_results, "stderr", true);
 	}
 	
 	return false;
@@ -228,8 +228,8 @@ bool Modem::ssh_send_sms( string message, string number ) {
 	return false;
 }
 
+//TODO: Remove escape characters from Message
 bool Modem::send_sms(string message, string number ) {
-	//TODO: something here to send the messages
 	logger::logger(__FUNCTION__, this->getInfo() + " - About to send SMS", "stderr", true);
 	switch( this->getType() ) {
 		case Modem::MMCLI:
