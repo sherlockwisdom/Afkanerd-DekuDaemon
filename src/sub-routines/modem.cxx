@@ -118,7 +118,7 @@ void modem_request_listener( Modem* modem ) {
 		//Begin making request and getting jobs back in
 		if(blocking_mutex.try_lock() ) {
 			logger::logger(__FUNCTION__,  modem->getInfo() + " - Acquiring mutex", "stdout");
-			map<string,string> request = modem->request_job( modem->getConfigs()["DIR_ISP_REQUEST"] );
+			map<string,string> request = modem->request_job( modem->getConfigs()["DIR_ISP"] + "/" + modem->getISP() );
 			if( request.empty()) {
 				logger::logger(__FUNCTION__, modem->getInfo() + " - No request...", "stdout", true);
 				blocking_mutex.unlock();
@@ -140,7 +140,11 @@ void modem_request_listener( Modem* modem ) {
 				}
 				else {
 					//TODO: SMS failed to go, release the files....
-					logger::logger(__FUNCTION__, modem->getInfo() + " - Couldn't send SMS", "stderr", true);
+					logger::logger(__FUNCTION__, modem->getInfo() + " - Couldn't send SMS, unlocking file", "stderr", true);
+					if(!sys_calls::rename_file(request["filename"], request["filename"].erase(0,1))) {
+						logger::logger(__FUNCTION__, modem->getInfo() + " - Failed to release job... maybe recreated it...", "stderr", true);
+						logger::logger_errno( errno );
+					}
 				}
 			}
 		}
@@ -187,6 +191,7 @@ string Modem::getErrorLogs() {
 
 map<string,string> Modem::request_job( string path_dir_request) {
 	map<string,string> request;
+	logger::logger(__FUNCTION__, "Requesting job at: " + path_dir_request);
 	string filenames = sys_calls::terminal_stdout("ls -1 "+path_dir_request);	
 	if( filenames.empty() or filenames == "" or path_dir_request.empty()) return request;
 	
