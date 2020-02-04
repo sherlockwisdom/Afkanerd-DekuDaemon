@@ -18,6 +18,7 @@ Modem::Modem(const Modem& modem) {
 	this->index = modem.getIndex();
 	this->configs = modem.getConfigs();
 	this->state = modem.state;
+	this->type = modem.getType();
 }
 
 void Modem::setIMEI( string IMEI ) {
@@ -63,7 +64,8 @@ bool Modem::operator==( Modem modem ) const {
 	return (
 			modem.getIndex() == this->getIndex() and
 			modem.getISP() == this->getISP() and
-			modem.getIMEI() == this->getIMEI()
+			modem.getIMEI() == this->getIMEI() and
+			modem.getType() == this->getType();
 	);
 }
 

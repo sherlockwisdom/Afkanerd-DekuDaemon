@@ -13,11 +13,11 @@ class Modem {
 	bool thread_safety = false;
 	map<string,string> configs;
 
-	enum TYPE{SSH, MMCLI};
-	TYPE type;
 	
 	public:
 		enum STATE {TEST, PRODUCTION};
+		enum TYPE{SSH, MMCLI};
+
 		STATE state;
 		Modem(map<string,string> configs, STATE state = TEST );
 		Modem(const Modem& modem);
@@ -53,6 +53,8 @@ class Modem {
 
 		map<string,string> request_job( string path_dir_request );
 		map<string,string> getConfigs() const;
+	private:
+		TYPE type;
 };
 
 #endif
