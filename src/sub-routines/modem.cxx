@@ -142,7 +142,7 @@ void modem_request_listener( Modem* modem ) {
 					//TODO: SMS failed to go, release the files....
 					logger::logger(__FUNCTION__, modem->getInfo() + " - Couldn't send SMS, unlocking file", "stderr", true);
 					if(string unlocked_filename = request["u_filename"]; !sys_calls::rename_file(request["filename"], unlocked_filename)) {
-						logger::logger(__FUNCTION__, modem->getInfo() + " - Failed to release job... maybe recreated it...", "stderr", true);
+						logger::logger(__FUNCTION__, modem->getInfo() + " - Failed to release job: ", "stderr", true);
 						logger::logger_errno( errno );
 					}
 				}
@@ -191,24 +191,24 @@ string Modem::getErrorLogs() {
 
 map<string,string> Modem::request_job( string path_dir_request) {
 	map<string,string> request;
-	logger::logger(__FUNCTION__, "Requesting job at: " + path_dir_request);
+	logger::logger(__FUNCTION__, this->getInfo() + " - Requesting job at: " + path_dir_request);
 	string filenames = sys_calls::terminal_stdout("ls -1 "+path_dir_request);	
 	if( filenames.empty() or filenames == "" or path_dir_request.empty()) return request;
 	
 	string filename = helpers::split(filenames, '\n', true)[0];
 	if(!sys_calls::rename_file(path_dir_request + "/" + filename, path_dir_request + "/." + filename)) {
-		logger::logger(__FUNCTION__, "Failed renaming request file (failed locking it)...", "stderr", true);
+		logger::logger(__FUNCTION__, this->getInfo() + " - Failed renaming request file (failed locking it)...", "stderr", true);
 		logger::logger_errno( errno );
 		return request;
 	}
 	string request_content = helpers::read_file(path_dir_request + "/." + filename)[0];
 	if(request_content.empty()) {
-		logger::logger(__FUNCTION__, "Request file is empty... this shouldn't happen...", "stderr", true);
+		logger::logger(__FUNCTION__, this->getInfo() + " - Request file is empty... this shouldn't happen...", "stderr", true);
 		return request;
 	}
 	request = request_distribution_listener::request_parser( request_content );
 	request.insert(make_pair("filename", path_dir_request + "/." + filename));
-	request.insert(make_pari("u_filename", path_dir_request + "/" + filename));
+	request.insert(make_pair("u_filename", path_dir_request + "/" + filename));
 	return request;
 }
 
