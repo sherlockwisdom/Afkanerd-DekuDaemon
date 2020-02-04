@@ -60,7 +60,8 @@ namespace request_distribution_listener {
 				//TODO: rename file and parse it
 				logger::logger(__FUNCTION__, "Request file is present..", "stdout", true);
 				string random_name = configs["DIR_REQUEST_FILE"] + "/" + helpers::random_string();
-				if( !helpers::rename_file( PATH_REQUEST_FILE, random_name )) {
+				if( !sys_calls::rename_file( PATH_REQUEST_FILE, random_name )) {
+					logger::logger(__FUNCTION__, "Not good, couldn't lock request file...", "stderr", true);
 					logger::logger_errno(errno);
 				}
 				else {
