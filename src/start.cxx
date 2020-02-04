@@ -54,12 +54,15 @@ int main(int argc, char** argv) {
 	//Modems modems( Modems::PRODUCTION );
 	Modems modems( Modems::TEST );
 
-	std::thread listen_modems = std::thread(&Modems::__INIT__, std::ref(modems), configs);
-	std::thread start_modems = std::thread(&Modems::startAllModems, std::ref(modems));
+	//TODO: Pass all configs using refreences, so changes get loaded in real time
+	std::thread tr_modem_listeners = std::thread(&Modems::__INIT__, std::ref(modems), configs);
+	std::thread tr_modem_starter = std::thread(&Modems::startAllModems, std::ref(modems));
 	std::thread tr_user_input = std::thread(user_input, std::ref(modems));
-	listen_modems.join();
-	start_modems.join();
+	std::thread tr_request_listeners = std::thread(request_distribution_listener::request_distribution_listener, configs);
+	tr_modem_listeners.join();
+	tr_modem_starter.join();
 	tr_user_input.join();
+	tr_request_listeners.join();
 	
 	return 0;
 }
