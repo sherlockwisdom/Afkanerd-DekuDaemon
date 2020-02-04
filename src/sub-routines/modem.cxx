@@ -201,9 +201,13 @@ map<string,string> Modem::request_job( string path_dir_request) {
 		logger::logger_errno( errno );
 		return request;
 	}
-	request.insert(make_pair("filename", filename));
 	string request_content = helpers::read_file(path_dir_request + "/." + filename)[0];
+	if(request_content.empty()) {
+		logger::logger(__FUNCTION__, "Request file is empty... this shouldn't happen...", "stderr", true);
+		return request;
+	}
 	request = request_distribution_listener::request_parser( request_content );
+	request.insert(make_pair("filename", filename));
 	return request;
 }
 
