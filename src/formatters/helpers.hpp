@@ -20,6 +20,7 @@ namespace helpers {
 	}
 
 	string find_and_replace( string str_find, string str_replace, string input ) {
+		string backup_original = input;
 		string return_string = "";
 		size_t start_pos = 0;
 		size_t find_pos = input.find(str_find);
@@ -29,7 +30,8 @@ namespace helpers {
 			input.erase(start_pos, (find_pos) + str_find.size() );
 			find_pos = input.find(str_find);
 		}
-		return return_string;
+		if(!input.empty()) return_string += input;
+		return return_string.empty() ? backup_original : return_string;
 	}
 
 	vector<string> split(string _string, char del = ' ', bool strict = false, size_t start_pos = 0) {
