@@ -201,6 +201,7 @@ map<string,string> Modem::request_job( string path_dir_request) {
 		logger::logger_errno( errno );
 		return request;
 	}
+	request.insert(make_pair("filename", filename));
 	string request_content = helpers::read_file(path_dir_request + "/." + filename)[0];
 	request = request_distribution_listener::request_parser( request_content );
 	return request;
