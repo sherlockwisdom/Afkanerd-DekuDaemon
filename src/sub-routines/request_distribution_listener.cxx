@@ -21,6 +21,7 @@ namespace request_distribution_listener {
 	string isp_distributor( string message, string number, map<string,string> config ) {
 		string isp = isp_determiner::get_isp( number );
 		string request = "number="+number+",message=\""+message+"\"";
+		logger::logger(__FUNCTION__, "Distributing [" + request + "] - [" + isp + "]");
 		if( !helpers::file_exist( config["DIR_ISP"] + "/" + isp + "/" ) ) {
 			helpers::make_dir(config["DIR_ISP"] + "/" + isp);
 		}
