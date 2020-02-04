@@ -228,9 +228,10 @@ bool Modem::ssh_send_sms( string message, string number ) {
 	return false;
 }
 
-//TODO: Remove escape characters from Message
 bool Modem::send_sms(string message, string number ) {
 	logger::logger(__FUNCTION__, this->getInfo() + " - About to send SMS", "stderr", true);
+	message = helpers::find_and_replace("\\n", "\n", message);
+	message = helpers::find_and_replace("\\\"", "\"", message);
 	switch( this->getType() ) {
 		case Modem::MMCLI:
 			return this->mmcli_send_sms( message, number);
