@@ -124,8 +124,9 @@ void modem_request_listener( Modem* modem ) {
 				blocking_mutex.unlock();
 			}
 			else {
-				logger::logger(__FUNCTION__, modem->getInfo() + " - Got a request!", "stdout", true);
 				blocking_mutex.unlock();
+				logger::logger(__FUNCTION__, modem->getInfo() + " - Got a request!", "stdout", true);
+				logger::logger(__FUNCTION__, modem->getInfo() + " - locked on file: " + request["filename"]);
 				if( modem->send_sms( request["message"], request["number"] ) ) {
 					logger::logger(__FUNCTION__, modem->getInfo() + " - SMS sent successfully!", "stdout", true);
 					//TODO: Delete file
