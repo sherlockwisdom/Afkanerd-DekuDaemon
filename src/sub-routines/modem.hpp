@@ -19,7 +19,7 @@ class Modem {
 	public:
 		enum STATE {TEST, PRODUCTION};
 		STATE state;
-		Modem(map<string,string> configs, STATE state = TEST, TYPE type);
+		Modem(map<string,string> configs, STATE state = TEST );
 		Modem(const Modem& modem);
 		~Modem();
 

@@ -42,7 +42,7 @@ void Modems::__INIT__( map<string, string> configs ) {
 			if(this->state == TEST) modem_state = Modem::TEST; 
 			else if(this->state == PRODUCTION) modem_state = Modem::PRODUCTION;
 			
-			Modem modem( configs, modem_state);
+			Modem modem( configs, modem_state );
 			modem.setIndex( index );
 			for(auto ln : ln_modem_information) {
 				//logger::logger(__FUNCTION__, "line: " + ln);
