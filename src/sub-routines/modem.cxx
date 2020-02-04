@@ -64,8 +64,8 @@ bool Modem::operator==( Modem modem ) const {
 	return (
 			modem.getIndex() == this->getIndex() and
 			modem.getISP() == this->getISP() and
-			modem.getIMEI() == this->getIMEI() and
-			modem.getType() == this->getType();
+			modem.getIMEI() == this->getIMEI() and 
+			modem.getType() == this->getType()
 	);
 }
 
