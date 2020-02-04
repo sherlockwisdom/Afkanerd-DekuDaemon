@@ -141,7 +141,7 @@ void modem_request_listener( Modem* modem ) {
 				else {
 					//TODO: SMS failed to go, release the files....
 					logger::logger(__FUNCTION__, modem->getInfo() + " - Couldn't send SMS, unlocking file", "stderr", true);
-					if(!sys_calls::rename_file(request["filename"], request["filename"].erase(0,1))) {
+					if(string unlocked_filename = request["filename"].erase(0,1); !sys_calls::rename_file(request["filename"], unlocked_filename)) {
 						logger::logger(__FUNCTION__, modem->getInfo() + " - Failed to release job... maybe recreated it...", "stderr", true);
 						logger::logger_errno( errno );
 					}
