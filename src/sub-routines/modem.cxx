@@ -236,13 +236,17 @@ bool Modem::ssh_send_sms( string message, string number ) {
 
 bool Modem::send_sms(string message, string number ) {
 	//TODO: something here to send the messages
-	if( this->getType() == MMCLI ) {
-		//TODO: send mmcli
-		return this->mmcliSendSMS( message, number);
-	}
-	else if( this->getType() == SSH ) {
-		//TODO: send ssh
-		return this->ssh_send_sms( message, number );
+	switch( this->getType() ) {
+		case MMCLI:
+			return this->mmcliSendSMS( message, number);
+		break;
+
+		case SSH:
+			return this->ssh_send_sms( message, number );
+		break;
+
+		default:
+		break;
 	}
 	return false;
 }
