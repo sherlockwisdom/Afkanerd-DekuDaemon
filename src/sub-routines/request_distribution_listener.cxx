@@ -58,6 +58,7 @@ namespace request_distribution_listener {
 		while( 1 ) {
 			if( helpers::file_exist( PATH_REQUEST_FILE ) ) {
 				//TODO: rename file and parse it
+				logger::logger(__FUNCTION__, "Request file is present..", "stdout", true);
 				string random_name = configs["DIR_REQUEST_FILE"] + "/" + helpers::random_string();
 				if( !helpers::rename_file( PATH_REQUEST_FILE, random_name )) {
 					logger::logger_errno(errno);
@@ -72,8 +73,12 @@ namespace request_distribution_listener {
 					}
 				}
 			}
+			else {
+				logger::logger(__FUNCTION__, "No current request...");
+			}
 
 			helpers::sleep_thread( 10 ); //Stops CPU from running on overclock
+			//TODO: use inotify to notify changes in directory structure and files
 		}
 		
 	}
