@@ -8,11 +8,13 @@ class Modem {
 	string isp;
 	string imei;
 	string errorLogs;
-	string type;
 
 	bool keepAlive = false;
 	bool thread_safety = false;
 	map<string,string> configs;
+
+	enum TYPE{SSH, MMCLI};
+	TYPE type;
 	
 	public:
 		enum STATE {TEST, PRODUCTION};
@@ -37,7 +39,7 @@ class Modem {
 		string getIMEI() const;
 		string getErrorLogs();
 		string getInfo() const;
-		string getType() const;
+		TYPE getType() const;
 
 		explicit operator bool() const;
 		bool operator==(Modem modem) const;

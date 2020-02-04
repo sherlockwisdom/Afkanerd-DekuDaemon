@@ -50,6 +50,10 @@ string Modem::getInfo() const {
 	return this->getIMEI() + "|" + this->getISP() + "|" + this->getIndex();
 }
 
+Modem::TYPE Modem::getType() const {
+	return this->getType();
+}
+
 Modem::operator bool() const {
 	return !this->getISP().empty();
 }
