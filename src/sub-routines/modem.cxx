@@ -7,9 +7,10 @@
 using namespace std;
 std::mutex blocking_mutex;
 //class Modem
-Modem::Modem(map<string,string> configs, STATE state) {
+Modem::Modem(map<string,string> configs, STATE state, TYPE type) {
 	this->configs = configs;
 	this->state = state;
+	this->type = type;
 }
 
 Modem::Modem(const Modem& modem) {

@@ -19,9 +19,8 @@ class Modem {
 	public:
 		enum STATE {TEST, PRODUCTION};
 		STATE state;
-		Modem(map<string,string> configs, STATE state = TEST);
+		Modem(map<string,string> configs, STATE state = TEST, TYPE type);
 		Modem(const Modem& modem);
-		Modem(string type);
 		~Modem();
 
 		void setIndex( string index );
