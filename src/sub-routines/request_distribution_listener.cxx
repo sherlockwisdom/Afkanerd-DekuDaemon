@@ -73,6 +73,10 @@ namespace request_distribution_listener {
 						string message = extracted_request["message"];
 						isp_distributor( message, number, configs );
 					}
+					if(!sys_calls::file_handlers( random_name, sys_calls::DEL )) {
+						logger::logger(__FUNCTION__, "Failed to delete old file, not bad but not good...", "stderr", true);
+						logger::logger_errno(errno);
+					}
 				}
 			}
 			else {

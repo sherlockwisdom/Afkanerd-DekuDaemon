@@ -19,6 +19,8 @@ namespace sys_calls {
 			break;
 
 			case DEL:
+				if( std::remove(file_path.c_str()) == 0) return true;
+				else return false;
 			break;
 
 		}
