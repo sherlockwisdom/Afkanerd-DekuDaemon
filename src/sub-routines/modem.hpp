@@ -26,8 +26,6 @@ class Modem {
 		void setIndex( string index );
 		void setIMEI( string IMEI );
 		void setISP( string ISP );
-		//void modem_request_listener(map<string,string> configs={});
-		//void modem_state_listener( );
 		void setKeepAlive( bool keepAlive);
 		void start();
 		void setThreadSafety( bool thread_safety );
@@ -48,6 +46,8 @@ class Modem {
 
 		bool end();
 		bool send_sms(string message, string number);
+		bool mmcli_send_sms(string message, string number);
+		bool ssh_send_sms(string message, string number);
 		bool getKeepAlive() const;
 		bool getThreadSafety() const;
 

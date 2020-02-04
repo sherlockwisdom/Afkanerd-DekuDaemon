@@ -47,7 +47,7 @@ string Modem::getIMEI() const {
 }
 
 string Modem::getInfo() const {
-	return this->getIMEI() + "|" + this->getISP() + "|" + this->getIndex();
+	return this->getIMEI() + "|" + this->getISP() + "|" + this->getIndex() + "|" + (this->getType() == MMCLI ? "MMCLI" : "SSH");
 }
 
 Modem::TYPE Modem::getType() const {
@@ -165,25 +165,9 @@ void modem_request_listener( Modem* modem ) {
 	logger::logger(__FUNCTION__, modem->getInfo() + " - KeepAlive died!" );
 }
 
-void modem_state_listener( Modem& modem ) {
-	//TODO: listens for changes to modems state and updates appropriately
-}
-
 void Modem::start() {
-	//std::thread tr_modem_request_listener(&Modem::modem_request_listener, this, this->configs);
-	//cout << __FUNCTION__ << "mem address before start: " << &*this << endl;
 	std::thread tr_modem_request_listener = std::thread(modem_request_listener, &*this);
-	//std::thread tr_modem_state_listener = std::thread(modem_state_listener, std::ref(*this));
-
-	//if(this->state == TEST) tr_modem_request_listener.detach(); //TODO: change to detach
-	//if(this->state == TEST) tr_modem_request_listener.join(); //TODO: change to detach
-	//else if(this->state == PRODUCTION) tr_modem_request_listener.join();
-	//this->request_thread_id.push_back(tr_modem_request_listener);
 	tr_modem_request_listener.join();
-
-	//if(this->state == TEST) tr_modem_state_listener.detach();
-	//if(this->state == TEST) tr_modem_state_listener.join();
-	//else if(this->state == PRODUCTION) tr_modem_state_listener.join();
 }
 
 bool Modem::end() {
@@ -228,7 +212,7 @@ bool Modem::mmcli_send_sms( string message, string number ) {
 
 bool Modem::ssh_send_sms( string message, string number ) {
 	string sms_results = sys_calls::terminal_stdout("ssh root@" + this->getIndex() + " -o 'ServerAliveInterval 20' sendsms \"" + message + "\" " + number );
-	sms_results = hellpers::to_lowercase( sms_results );
+	sms_results = helpers::to_lowercase( sms_results );
 	if( sms_results.find("done") != string::npos ) return true;
 	
 	return false;
@@ -238,7 +222,7 @@ bool Modem::send_sms(string message, string number ) {
 	//TODO: something here to send the messages
 	switch( this->getType() ) {
 		case MMCLI:
-			return this->mmcliSendSMS( message, number);
+			return this->mmcli_send_sms( message, number);
 		break;
 
 		case SSH:

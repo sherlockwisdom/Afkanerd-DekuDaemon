@@ -175,6 +175,12 @@ namespace helpers {
 
 	string to_upper(string input) {
 		string str = input;
+		transform(str.begin(), str.end(),str.begin(), ::tolower);
+		return str;
+	}
+
+	string to_lowercase(string input) {
+		string str = input;
 		transform(str.begin(), str.end(),str.begin(), ::toupper);
 		return str;
 	}
