@@ -70,7 +70,6 @@ bool Modem::operator==( Modem modem ) const {
 }
 
 bool Modem::operator==( Modem* modem ) const {
-	logger::logger(__FUNCTION__, this->getInfo() + " - " + modem->getInfo());
 	return (
 			modem->getIndex() == this->getIndex() and
 			modem->getISP() == this->getISP() and
@@ -205,9 +204,13 @@ map<string,string> Modem::request_job( string path_dir_request) {
 }
 
 bool Modem::mmcli_send_sms( string message, string number ) {
+	logger::logger(__FUNCTION__, "SENDING - [" + message + "] - [" + number + "]");
 	string sms_results = sys_calls::terminal_stdout(this->configs["DIR_SCRIPTS"] + "/modem_information_extraction sms send " + message + " " + number + " " + this->getIndex());
 	sms_results = helpers::to_lowercase( sms_results );
 	if( sms_results.find("successfully") != string::npos ) return true;
+	else {
+		logger::logger(__FUNCTION__, "SMS Failed log: ", "stderr", true);
+	}
 	
 	return false;
 }
@@ -218,22 +221,27 @@ bool Modem::ssh_send_sms( string message, string number ) {
 	logger::logger(__FUNCTION__, sms_results);
 	sms_results = helpers::to_lowercase( sms_results );
 	if( sms_results.find("done") != string::npos ) return true; //TODO: change to == done, not find("done")
+	else {
+		logger::logger(__FUNCTION__, "SMS Failed log: ", "stderr", true);
+	}
 	
 	return false;
 }
 
 bool Modem::send_sms(string message, string number ) {
 	//TODO: something here to send the messages
+	logger::logger(__FUNCTION__, this->getInfo() + " - About to send SMS", "stderr", true);
 	switch( this->getType() ) {
-		case MMCLI:
+		case Modem::MMCLI:
 			return this->mmcli_send_sms( message, number);
 		break;
 
-		case SSH:
+		case Modem::SSH:
 			return this->ssh_send_sms( message, number );
 		break;
 
 		default:
+			logger::logger(__FUNCTION__, this->getInfo() + " - Failed to get type..", "stderr");
 		break;
 	}
 	return false;
