@@ -212,8 +212,32 @@ map<string,string> Modem::request_job( string path_dir_request) {
 	return request;
 }
 
+bool Modem::mmcli_send_sms( string message, string number ) {
+	string sms_results = sys_calls::terminal_stdout(this->configs["DIR_SCRIPTS"] + "/modem_information_extraction sms send " + message + " " + number + " " + this->getIndex());
+	sms_results = helpers::to_lowercase( sms_results );
+	if( sms_results.find("successfully") != string::npos ) return true;
+	
+	return false;
+}
+
+bool Modem::ssh_send_sms( string message, string number ) {
+	string sms_results = sys_calls::terminal_stdout("ssh root@" + this->getIndex() + " -o 'ServerAliveInterval 20' sendsms \"" + message + "\" " + number );
+	sms_results = hellpers::to_lowercase( sms_results );
+	if( sms_results.find("done") != string::npos ) return true;
+	
+	return false;
+}
+
 bool Modem::send_sms(string message, string number ) {
 	//TODO: something here to send the messages
+	if( this->getType == MMCLI ) {
+		//TODO: send mmcli
+		return this->mmcliSendSMS( message, number);
+	}
+	else if( this->getType() == SSH ) {
+		//TODO: send ssh
+		return this->ssh_send_sms( message, number );
+	}
 	return false;
 }
 

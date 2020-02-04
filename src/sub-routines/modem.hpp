@@ -18,6 +18,7 @@ class Modem {
 		STATE state;
 		Modem(map<string,string> configs, STATE state = TEST);
 		Modem(const Modem& modem);
+		Modem(string type);
 		~Modem();
 
 		void setIndex( string index );
@@ -28,12 +29,14 @@ class Modem {
 		void setKeepAlive( bool keepAlive);
 		void start();
 		void setThreadSafety( bool thread_safety );
+		void setType( string type );
 
 		string getIndex() const;
 		string getISP() const;
 		string getIMEI() const;
 		string getErrorLogs();
 		string getInfo() const;
+		string getType() const;
 
 		explicit operator bool() const;
 		bool operator==(Modem modem) const;
