@@ -252,21 +252,5 @@ bool Modem::send_sms(string message, string number ) {
 }
 
 Modem::~Modem() {
-	/*
-	if(this->keepAlive) {
-		logger::logger(__FUNCTION__, "Keeping Modem as a service...");
-		std::thread tr_modem_request_listener = std::thread(modem_request_listener, std::ref(*this));
-		std::thread tr_modem_state_listener = std::thread(modem_state_listener, std::ref(*this));
-
-		//if(this->state == TEST) tr_modem_request_listener.detach(); //TODO: change to detach
-		if(this->state == TEST) tr_modem_request_listener.join(); //TODO: change to detach
-		else if(this->state == PRODUCTION) tr_modem_request_listener.join();
-
-		//if(this->state == TEST) tr_modem_state_listener.detach();
-		if(this->state == TEST) tr_modem_state_listener.join();
-		else if(this->state == PRODUCTION) tr_modem_state_listener.join();
-	}
-	*/
-
 	logger::logger(__FUNCTION__, this->getInfo() + " - Destructor called...");
 }
