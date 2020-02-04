@@ -203,6 +203,7 @@ map<string,string> Modem::request_job( string path_dir_request) {
 
 bool Modem::send_sms(string message, string number ) {
 	//TODO: something here to send the messages
+	return false;
 }
 
 Modem::~Modem() {
