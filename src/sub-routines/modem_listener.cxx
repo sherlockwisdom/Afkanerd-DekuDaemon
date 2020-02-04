@@ -35,30 +35,40 @@ void Modems::__INIT__( map<string, string> configs ) {
 		for(auto index : modem_indexes) {
 			//logger::logger(__FUNCTION__, "working with index: " + index );
 			//TODO: check if SSH or MMCLI modems before deciding method of extraction
-			string modem_information = sys_calls::terminal_stdout(configs["DIR_SCRIPTS"] + "/modem_information_extraction.sh extract " + index );
-			vector<string> ln_modem_information = helpers::split(modem_information, '\n', true);
-
 			Modem::STATE modem_state = Modem::TEST;
 			if(this->state == TEST) modem_state = Modem::TEST; 
 			else if(this->state == PRODUCTION) modem_state = Modem::PRODUCTION;
 			
 			Modem modem( configs, modem_state );
 			modem.setIndex( index );
-			for(auto ln : ln_modem_information) {
-				//logger::logger(__FUNCTION__, "line: " + ln);
-				vector<string> component = helpers::split(ln, ':', true);
-				if((component.size() != 2 or component[1].empty())) {
+			string modem_information = modem.getType() == Modem::SSH ? sys_calls::terminal_stdout("ssh root@"+index+" -o 'ServerAliveInterval 10' deku") : sys_calls::terminal_stdout(configs["DIR_SCRIPTS"] + "/modem_information_extraction.sh extract " + index );
+			vector<string> ln_modem_information = helpers::split(modem_information, '\n', true);
+
+			if(modem.getType() == Modem::SSH) {
+				if(ln_modem_information.size() < 2) {
 					logger::logger(__FUNCTION__, "Incomplete data for modem at index: " + index, "stderr");
-					continue;
 				}
-				else if(component[0] == "equipment_id") modem.setIMEI( component[1]);
-				else if(component[0] == "operator_name") {
-					//logger::logger(__FUNCTION__, "Setting ISP: " + component[1]);
-					modem.setISP( component[1]);
+				else if(ln_modem_information[0].find("deku:verified:") != string::npos) {
+					modem.setISP(helpers::to_upper(ln_modem_information[1]));
+					modem.setIMEI(index);
 				}
 			}
-			//TODO: What happens if a modem changes, but index remains
-			//TODO: what happens when a modem is completely removed
+			else if(modem.getType() == Modem::MMCLI) {
+				for(auto ln : ln_modem_information) {
+					//logger::logger(__FUNCTION__, "line: " + ln);
+					vector<string> component = helpers::split(ln, ':', true);
+					if((component.size() != 2 or component[1].empty())) {
+						logger::logger(__FUNCTION__, "Incomplete data for modem at index: " + index, "stderr");
+						continue;
+					}
+					else if(component[0] == "equipment_id") modem.setIMEI( component[1]);
+					else if(component[0] == "operator_name") {
+						//logger::logger(__FUNCTION__, "Setting ISP: " + component[1]);
+						modem.setISP( component[1]);
+					}
+				}
+			}
+
 			auto it_modemCollection = std::find_if(this->modemCollection.begin(), this->modemCollection.end(), [&](Modem* modem1){ return *modem1 == modem; });
 			if(it_modemCollection == this->modemCollection.end()) {
 				logger::logger(__FUNCTION__, modem.getInfo() + " - Not found in list");

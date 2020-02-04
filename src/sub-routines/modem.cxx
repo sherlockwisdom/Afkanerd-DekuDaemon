@@ -211,9 +211,11 @@ bool Modem::mmcli_send_sms( string message, string number ) {
 }
 
 bool Modem::ssh_send_sms( string message, string number ) {
+	logger::logger(__FUNCTION__, "SENDING - [" + message + "] - [" + number + "]");
 	string sms_results = sys_calls::terminal_stdout("ssh root@" + this->getIndex() + " -o 'ServerAliveInterval 20' sendsms \"" + message + "\" " + number );
+	logger::logger(__FUNCTION__, sms_results);
 	sms_results = helpers::to_lowercase( sms_results );
-	if( sms_results.find("done") != string::npos ) return true;
+	if( sms_results.find("done") != string::npos ) return true; //TODO: change to == done, not find("done")
 	
 	return false;
 }
