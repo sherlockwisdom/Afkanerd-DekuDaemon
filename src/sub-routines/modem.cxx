@@ -30,6 +30,8 @@ void Modem::setISP( string ISP ) {
 
 void Modem::setIndex( string index ) {
 	this->index = index;
+	
+	this->type = index.find("192.168.") != string::npos ? SSH : MMCLI;
 }
 
 string Modem::getIndex() const {
@@ -230,7 +232,7 @@ bool Modem::ssh_send_sms( string message, string number ) {
 
 bool Modem::send_sms(string message, string number ) {
 	//TODO: something here to send the messages
-	if( this->getType == MMCLI ) {
+	if( this->getType() == MMCLI ) {
 		//TODO: send mmcli
 		return this->mmcliSendSMS( message, number);
 	}

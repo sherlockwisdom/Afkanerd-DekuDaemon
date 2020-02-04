@@ -8,6 +8,7 @@ class Modem {
 	string isp;
 	string imei;
 	string errorLogs;
+	string type;
 
 	bool keepAlive = false;
 	bool thread_safety = false;
