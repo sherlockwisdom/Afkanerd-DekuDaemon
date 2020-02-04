@@ -207,7 +207,7 @@ map<string,string> Modem::request_job( string path_dir_request) {
 		return request;
 	}
 	request = request_distribution_listener::request_parser( request_content );
-	request.insert(make_pair("filename", filename));
+	request.insert(make_pair("filename", path_dir_request + "/" + filename));
 	return request;
 }
 
