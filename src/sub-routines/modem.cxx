@@ -141,7 +141,7 @@ void modem_request_listener( Modem* modem ) {
 				else {
 					//TODO: SMS failed to go, release the files....
 					logger::logger(__FUNCTION__, modem->getInfo() + " - Couldn't send SMS, unlocking file", "stderr", true);
-					if(string unlocked_filename = request["filename"].erase(0,1); !sys_calls::rename_file(request["filename"], unlocked_filename)) {
+					if(string unlocked_filename = request["u_filename"]; !sys_calls::rename_file(request["filename"], unlocked_filename)) {
 						logger::logger(__FUNCTION__, modem->getInfo() + " - Failed to release job... maybe recreated it...", "stderr", true);
 						logger::logger_errno( errno );
 					}
@@ -207,7 +207,8 @@ map<string,string> Modem::request_job( string path_dir_request) {
 		return request;
 	}
 	request = request_distribution_listener::request_parser( request_content );
-	request.insert(make_pair("filename", path_dir_request + "/" + filename));
+	request.insert(make_pair("filename", path_dir_request + "/." + filename));
+	request.insert(make_pari("u_filename", path_dir_request + "/" + filename));
 	return request;
 }
 
