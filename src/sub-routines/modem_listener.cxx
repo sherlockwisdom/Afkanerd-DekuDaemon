@@ -34,6 +34,7 @@ void Modems::__INIT__( map<string, string> configs ) {
 		vector<Modem*> tmp_modemCollection;
 		for(auto index : modem_indexes) {
 			//logger::logger(__FUNCTION__, "working with index: " + index );
+			//TODO: check if SSH or MMCLI modems before deciding method of extraction
 			string modem_information = sys_calls::terminal_stdout(configs["DIR_SCRIPTS"] + "/modem_information_extraction.sh extract " + index );
 			vector<string> ln_modem_information = helpers::split(modem_information, '\n', true);
 
