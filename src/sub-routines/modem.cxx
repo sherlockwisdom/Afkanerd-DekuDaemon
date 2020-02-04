@@ -140,6 +140,7 @@ void modem_request_listener( Modem* modem ) {
 				}
 				else {
 					//TODO: SMS failed to go, release the files....
+					logger::logger(__FUNCTION__, modem->getInfo() + " - Couldn't send SMS", "stderr", true);
 				}
 			}
 		}
@@ -191,7 +192,7 @@ map<string,string> Modem::request_job( string path_dir_request) {
 	
 	string filename = helpers::split(filenames, '\n', true)[0];
 	if(!sys_calls::rename_file(path_dir_request + "/" + filename, path_dir_request + "/." + filename)) {
-		logger::logger(__FUNCTION__, "Failed renaming request file...", "stderr", true);
+		logger::logger(__FUNCTION__, "Failed renaming request file (failed locking it)...", "stderr", true);
 		logger::logger_errno( errno );
 		return request;
 	}
