@@ -54,12 +54,14 @@ bool system_check( string path_to_sys_file) {
 }
 
 map<string,string> get_system_configs( vector<string> sys_config_lines ) {
-	//TODO: UTest this function
 	map<string,string> configs;
 	for(auto config_line: sys_config_lines) {
 		//TODO: put integrity check to make sure valid configs have been entered
 		vector<string> tmp_configs = helpers::split(config_line, '=', true);
-		configs.insert(make_pair( tmp_configs[0], tmp_configs[1]));
+		if(tmp_configs.size() > 1) configs.insert(make_pair( tmp_configs[0], tmp_configs[1]));
+		else {
+			logger::logger(__FUNCTION__, "Error reading configs...", "stderr", true);
+		}
 	}
 	return configs;
 }
