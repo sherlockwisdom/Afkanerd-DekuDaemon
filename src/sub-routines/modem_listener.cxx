@@ -119,7 +119,7 @@ bool Modems::start( Modem modem ) {
 }
 
 void Modems::startAllModems() {
-	while( 1 ) {  //TODO: Change this to a condition
+	while( 1 ) {  //TODO: Use an internal variable to control this loop
 		logger::logger(__FUNCTION__, to_string(this->threaded_modems.size()) + " currently threaded modems");
 		for(map<Modem*, std::thread>::iterator it=this->threaded_modems.begin();it!=this->threaded_modems.end();++it ) {
 			//if(std::find(this->modemCollection.begin(), this->modemCollection.end(), it->first) == this->modemCollection.end()) { //This checks against mem values
