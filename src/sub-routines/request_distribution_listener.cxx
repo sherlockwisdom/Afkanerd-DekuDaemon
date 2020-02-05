@@ -45,7 +45,6 @@ namespace request_distribution_listener {
 	}
 
 	void request_distribution_listener( map<string, string> configs ) {
-		//TODO: run system checks here
 		if( !configs_check(configs)) {
 			logger::logger( __FUNCTION__, "Configuration check failed, cannot start", "stderr", true);
 			return;
@@ -54,7 +53,6 @@ namespace request_distribution_listener {
 		string PATH_REQUEST_FILE = configs["DIR_REQUEST_FILE"] + "/" + configs["STD_NAME_REQUEST_FILE"];
 		while( 1 ) {
 			if( helpers::file_exist( PATH_REQUEST_FILE ) ) {
-				//TODO: rename file and parse it
 				logger::logger(__FUNCTION__, "Request file is present..", "stdout", true);
 				string random_name = configs["DIR_REQUEST_FILE"] + "/" + helpers::random_string();
 				if( !sys_calls::rename_file( PATH_REQUEST_FILE, random_name )) {
@@ -79,8 +77,9 @@ namespace request_distribution_listener {
 				logger::logger(__FUNCTION__, "No current request...");
 			}
 
-			helpers::sleep_thread( 10 ); //Stops CPU from running on overclock
-			//TODO: use inotify to notify changes in directory structure and files
+			helpers::sleep_thread( 10 ); 
+
+			//IDEA: could linux inotify replace sleeping the thread; use events to determine when to run
 		}
 		
 	}

@@ -115,14 +115,10 @@ map<string,string> Modem::getConfigs() const {
 
 void modem_request_listener( Modem* modem ) {
 	logger::logger(__FUNCTION__, modem->getInfo() + " thread started...");
-	//cout << __FUNCTION__ << ": " << modem << endl;
 	modem->setKeepAlive(true);
-	//TODO: https://en.cppreference.com/w/cpp/thread/mutex
-	//TODO: begin making request for task and finishing the task
 	
 	modem->setThreadSafety( true );
 	while( modem->getKeepAlive() ) {
-		//Begin making request and getting jobs back in
 		if(blocking_mutex.try_lock() ) {
 			logger::logger(__FUNCTION__,  modem->getInfo() + " - Acquiring mutex", "stdout");
 			map<string,string> request = modem->request_job( modem->getConfigs()["DIR_ISP"] + "/" + modem->getISP() );
@@ -136,7 +132,7 @@ void modem_request_listener( Modem* modem ) {
 				logger::logger(__FUNCTION__, modem->getInfo() + " - locked on file: " + request["filename"]);
 				if( modem->send_sms( request["message"], request["number"] ) ) {
 					logger::logger(__FUNCTION__, modem->getInfo() + " - SMS sent successfully!", "stdout", true);
-					//TODO: Delete file
+					//DELETE FILE
 					if( !sys_calls::file_handlers(request["filename"], sys_calls::DEL)){
 						logger::logger(__FUNCTION__, modem->getInfo() + " - Failed to clean job file", "stderr", true);
 						logger::logger_errno( errno );
@@ -146,8 +142,8 @@ void modem_request_listener( Modem* modem ) {
 					}
 				}
 				else {
-					//TODO: SMS failed to go, release the files....
 					logger::logger(__FUNCTION__, modem->getInfo() + " - Couldn't send SMS, unlocking file", "stderr", true);
+					//RELEASE FILE
 					if(string unlocked_filename = request["u_filename"]; !sys_calls::rename_file(request["filename"], unlocked_filename)) {
 						logger::logger(__FUNCTION__, modem->getInfo() + " - Failed to release job: ", "stderr", true);
 						logger::logger_errno( errno );
