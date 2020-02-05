@@ -22,8 +22,6 @@ class Modems {
 		vector<string> getAllIMEI();
 
 		vector<Modem*> getAllModems();
-
-		bool start(Modem);
 };
 
 #endif

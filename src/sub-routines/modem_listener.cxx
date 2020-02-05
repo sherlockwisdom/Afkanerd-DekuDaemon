@@ -114,10 +114,6 @@ vector<Modem*> Modems::getAllModems() {
 	return this->modemCollection;
 }
 
-bool Modems::start( Modem modem ) {
-
-}
-
 void Modems::startAllModems() {
 	while( 1 ) {  //TODO: Use an internal variable to control this loop
 		logger::logger(__FUNCTION__, to_string(this->threaded_modems.size()) + " currently threaded modems");

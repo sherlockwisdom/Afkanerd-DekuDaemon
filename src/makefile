@@ -1,5 +1,5 @@
 CC = g++
-CFLAGS = -g -Wall -pthread
+CFLAGS = -g -Wall -pthread -std=c++1z
 TARGET = start
 
 default: $(TARGET)

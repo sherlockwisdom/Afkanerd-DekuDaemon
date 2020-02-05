@@ -7,8 +7,7 @@
 using namespace std;
 
 namespace sys_calls {
-	enum FILE_FLAG{EXIST, READ, DEL};
-	bool file_listeners( string file_path ) {}
+	enum FILE_FLAG{EXIST, DEL};
 
 	bool file_handlers( string file_path, FILE_FLAG flag) {
 		switch( flag ) {
@@ -24,13 +23,14 @@ namespace sys_calls {
 			break;
 
 		}
+		return false;
 	}
 
 	void make_dir( string path_dirname ) {
 		size_t start_pos = path_dirname[0] == '/' ? 1 : 0;
 		vector<string> recursive_paths = helpers::split(path_dirname, '/', true, start_pos);
 		string make_me = recursive_paths[0];
-		for(int i=0;i<recursive_paths.size();++i) {
+		for(size_t i=0;i<recursive_paths.size();++i) {
 			logger::logger(__FUNCTION__, "Making dir: " + make_me, "stdout", false);
 			if( i!=0) make_me += "/" + recursive_paths[i];
 			if( mkdir( make_me.c_str(), 0777 ) == -1) {
@@ -64,13 +64,6 @@ namespace sys_calls {
 		return true;
 	}
 	
-	bool unhide_file( string path_filename) {}
-
-	bool hide_file( string path_filename) {
-		
-	}
-
-	int dir_handlers( string dir_path ) {}
 }
 
 
