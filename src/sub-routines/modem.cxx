@@ -216,7 +216,7 @@ bool Modem::ssh_send_sms( string message, string number ) {
 	string sms_results = sys_calls::terminal_stdout("ssh root@" + this->getIndex() + " -o 'ServerAliveInterval 20' sendsms \"" + message + "\" " + number );
 	logger::logger(__FUNCTION__, sms_results);
 	sms_results = helpers::to_lowercase( sms_results );
-	if( sms_results.find("done") != string::npos ) return true; //TODO: change to == done, not find("done")
+	if( sms_results == "done" ) return true; 
 	else {
 		logger::logger(__FUNCTION__, "SMS Failed log: ", "stderr", true);
 	}
