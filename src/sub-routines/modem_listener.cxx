@@ -21,10 +21,9 @@ Modems::Modems( STATE state) {
 
 void Modems::__INIT__( map<string, string> configs ) {
 
-	while( 1 ) {
+	while( 1 ) { //TODO: Use a variable to control this loop
 		logger::logger(__FUNCTION__, "Refreshing modem list..");
 		string list_of_modem_indexes = sys_calls::terminal_stdout(configs["DIR_SCRIPTS"] + "/modem_information_extraction.sh list");
-		//logger::logger(__FUNCTION__, list_of_modem_indexes );
 		vector<string> modem_indexes = helpers::split(list_of_modem_indexes, '\n', true);
 		logger::logger(__FUNCTION__, "Number of indexes: " + to_string(modem_indexes.size()));
 		logger::logger(__FUNCTION__, "Number of collected modems: " + to_string(this->modemCollection.size()));
@@ -33,8 +32,6 @@ void Modems::__INIT__( map<string, string> configs ) {
 
 		vector<Modem*> tmp_modemCollection;
 		for(auto index : modem_indexes) {
-			//logger::logger(__FUNCTION__, "working with index: " + index );
-			//TODO: check if SSH or MMCLI modems before deciding method of extraction
 			Modem::STATE modem_state = Modem::TEST;
 			if(this->state == TEST) modem_state = Modem::TEST; 
 			else if(this->state == PRODUCTION) modem_state = Modem::PRODUCTION;
@@ -131,7 +128,6 @@ void Modems::startAllModems() {
 				logger::logger(__FUNCTION__, it->first->getInfo() + " - Modem not available, stopping thread");
 				if(this->threaded_modems.find(it->first) != this->threaded_modems.end()) {
 					it->first->end();
-					//while(!it->first->getThreadSafety()) helpers::sleep_thread(5); //TODO: remove this part from the code all together... nothing can kill a detached thread except OS exceptions or the thread dies off
 					this->threaded_modems.erase(it);
 					if(this->threaded_modems.empty()) {
 						logger::logger(__FUNCTION__, "Currently no modem threads running");

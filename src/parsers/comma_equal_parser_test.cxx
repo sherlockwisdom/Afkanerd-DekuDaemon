@@ -2,7 +2,6 @@
 #include "comma_equals_parser.hpp"
 
 using namespace std;
-//TODO: Allow parser to choose parsing or ignoring double quotes
 
 int main() {
 	string sample = "number=00000,message=Hello world\"this is a sample message,retry=true";
