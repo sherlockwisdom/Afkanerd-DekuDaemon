@@ -200,9 +200,7 @@ namespace helpers {
 	}
 
 	string remove_char( string input, char value = '\n', char location = 'B' ) {
-		//TODO: Make location determine where it takes the input file from
-		size_t check_pos = 0;
-		if( location == 'E' ) check_pos = input.size() -1;
+		size_t check_pos = location == 'B' ? 0 : input.size() -1;
 		size_t space_location = input.find( value );
 		while( space_location != string::npos and space_location == check_pos) {
 			input.erase( check_pos, 1);
