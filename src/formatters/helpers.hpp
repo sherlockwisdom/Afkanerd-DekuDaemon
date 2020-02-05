@@ -62,7 +62,7 @@ namespace helpers {
 		size_t start_pos = path_dirname[0] == '/' ? 1 : 0;
 		vector<string> recursive_paths = helpers::split(path_dirname, '/', true, start_pos);
 		string make_me = recursive_paths[0];
-		for(int i=0;i<recursive_paths.size();++i) {
+		for(size_t i=0;i<recursive_paths.size();++i) {
 			logger::logger(__FUNCTION__, "Making dir: " + make_me, "stdout", false);
 			if( i!=0) make_me += "/" + recursive_paths[i];
 			if( mkdir( make_me.c_str(), 0777 ) == -1) {
@@ -72,7 +72,9 @@ namespace helpers {
 		
 		return;
 	}
-	void write_file( string path_filename, auto input, bool b_unescape_string = false, ios_base::openmode mode = ios::app ) {
+
+	template<class T>
+	void write_file( string path_filename, T input, bool b_unescape_string = false, ios_base::openmode mode = ios::app ) {
 		//if( b_unescape_string ) input = unescape_string( input );
 		ofstream writefile( path_filename.c_str(), mode );
 		writefile << input;
@@ -94,16 +96,6 @@ namespace helpers {
 	bool file_exist( string path_filename ) {
 		struct stat buffer; 
 		return stat( path_filename.c_str(), &buffer) == 0;
-	}
-
-	bool delete_file( string path_filename) {}
-
-	bool rename_file( string path_filename, string new_path_filename) {}
-	
-	bool unhide_file( string path_filename) {}
-
-	bool hide_file( string path_filename) {
-		
 	}
 
 	void sleep_thread( int duration ) {
