@@ -7,11 +7,11 @@ using namespace std;
 
 namespace request_distribution_listener {
 	bool configs_check( map<string,string> configs ) {
-		//TODO: put the things one needs to check in here
 		return (
 				configs.find("DIR_ISP") != configs.end() and 
 				configs.find("DIR_REQUEST_FILE") != configs.end() and 
-				configs.find("STD_NAME_REQUEST_FILE") != configs.end()
+				configs.find("STD_NAME_REQUEST_FILE") != configs.end() and
+				configs.find("DIR_SCRIPTS") != configs.end()
 		);
 	}
 
@@ -31,8 +31,7 @@ namespace request_distribution_listener {
 		vector<string> request_extract = parsers::comma_seperate( request );
 		string message, number;
 		for(auto r_entity : request_extract ) {
-			//TODO: critical... if equals is in message, it will parse through the message
-			vector<string> component = parsers::equal_seperate( r_entity );
+			vector<string> component = parsers::equal_seperate( r_entity, 1);
 			if( component[0] == "number" ) extracted_request.insert(make_pair("number", component[1]));
 			else if(component[0] == "message" ) {
 				if(component[1][0] == '"') component[1].erase(0,1);
