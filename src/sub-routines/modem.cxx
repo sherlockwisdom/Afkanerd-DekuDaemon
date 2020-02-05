@@ -60,7 +60,7 @@ Modem::operator bool() const {
 }
 
 bool Modem::operator==( Modem modem ) const {
-	logger::logger(__FUNCTION__, this->getInfo() + " - " + modem.getInfo());
+	//logger::logger(__FUNCTION__, this->getInfo() + " - " + modem.getInfo());
 	return (
 			modem.getIndex() == this->getIndex() and
 			modem.getISP() == this->getISP() and
@@ -73,7 +73,8 @@ bool Modem::operator==( Modem* modem ) const {
 	return (
 			modem->getIndex() == this->getIndex() and
 			modem->getISP() == this->getISP() and
-			modem->getIMEI() == this->getIMEI()
+			modem->getIMEI() == this->getIMEI() and
+			modem->getType() == this->getType()
 	);
 }
 
@@ -92,7 +93,7 @@ bool Modem::operator<( Modem modem ) const {
 
 void Modem::setKeepAlive( bool keepAlive ) {
 	string changedKeepAlive = keepAlive ? "true" : "false";
-	logger::logger(__FUNCTION__, this->getInfo() + " - Changing keepAlive to " + changedKeepAlive);
+	//logger::logger(__FUNCTION__, this->getInfo() + " - Changing keepAlive to " + changedKeepAlive);
 	this->keepAlive = keepAlive;
 }
 
@@ -114,13 +115,13 @@ map<string,string> Modem::getConfigs() const {
 
 
 void modem_request_listener( Modem* modem ) {
-	logger::logger(__FUNCTION__, modem->getInfo() + " thread started...");
+	//logger::logger(__FUNCTION__, modem->getInfo() + " thread started...");
 	modem->setKeepAlive(true);
 	
 	modem->setThreadSafety( true );
 	while( modem->getKeepAlive() ) {
 		if(blocking_mutex.try_lock() ) {
-			logger::logger(__FUNCTION__,  modem->getInfo() + " - Acquiring mutex", "stdout");
+			//logger::logger(__FUNCTION__,  modem->getInfo() + " - Acquiring mutex", "stdout");
 			map<string,string> request = modem->request_job( modem->getConfigs()["DIR_ISP"] + "/" + modem->getISP() );
 			if( request.empty()) {
 				logger::logger(__FUNCTION__, modem->getInfo() + " - No request...", "stdout", true);
@@ -128,7 +129,7 @@ void modem_request_listener( Modem* modem ) {
 			}
 			else {
 				blocking_mutex.unlock();
-				logger::logger(__FUNCTION__, modem->getInfo() + " - Got a request!", "stdout", true);
+				//logger::logger(__FUNCTION__, modem->getInfo() + " - Got a request!", "stdout", true);
 				logger::logger(__FUNCTION__, modem->getInfo() + " - locked on file: " + request["filename"]);
 				if( modem->send_sms( request["message"], request["number"] ) ) {
 					logger::logger(__FUNCTION__, modem->getInfo() + " - SMS sent successfully!", "stdout", true);
@@ -152,14 +153,14 @@ void modem_request_listener( Modem* modem ) {
 			}
 		}
 		else {
-			logger::logger(__FUNCTION__, modem->getInfo() + " - Mutex locked..", "stdout");
+			//logger::logger(__FUNCTION__, modem->getInfo() + " - Mutex locked..", "stdout");
 			helpers::sleep_thread( 3 );
 			continue;
 		}
 		helpers::sleep_thread( 10 );
 	}
 	modem->setThreadSafety(false);
-	logger::logger(__FUNCTION__, modem->getInfo() + " - KeepAlive died!" );
+	//logger::logger(__FUNCTION__, modem->getInfo() + " - KeepAlive died!" );
 }
 
 void Modem::start() {
@@ -214,11 +215,11 @@ bool Modem::mmcli_send_sms( string message, string number ) {
 bool Modem::ssh_send_sms( string message, string number ) {
 	logger::logger(__FUNCTION__, "SENDING - [" + message + "] - [" + number + "]");
 	string sms_results = sys_calls::terminal_stdout("ssh root@" + this->getIndex() + " -o 'ServerAliveInterval 20' sendsms \"" + message + "\" " + number );
-	logger::logger(__FUNCTION__, sms_results);
+	//logger::logger(__FUNCTION__, sms_results);
 	sms_results = helpers::to_lowercase( sms_results );
 	if( sms_results == "done" ) return true; 
 	else {
-		logger::logger(__FUNCTION__, "SMS Failed log: ", "stderr", true);
+		logger::logger(__FUNCTION__, "SMS Failed log: " + sms_results, "stderr", true);
 	}
 	
 	return false;
@@ -245,5 +246,5 @@ bool Modem::send_sms(string message, string number ) {
 }
 
 Modem::~Modem() {
-	logger::logger(__FUNCTION__, this->getInfo() + " - Destructor called...");
+	//logger::logger(__FUNCTION__, this->getInfo() + " - Destructor called...");
 }
