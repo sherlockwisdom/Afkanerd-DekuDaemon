@@ -18,7 +18,6 @@ bool system_check( string path_to_sys_file) {
 
 	vector<string> sys_file_contents = helpers::read_file( path_to_sys_file );
 	if( sys_file_contents.size() < 1 ) {
-		//TODO: put logger statement
 		logger::logger(__FUNCTION__, "Nothing to read in config file", "stderr", true);
 		return false;
 	}
@@ -27,8 +26,6 @@ bool system_check( string path_to_sys_file) {
 		logger::logger(__FUNCTION__, config_line);
 		vector<string> configs = helpers::split(config_line, '=', true);
 		if(configs[0] == "DIR_REQUEST_FILE") {
-			//logger::logger(__FUNCTION__, to_string(configs.size()));
-			//TODO: check if dir exist, else create it
 			string dir_request_file = configs[1];
 			if(!helpers::file_exist( dir_request_file ) ) {
 				helpers::make_dir( dir_request_file );
@@ -37,7 +34,6 @@ bool system_check( string path_to_sys_file) {
 			else logger::logger(__FUNCTION__, "DIR_REQUEST_FILE already exist" );
 		}
 		else if(configs[0] == "DIR_ISP") {
-			//TODO: check if dir exist, else create it
 			string dir_isp = configs[1];
 			if(!helpers::file_exist( dir_isp ) ) {
 				helpers::make_dir( dir_isp );
