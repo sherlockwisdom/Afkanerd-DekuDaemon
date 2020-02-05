@@ -72,7 +72,7 @@ namespace helpers {
 		
 		return;
 	}
-	void write_file( string path_filename, auto input, bool b_unescape_string = false, ios_base::openmode mode = ios::app ) { //TODO: what about auto
+	void write_file( string path_filename, auto input, bool b_unescape_string = false, ios_base::openmode mode = ios::app ) {
 		//if( b_unescape_string ) input = unescape_string( input );
 		ofstream writefile( path_filename.c_str(), mode );
 		writefile << input;
@@ -80,7 +80,6 @@ namespace helpers {
 	}
 
 	vector<string> read_file( string filename ) {
-		// TODO: add variable to read into string not vector, change return type to auto when this happens
 		ifstream readfile( filename.c_str() );
 		vector<string> file_contents;
 		if( !readfile.good() ) return file_contents;
