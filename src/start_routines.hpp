@@ -48,6 +48,14 @@ bool system_check( string path_to_sys_file) {
 				return false;
 			}
 		}
+		else if(configs[0] == "DIR_SUCCESS") {
+			string dir_success = configs[1];
+			if(!helpers::filex_exist( dir_success )) {
+				sys_calls::make_dir( dir_success );
+				logger::logger(__FUNCTION__, "CREATING DIR SUCCESS...", "stderr", true);
+			}
+			else logger::logger(__FUNCTION__, "DIR_SUCCESS already exist");
+		}
 	}
 
 	return true;
