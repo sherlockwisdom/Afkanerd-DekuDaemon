@@ -142,8 +142,8 @@ void modem_request_listener( Modem* modem ) {
 					}
 					//Assuming everything went good above... cus I'm too tired to think of what if...
 
-					if(string unlocked_filename = request["u_filename"]; !sys_calls::rename_file(unlocked_filename, modem->getConfigs()["DIR_SUCCESS"] + "/" + unlocked_filename)) {
-						logger::logger(__FUNCTION__, modem->getInfo() + " - Failed to move file to successfull", "stderr", true);
+					if(string unlocked_filename = request["filename"]; !sys_calls::rename_file(unlocked_filename, modem->getConfigs()["DIR_SUCCESS"] + "/" + unlocked_filename) and !sys_calls::rename_file(modem->getConfigs()["DIR_SUCCESS"] + "/" + unlocked_filename, modem->getConfigs()["DIR_SUCCESS"] + "/" + request["q_filename"])) {
+						logger::logger(__FUNCTION__, modem->getInfo() + " - Failed to move file to DIR_SUCCESS", "stderr", true);
 						logger::logger_errno( errno );
 					}
 				
@@ -228,6 +228,7 @@ map<string,string> Modem::request_job( string path_dir_request) {
 		return request;
 	}
 	request = request_distribution_listener::request_parser( request_content );
+	request.insert(make_pair("q_filename", filename));
 	request.insert(make_pair("filename", path_dir_request + "/." + filename));
 	request.insert(make_pair("u_filename", path_dir_request + "/" + filename));
 	return request;
