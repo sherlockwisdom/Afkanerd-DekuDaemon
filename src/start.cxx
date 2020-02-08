@@ -45,6 +45,17 @@ int main(int argc, char** argv) {
 					return 1;
 				}
 			}
+
+			else if((string)argv[i] == "--show_isp") {
+				if(i+1 < argc ) {
+					string number = (string)argv[i+1];
+					cout << isp_determiner::get_isp( number ) << endl;
+					return 0;
+				}
+				else {
+					return 1;
+				}
+			}
 		}
 	}
 
