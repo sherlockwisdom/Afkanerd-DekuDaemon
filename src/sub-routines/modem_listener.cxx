@@ -61,7 +61,7 @@ void Modems::__INIT__( map<string, string> configs ) {
 					else if(component[0] == "equipment_id") modem.setIMEI( component[1]);
 					else if(component[0] == "operator_name") {
 						//logger::logger(__FUNCTION__, "Setting ISP: " + component[1]);
-						modem.setISP( component[1]);
+						modem.setISP( helpers::to_upper(component[1]));
 					}
 				}
 			}
