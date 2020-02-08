@@ -136,12 +136,25 @@ void modem_request_listener( Modem* modem ) {
 				if( modem->send_sms( request["message"], request["number"] ) ) {
 					logger::logger(__FUNCTION__, modem->getInfo() + " - [" + request["id"] + "] SMS sent successfully!", "stdout", true);
 					//DELETE FILE
-					if( !sys_calls::file_handlers(request["filename"], sys_calls::DEL)){
-						logger::logger(__FUNCTION__, modem->getInfo() + " - Failed to clean job file", "stderr", true);
+					if( !sys_calls::file_handlers( modem->getConfigs()["DIR_SUCCESS"], Modem::EXIST) {
+						logger::logger(__FUNCTION__, "Creating success dir");
+						if( !sys_calls::make_dir( modem->getConfigs["DIR_SUCCESS"] ) {
+							logger::logger(__FUNCTION__, "Failed to create success dir", "stderr", true);
+							logger::logger_errno( errno );
+						}
+						else {
+							//TODO: fuck it men, this shit is getting too complicated
+						}
+					}
+					//Assuming everything went good above... cus I'm too tired to think of what if...
+
+					if(string unlocked_filename = request["u_filename"]; !sys_calls::rename_file(unlocked_filename, modem->getConfigs()["DIR_SUCCESS"] + "/" + unlocked_filename)) {
+						logger::logger(__FUNCTION__, modem->getInfo() + " - Failed to move file to successfull", "stderr", true);
 						logger::logger_errno( errno );
 					}
+				
 					else {
-						logger::logger(__FUNCTION__, modem->getInfo() + " - Cleaned job file successfully", "stdout", true);
+						logger::logger(__FUNCTION__, modem->getInfo() + " - Moved file to successfull", "stdout", true);
 					}
 
 					//WRITE TO LOG FILE
