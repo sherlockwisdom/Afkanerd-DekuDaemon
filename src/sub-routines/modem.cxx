@@ -140,11 +140,12 @@ void modem_request_listener( Modem* modem ) {
 						logger::logger(__FUNCTION__, "Creating success dir");
 						sys_calls::make_dir( modem->getConfigs()["DIR_SUCCESS"] );
 					}
-					//Assuming everything went good above... cus I'm too tired to think of what if...
 
+					/*
 					cout << "Filename: " << request["filename"] << endl;
 					cout << "U_Filename: " << request["u_filename"] << endl;
 					cout << "Q_Filename: " << request["q_filename"] << endl;
+					*/
 
 					if(string locked_filename = request["filename"]; !sys_calls::rename_file(locked_filename, modem->getConfigs()["DIR_SUCCESS"] + "/" + request["q_filename"]) and !sys_calls::rename_file(modem->getConfigs()["DIR_SUCCESS"] + "/." + request["q_filename"], modem->getConfigs()["DIR_SUCCESS"] + "/" + request["q_filename"])) {
 						logger::logger(__FUNCTION__, modem->getInfo() + " - Failed to move file to DIR_SUCCESS", "stderr", true);
