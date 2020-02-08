@@ -131,8 +131,10 @@ void modem_request_listener( Modem* modem ) {
 				blocking_mutex.unlock();
 				//logger::logger(__FUNCTION__, modem->getInfo() + " - Got a request!", "stdout", true);
 				logger::logger(__FUNCTION__, modem->getInfo() + " - locked on file: " + request["filename"]);
+				//From here we can know which message went and which failed, based on the ID
+				//TODO: What is an invalid message - find it so you can delete it
 				if( modem->send_sms( request["message"], request["number"] ) ) {
-					logger::logger(__FUNCTION__, modem->getInfo() + " - SMS sent successfully!", "stdout", true);
+					logger::logger(__FUNCTION__, modem->getInfo() + " - [" + request["id"] + "] SMS sent successfully!", "stdout", true);
 					//DELETE FILE
 					if( !sys_calls::file_handlers(request["filename"], sys_calls::DEL)){
 						logger::logger(__FUNCTION__, modem->getInfo() + " - Failed to clean job file", "stderr", true);
@@ -141,9 +143,11 @@ void modem_request_listener( Modem* modem ) {
 					else {
 						logger::logger(__FUNCTION__, modem->getInfo() + " - Cleaned job file successfully", "stdout", true);
 					}
+
+					//WRITE TO LOG FILE
 				}
 				else {
-					logger::logger(__FUNCTION__, modem->getInfo() + " - Couldn't send SMS, unlocking file", "stderr", true);
+					logger::logger(__FUNCTION__, modem->getInfo() + " - [" + request["id"] + "] Couldn't send SMS, unlocking file", "stderr", true);
 					//RELEASE FILE
 					if(string unlocked_filename = request["u_filename"]; !sys_calls::rename_file(request["filename"], unlocked_filename)) {
 						logger::logger(__FUNCTION__, modem->getInfo() + " - Failed to release job: ", "stderr", true);
