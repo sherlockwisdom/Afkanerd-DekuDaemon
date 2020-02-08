@@ -180,7 +180,12 @@ string Modem::getErrorLogs() {
 map<string,string> Modem::request_job( string path_dir_request) {
 	map<string,string> request;
 	logger::logger(__FUNCTION__, this->getInfo() + " - Requesting job at: " + path_dir_request);
-	string filenames = sys_calls::terminal_stdout("ls -1 "+path_dir_request);	
+	map<string,string> ls_returned_values;
+	sys_calls::terminal_stdout(ls_returned_values, "ls -1 "+path_dir_request);	
+	if(ls_returned_values.empty() or ls_returned_values.size() != 2 and (ls_returned_values.find("return")!=ls_returned_values.end() and ls_returned_values.find("data")!=ls_returned_values.end())) {
+		logger::logger(__FUNCTION__, "Error with terminal command to read ISP dir");
+		return request;
+	}
 	if( filenames.empty() or filenames == "" or path_dir_request.empty()) return request;
 	
 	string filename = helpers::split(filenames, '\n', true)[0];
