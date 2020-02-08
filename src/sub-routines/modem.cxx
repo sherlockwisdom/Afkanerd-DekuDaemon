@@ -184,8 +184,12 @@ map<string,string> Modem::request_job( string path_dir_request) {
 	if( filenames.empty() or filenames == "" or path_dir_request.empty()) return request;
 	
 	string filename = helpers::split(filenames, '\n', true)[0];
+	if(filename.empty() or filename == "") {
+		logger::logger(__FUNCTION__, this->getInfo() + " - Seems no request available at this time");
+		return request;
+	}
 	if(!sys_calls::rename_file(path_dir_request + "/" + filename, path_dir_request + "/." + filename)) {
-		logger::logger(__FUNCTION__, this->getInfo() + " - Failed renaming request file (failed locking it)...", "stderr", true);
+		logger::logger(__FUNCTION__, this->getInfo() + " - Failed renaming request file: "+filename, "stderr", true);
 		logger::logger_errno( errno );
 		return request;
 	}

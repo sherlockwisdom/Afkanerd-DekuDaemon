@@ -112,9 +112,24 @@ namespace helpers {
 		stream = popen(command.c_str(), "r");
 		if (stream) {
 			while (!feof(stream)) if (fgets(buffer, max_buffer, stream) != NULL) data.append(buffer);
-			pclose(stream);
+			int return_value = pclose(stream);
 		}
 		return data;
+	}
+
+	void terminal_stdout(map<string,string>& return_values, string command) {
+		string data;
+		FILE * stream;
+		const int max_buffer = 1024;
+		char buffer[max_buffer];
+		command.append(" 2>&1");
+
+		stream = popen(command.c_str(), "r");
+		if (stream) {
+			while (!feof(stream)) if (fgets(buffer, max_buffer, stream) != NULL) data.append(buffer);
+			return_values.insert(make_pair("return", to_string(pclose(stream))));
+		}
+		return_values.insert(make_pair("data", dadta));
 	}
 
 
