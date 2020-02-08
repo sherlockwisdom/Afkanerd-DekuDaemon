@@ -136,15 +136,9 @@ void modem_request_listener( Modem* modem ) {
 				if( modem->send_sms( request["message"], request["number"] ) ) {
 					logger::logger(__FUNCTION__, modem->getInfo() + " - [" + request["id"] + "] SMS sent successfully!", "stdout", true);
 					//DELETE FILE
-					if( !sys_calls::file_handlers( modem->getConfigs()["DIR_SUCCESS"], Modem::EXIST) {
+					if( !sys_calls::file_handlers( modem->getConfigs()["DIR_SUCCESS"], sys_calls::EXIST )) {
 						logger::logger(__FUNCTION__, "Creating success dir");
-						if( !sys_calls::make_dir( modem->getConfigs["DIR_SUCCESS"] ) {
-							logger::logger(__FUNCTION__, "Failed to create success dir", "stderr", true);
-							logger::logger_errno( errno );
-						}
-						else {
-							//TODO: fuck it men, this shit is getting too complicated
-						}
+						sys_calls::make_dir( modem->getConfigs()["DIR_SUCCESS"] );
 					}
 					//Assuming everything went good above... cus I'm too tired to think of what if...
 

@@ -31,7 +31,7 @@ namespace sys_calls {
 		vector<string> recursive_paths = helpers::split(path_dirname, '/', true, start_pos);
 		string make_me = recursive_paths[0];
 		for(size_t i=0;i<recursive_paths.size();++i) {
-			logger::logger(__FUNCTION__, "Making dir: " + make_me, "stdout", false);
+			//logger::logger(__FUNCTION__, "Making dir: " + make_me, "stdout", false);
 			if( i!=0) make_me += "/" + recursive_paths[i];
 			if( mkdir( make_me.c_str(), 0777 ) == -1) {
 				if( errno != 17 ) logger::logger_errno( errno );

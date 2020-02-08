@@ -2,6 +2,7 @@
 #include <iostream>
 #include <vector>
 #include "formatters/helpers.hpp"
+#include "sys_calls/sys_calls.hpp"
 #ifndef START_ROUTINES_H_INCLUDED_
 #define START_ROUTINES_H_INCLUDED_
 using namespace std;
@@ -50,7 +51,7 @@ bool system_check( string path_to_sys_file) {
 		}
 		else if(configs[0] == "DIR_SUCCESS") {
 			string dir_success = configs[1];
-			if(!helpers::filex_exist( dir_success )) {
+			if(!helpers::file_exist( dir_success )) {
 				sys_calls::make_dir( dir_success );
 				logger::logger(__FUNCTION__, "CREATING DIR SUCCESS...", "stderr", true);
 			}
