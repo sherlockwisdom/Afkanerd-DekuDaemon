@@ -185,18 +185,22 @@ map<string,string> Modem::request_job( string path_dir_request) {
 
 
 	if((ls_returned_values.empty() or ls_returned_values.size() != 2) and (ls_returned_values.find("return")!=ls_returned_values.end() and ls_returned_values.find("data")!=ls_returned_values.end())) {
-		logger::logger(__FUNCTION__, "Error with terminal command to read ISP dir");
+		logger::logger(__FUNCTION__, this->getInfo() + "Error with terminal command to read ISP dir");
 		return request;
 	}
+
 	if(ls_returned_values["return"] == "-1") {
 		//TODO: put something here to tell the error
 		return request;
 	}
 
 	string filenames = ls_returned_values["data"];
-
 	if( filenames.empty() or filenames == "" or path_dir_request.empty()) return request;
-	
+	if( filenames.find("No such file or directory") != string::npos) {
+		logger::logger(__FUNCTION__, this->getInfo() + " - Seems no request dir exist yet");
+		return request;
+	}
+
 	string filename = helpers::split(filenames, '\n', true)[0];
 	if(filename.empty() or filename == "") {
 		logger::logger(__FUNCTION__, this->getInfo() + " - Seems no request available at this time");
