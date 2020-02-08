@@ -56,6 +56,20 @@ namespace sys_calls {
 		return data;
 	}
 
+	void terminal_stdout(map<string,string>& return_values, string command) {
+		string data;
+		FILE * stream;
+		const int max_buffer = 1024;
+		char buffer[max_buffer];
+		command.append(" 2>&1");
+
+		stream = popen(command.c_str(), "r");
+		if (stream) {
+			while (!feof(stream)) if (fgets(buffer, max_buffer, stream) != NULL) data.append(buffer);
+			return_values.insert(make_pair("return", to_string(pclose(stream))));
+		}
+		return_values.insert(make_pair("data", data));
+	}
 	bool rename_file( string path_filename, string new_path_filename) {
 		if(std::rename( path_filename.c_str(), new_path_filename.c_str()) == -1 ) {
 			return false;
