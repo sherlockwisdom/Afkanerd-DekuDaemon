@@ -256,7 +256,7 @@ bool Modem::ssh_send_sms( string message, string number ) {
 	string sms_results = sys_calls::terminal_stdout("ssh root@" + this->getIndex() + " -o 'ServerAliveInterval 20' 'sendsms " + number + " \"" + message + "\"'" );
 	//logger::logger(__FUNCTION__, sms_results);
 	sms_results = helpers::to_lowercase( sms_results );
-	if( sms_results.find("send") != string::npos ) return true;  //TODO: Add a config list for possibel HTTP code 200 here
+	if( sms_results.find("success") != string::npos ) return true;  //TODO: Add a config list for possibel HTTP code 200 here
 	else {
 		logger::logger(__FUNCTION__, "SMS Failed log: " + sms_results, "stderr", true);
 	}
