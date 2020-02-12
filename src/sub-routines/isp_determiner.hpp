@@ -30,7 +30,7 @@ namespace isp_determiner {
 					}
 				break;
 
-				case '6': return "NEXTTELL";
+				case '6': return "NEXTTEL";
 
 				case '7': return "MTN";
 				break;
