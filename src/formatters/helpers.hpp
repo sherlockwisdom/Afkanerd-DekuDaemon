@@ -9,11 +9,11 @@
 using namespace std;
 
 namespace helpers {
-	string unescape_string( string input ) {
+	string unescape_string( string input, char del ) {
 		for(size_t i=0;i<input.size();++i) {
-			if( input[i] == '\n' ) {
+			if( input[i] == '\'' ) {
 				input.erase(i, 1);
-				input.insert(i, "\\n");
+				input.insert(i, "\\'");
 			}
 		}
 		return input;
