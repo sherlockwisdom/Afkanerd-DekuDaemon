@@ -28,7 +28,7 @@ namespace request_distribution_listener {
 
 	map<string,string> request_parser(string request) {
 		map<string, string> extracted_request;
-		vector<string> request_extract = parsers::comma_seperate( request );
+		vector<string> request_extract = parsers::comma_seperate( request, 0, true);
 		string message, number;
 		for(auto r_entity : request_extract ) {
 			vector<string> component = parsers::equal_seperate( r_entity, 1);

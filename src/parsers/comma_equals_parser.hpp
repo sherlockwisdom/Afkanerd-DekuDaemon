@@ -5,14 +5,26 @@
 using namespace std;
 
 namespace parsers {
-	vector<string> comma_seperate( string input ) {
+	vector<string> comma_seperate( string input, size_t limit_to = 0, bool ignore_in_quotes = false ) {
 		vector<string> seperated;
 		size_t comma_pos = input.find(',');
+		size_t found_counter = 0;
+		size_t quotes_pos = input.find('"');
+		size_t quotes_pos_1 = input.find('"', quotes_pos + 1);
 		while(comma_pos != string::npos) {
+			if(quotes_pos != string::npos and quotes_pos_1 != string::npos and comma_pos > quotes_pos and comma_pos < quotes_pos_1) {
+				//TODO: needs serious work - this is a hack
+				comma_pos = input.find(',', quotes_pos_1+1);
+				quotes_pos = input.find('"', quotes_pos_1+1);
+				quotes_pos_1 = input.find('"', quotes_pos + 1);
+				continue;
+			}
+			++found_counter;
 			seperated.push_back( input.substr(0, comma_pos));
 			input.erase(0, comma_pos+1);
-
 			comma_pos = input.find(',');
+
+			if( limit_to != 0 and found_counter >= limit_to ) break;
 		}
 		seperated.push_back( input ); 
 		return seperated;
