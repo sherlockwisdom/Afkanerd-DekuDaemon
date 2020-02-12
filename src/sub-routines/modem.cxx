@@ -241,7 +241,7 @@ map<string,string> Modem::request_job( string path_dir_request) {
 
 bool Modem::mmcli_send_sms( string message, string number ) {
 	logger::logger(__FUNCTION__, "SENDING - [" + message + "] - [" + number + "]");
-	string sms_results = sys_calls::terminal_stdout(this->configs["DIR_SCRIPTS"] + "/modem_information_extraction.sh sms send \"" + helpers::unescape_string(message, '\'') + "\" " + number + " " + this->getIndex());
+	string sms_results = sys_calls::terminal_stdout(this->configs["DIR_SCRIPTS"] + "/modem_information_extraction.sh sms send \"" + helpers::remove_char(message, '\'') + "\" " + number + " " + this->getIndex());
 	sms_results = helpers::to_lowercase( sms_results );
 	if( sms_results.find("successfully") != string::npos ) return true;
 	else {
