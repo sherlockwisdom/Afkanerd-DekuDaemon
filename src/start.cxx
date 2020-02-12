@@ -28,6 +28,7 @@ void user_input( Modems& modems ) {
 
 int main(int argc, char** argv) {
 	string PATH_SYS_FILE;
+	Modems::STATE RUNNING_MODE = Modems::TEST;
 	if(argc < 2 ) {
 		logger::logger(__FUNCTION__, "Usage: -c <path_to_config_file>", "stderr", true);
 		return 1;
@@ -56,6 +57,14 @@ int main(int argc, char** argv) {
 					return 1;
 				}
 			}
+
+			else if((string)argv[i] == "--mode") {
+				if(i+1 < argc ) {
+					string mode = (string)argv[i+1];
+					if( helpers::to_upper(mode) == "PRODUCTION") RUNNING_MODE = Modems::PRODUCTION;
+					else RUNNING_MODE = Modems::TEST;
+				}
+			}
 		}
 	}
 
@@ -72,7 +81,7 @@ int main(int argc, char** argv) {
 	map<string,string> configs = get_system_configs( helpers::read_file( PATH_SYS_FILE ));
 
 	//Modems modems( Modems::PRODUCTION );
-	Modems modems( Modems::TEST );
+	Modems modems( RUNNING_MODE );
 
 	//TODO: Pass all configs using refreences, so changes get loaded in real time
 	std::thread tr_modem_listeners = std::thread(&Modems::__INIT__, std::ref(modems), configs);
