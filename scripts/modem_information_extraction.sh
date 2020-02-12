@@ -29,7 +29,7 @@ elif [ "$1" == "sms" ] ; then
 		number=$4
 		modem_index=$5
 		
-		output=$( mmcli -m $modem_index --messaging-create-sms="text='$message',number='$number',delivery-report-request='no'" )
+		output=$( mmcli -m $modem_index --messaging-create-sms="text=\"$message\",number='$number',delivery-report-request='no'" )
 		sms_index=$( echo $output | grep -oe "[0-9]*$" )
 		sending_output=$( mmcli -m $modem_index -s $sms_index --send )
 		printf "$sending_output"
