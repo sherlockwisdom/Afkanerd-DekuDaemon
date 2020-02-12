@@ -26,7 +26,7 @@ void Modem::setIMEI( string IMEI ) {
 }
 
 void Modem::setISP( string ISP ) {
-	this->isp = ISP;
+	this->isp = ISP.find(" ") != string::npos ? helpers::split(ISP, ' ', true)[0] : ISP;
 }
 
 void Modem::setIndex( string index ) {
