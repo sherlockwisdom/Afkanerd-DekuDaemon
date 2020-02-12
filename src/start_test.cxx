@@ -1,4 +1,5 @@
 #include "start_routines.hpp"
+#include "parsers/comma_equals_parser.hpp"
 
 using namespace std;
 
@@ -24,6 +25,11 @@ int main() {
 	else {
 		cout << "Get system configs Failed..." << endl;
 	}
+
+	string sample="number=1234,message=\"Hello world,remove commas from,here\"";
+	vector<string> comma_parsed= parsers::comma_seperate( sample, 0, true );
+
+	for(auto i : comma_parsed) cout << i << endl;
 
 	return 0;
 }
