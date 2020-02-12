@@ -258,14 +258,14 @@ bool Modem::ssh_send_sms( string message, string number ) {
 	sms_results = helpers::to_lowercase( sms_results );
 	if( sms_results.find("success") != string::npos ) return true;  //TODO: Add a config list for possibel HTTP code 200 here
 	else {
-		logger::logger(__FUNCTION__, "SMS Failed log: " + sms_results, "stderr", true);
+		logger::logger(__FUNCTION__, this->getInfo() + " - SMS Failed log: " + sms_results, "stderr", true);
 	}
 	
 	return false;
 }
 
 bool Modem::send_sms(string message, string number ) {
-	logger::logger(__FUNCTION__, this->getInfo() + " - About to send SMS", "stderr", true);
+	logger::logger(__FUNCTION__, this->getInfo() + " - About to send SMS", "stdout", true);
 	message = helpers::find_and_replace("\\n", "\n", message);
 	message = helpers::find_and_replace("\\\"", "\"", message);
 	switch( this->getType() ) {
