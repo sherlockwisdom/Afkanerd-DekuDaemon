@@ -27,7 +27,7 @@ int main() {
 	}
 
 	string sample="number=1234,message=\"Hello world,remove commas from,here\"";
-	vector<string> comma_parsed= parsers::comma_seperate( sample, 0, true );
+	vector<string> comma_parsed= parsers::comma_seperate( sample, 0 );
 
 	for(auto i : comma_parsed) cout << i << endl;
 
