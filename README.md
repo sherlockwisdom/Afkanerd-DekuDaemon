@@ -1,4 +1,4 @@
-<h1>Deku Daemon</h1>
+<h1>Deku Daemon</h1><hr>
 <h5>How to build</h5>
 <i>TODO:</i>
 <h5>Dependency files</h5>
