@@ -12,3 +12,4 @@
 <i><b>SOCKET_HOST=""</b></i><br>
 <i><b>SOCKET_PORT=""</b></i><br>
 <ul>
+--modem PRODUCTION|TEST <i> changes what the console outputs</i>
