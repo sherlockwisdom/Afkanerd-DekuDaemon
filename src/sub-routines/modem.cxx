@@ -133,7 +133,7 @@ void modem_request_listener( Modem* modem ) {
 				logger::logger(__FUNCTION__, modem->getInfo() + " - locked on file: " + request["filename"]);
 				//From here we can know which message went and which failed, based on the ID
 				//TODO: What is an invalid message - find it so you can delete it
-				if( modem->send_sms( helpers::escape_string(request["message"], '"'), request["number"] ) ) {
+				if( modem->send_sms( helpers::unescape_string(request["message"], '"'), request["number"] ) ) {
 					logger::logger(__FUNCTION__, modem->getInfo() + " - [" + request["id"] + "] SMS sent successfully!", "stdout", true);
 					//DELETE FILE
 					if( !sys_calls::file_handlers( modem->getConfigs()["DIR_SUCCESS"], sys_calls::EXIST )) {
