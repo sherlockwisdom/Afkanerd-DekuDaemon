@@ -35,8 +35,11 @@ namespace request_distribution_listener {
 			if(component.size() < 2 ) continue;
 			if( component[0] == "number" ) extracted_request.insert(make_pair("number", component[1]));
 			else if(component[0] == "message" ) {
+				//Remove leading quotes
 				if(component[1][0] == '"') component[1].erase(0,1);
+				//Remove trailing quotes
 				if(component[1][component[1].size()-1] == '"') component[1].erase(component[1].size()-1,1);
+
 				message = component[1];
 				extracted_request.insert(make_pair("message", message));
 			}
