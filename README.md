@@ -14,3 +14,4 @@
 <ul>
 --modem PRODUCTION|TEST <i> changes what the console outputs</i><br>
 --show_isp <number>
+--run_ussd [code]
