@@ -13,5 +13,6 @@
 <i><b>SOCKET_PORT=""</b></i><br>
 <ul>
 --modem PRODUCTION|TEST <i> changes what the console outputs</i><br>
---show_isp <number>
---run_ussd [code]
+--show_isp <number>\
+--run_ussd [code]\
+--run_ussd_script <path to file>
