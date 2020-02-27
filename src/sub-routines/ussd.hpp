@@ -12,6 +12,8 @@ class USSD {
 	string initiate( string );
 	string respond( string );
 	string getStatus();
+	
+	map<string,string> initiate_series( vector<string>);
 
 	bool cancel();
 };

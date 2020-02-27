@@ -8,6 +8,8 @@ USSD::USSD( string modem_index ) {}
 
 string USSD::initiate( string command ) {}
 
+map<string,string> USSD::initiate_series( vector<string> commands ) {}
+
 string USSD::respond( string command ) {}
 
 string USSD::status() {}
