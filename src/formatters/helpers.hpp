@@ -9,34 +9,87 @@
 using namespace std;
 
 namespace helpers {
-	string unescape_string( string input ) {
+	string remove_char_advanced( string input, char del ) {
 		for(size_t i=0;i<input.size();++i) {
-			if( input[i] == '\n' ) {
+			if( input[i] == del ) {
 				input.erase(i, 1);
-				input.insert(i, "\\n");
+			}
+		}
+		return input;
+	}
+	string unescape_string( string input, char del ) {
+		for(size_t i=0;i<input.size();++i) {
+			if( input[i] == del ) {
+				input.erase(i, 1);
+				input.insert(i, "\""+del);
 			}
 		}
 		return input;
 	}
 
+	string find_and_replace( string str_find, string str_replace, string input ) {
+		string backup_original = input;
+		string return_string = "";
+		size_t start_pos = 0;
+		size_t find_pos = input.find(str_find);
+		while(find_pos != string::npos) {
+			return_string += input.substr(start_pos, find_pos);
+			return_string += str_replace;
+			input.erase(start_pos, (find_pos) + str_find.size() );
+			find_pos = input.find(str_find);
+		}
+		if(!input.empty()) return_string += input;
+		return return_string.empty() ? backup_original : return_string;
+	}
+
+	vector<string> split(string _string, char del = ' ', bool strict = false, size_t start_pos = 0) {
+		vector<string> return_value;
+		string temp_string = "";
+		size_t found_count = 0;
+		for(auto _char : _string) {
+			if(_char==del) {
+				if(found_count >= start_pos) {
+					if(strict and temp_string.empty()) continue;
+					return_value.push_back(temp_string);
+					temp_string="";
+				}
+				else 
+				temp_string+=_char;
+				++found_count;
+			}
+			else {
+				temp_string+=_char;
+			}
+		}
+		if(strict and !temp_string.empty()) return_value.push_back(temp_string);
+
+		return return_value;
+	}
 
 	void make_dir( string path_dirname ) {
-		string func_name = "make_dir";
-		if( mkdir( path_dirname.c_str(), 0777 ) == -1) {
-			if( errno != 17 ) logger::logger_errno( errno );
+		size_t start_pos = path_dirname[0] == '/' ? 1 : 0;
+		vector<string> recursive_paths = helpers::split(path_dirname, '/', true, start_pos);
+		string make_me = recursive_paths[0];
+		for(size_t i=0;i<recursive_paths.size();++i) {
+			logger::logger(__FUNCTION__, "Making dir: " + make_me, "stdout", false);
+			if( i!=0) make_me += "/" + recursive_paths[i];
+			if( mkdir( make_me.c_str(), 0777 ) == -1) {
+				if( errno != 17 ) logger::logger_errno( errno );
+			}
 		}
 		
 		return;
 	}
-	void write_file( string path_filename, auto input, bool b_unescape_string, ios_base::openmode mode = ios::app ) { //TODO: what about auto
-		if( b_unescape_string ) input = unescape_string( input );
+
+	template<class T>
+	void write_file( string path_filename, T input, bool b_unescape_string = false, ios_base::openmode mode = ios::app ) {
+		//if( b_unescape_string ) input = unescape_string( input );
 		ofstream writefile( path_filename.c_str(), mode );
 		writefile << input;
 		writefile.close();
 	}
 
 	vector<string> read_file( string filename ) {
-		// TODO: add variable to read into string not vector, change return type to auto when this happens
 		ifstream readfile( filename.c_str() );
 		vector<string> file_contents;
 		if( !readfile.good() ) return file_contents;
@@ -51,16 +104,6 @@ namespace helpers {
 	bool file_exist( string path_filename ) {
 		struct stat buffer; 
 		return stat( path_filename.c_str(), &buffer) == 0;
-	}
-
-	bool delete_file( string path_filename) {}
-
-	bool rename_file( string path_filename) {}
-	
-	bool unhide_file( string path_filename) {}
-
-	bool hide_file( string path_filename) {
-		
 	}
 
 	void sleep_thread( int duration ) {
@@ -81,25 +124,6 @@ namespace helpers {
 		}
 		return data;
 	}
-
-	vector<string> split(string _string, char del = ' ', bool strict = false) {
-		vector<string> return_value;
-		string temp_string = "";
-		for(auto _char : _string) {
-			if(_char==del) {
-				if(strict and temp_string.empty()) continue;
-				return_value.push_back(temp_string);
-				temp_string="";
-			}
-			else {
-				temp_string+=_char;
-			}
-		}
-		if(strict and !temp_string.empty()) return_value.push_back(temp_string);
-
-		return return_value;
-	}
-
 
 	string ISPFinder(string number) {
 		if(number[0] == '6') {
@@ -167,10 +191,14 @@ namespace helpers {
 		return str;
 	}
 
+	string to_lowercase(string input) {
+		string str = input;
+		transform(str.begin(), str.end(),str.begin(), ::tolower);
+		return str;
+	}
+
 	string remove_char( string input, char value = '\n', char location = 'B' ) {
-		//TODO: Make location determine where it takes the input file from
-		size_t check_pos = 0;
-		if( location == 'E' ) check_pos = input.size() -1;
+		size_t check_pos = location == 'B' ? 0 : input.size() -1;
 		size_t space_location = input.find( value );
 		while( space_location != string::npos and space_location == check_pos) {
 			input.erase( check_pos, 1);

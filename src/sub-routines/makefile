@@ -1,5 +1,5 @@
 CC = g++
-CFLAGS = -g -Wall -std=c++1z
+CFLAGS = -g -Wall -pthread -std=c++1z
 TARGET = isp_determiner_test
 
 default: $(TARGET)
@@ -9,3 +9,9 @@ $(TARGET): $(TARGET).cxx
 
 ussd_test: ussd_test.cxx
 	$(CC) $(CFLAGS) -o ussd_test ussd_test.cxx
+
+request_distribution_listener_test: request_distribution_listener_test.cxx
+	$(CC) $(CFLAGS) -o request_distribution_listener_test request_distribution_listener_test.cxx
+
+modem_listener_test: modem_listener_test.cxx
+	$(CC) $(CFLAGS) -o modem_listener_test modem_listener_test.cxx

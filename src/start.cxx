@@ -1,56 +1,77 @@
 // Purpose: Starts all the functions that monitor the hardware and monitors the request files
-
-#include <iostream>
-#include <map>
+#include "start_routines.hpp"
 #include "formatters/helpers.hpp"
-#include "sub-routines/request_distribution_listener.cxx"
-#include "sub-routines/request_execution_listener.cxx"
+//#include "sub-routines/request_distribution_listener.cxx"
+//#include "sub-routines/request_execution_listener.cxx"
+#include "sub-routines/modem_listener.cxx"
 using namespace std;
 
 
-bool system_check( string path_to_sys_file) {
-	logger::logger( __FUNCTION__, "Running system check at: " + path_to_sys_file, "stdout", true);
+void user_input( Modems& modems ) {
+	/* TODO: commands to introduce...
 
-	if( !helpers::file_exist(path_to_sys_file)) {
-		logger::logger(__FUNCTION__, "System file does not exist", "stderr", true);
-		return false;
-	}
+	isp stats = provide information about all isp
+	"isp" stats = provide information about "isp"
 
-	vector<string> sys_file_contents = helpers::read_file( path_to_sys_file );
-	if( sys_file_contents.size() < 1 ) {
-		//TODO: put logger statement
-	}
+	isp stats pending/locked = provide information about pending/locked jobs for all isp
+	"isp" stats pending/locked = provide information about pending/locked jobs for "isp"
+	*/
 
-	for(auto config_line: sys_file_contents) {
-		vector<string> configs = helpers::split(config_line, ':');
-		if(configs[0] == "DIR_REQUEST_FILE") {
-			//TODO: check if dir exist, else create it
-		}
-		else if(configs[0] == "DIR_ISP") {
-			//TODO: check if dir exist, else create it
-		}
+	while( 1 ) {
+		cout << __FUNCTION__ << ": ";
+		string input;
+		getline(cin, input);
+
+		cout << __FUNCTION__<< " = " << input << endl;
 	}
 }
-
-map<string,string> get_system_configs( vector<string> sys_config_lines ) {
-	//TODO: UTest this function
-	map<string,string> configs;
-	for(auto config_line: sys_config_lines) {
-		//TODO: put integrity check to make sure valid configs have been entered
-		vector<string> tmp_configs = helpers::split(config_line, ':');
-		configs.insert(make_pair( tmp_configs[0], tmp_configs[1]));
-	}
-	return configs;
-}
-
 
 int main(int argc, char** argv) {
-	std::string PATH_SYS_FILE = "build_files/sys_file.txt";
+	string PATH_SYS_FILE;
+	Modems::STATE RUNNING_MODE = Modems::TEST;
+	if(argc < 2 ) {
+		logger::logger(__FUNCTION__, "Usage: -c <path_to_config_file>", "stderr", true);
+		return 1;
+	}
+	else {
+		for(int i=1;i<argc;++i) {
+			if((string)argv[i]== "-c") {
+				logger::logger(__FUNCTION__, "config file arguments present", "stdout", false);
+				if(i+1 < argc) {
+					PATH_SYS_FILE = argv[i+1];
+					++i;
+				}
+				else {
+					logger::logger(__FUNCTION__, "Incomplete args\nUsage: -c <path_to_config_file>", "stderr", true);
+					return 1;
+				}
+			}
 
-	// Begins by running the simple beginning test
-	// TEST:
-	// 1. Checks if system files are available
-	
+			else if((string)argv[i] == "--show_isp") {
+				if(i+1 < argc ) {
+					string number = (string)argv[i+1];
+					cout << isp_determiner::get_isp( number ) << endl;
+					return 0;
+				}
+				else {
+					return 1;
+				}
+			}
+
+			else if((string)argv[i] == "--mode") {
+				if(i+1 < argc ) {
+					string mode = (string)argv[i+1];
+					if( helpers::to_upper(mode) == "PRODUCTION") RUNNING_MODE = Modems::PRODUCTION;
+					else RUNNING_MODE = Modems::TEST;
+				}
+			}
+		}
+	}
+
+	if(PATH_SYS_FILE.empty()) {
+		logger::logger(__FUNCTION__, "Usage: -c <path_to_config_file>", "stderr", true);
+		return 1;
+	}
 	if( !system_check( PATH_SYS_FILE )) {
 		logger::logger( __FUNCTION__, "System check failed....", "stderr", true);
 		return 1;
@@ -59,13 +80,18 @@ int main(int argc, char** argv) {
 	// Then after the checks, it moves set the variables for global use
 	map<string,string> configs = get_system_configs( helpers::read_file( PATH_SYS_FILE ));
 
-	// Begin listening for input (request file)
-	//thread tr_request_distribution_listener( request_distribution_listener, configs);
-	// Begin listening for request (modems)
-	//thread tr_request_execution_listener( request_execution_listener, configs);
+	//Modems modems( Modems::PRODUCTION );
+	Modems modems( RUNNING_MODE );
 
-	//tr_request_distribution_listener.join();
-	//tr_request_execution_listener.join();
+	//TODO: Pass all configs using refreences, so changes get loaded in real time
+	std::thread tr_modem_listeners = std::thread(&Modems::__INIT__, std::ref(modems), configs);
+	std::thread tr_modem_starter = std::thread(&Modems::startAllModems, std::ref(modems));
+	std::thread tr_user_input = std::thread(user_input, std::ref(modems));
+	std::thread tr_request_listeners = std::thread(request_distribution_listener::request_distribution_listener, configs);
+	tr_modem_listeners.join();
+	tr_modem_starter.join();
+	tr_user_input.join();
+	tr_request_listeners.join();
 	
 	return 0;
 }

@@ -11,7 +11,7 @@ using namespace std;
 namespace logger {
 
 	string show_state = "TESTING";
-	void logger( auto func_name, string output, string output_stream = "stdout", bool show_production = false) {
+	void logger( const char* func_name, string output, string output_stream = "stdout", bool show_production = false) {
 		if( show_state == "PRODUCTION" and !show_production) return;
 		if( output.empty() ) return;
 
