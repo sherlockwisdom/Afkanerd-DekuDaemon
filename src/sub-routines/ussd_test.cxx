@@ -16,6 +16,13 @@ int main() {
 	
 	string static_respond = ussd.initiate( static_test );
 	cout << "static_respond=> " << static_respond << endl;
+
+	if( static_respond.find("Your balance") != string::npos) {
+		cout << "PASSED" << endl;
+	}
+	else {
+		cout << "FAILED" << endl;
+	}
 	cout << endl;
 
 	map<string,string> dynamic_responds = ussd.initiate_series( dynamic_test );
@@ -23,6 +30,8 @@ int main() {
 	for(auto responds : dynamic_responds ) {
 		cout << responds.first << "=> " << responds.second << endl;
 	}
+
+	//conditions to test dynamic input request
 
 	return 0;
 }
