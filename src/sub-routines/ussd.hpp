@@ -5,6 +5,9 @@ using namespace std;
 
 class USSD {
 	public:
+
+	USSD();
+	USSD( string);
 	
 	string initiate( string );
 	string respond( string );
