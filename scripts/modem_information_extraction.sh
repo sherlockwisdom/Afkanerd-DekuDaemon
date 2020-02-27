@@ -22,6 +22,9 @@ elif [ "$1" == "extract" ] ; then
 	operator_name=$( mmcli -m $modem_index | grep "operator name" | grep -oP ": ([a-zA-Z]*)" | cut -b 3- )
 	printf "equipment_id:$equipment_id\nsignal_quality:$signal_quality\noperator_name:$operator_name"
 
+elif [ "$1" == "ussd_initiate" ]; then
+elif [ "$1" == "ussd_respond" ]; then
+
 elif [ "$1" == "sms" ] ; then
 	_type=$2
 	if [ "$_type" == "send" ] ; then
