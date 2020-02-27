@@ -4,17 +4,13 @@ using namespace std;
 
 
 int main() {
-	string modem_index = "";
-	
 	string static_test = "*155#";
 
-	vector<string> dynamic_test = ["*123#", "5", "2", "6" ];
+	vector<string> dynamic_test {"*123#", "5", "2", "6"};
 
 	// static_test = "Your balance..."
 
 	// invalid input
-
-
 	string modem_index = "0";
 	USSD ussd( modem_index );
 	
@@ -28,7 +24,5 @@ int main() {
 		cout << responds.first << "=> " << responds.second << endl;
 	}
 
-
 	return 0;
-
 }

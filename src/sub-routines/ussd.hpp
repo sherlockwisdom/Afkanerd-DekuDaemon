@@ -1,3 +1,6 @@
+#include <iostream>
+#include <map>
+#include <vector>
 #ifndef USSD_H_INCLUDED_
 #define USSD_H_INCLUDED_
 
@@ -7,11 +10,11 @@ class USSD {
 	public:
 
 	USSD();
-	USSD( string);
+	USSD( string );
 	
 	string initiate( string );
 	string respond( string );
-	string getStatus();
+	string status();
 	
 	map<string,string> initiate_series( vector<string>);
 
