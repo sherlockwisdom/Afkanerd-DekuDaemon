@@ -5,6 +5,12 @@ using namespace std;
 
 class USSD {
 	public:
+	
+	string initiate( string );
+	string respond( string );
+	string getStatus();
+
+	bool cancel();
 };
 
 #endif
