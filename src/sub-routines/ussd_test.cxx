@@ -28,4 +28,7 @@ int main() {
 		cout << responds.first << "=> " << responds.second << endl;
 	}
 
+
+	return 0;
+
 }
