@@ -22,6 +22,7 @@ elif [ "$1" == "extract" ] ; then
 	operator_name=$( mmcli -m $modem_index | grep "operator name" | grep -oP ": ([a-zA-Z]*)" | cut -b 3- )
 	printf "equipment_id:$equipment_id\nsignal_quality:$signal_quality\noperator_name:$operator_name"
 
+# Do not use regex here anywhwere cus service providers are not the same through out
 elif [ "$1" == "ussd_initiate" ]; then
 	#ussd_initiate 0 *155#
 	modem_index=$2
