@@ -29,7 +29,7 @@ multimap<string,string> USSD::initiate_series( vector<string> commands ) {
 	if( terminal_response.empty()) return responses;
 
 	responses.insert(make_pair(commands[0], terminal_response));
-	for(auto command = commands.begin()++; command != commands.end(); ++command) {
+	for(auto command = commands.begin() + 1; command != commands.end(); ++command) {
 		terminal_response = this->respond( *command );
 		if( terminal_response.empty()) break;
 		responses.insert(make_pair(*command, terminal_response));
