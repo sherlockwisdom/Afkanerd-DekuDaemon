@@ -23,7 +23,13 @@ elif [ "$1" == "extract" ] ; then
 	printf "equipment_id:$equipment_id\nsignal_quality:$signal_quality\noperator_name:$operator_name"
 
 elif [ "$1" == "ussd_initiate" ]; then
-elif [ "$1" == "ussd_respond" ]; then
+	#ussd_initiate 0 *155#
+	modem_index=$2
+	_command=$3
+	ussd_respond=$( mmcli -m $modem_index --3gpp-ussd-initiate=$_command )
+	printf "$ussd_respond"
+	
+#elif [ "$1" == "ussd_respond" ]; then
 
 elif [ "$1" == "sms" ] ; then
 	_type=$2
