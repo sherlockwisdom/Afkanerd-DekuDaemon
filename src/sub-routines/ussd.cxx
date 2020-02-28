@@ -41,7 +41,14 @@ map<size_t,string> USSD::initiate_series( vector<string> commands ) {
 	return responses;
 }
 
-string USSD::respond( string command ) {}
+string USSD::respond( string command ) {
+	string terminal_request = this->configs["DIR_SCRIPTS"] + "/modem_information_extraction.sh ussd_respond " + this->modem_index + " " + command;
+	//logger::logger(__FUNCTION__, terminal_request );
+
+	string response = sys_calls::terminal_stdout( terminal_request );
+	//logger::logger(__FUNCTION__, response);
+	return response;
+}
 
 string USSD::status() {}
 
