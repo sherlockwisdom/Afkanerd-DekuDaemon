@@ -31,7 +31,7 @@ int main() {
 		cout << responds.first << "=> " << responds.second << endl;
 	}
 
-	auto it_dynamic_responds = dynamic_responds.end()--;
+	auto it_dynamic_responds = --dynamic_responds.end();
 	string d_responds = it_dynamic_responds->second;
 	
 	if( d_responds.find("valid") != string::npos) {
