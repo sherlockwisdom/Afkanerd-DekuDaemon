@@ -4,16 +4,16 @@ using namespace std;
 
 
 int main() {
-	string static_test = "*155#";
+	string modem_index = "0";
+	map<string,string> configs {
+		{ "DIR_SCRIPTS", "/home/sherlock/Desktop/Deku Daemon/scripts" }
+	};
+	// invalid input
+	USSD ussd( modem_index, configs );
 
+	string static_test = "*155#";
 	vector<string> dynamic_test {"*123#", "5", "2", "6"};
 
-	// static_test = "Your balance..."
-
-	// invalid input
-	string modem_index = "0";
-	USSD ussd( modem_index );
-	
 	string static_respond = ussd.initiate( static_test );
 	cout << "static_respond=> " << static_respond << endl;
 
