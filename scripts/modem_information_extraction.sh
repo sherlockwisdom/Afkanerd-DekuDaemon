@@ -29,7 +29,11 @@ elif [ "$1" == "ussd_initiate" ]; then
 	ussd_respond=$( mmcli -m $modem_index --3gpp-ussd-initiate=$_command )
 	printf "$ussd_respond"
 	
-#elif [ "$1" == "ussd_respond" ]; then
+elif [ "$1" == "ussd_respond" ]; then
+	modem_index=$2
+	_command=$3
+	ussd_respond=$( mmcli -m $modem_index --3gpp-ussd-respond=$_command )
+	printf "$ussd_respond"
 
 elif [ "$1" == "sms" ] ; then
 	_type=$2
