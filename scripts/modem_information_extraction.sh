@@ -36,6 +36,11 @@ elif [ "$1" == "ussd_respond" ]; then
 	ussd_respond=$( mmcli -m $modem_index --3gpp-ussd-respond=$_command )
 	printf "$ussd_respond"
 
+elif [ "$1" == "ussd_status" ]; then
+	modem_index=$2
+	ussd_respond=$( mmcli -m $modem_index --3gpp-ussd-status )
+	printf "$ussd_respond"
+
 elif [ "$1" == "sms" ] ; then
 	_type=$2
 	if [ "$_type" == "send" ] ; then
