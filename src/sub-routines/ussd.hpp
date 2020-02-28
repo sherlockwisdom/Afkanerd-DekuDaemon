@@ -22,7 +22,7 @@ class USSD {
 	string respond( string );
 	string status();
 	
-	map<size_t,string> initiate_series( vector<string>);
+	multimap<string,string> initiate_series( vector<string>);
 
 	bool cancel();
 };

@@ -20,22 +20,19 @@ string USSD::initiate( string command ) {
 	return response;
 }
 
-map<size_t,string> USSD::initiate_series( vector<string> commands ) {
-	map<size_t, string> responses;
+multimap<string,string> USSD::initiate_series( vector<string> commands ) {
+	multimap<string, string> responses;
 
 	if( commands.empty() ) return responses;
 	
-	size_t commands_at = 0;
-	string terminal_response = this->initiate( commands[ commands_at ] );
-	
-	++commands_at;
+	string terminal_response = this->initiate( commands[0] );
 	if( terminal_response.empty()) return responses;
-	responses.insert(make_pair(commands_at, terminal_response));
-	for(auto command : commands ) {
-		terminal_response = this->respond( command );
+
+	responses.insert(make_pair(commands[0], terminal_response));
+	for(auto command = commands.begin()++; command != commands.end(); ++command) {
+		terminal_response = this->respond( *command );
 		if( terminal_response.empty()) break;
-		responses.insert(make_pair(commands_at, terminal_response));
-		++commands_at;
+		responses.insert(make_pair(*command, terminal_response));
 	}
 
 	return responses;

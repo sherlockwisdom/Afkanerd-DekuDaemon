@@ -25,10 +25,20 @@ int main() {
 	}
 	cout << endl;
 
-	map<size_t,string> dynamic_responds = ussd.initiate_series( dynamic_test );
+	multimap<string,string> dynamic_responds = ussd.initiate_series( dynamic_test );
 
 	for(auto responds : dynamic_responds ) {
 		cout << responds.first << "=> " << responds.second << endl;
+	}
+
+	auto it_dynamic_responds = dynamic_responds.end()--;
+	string d_responds = it_dynamic_responds->second;
+	
+	if( d_responds.find("valid") != string::npos) {
+		cout << "PASSED" << endl;
+	}
+	else {
+		cout << "FAILED" << endl;
 	}
 
 	//conditions to test dynamic input request
