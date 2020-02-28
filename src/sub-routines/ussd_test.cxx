@@ -4,9 +4,9 @@ using namespace std;
 
 
 int main() {
-	string modem_index = "0";
+	string modem_index = "1";
 	map<string,string> configs {
-		{ "DIR_SCRIPTS", "/home/sherlock/Desktop/Deku Daemon/scripts" }
+		{ "DIR_SCRIPTS", "\"/home/sherlock/Desktop/Deku Daemon/scripts\"" }
 	};
 	// invalid input
 	USSD ussd( modem_index, configs );
