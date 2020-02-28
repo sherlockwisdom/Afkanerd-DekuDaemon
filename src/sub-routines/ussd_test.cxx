@@ -25,7 +25,7 @@ int main() {
 	}
 	cout << endl;
 
-	map<string,string> dynamic_responds = ussd.initiate_series( dynamic_test );
+	map<size_t,string> dynamic_responds = ussd.initiate_series( dynamic_test );
 
 	for(auto responds : dynamic_responds ) {
 		cout << responds.first << "=> " << responds.second << endl;
