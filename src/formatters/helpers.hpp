@@ -19,9 +19,9 @@ namespace helpers {
 	}
 	string unescape_string( string input, char del ) {
 		for(size_t i=0;i<input.size();++i) {
-			if( input[i] == '\'' ) {
+			if( input[i] == del ) {
 				input.erase(i, 1);
-				input.insert(i, "\\'");
+				input.insert(i, "\""+del);
 			}
 		}
 		return input;

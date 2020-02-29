@@ -22,6 +22,31 @@ elif [ "$1" == "extract" ] ; then
 	operator_name=$( mmcli -m $modem_index | grep "operator name" | grep -oP ": ([a-zA-Z]*)" | cut -b 3- )
 	printf "equipment_id:$equipment_id\nsignal_quality:$signal_quality\noperator_name:$operator_name"
 
+# Do not use regex here anywhwere cus service providers are not the same through out
+elif [ "$1" == "ussd_initiate" ]; then
+	#ussd_initiate 0 *155#
+	modem_index=$2
+	_command=$3
+	ussd_respond=$( mmcli -K -m $modem_index --3gpp-ussd-initiate=$_command )
+	printf "$ussd_respond"
+	
+elif [ "$1" == "ussd_respond" ]; then
+	modem_index=$2
+	_command=$3
+	ussd_respond=$( mmcli -K -m $modem_index --3gpp-ussd-respond=$_command )
+	printf "$ussd_respond"
+
+elif [ "$1" == "ussd_status" ]; then
+	#would need some parsing
+	modem_index=$2
+	ussd_respond=$( mmcli -K -m $modem_index --3gpp-ussd-status )
+	printf "$ussd_respond"
+
+elif [ "$1" == "ussd_cancel" ]; then
+	modem_index=$2
+	ussd_respond=$( mmcli -K -m $modem_index --3gpp-ussd-cancel )
+	printf "$ussd_respond"
+
 elif [ "$1" == "sms" ] ; then
 	_type=$2
 	if [ "$_type" == "send" ] ; then
