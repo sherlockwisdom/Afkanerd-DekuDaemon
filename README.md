@@ -5,12 +5,13 @@
 <ul>
 <li>-c [configuration file]</li>
 <i>file contents:</i><br>
-<i><b>DIR_ISP=""</b></i><br>
-<i><b>STD_NAME_REQUEST_FILE=""</b></i><br>
-<i><b>DIR_REQUEST_FILE=""</b></i><br>
-<i><b>DIR_SUCCESS=""</b></i><br>
-<i><b>SOCKET_HOST=""</b></i><br>
-<i><b>SOCKET_PORT=""</b></i><br>
+* DIR_ISP=""</b></i><br>
+* STD_NAME_REQUEST_FILE=""</b></i><br>
+* DIR_REQUEST_FILE=""</b></i><br>
+* DIR_SUCCESS=""</b></i><br>
+* DIR_SCRIPTS=""</i><br>
+* SOCKET_HOST=""</b></i><br>
+* SOCKET_PORT=""</b></i><br>
 <ul>
 --modem PRODUCTION|TEST <i> changes what the console outputs</i><br>
 --show_isp <number><br>
