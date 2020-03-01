@@ -1,9 +1,6 @@
-<h1>Deku Daemon</h1><hr>
-<h5>How to build</h5>
-<i>TODO:</i>
-<h5>Dependency files</h5>
-<ul>
-<li>-c [configuration file]</li>
+** Deku Daemon\
+****** How to run\
+--c [configuration file]
 <i>file contents:</i><br>
 * DIR_ISP=""</b></i><br>
 * STD_NAME_REQUEST_FILE=""</b></i><br>
