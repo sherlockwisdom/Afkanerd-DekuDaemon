@@ -74,6 +74,22 @@ string USSD::respond( string command ) {
 	return response;
 }
 
-string USSD::status() {}
+string USSD::status() {
+	string terminal_request = this->configs["DIR_SCRIPTS"] + "/modem_information_extraction.sh ussd_status " + this->modem_index;
+	//logger::logger(__FUNCTION__, terminal_request );
 
-bool USSD::cancel() {}
+	string response = sys_calls::terminal_stdout( terminal_request );
+	// Parse response to get output
+	//logger::logger(__FUNCTION__, response);
+	//return response;
+}
+
+bool USSD::cancel() {
+	string terminal_request = this->configs["DIR_SCRIPTS"] + "/modem_information_extraction.sh ussd_cancel " + this->modem_index;
+	//logger::logger(__FUNCTION__, terminal_request );
+
+	string response = sys_calls::terminal_stdout( terminal_request );
+	// Parse response to get output
+	//logger::logger(__FUNCTION__, response);
+	//return response;
+}
