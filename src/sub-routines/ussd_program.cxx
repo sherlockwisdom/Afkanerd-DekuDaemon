@@ -51,6 +51,7 @@ int main(int argc, char** argv) {
 	}
 	else if( request.size() > 1 ) {
 		for(auto arg : arguments ) {
+			logger::logger(__FUNCTION__, "Executing with args: " + helpers::vector_to_string(arg, ' '));
 			multimap<string,string> values = arguments.empty() ? ussd.initiate_series( request ) : ussd.initiate_series( arg, request);
 			for(auto value : values ) {
 				logger::logger(__FUNCTION__, value.first + "\n====>\n" + value.second + "\n", "stdout", true);
