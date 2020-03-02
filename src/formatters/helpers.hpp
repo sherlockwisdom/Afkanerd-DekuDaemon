@@ -27,6 +27,18 @@ namespace helpers {
 		return input;
 	}
 
+	template<class T>
+	string vector_to_string( T in_vector, char del = ' ') { // this should be a template of dynamic input
+		if(typeid(in_vector).name() == typeid(vector<string>).name()) {
+			string _return = "";
+			for(auto _string : in_vector ) {
+				if(!_return.empty()) _return += " ";
+				_return += _string;
+			}
+			return _return;
+		}
+	}
+
 	string find_and_replace( string str_find, string str_replace, string input ) {
 		string backup_original = input;
 		string return_string = "";
