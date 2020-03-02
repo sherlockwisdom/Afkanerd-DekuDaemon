@@ -14,10 +14,15 @@ int main(int argc, char** argv) {
 	//TODO: Path to script should be passed as an argument
 	string path_to_script = "\"/home/sherlock/Desktop/Deku Daemon/scripts\"";
 	//TODO: Modem index should be passed as an argument
-	string modem_index = 0;
+	string modem_index = "0";
 
 	for(int i=1;i<argc;++i) {
 		if((string)argv[i] == "-sc") {
+			if( i+1 >= argc ) {
+				logger::logger(__FUNCTION__, "USSD needed after -sc command", "stderr", true);
+				return 1;
+			}
+			logger::logger(__FUNCTION__, "processing ussd: " + (string)argv[i+1]);
 			string shortcode = (string)argv[i+1];
 			i++;
 			
