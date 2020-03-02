@@ -10,7 +10,8 @@ int main(int argc, char** argv) {
 	}
 
 	vector<string> request;
-	vector<string> arguments {"5", "2"};
+	//vector<string> arguments {"5", "2"};
+	vector< vector<string> > arguments;
 	//TODO: Path to script should be passed as an argument
 	string path_to_script = "\"/home/sherlock/Desktop/Deku Daemon/scripts\"";
 	//TODO: Modem index should be passed as an argument
@@ -33,7 +34,9 @@ int main(int argc, char** argv) {
 			string filepath = (string)argv[i+1];
 			++i;
 
-			arguments = helpers::read_file( filepath );
+			// It should all go in one line and seperated the usual way |
+			for( auto args : helpers::read_file( filepath ) ) 
+				arguments.push_back( helpers::split( args, '|', true ));
 			continue;
 		}
 	}
@@ -47,9 +50,17 @@ int main(int argc, char** argv) {
 		logger::logger("", ussd.initiate( request[0] ), "stdout", true);
 	}
 	else if( request.size() > 1 ) {
-		multimap<string,string> values = arguments.empty() ? ussd.initiate_series( request ) : ussd.initiate_series( arguments, request);
-		for(auto value : values ) {
-			logger::logger(__FUNCTION__, value.first + "\n====>\n" + value.second + "\n", "stdout", true);
+		for(auto arg : arguments ) {
+			multimap<string,string> values = arguments.empty() ? ussd.initiate_series( request ) : ussd.initiate_series( arg, request);
+			for(auto value : values ) {
+				logger::logger(__FUNCTION__, value.first + "\n====>\n" + value.second + "\n", "stdout", true);
+			}
+			string _continue;
+			logger::logger(__FUNCTION__, "Done executing... continue? [yes|no]: ");
+			getline(cin, _continue);
+
+			if(_continue == "yes") continue;
+			else break;
 		}
 	}
 	else {
