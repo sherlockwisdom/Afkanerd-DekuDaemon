@@ -10,6 +10,7 @@ int main(int argc, char** argv) {
 	}
 
 	vector<string> request;
+	vector<string> arguments;
 	//TODO: Path to script should be passed as an argument
 	string path_to_script = "\"/home/sherlock/Desktop/Deku Daemon/scripts\"";
 	//TODO: Modem index should be passed as an argument
