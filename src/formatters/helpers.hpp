@@ -32,7 +32,7 @@ namespace helpers {
 		if(typeid(in_vector).name() == typeid(vector<string>).name()) {
 			string _return = "";
 			for(auto _string : in_vector ) {
-				if(!_return.empty()) _return += " ";
+				if(!_return.empty()) _return += del;
 				_return += _string;
 			}
 			return _return;
