@@ -59,7 +59,10 @@ int main(int argc, char** argv) {
 			logger::logger(__FUNCTION__, "Done executing... continue? [yes|no]: ");
 			getline(cin, _continue);
 
-			if(_continue == "yes") continue;
+			if(_continue == "yes") {
+				helpers::sleep_thread( 3 );
+				continue;
+			}
 			else break;
 		}
 	}
