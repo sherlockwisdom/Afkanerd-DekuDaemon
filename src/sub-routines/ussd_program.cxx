@@ -10,7 +10,7 @@ int main(int argc, char** argv) {
 	}
 
 	vector<string> request;
-	vector<string> arguments;
+	vector<string> arguments {"5", "2"};
 	//TODO: Path to script should be passed as an argument
 	string path_to_script = "\"/home/sherlock/Desktop/Deku Daemon/scripts\"";
 	//TODO: Modem index should be passed as an argument
@@ -47,7 +47,7 @@ int main(int argc, char** argv) {
 		logger::logger("", ussd.initiate( request[0] ), "stdout", true);
 	}
 	else if( request.size() > 1 ) {
-		auto values = ussd.initiate_series( request );
+		multimap<string,string> values = arguments.empty() ? ussd.initiate_series( request ) : ussd.initiate_series( arguments, request);
 		for(auto value : values ) {
 			logger::logger(__FUNCTION__, value.first + "\n====>\n" + value.second + "\n", "stdout", true);
 		}
