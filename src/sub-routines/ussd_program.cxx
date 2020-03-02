@@ -44,7 +44,7 @@ int main(int argc, char** argv) {
 
 	if( request.size() == 1 ) {
 		logger::logger(__FUNCTION__, "Executing 1 command...", "stdout", true);
-		logger::logger(__FUNCTION__, ussd.initiate( request[0] ), "stdout", true);
+		logger::logger("", ussd.initiate( request[0] ), "stdout", true);
 	}
 	else if( request.size() > 1 ) {
 		auto values = ussd.initiate_series( request );
