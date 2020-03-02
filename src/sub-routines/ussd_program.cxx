@@ -15,10 +15,19 @@ int main(int argc, char** argv) {
 	//TODO: Path to script should be passed as an argument
 	string path_to_script = "\"/home/sherlock/Desktop/Deku Daemon/scripts\"";
 	//TODO: Modem index should be passed as an argument
-	string modem_index = "0";
+	string modem_index;
 
 	for(int i=1;i<argc;++i) {
-		if((string)argv[i] == "-sc") {
+		if((string)argv[i] == "-m") {
+			if(i+1 >= argc) {
+				// TODO: 
+				return 1;
+			}
+			logger::logger(__FUNCTION__, "Executing modem: " + (string)argv[i+1]);
+			modem_index = (string)argv[i+1];
+			++i;
+		}
+		else if((string)argv[i] == "-sc") {
 			if( i+1 >= argc ) {
 				logger::logger(__FUNCTION__, "USSD needed after -sc command", "stderr", true);
 				return 1;
@@ -39,6 +48,11 @@ int main(int argc, char** argv) {
 				arguments.push_back( helpers::split( args, '|', true ));
 			continue;
 		}
+	}
+
+	if( modem_index.empty()) {
+		logger::logger(__FUNCTION__, "Modem index not supplied", "stderr", true);
+		return 1;
 	}
 
 	map<string,string> config {{"DIR_SCRIPTS", path_to_script}};	
