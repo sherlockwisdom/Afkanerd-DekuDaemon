@@ -56,7 +56,8 @@ int main(int argc, char** argv) {
 				logger::logger(__FUNCTION__, value.first + "\n====>\n" + value.second + "\n", "stdout", true);
 			}
 			string _continue;
-			logger::logger(__FUNCTION__, "Done executing... continue? [yes|no]: ");
+			//logger::logger(__FUNCTION__, "Done executing... continue? [yes|no]: ");
+			cout << __FUNCTION__ << "=> Done executing... continue? [yes|no]: ";
 			getline(cin, _continue);
 
 			if(_continue == "yes") {
