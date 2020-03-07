@@ -33,7 +33,7 @@ int main(int argc, char** argv) {
 				return 1;
 			}
 
-			logger::logger(__FUNCTION__, "Configuration file: " + (string)argv[i+1]);
+			logger::logger(__FUNCTION__, "Path to script: " + (string)argv[i+1]);
 			path_to_script = (string)argv[i+1];
 			++i;
 		}
