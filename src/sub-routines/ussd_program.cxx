@@ -13,7 +13,8 @@ int main(int argc, char** argv) {
 	//vector<string> arguments {"5", "2"};
 	vector< vector<string> > arguments;
 	//TODO: Path to script should be passed as an argument
-	string path_to_script = "\"/home/sherlock/Desktop/Deku Daemon/scripts\"";
+	// string path_to_script = "\"/home/sherlock/Desktop/Deku Daemon/scripts\"";
+	string path_to_script;
 	//TODO: Modem index should be passed as an argument
 	string modem_index;
 
@@ -27,6 +28,16 @@ int main(int argc, char** argv) {
 			modem_index = (string)argv[i+1];
 			++i;
 		}
+		else if((string)argv[i] == "-c") {
+			if( i+1 >= argc ) {
+				return 1;
+			}
+
+			logger::logger(__FUNCTION__, "Configuration file: " + (string)argv[i+1]);
+			path_to_script = (string)argv[i+1];
+			++i;
+		}
+
 		else if((string)argv[i] == "-sc") {
 			if( i+1 >= argc ) {
 				logger::logger(__FUNCTION__, "USSD needed after -sc command", "stderr", true);
@@ -52,6 +63,11 @@ int main(int argc, char** argv) {
 
 	if( modem_index.empty()) {
 		logger::logger(__FUNCTION__, "Modem index not supplied", "stderr", true);
+		return 1;
+	}
+
+	if( path_to_script.empty()) {
+		logger::logger(__FUNCTION__, "Configuration path missing", "stderr", true);
 		return 1;
 	}
 
