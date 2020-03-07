@@ -267,7 +267,7 @@ bool Modem::ssh_send_sms( string message, string number ) {
 bool Modem::send_sms(string message, string number ) {
 	logger::logger(__FUNCTION__, this->getInfo() + " - About to send SMS", "stdout", true);
 	message = helpers::find_and_replace("\\n", "\n", message);
-	message = helpers::find_and_replace("\\\"", "\"", message);
+	message = helpers::find_and_replace("\\\"", " ", message);
 	switch( this->getType() ) {
 		case Modem::MMCLI:
 			return this->mmcli_send_sms( message, number);
