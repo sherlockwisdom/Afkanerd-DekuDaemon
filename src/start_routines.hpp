@@ -44,6 +44,7 @@ bool system_check( string path_to_sys_file) {
 		}
 		else if(configs[0] == "DIR_SCRIPTS") {
 			string dir_scripts = configs[1];
+			logger::logger(__FUNCTION__, "=> " + dir_scripts );
 			if(!helpers::file_exist( dir_scripts )) {
 				logger::logger(__FUNCTION__, "PATH TO SCRIPT NOT VALID...", "stderr", true);
 				return false;
