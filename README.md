@@ -1,4 +1,10 @@
 ### Deku Daemon
+#### Dependencies
+- g++ 4.8
+- make
+- doxygen - _for generating documentations found in docs/_
+- ModemManager - _comes installed on most Linux systems_
+- Linux system with Bash support
 #### How to build and run
 _Project's root dir_\
 `make -B start`\
