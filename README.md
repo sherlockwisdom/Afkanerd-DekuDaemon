@@ -1,9 +1,9 @@
 ### Deku Daemon
-#### How to build
+#### How to build and run
 _Project's root dir_\
 `make -B start`\
-`./start`
-#### How to run
+`./start --c <path to file> --mode TEST`
+#### Start arguments
 ##### `--c [configuration file]`
 * `DIR_ISP=""`
 * `STD_NAME_REQUEST_FILE=""`
