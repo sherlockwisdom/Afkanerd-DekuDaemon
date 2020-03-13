@@ -87,7 +87,8 @@ int main(int argc, char** argv) {
 			}
 		}
 		else {
-			for(auto arg : arguments ) {
+			for(size_t i=0;i<arguments.size();++i ) {
+				vector<string> arg = arguments[i];
 				logger::logger(__FUNCTION__, "Executing with args: " + helpers::vector_to_string(arg, ' '));
 				multimap<string,string> values = ussd.initiate_series( arg, request);
 				for(auto value : values ) {
@@ -95,11 +96,18 @@ int main(int argc, char** argv) {
 				}
 				string _continue;
 				//logger::logger(__FUNCTION__, "Done executing... continue? [yes|no]: ");
-				cout << __FUNCTION__ << "=> Done executing... continue? [yes|no]: ";
+				cout << __FUNCTION__ << "=> Done executing... continue? [yes|no|repeat]: ";
 				getline(cin, _continue);
 
 				if(_continue == "yes") {
 					helpers::sleep_thread( 3 );
+					continue;
+				}
+				else if(_continue == "repeat") {
+					logger::logger(__FUNCTION__, "Repeating with args: " + helpers::vector_to_string( arg, ' '));
+					helpers::sleep_thread( 3 );
+					ussd.cancel();
+					--i;
 					continue;
 				}
 				else break;
