@@ -181,6 +181,8 @@ void modem_request_listener( Modem* modem ) {
 
 void Modem::start() {
 	std::thread tr_modem_request_listener = std::thread(modem_request_listener, &*this);
+	
+	//TODO: Checks for incoming sms messages here
 	tr_modem_request_listener.join();
 }
 
