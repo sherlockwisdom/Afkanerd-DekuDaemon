@@ -114,7 +114,11 @@ map<string,string> Modem::getConfigs() const {
 }
 
 vector<map<string,string>> Modem::get_sms_messages() const {
+	string terminal_respond = sys_calls::terminal_stdout( this->getConfigs()["DIR_SCRIPTS"] + "/modem_information_extraction.sh sms all " + this->getIndex() );	
+	vector<string> sms_indexes = helpers::split( terminal_respond, '\n', true );
+	logger::logger(__FUNCTION__, "Number of SMS messages: " + to_string( sms_indexes.size() ));
 
+	for(auto i: sms_indexes) logger::logger(__FUNCTION__, i );
 }
 
 void modem_sms_listener ( Modem* modem ) {
