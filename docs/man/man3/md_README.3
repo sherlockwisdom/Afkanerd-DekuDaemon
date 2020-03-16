@@ -1,0 +1,42 @@
+.TH "md_README" 3 "Tue Mar 10 2020" "Version 0.5" "Afkanerd-DekuDaemon" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+md_README \- Deku Daemon 
+
+.SS "Dependencies"
+.IP "\(bu" 2
+g++ 4\&.8
+.IP "\(bu" 2
+make
+.IP "\(bu" 2
+doxygen - \fIfor generating documentations found in docs/\fP
+.IP "\(bu" 2
+ModemManager - \fIcomes installed on most Linux systems\fP
+.IP "\(bu" 2
+Linux system with Bash support 
+.PP
+.SS "How to build and run"
+\fIProject's root dir\fP\\ \fCmake -B start\fP\\ \fC\&./start --c <path to file> --mode TEST\fP 
+.SS "Start arguments"
+.SS "<tt>--c [configuration file]</tt>"
+.IP "\(bu" 2
+\fCDIR_ISP=''\fP
+.IP "\(bu" 2
+\fCSTD_NAME_REQUEST_FILE=''\fP
+.IP "\(bu" 2
+\fCDIR_REQUEST_FILE=''\fP
+.IP "\(bu" 2
+\fCDIR_SUCCESS=''\fP
+.IP "\(bu" 2
+\fCDIR_SCRIPTS=''\fP
+.IP "\(bu" 2
+\fCSOCKET_HOST=''\fP
+.IP "\(bu" 2
+\fCSOCKET_PORT=''\fP 
+.PP
+.SS "<tt>--modem PRODUCTION|TEST</tt> <em>changes what the console outputs</em>"
+.SS "<tt>--show_isp [number]</tt>"
+.SS "<tt>--run_ussd [code]</tt>"
+.SS "<tt>--run_ussd_script <path to file></tt>"
+
