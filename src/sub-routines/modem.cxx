@@ -113,12 +113,39 @@ map<string,string> Modem::getConfigs() const {
 	return this->configs;
 }
 
+map<string,string> Modem::get_sms_message( string message_index ) const {
+	string terminal_respond = sys_calls::terminal_stdout( this->getConfigs()["DIR_SCRIPTS"] + "/modem_information_extraction.sh sms read_sms " + message_index + " " + this->getIndex() );	
+	
+	vector<string> message_body = helpers::split( terminal_respond, '\n', true);
+	//TODO: if less than 3... somethings wrong
+	/*
+	for( auto message_line : message_body ) {
+		// logger::logger(__FUNCTION__, message_line);
+	}
+	*/
+
+	string number = message_body[0];
+	string message = message_body[1];
+	string timestamp = message_body[2];
+
+	return map<string,string> {
+		{"number", number},
+		{"message", message},
+		{"timestamp", timestamp}
+	};
+}
+
 vector<map<string,string>> Modem::get_sms_messages() const {
+	vector<map<string,string>> sms_messages;
 	string terminal_respond = sys_calls::terminal_stdout( this->getConfigs()["DIR_SCRIPTS"] + "/modem_information_extraction.sh sms all " + this->getIndex() );	
 	vector<string> sms_indexes = helpers::split( terminal_respond, '\n', true );
 	logger::logger(__FUNCTION__, "Number of SMS messages: " + to_string( sms_indexes.size() ));
 
-	for(auto i: sms_indexes) logger::logger(__FUNCTION__, i );
+	for(auto message_index : sms_indexes) {
+		map<string,string> sms_message = this->get_sms_message( message_index );
+		// logger::logger(__FUNCTION__, message_index );
+		sms_messages.push_back( sms_message );
+	}
 }
 
 void modem_sms_listener ( Modem* modem ) {

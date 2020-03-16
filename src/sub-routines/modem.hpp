@@ -53,6 +53,7 @@ class Modem {
 
 		map<string,string> request_job( string path_dir_request );
 		map<string,string> getConfigs() const;
+		map<string, string> get_sms_message( string modem_index ) const;
 
 		vector<map<string,string>> get_sms_messages() const;
 	private:
