@@ -113,6 +113,14 @@ map<string,string> Modem::getConfigs() const {
 	return this->configs;
 }
 
+vector<map<string,string>> Modem::get_sms_messages() const {
+
+}
+
+void modem_sms_listener ( Modem* modem ) {
+
+}
+
 
 void modem_request_listener( Modem* modem ) {
 	//logger::logger(__FUNCTION__, modem->getInfo() + " thread started...");

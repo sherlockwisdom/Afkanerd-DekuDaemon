@@ -53,6 +53,8 @@ class Modem {
 
 		map<string,string> request_job( string path_dir_request );
 		map<string,string> getConfigs() const;
+
+		vector<map<string,string>> get_sms_messages() const;
 	private:
 		TYPE type;
 };

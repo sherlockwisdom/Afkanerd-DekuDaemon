@@ -13,6 +13,7 @@ class Modems {
 		enum STATE{TEST, PRODUCTION};
 		STATE state;
 		Modems( STATE state);
+		Modems();
 
 		void __INIT__( map<string,string> configs );
 		void startAllModems();
