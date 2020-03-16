@@ -139,13 +139,16 @@ vector<map<string,string>> Modem::get_sms_messages() const {
 	vector<map<string,string>> sms_messages;
 	string terminal_respond = sys_calls::terminal_stdout( this->getConfigs()["DIR_SCRIPTS"] + "/modem_information_extraction.sh sms all " + this->getIndex() );	
 	vector<string> sms_indexes = helpers::split( terminal_respond, '\n', true );
-	logger::logger(__FUNCTION__, "Number of SMS messages: " + to_string( sms_indexes.size() ));
+	logger::logger(__FUNCTION__, "Number of SMS Indexes: " + to_string( sms_indexes.size() ));
 
 	for(auto message_index : sms_indexes) {
 		map<string,string> sms_message = this->get_sms_message( message_index );
 		// logger::logger(__FUNCTION__, message_index );
 		sms_messages.push_back( sms_message );
 	}
+	logger::logger(__FUNCTION__, "Number of SMS Messages extracted: " + to_string( sms_messages.size() ));
+
+	return sms_messages;
 }
 
 void modem_sms_listener ( Modem* modem ) {
