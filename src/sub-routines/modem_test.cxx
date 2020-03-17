@@ -5,7 +5,7 @@ int main() {
 		{"DIR_SCRIPTS", "../../scripts"}
 	};
 	Modem modem( configs );
-	modem.setIndex("3");
+	modem.setIndex("5");
 
 	vector<map<string,string>> sms_messages = modem.get_sms_messages();
 

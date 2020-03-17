@@ -152,7 +152,18 @@ vector<map<string,string>> Modem::get_sms_messages() const {
 }
 
 void modem_sms_listener ( Modem* modem ) {
+	logger::logger(__FUNCTION__, "Checking for SMS messages ->\n");
 
+	while( 1 ) {
+		vector<map<string,string>> sms_messages = modem->get_sms_messages();
+
+		for( auto sms_message_body : sms_messages )
+			for( auto component : sms_message_body) 
+				logger::logger(__FUNCTION__, "=> SMS Message: " + component.first + " : " + component.second);
+
+		cout << "=============================" << endl << endl;
+		helpers::sleep_thread( 5 );
+	}
 }
 
 
@@ -222,10 +233,12 @@ void modem_request_listener( Modem* modem ) {
 }
 
 void Modem::start() {
-	std::thread tr_modem_request_listener = std::thread(modem_request_listener, &*this);
+	// std::thread tr_modem_request_listener = std::thread(modem_request_listener, &*this);
+	// tr_modem_request_listener.join();
 	
 	//TODO: Checks for incoming sms messages here
-	tr_modem_request_listener.join();
+	std::thread tr_modem_sms_listener = std::thread(modem_sms_listener, &*this);
+	tr_modem_sms_listener.join();
 }
 
 bool Modem::end() {
