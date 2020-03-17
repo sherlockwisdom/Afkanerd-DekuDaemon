@@ -19,6 +19,10 @@ Modems::Modems( STATE state) {
 	}
 }
 
+Modems::Modems() {
+	logger::show_state = "TESTING";
+}
+
 void Modems::__INIT__( map<string, string> configs ) {
 
 	while( 1 ) { //TODO: Use a variable to control this loop

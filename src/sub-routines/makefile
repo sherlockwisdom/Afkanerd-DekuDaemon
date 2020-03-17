@@ -18,3 +18,6 @@ request_distribution_listener_test: request_distribution_listener_test.cxx
 
 modem_listener_test: modem_listener_test.cxx
 	$(CC) $(CFLAGS) -o modem_listener_test modem_listener_test.cxx
+
+modem_test: modem_test.cxx
+	$(CC) $(CFLAGS) -o modem_test modem_test.cxx
