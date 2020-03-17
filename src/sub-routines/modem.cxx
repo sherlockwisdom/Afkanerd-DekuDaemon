@@ -157,11 +157,16 @@ void modem_sms_listener ( Modem* modem ) {
 	while( 1 ) {
 		vector<map<string,string>> sms_messages = modem->get_sms_messages();
 
-		for( auto sms_message_body : sms_messages )
-			for( auto component : sms_message_body) 
-				logger::logger(__FUNCTION__, "=> SMS Message: " + component.first + " : " + component.second);
+		if( !sms_messages.empty()) {
+			for( auto sms_message_body : sms_messages ) {
+				cout << "\n=============================" << endl;
+				for( auto component : sms_message_body) 
+					logger::logger(__FUNCTION__, "=> SMS Message: " + component.first + " : " + component.second);
+				cout << "=============================" << endl << endl;
+			}
 
-		cout << "=============================" << endl << endl;
+		}
+
 		helpers::sleep_thread( 5 );
 	}
 }
