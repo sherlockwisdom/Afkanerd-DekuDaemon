@@ -1,5 +1,5 @@
 CC = g++
-CFLAGS = -g -Wall -pthread lncurses -std=c++1z
+CFLAGS = -g -Wall -pthread -lncurses -std=c++1z
 TARGET = main
 
 default: $(TARGET)
