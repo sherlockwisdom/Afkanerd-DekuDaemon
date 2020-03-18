@@ -151,6 +151,8 @@ vector<map<string,string>> Modem::get_sms_messages() const {
 	return sms_messages;
 }
 
+
+//XXX: WORKING HERE ===================>
 void modem_sms_listener ( Modem* modem ) {
 	logger::logger(__FUNCTION__, "Checking for SMS messages ->\n");
 

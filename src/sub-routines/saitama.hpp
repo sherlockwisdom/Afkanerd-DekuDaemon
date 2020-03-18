@@ -6,7 +6,7 @@ using namespace std;
 namespace saitama {
 
 	map<string,string> executions {
-		{"--:all_might:--", ""}
+		{"--:all_might:--", " <-- Executing All Might --> "}
 	};
 }
 
