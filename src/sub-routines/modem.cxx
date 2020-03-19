@@ -1,4 +1,5 @@
 #include "modem.hpp"
+#include "saitama.hpp"
 #include <iostream>
 #include <thread>
 #include <mutex>
@@ -171,6 +172,8 @@ void modem_sms_listener ( Modem* modem ) {
 				logger::logger(__FUNCTION__, "=============================");
 
 				//TODO: put a helper function
+
+				saitama::execute( message );
 			}
 		}
 		helpers::sleep_thread( 5 );
