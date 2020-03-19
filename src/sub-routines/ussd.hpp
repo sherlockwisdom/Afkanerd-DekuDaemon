@@ -26,8 +26,8 @@ class USSD {
 
 	bool cancel();
 
-	template<class RETURN>
-	RETURN initiate( string );
+	template<typename TEMPLATED_RETURN_TYPE>
+	TEMPLATED_RETURN_TYPE initiate( string );
 };
 
 #endif

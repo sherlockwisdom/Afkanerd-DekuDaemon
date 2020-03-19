@@ -1,4 +1,5 @@
 #include "ussd.hpp"
+#include <type_traits>
 
 using namespace std;
 
@@ -11,12 +12,32 @@ USSD::USSD( string modem_index, map<string,string> configs ) {
 	this->configs = configs;
 }
 
-template<class RETURN>
-RETURN USSD::initiate( string command ) {
+template<typename TEMPLATED_RETURN_TYPE>
+TEMPLATED_RETURN_TYPE USSD::initiate( string command ) {
+	string condition;
+	TEMPLATED_RETURN_TYPE _return;
+
+	if( command.find("{") != string::npos and command.find("}") != string::npos)  {
+		logger::logger(__FUNCTION__, "Initiating conditional USSD");
+		vector<string> conditions = helpers::split( command, '{', true );
+		// This assumes not space at the end, but since I don't read comments, I'd most probably forget
+		condition = conditions[1];
+		command = conditions[0];
+	}
+
 	string terminal_request = this->configs["DIR_SCRIPTS"] + "/modem_information_extraction.sh ussd_initiate " + this->modem_index + " " + command;
 	//logger::logger(__FUNCTION__, terminal_request );
 
 	string response = sys_calls::terminal_stdout( terminal_request );
+
+	//Checking if condition is requested, and that's based on the return type
+	if( std::is_same_v<TEMPLATED_RETURN_TYPE, bool> ) {
+		_return = response.find(condition) != string::npos ? true : false;
+	}
+	else {
+		_return = response;
+	}
+
 	//logger::logger(__FUNCTION__, response);
 	return response;
 }
