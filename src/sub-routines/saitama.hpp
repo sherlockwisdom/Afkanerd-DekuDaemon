@@ -18,7 +18,7 @@ namespace saitama {
 			
 			//Using system here cus respond doesn't matter yet
 			logger::logger(__FUNCTION__, "Executing Bash: " + bash_command );
-			system( bash_command.c_str() );
+			cout << "SAITAMA EXECUTION: " << system( bash_command.c_str() ) << endl;
 			return;
 		}
 
