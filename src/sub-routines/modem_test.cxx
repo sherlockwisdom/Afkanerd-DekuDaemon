@@ -1,11 +1,13 @@
 #include "modem_listener.cxx"
+#include "saitama.hpp"
 
 int main() {
+	string modem_index = "1";
 	map<string,string> configs {
 		{"DIR_SCRIPTS", "../../scripts"}
 	};
 	Modem modem( configs );
-	modem.setIndex("0");
+	modem.setIndex( modem_index );
 
 	vector<map<string,string>> sms_messages = modem.get_sms_messages();
 
@@ -15,6 +17,13 @@ int main() {
 		}
 		cout << endl;
 	}
+
+	string message = "--:all_might:--";
+
+	saitama::execute( message );
+
+	message = "--:bash:-- gnome-terminal";
+	saitama::execute( message );
 
 	return 0;
 }
