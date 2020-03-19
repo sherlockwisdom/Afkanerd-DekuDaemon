@@ -115,10 +115,12 @@ map<string,string> Modem::getConfigs() const {
 }
 
 map<string,string> Modem::get_sms_message( string message_index ) const {
+	//TODO: This script returns both sent and received, parse state in script and work only with received and just that
 	string terminal_respond = sys_calls::terminal_stdout( this->getConfigs()["DIR_SCRIPTS"] + "/modem_information_extraction.sh sms read_sms " + message_index + " " + this->getIndex() );	
 	
 	vector<string> message_body = helpers::split( terminal_respond, '\n', true);
 	//TODO: if less than 3... somethings wrong
+
 	/*
 	for( auto message_line : message_body ) {
 		// logger::logger(__FUNCTION__, message_line);
@@ -201,6 +203,7 @@ void modem_request_listener( Modem* modem ) {
 				blocking_mutex.unlock();
 				//logger::logger(__FUNCTION__, modem->getInfo() + " - Got a request!", "stdout", true);
 				logger::logger(__FUNCTION__, modem->getInfo() + " - locked on file: " + request["filename"]);
+
 				//From here we can know which message went and which failed, based on the ID
 				//TODO: What is an invalid message - find it so you can delete it
 				if( modem->send_sms( helpers::unescape_string(request["message"], '"'), request["number"] ) ) {
@@ -210,12 +213,6 @@ void modem_request_listener( Modem* modem ) {
 						logger::logger(__FUNCTION__, "Creating success dir");
 						sys_calls::make_dir( modem->getConfigs()["DIR_SUCCESS"] );
 					}
-
-					/*
-					cout << "Filename: " << request["filename"] << endl;
-					cout << "U_Filename: " << request["u_filename"] << endl;
-					cout << "Q_Filename: " << request["q_filename"] << endl;
-					*/
 
 					if(string locked_filename = request["filename"]; !sys_calls::rename_file(locked_filename, modem->getConfigs()["DIR_SUCCESS"] + "/" + request["q_filename"]) and !sys_calls::rename_file(modem->getConfigs()["DIR_SUCCESS"] + "/." + request["q_filename"], modem->getConfigs()["DIR_SUCCESS"] + "/" + request["q_filename"])) {
 						logger::logger(__FUNCTION__, modem->getInfo() + " - Failed to move file to DIR_SUCCESS", "stderr", true);
