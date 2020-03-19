@@ -18,7 +18,6 @@ class USSD {
 	USSD( map<string,string> );
 	USSD( string, map<string,string> );
 	
-	string initiate( string );
 	string respond( string );
 	string status();
 	
@@ -26,6 +25,9 @@ class USSD {
 	multimap<string,string> initiate_series( vector<string>, vector<string>);
 
 	bool cancel();
+
+	template<class RETURN>
+	RETURN initiate( string );
 };
 
 #endif

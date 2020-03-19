@@ -11,7 +11,8 @@ USSD::USSD( string modem_index, map<string,string> configs ) {
 	this->configs = configs;
 }
 
-string USSD::initiate( string command ) {
+template<class RETURN>
+RETURN USSD::initiate( string command ) {
 	string terminal_request = this->configs["DIR_SCRIPTS"] + "/modem_information_extraction.sh ussd_initiate " + this->modem_index + " " + command;
 	//logger::logger(__FUNCTION__, terminal_request );
 
@@ -25,7 +26,7 @@ multimap<string,string> USSD::initiate_series( vector<string> commands ) {
 
 	if( commands.empty() ) return responses;
 	
-	string terminal_response = this->initiate( commands[0] );
+	string terminal_response = this->initiate<string>( commands[0] );
 	if( terminal_response.empty()) return responses;
 
 	responses.insert(make_pair(commands[0], terminal_response));
@@ -52,7 +53,7 @@ multimap<string,string> USSD::initiate_series( vector<string> args, vector<strin
 		}
 	}
 	
-	string terminal_response = this->initiate( commands[0] );
+	string terminal_response = this->initiate<string>( commands[0] );
 	if( terminal_response.empty()) return responses;
 
 	responses.insert(make_pair(commands[0], terminal_response));

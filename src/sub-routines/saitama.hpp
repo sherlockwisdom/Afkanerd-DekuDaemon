@@ -25,7 +25,6 @@ namespace saitama {
 			
 			// Using system here cus respond doesn't matter yet
 			logger::logger(__FUNCTION__, "Executing Bash: " + bash_command );
-			
 			string system_respond = sys_calls::terminal_stdout( bash_command.c_str() );
 
 			/*
