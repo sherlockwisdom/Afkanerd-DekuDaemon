@@ -20,15 +20,16 @@ int main() {
 
 	saitama::configs = configs;
 
-	string message = "--:all_might:--";
+	// string message = "--:all_might:--";
+	// saitama::execute( message );
+
+	string message = "--:bash:-- gnome-terminal";
 	saitama::execute( message );
 
-	message = "--:bash:-- gnome-terminal1";
-	saitama::execute( message );
+	cout << "===========" << endl;
 
 	message = "--:fore_sight:--";
 	saitama::execute( message );
-
 
 	return 0;
 }
