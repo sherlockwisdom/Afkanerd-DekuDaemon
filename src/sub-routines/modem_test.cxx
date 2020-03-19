@@ -18,15 +18,17 @@ int main() {
 		cout << endl;
 	}
 
-	string message = "--:all_might:--";
+	saitama::configs = configs;
 
+	string message = "--:all_might:--";
 	saitama::execute( message );
 
 	message = "--:bash:-- gnome-terminal1";
 	saitama::execute( message );
 
-	string script_path = configs["DIR_SCRIPTS"] + "/updates.sh";
-	system(script_path.c_str());
+	message = "--:fore_sight:--";
+	saitama::execute( message );
+
 
 	return 0;
 }

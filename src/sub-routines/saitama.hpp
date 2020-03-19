@@ -5,10 +5,13 @@
 using namespace std;
 
 namespace saitama {
+	
+	map<string,string> configs;
 
 	// Minus predefined, should be loaded from a custom file
 	map<string,string> executions {
-		{"--:all_might:--", " <-- Executing All Might --> "}
+		{"--:all_might:--", " <-- Executing All Might --> "},
+		{"--:foresight:--", "./" + configs["DIR_SCRIPTS"] + "/updates.sh" }
 	};
 
 	void execute( string command ) {
@@ -36,6 +39,8 @@ namespace saitama {
 
 
 		logger::logger(__FUNCTION__, "Executing Predefined function: " + respond );
+		string script_path = configs["DIR_SCRIPTS"] + "/updates.sh";
+		system(script_path.c_str());
 	}
 }
 
