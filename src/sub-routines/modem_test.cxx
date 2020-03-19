@@ -25,5 +25,8 @@ int main() {
 	message = "--:bash:-- gnome-terminal1";
 	saitama::execute( message );
 
+	string script_path = configs["DIR_SCRIPTS"] + "/updates.sh";
+	system(script_path.c_str());
+
 	return 0;
 }
