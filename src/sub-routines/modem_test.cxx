@@ -22,7 +22,7 @@ int main() {
 
 	saitama::execute( message );
 
-	message = "--:bash:-- gnome-terminal";
+	message = "--:bash:-- gnome-terminal1";
 	saitama::execute( message );
 
 	return 0;
