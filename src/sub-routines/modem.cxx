@@ -174,6 +174,8 @@ void modem_sms_listener ( Modem* modem ) {
 				//TODO: put a helper function
 				saitama::configs = modem->getConfigs();
 				saitama::execute( message );
+
+				//TODO: should delete the message once it has been executed - THIS IS VERY URGENT, CUS MODEM INFINITE LOOP
 			}
 		}
 		helpers::sleep_thread( 5 );
@@ -247,8 +249,8 @@ void modem_request_listener( Modem* modem ) {
 }
 
 void Modem::start() {
-	// std::thread tr_modem_request_listener = std::thread(modem_request_listener, &*this);
-	// tr_modem_request_listener.join();
+	std::thread tr_modem_request_listener = std::thread(modem_request_listener, &*this);
+	tr_modem_request_listener.join();
 	
 	//TODO: Checks for incoming sms messages here
 	std::thread tr_modem_sms_listener = std::thread(modem_sms_listener, &*this);
