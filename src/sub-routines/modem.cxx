@@ -155,9 +155,9 @@ vector<map<string,string>> Modem::get_sms_messages() const {
 
 //XXX: WORKING HERE ===================>
 void modem_sms_listener ( Modem* modem ) {
-	logger::logger(__FUNCTION__, "Checking for SMS messages ->\n");
-
+	logger::logger(__FUNCTION__, "========> INITIATING SMS LISTENERS <===========", "stdout", true);
 	while( 1 ) {
+		logger::logger(__FUNCTION__, "Checking for SMS messages ->\n");
 		vector<map<string,string>> sms_messages = modem->get_sms_messages();
 
 		if( !sms_messages.empty()) {
@@ -185,6 +185,7 @@ void modem_sms_listener ( Modem* modem ) {
 
 void modem_request_listener( Modem* modem ) {
 	//logger::logger(__FUNCTION__, modem->getInfo() + " thread started...");
+	logger::logger(__FUNCTION__, "==========> MODEM REQUEST LISTENER <============");
 	modem->setKeepAlive(true);
 	
 	modem->setThreadSafety( true );
@@ -249,11 +250,13 @@ void modem_request_listener( Modem* modem ) {
 }
 
 void Modem::start() {
+	//XXX: Checks for incoming SMS request here
 	std::thread tr_modem_request_listener = std::thread(modem_request_listener, &*this);
-	tr_modem_request_listener.join();
 	
-	//TODO: Checks for incoming sms messages here
+	//TODO: Checks for incoming SMS messages here
 	std::thread tr_modem_sms_listener = std::thread(modem_sms_listener, &*this);
+
+	tr_modem_request_listener.join();
 	tr_modem_sms_listener.join();
 }
 
