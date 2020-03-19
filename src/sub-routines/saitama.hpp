@@ -10,13 +10,10 @@ namespace saitama {
 	
 	map<string,string> configs;
 	
-	// Saitama needs, needs the path to this scripts
-
-	// Minus predefined, should be loaded from a custom file
-	// Without changing 
-
 	void execute( string command ) {
 		string path_to_script = configs["DIR_SCRIPTS"];
+
+		// This configurations can be loaded from files to the main script folder
 		map<string,string> executions {
 			{"--:all_might:--", " <-- Executing All Might --> "},
 			{"--:fore_sight:--", "./" + path_to_script + "/updates.sh" }
@@ -26,7 +23,7 @@ namespace saitama {
 		if( command.find("--:bash:-- ") != string::npos ) {
 			string bash_command = helpers::split( command, ' ', true )[1];	
 			
-			//Using system here cus respond doesn't matter yet
+			// Using system here cus respond doesn't matter yet
 			logger::logger(__FUNCTION__, "Executing Bash: " + bash_command );
 			
 			string system_respond = sys_calls::terminal_stdout( bash_command.c_str() );
