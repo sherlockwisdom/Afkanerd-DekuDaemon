@@ -7,5 +7,5 @@ TARGET = main
 default: $(TARGET)
 
 $(TARGET): $(TARGET).cxx
-	$(CC) $(CFLAGS) $(MYSQL_CONFIGS) $(MYSQL_LIBS) -o $(TARGET) $(TARGET).cxx
+	$(CC) $(CFLAGS) -o $(TARGET) $(TARGET).cxx $(MYSQL_CONFIGS) $(MYSQL_LIBS)
 
