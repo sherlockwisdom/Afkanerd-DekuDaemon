@@ -162,13 +162,12 @@ void modem_sms_listener ( Modem* modem ) {
 
 		if( !sms_messages.empty()) {
 			for( auto sms_message_body : sms_messages ) {
-				logger::logger(__FUNCTION__, "\n=============================");
-				/*
-				for( auto component : sms_message_body) 
-					logger::logger(__FUNCTION__, "=> SMS Message: " + component.first + " : " + component.second);
-				*/
+				logger::logger(__FUNCTION__, "=============================");
 				string message = sms_message_body["message"];
+				string number = sms_message_body["number"];
+
 				logger::logger(__FUNCTION__, "SMS Message: " + message);
+				logger::logger(__FUNCTION__, "SMS Number: " + number);
 				logger::logger(__FUNCTION__, "=============================");
 
 				//TODO: put a helper function
