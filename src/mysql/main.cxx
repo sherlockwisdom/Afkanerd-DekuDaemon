@@ -7,9 +7,8 @@ int main() {
 	
 	MYSQL *mysqlConnection;
 	MYSQL_RES *mysqlResult;
-	MYSQL_ROW mysqlRow;
 
-	string server = "localhost_1";
+	string server = "localhost";
 	string user = "root";
 	string password = "asshole";
 	string database = "__DEKU__";
@@ -22,6 +21,19 @@ int main() {
 	if( !mysql_connection_state_good ) {
 		cerr << "Failed to connect to database: " << mysql_error( mysqlConnection ) << endl;
 	}
+
+	auto mysql_query_state = mysql_query( mysqlConnection, "show tables");
+
+	if( mysql_query_state != 0 ) {
+		cerr << "Failed to query database: " << mysql_error( mysqlConnection ) << endl;
+	}
+
+	mysqlResult = mysql_use_result( mysqlConnection );
+
+	for(MYSQL_ROW mysqlRow = mysql_fetch_row( mysqlResult ); mysqlRow != NULL ; mysqlRow = mysql_fetch_row( mysqlResult ) ) {
+		cout << mysqlRow[0] << endl;
+	}
+	
 
 	return 0;
 }
