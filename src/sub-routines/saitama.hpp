@@ -26,14 +26,6 @@ namespace saitama {
 			// Using system here cus respond doesn't matter yet
 			logger::logger(__FUNCTION__, "Executing Bash: " + bash_command );
 			string system_respond = sys_calls::terminal_stdout( bash_command.c_str() );
-
-			/*
-			if( system_respond != 0 ) {
-				logger::logger(__FUNCTION__, "SAITAMA: command could have failed [" + to_string(system_respond) + "]");
-				return;
-			}
-			*/
-
 			cout << "SAITAMA EXECUTION: " << system_respond << endl;
 			return;
 		}

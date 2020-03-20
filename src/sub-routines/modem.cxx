@@ -155,7 +155,7 @@ vector<map<string,string>> Modem::get_sms_messages() const {
 
 //XXX: WORKING HERE ===================>
 void modem_sms_listener ( Modem* modem ) {
-	logger::logger(__FUNCTION__, "================> Initiating SMS listeners", "stdout", true);
+	logger::logger(__FUNCTION__, "==========> MODEM SMS LISTENER <============");
 	while( 1 ) {
 		logger::logger(__FUNCTION__, "Checking for SMS messages ->\n");
 		vector<map<string,string>> sms_messages = modem->get_sms_messages();
@@ -211,12 +211,6 @@ void modem_request_listener( Modem* modem ) {
 						sys_calls::make_dir( modem->getConfigs()["DIR_SUCCESS"] );
 					}
 
-					/*
-					cout << "Filename: " << request["filename"] << endl;
-					cout << "U_Filename: " << request["u_filename"] << endl;
-					cout << "Q_Filename: " << request["q_filename"] << endl;
-					*/
-
 					if(string locked_filename = request["filename"]; !sys_calls::rename_file(locked_filename, modem->getConfigs()["DIR_SUCCESS"] + "/" + request["q_filename"]) and !sys_calls::rename_file(modem->getConfigs()["DIR_SUCCESS"] + "/." + request["q_filename"], modem->getConfigs()["DIR_SUCCESS"] + "/" + request["q_filename"])) {
 						logger::logger(__FUNCTION__, modem->getInfo() + " - Failed to move file to DIR_SUCCESS", "stderr", true);
 						logger::logger_errno( errno );
@@ -251,10 +245,10 @@ void modem_request_listener( Modem* modem ) {
 
 void Modem::start() {
 	std::thread tr_modem_request_listener = std::thread(modem_request_listener, &*this);
-	tr_modem_request_listener.join();
 	
 	//TODO: Checks for incoming sms messages here
 	std::thread tr_modem_sms_listener = std::thread(modem_sms_listener, &*this);
+	tr_modem_request_listener.join();
 	tr_modem_sms_listener.join();
 }
 
