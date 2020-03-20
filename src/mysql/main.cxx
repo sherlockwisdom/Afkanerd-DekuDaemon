@@ -33,6 +33,9 @@ int main() {
 	for(MYSQL_ROW mysqlRow = mysql_fetch_row( mysqlResult ); mysqlRow != NULL ; mysqlRow = mysql_fetch_row( mysqlResult ) ) {
 		cout << mysqlRow[0] << endl;
 	}
+
+	mysql_free_result ( mysqlResult );
+	mysql_close ( mysqlConnection );
 	
 
 	return 0;
