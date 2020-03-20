@@ -165,9 +165,11 @@ void modem_sms_listener ( Modem* modem ) {
 				logger::logger(__FUNCTION__, "=============================");
 				string message = sms_message_body["message"];
 				string number = sms_message_body["number"];
+				string timestamp = sms_message_body["timestamp"];
 
 				logger::logger(__FUNCTION__, "SMS Message: " + message);
 				logger::logger(__FUNCTION__, "SMS Number: " + number);
+				logger::logger(__FUNCTION__, "SMS Timestamp: " + timestamp );
 				logger::logger(__FUNCTION__, "=============================");
 
 				//TODO: put a helper function
