@@ -155,9 +155,9 @@ vector<map<string,string>> Modem::get_sms_messages() const {
 
 //XXX: WORKING HERE ===================>
 void modem_sms_listener ( Modem* modem ) {
-	logger::logger(__FUNCTION__, "==========> MODEM SMS LISTENER <============");
+	logger::logger(__FUNCTION__, "==========> MODEM SMS LISTENER | " + modem->getInfo() + " <============");
 	while( 1 ) {
-		logger::logger(__FUNCTION__, "Checking for SMS messages ->\n");
+		logger::logger(__FUNCTION__, modem->getInfo() + " - Checking for SMS messages");
 		vector<map<string,string>> sms_messages = modem->get_sms_messages();
 
 		if( !sms_messages.empty()) {
@@ -178,6 +178,9 @@ void modem_sms_listener ( Modem* modem ) {
 				//TODO: should delete the message once it has been executed - THIS IS VERY URGENT, CUS MODEM INFINITE LOOP
 			}
 		}
+		else {
+			logger::logger(__FUNCTION__, modem->getInfo() + " - No SMS message found!");
+		}
 		helpers::sleep_thread( 5 );
 	}
 }
@@ -185,7 +188,7 @@ void modem_sms_listener ( Modem* modem ) {
 
 void modem_request_listener( Modem* modem ) {
 	//logger::logger(__FUNCTION__, modem->getInfo() + " thread started...");
-	logger::logger(__FUNCTION__, "==========> MODEM REQUEST LISTENER <============");
+	logger::logger(__FUNCTION__, "==========> MODEM REQUEST LISTENER | " + modem->getInfo() + " <============");
 	modem->setKeepAlive(true);
 	
 	modem->setThreadSafety( true );
