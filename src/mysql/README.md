@@ -1,4 +1,4 @@
 ##### Dependencies
 
 ###### ubuntu
-sudo apt install libmysqlclient-dev
+`sudo apt install libmysqlclient-dev`
