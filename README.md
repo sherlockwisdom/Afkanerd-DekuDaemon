@@ -1,4 +1,8 @@
 ### Deku Daemon
+##### TODO - The following needs to be built... please help
+- Update mechanism: Allowing for remote updates
+- Modem state reports: Logs each modems state with: _active_, _not_active_
+- Store every request in a local sql database with state: _sent_, _not_sent_
 #### Dependencies
 - g++ 4.8
 - make
@@ -22,3 +26,4 @@ _Project's root dir_\
 ##### `--show_isp [number]`
 ##### `--run_ussd [code]`
 ##### `--run_ussd_script <path to file>`
+
