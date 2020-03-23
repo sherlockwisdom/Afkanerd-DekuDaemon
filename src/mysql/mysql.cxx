@@ -38,7 +38,10 @@ map<string, vector<string>> MySQL::query( string query ) {
 		}
 	}
 	mysql_free_result ( mysqlResult );
-	//mysql_close ( mysqlConnection );
 
 	return query_results;
+}
+
+~MySQL::MySQL() {
+	mysql_close( this->mysqlConnection );
 }
