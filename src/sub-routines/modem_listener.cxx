@@ -87,9 +87,13 @@ void Modems::__INIT__( map<string, string> configs ) {
 		//logger::logger(__FUNCTION__, "Exited..");
 		logger::logger(__FUNCTION__, "Finished refreshing with " + to_string(tmp_modemCollection.size()) + " modems");
 		this->modemCollection = tmp_modemCollection;
+
+		// TODO: Should this take  up to 10 seconds?
+		// TODO: change this time to a variable
 		helpers::sleep_thread( 10 );
 	}
 }
+
 vector<string> Modems::getAllIndexes() {
 	vector<string> list;
 	for(auto modem : this->modemCollection ) {
