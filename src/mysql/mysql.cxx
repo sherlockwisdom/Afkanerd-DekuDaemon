@@ -1,3 +1,4 @@
+// TODO: build test scripts to make sure this works as planned
 #include "mysql.hpp"
 #include "../formatters/helpers.hpp"
 #include <cstring>
@@ -36,6 +37,8 @@ map<string, vector<string>> MySQL::query( string query ) {
 			query_results[row_header].push_back( mysqlRow[i] );
 		}
 	}
+	mysql_free_result ( mysqlResult );
+	//mysql_close ( mysqlConnection );
 
 	return query_results;
 }
