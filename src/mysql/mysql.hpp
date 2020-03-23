@@ -1,4 +1,8 @@
 #include <mysql.h>
+#include <iostream>
+#include <map>
+#include <vector>
+
 #ifndef mysql_H_INCLUDED_
 #define mysql_H_INCLUDED_
 
@@ -16,7 +20,7 @@ class MySQL {
 	MYSQL* mysqlConnection;
 	
 	public:
-	MySQL(string server, string username, string password, string database = "");
+	MySQL(string server, string username, string password, string database);
 	MySQL();
 
 	map<string, vector<string>> query( string );
