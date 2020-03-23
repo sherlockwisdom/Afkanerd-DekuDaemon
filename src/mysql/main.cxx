@@ -30,6 +30,12 @@ int main() {
 
 	mysqlResult = mysql_use_result( mysqlConnection );
 
+	MYSQL_FIELD *fields = mysql_fetch_fields( mysqlResult );
+	size_t num_fields = mysql_num_fields( mysqlResult );
+	for(size_t i=0;i<num_fields;++i) {
+		cout << "FIELD: " << fields[i].name << endl;
+	}
+
 	for(MYSQL_ROW mysqlRow = mysql_fetch_row( mysqlResult ); mysqlRow != NULL ; mysqlRow = mysql_fetch_row( mysqlResult ) ) {
 		auto num_of_fields = mysql_num_fields( mysqlResult );
 		for( size_t i = 0; i< num_of_fields; ++i) {
