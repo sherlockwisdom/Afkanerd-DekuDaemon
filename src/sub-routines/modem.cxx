@@ -247,6 +247,10 @@ void modem_request_listener( Modem* modem ) {
 				else {
 					// TODO: Iterate a counter here, and after 3x consider the modem exhausted, send a signal here to make some changes
 					modem->iterate_failed_counter();
+					if( modem->get_failed_counter() > 3 and modem->db_get_working_state() == "active") {
+						logger::logger(__FUNCTION__, modem->getInfo() + " - Setting DB state to exhausted!");
+						modem->db_set_working_state( MODEM::EXHAUSTED );
+					}
 					logger::logger(__FUNCTION__, modem->getInfo() + " - [" + request["id"] + "] Couldn't send SMS, unlocking file", "stderr", true);
 					//RELEASE FILE
 					if(string unlocked_filename = request["u_filename"]; !sys_calls::rename_file(request["filename"], unlocked_filename)) {

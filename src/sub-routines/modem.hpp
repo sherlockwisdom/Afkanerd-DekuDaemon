@@ -19,9 +19,11 @@ class Modem {
 
 	public:
 		enum STATE {TEST, PRODUCTION};
+		enum WORKING_STATE {ACTIVE, EXHAUSTED};
 		enum TYPE{SSH, MMCLI};
 
 		STATE state;
+		WORKING_STATE working_state;
 		Modem(map<string,string> configs, STATE state = TEST );
 		Modem(const Modem& modem);
 		~Modem();
