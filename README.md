@@ -3,6 +3,7 @@
 - Update mechanism: Allowing for remote updates
 - Modem state reports: Logs each modems state with: _active_, _not_active_
 - Store every request in a local sql database with state: _sent_, _not_sent_
+- Include Unit testing for every component
 #### Dependencies
 - g++ 4.8
 - make
