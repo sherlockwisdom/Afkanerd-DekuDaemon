@@ -11,7 +11,6 @@ class Modem {
 
 	bool keepAlive = false;
 	bool thread_safety = false;
-	bool working_state = true;
 
 	map<string,string> configs;
 	
@@ -43,7 +42,9 @@ class Modem {
 		string getIMEI() const;
 		string getErrorLogs();
 		string getInfo() const;
+
 		TYPE getType() const;
+		WORKING_STATE db_get_working_state() const;
 
 		explicit operator bool() const;
 		bool operator==(Modem modem) const;
@@ -55,6 +56,7 @@ class Modem {
 		bool send_sms(string message, string number);
 		bool mmcli_send_sms(string message, string number);
 		bool ssh_send_sms(string message, string number);
+		bool db_set_working_state( WORKING_STATE );
 		bool getKeepAlive() const;
 		bool getThreadSafety() const;
 
@@ -63,6 +65,8 @@ class Modem {
 		map<string, string> get_sms_message( string modem_index ) const;
 
 		vector<map<string,string>> get_sms_messages() const;
+
+		int get_failed_counter() const;
 	private:
 		TYPE type;
 };

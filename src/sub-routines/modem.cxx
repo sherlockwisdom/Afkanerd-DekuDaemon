@@ -26,6 +26,10 @@ void Modem::setIMEI( string IMEI ) {
 	this->imei = IMEI;
 }
 
+int Modem::get_failed_counter() const {
+	return this->failed_counter;
+}
+
 void Modem::setISP( string ISP ) {
 	this->isp = ISP.find(" ") != string::npos ? helpers::split(ISP, ' ', true)[0] : ISP;
 }
@@ -189,7 +193,7 @@ void modem_sms_listener ( Modem* modem ) {
 void Modem::reset_failed_counter() {
 	if( this->failed_counter > 0 or !this->working_state ) {
 		logger::logger(__FUNCTION__, this->getInfo() + " - Resetting failed counter");
-		this->working_state = true;
+		this->working_state = Modem::ACTIVE;
 		this->failed_counter = 0;
 	}
 }
@@ -200,9 +204,16 @@ void Modem::iterate_failed_counter() {
 
 	if( this->failed_counter > 3 and this->working_state ) { //TODO: make this changeable from systems settings
 		logger::logger(__FUNCTION__, this->getInfo() + "- Modem Exhaused Based On Fail Counter!", "stderr", true);
-		this->working_state = false;
+		this->working_state = Modem::EXHAUSTED;
 	}
 }
+
+Modem::WORKING_STATE Modem::db_get_working_state() const {
+}
+
+bool Modem::db_set_working_state( WORKING_STATE working_state )  {
+}
+
 
 void modem_request_listener( Modem* modem ) {
 	//logger::logger(__FUNCTION__, modem->getInfo() + " thread started...");
@@ -247,9 +258,9 @@ void modem_request_listener( Modem* modem ) {
 				else {
 					// TODO: Iterate a counter here, and after 3x consider the modem exhausted, send a signal here to make some changes
 					modem->iterate_failed_counter();
-					if( modem->get_failed_counter() > 3 and modem->db_get_working_state() == "active") {
+					if( modem->get_failed_counter() > 3 and modem->db_get_working_state() == Modem::EXHAUSTED) {
 						logger::logger(__FUNCTION__, modem->getInfo() + " - Setting DB state to exhausted!");
-						modem->db_set_working_state( MODEM::EXHAUSTED );
+						modem->db_set_working_state( Modem::EXHAUSTED );
 					}
 					logger::logger(__FUNCTION__, modem->getInfo() + " - [" + request["id"] + "] Couldn't send SMS, unlocking file", "stderr", true);
 					//RELEASE FILE
