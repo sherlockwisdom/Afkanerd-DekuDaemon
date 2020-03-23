@@ -196,8 +196,10 @@ void Modem::iterate_failed_counter() {
 	logger::logger(__FUNCTION__, this->getInfo() + " - Iterating failed counter");
 	++this->failed_counter;
 
-	if( this->failed_counter > 3 ) //TODO: make this changeable from systems settings
+	if( this->failed_counter > 3 and this->working_state ) { //TODO: make this changeable from systems settings
+		logger::logger(__FUNCTION__, this->getInfo() + "- Modem Exhaused Based On Fail Counter!", "stderr", true);
 		this->working_state = false;
+	}
 }
 
 void modem_request_listener( Modem* modem ) {
