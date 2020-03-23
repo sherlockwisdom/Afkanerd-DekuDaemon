@@ -186,6 +186,19 @@ void modem_sms_listener ( Modem* modem ) {
 	}
 }
 
+void Modem::reset_failed_counter() {
+	logger::logger(__FUNCTION__, this->getInfo() + " - Resetting failed counter");
+	this->working_state = true;
+	this->failed_counter = 0;
+}
+
+void Modem::iterate_failed_counter() {
+	logger::logger(__FUNCTION__, this->getInfo() + " - Iterating failed counter");
+	++this->failed_counter;
+
+	if( this->failed_counter > 3 ) //TODO: make this changeable from systems settings
+		this->working_state = false;
+}
 
 void modem_request_listener( Modem* modem ) {
 	//logger::logger(__FUNCTION__, modem->getInfo() + " thread started...");
@@ -208,6 +221,7 @@ void modem_request_listener( Modem* modem ) {
 				//From here we can know which message went and which failed, based on the ID
 				//TODO: What is an invalid message - find it so you can delete it
 				if( modem->send_sms( helpers::unescape_string(request["message"], '"'), request["number"] ) ) {
+					modem->reset_failed_counter();
 					logger::logger(__FUNCTION__, modem->getInfo() + " - [" + request["id"] + "] SMS sent successfully!", "stdout", true);
 					//DELETE FILE
 					if( !sys_calls::file_handlers( modem->getConfigs()["DIR_SUCCESS"], sys_calls::EXIST )) {
@@ -227,6 +241,8 @@ void modem_request_listener( Modem* modem ) {
 					//WRITE TO LOG FILE
 				}
 				else {
+					// TODO: Iterate a counter here, and after 3x consider the modem exhausted, send a signal here to make some changes
+					modem->iterate_failed_counter();
 					logger::logger(__FUNCTION__, modem->getInfo() + " - [" + request["id"] + "] Couldn't send SMS, unlocking file", "stderr", true);
 					//RELEASE FILE
 					if(string unlocked_filename = request["u_filename"]; !sys_calls::rename_file(request["filename"], unlocked_filename)) {
@@ -248,6 +264,7 @@ void modem_request_listener( Modem* modem ) {
 }
 
 void Modem::start() {
+	// Looking for pending request messages
 	std::thread tr_modem_request_listener = std::thread(modem_request_listener, &*this);
 	
 	//TODO: Checks for incoming sms messages here

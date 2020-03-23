@@ -11,9 +11,12 @@ class Modem {
 
 	bool keepAlive = false;
 	bool thread_safety = false;
-	map<string,string> configs;
+	bool working_state = true;
 
+	map<string,string> configs;
 	
+	int failed_counter = 0;
+
 	public:
 		enum STATE {TEST, PRODUCTION};
 		enum TYPE{SSH, MMCLI};
@@ -30,6 +33,8 @@ class Modem {
 		void start();
 		void setThreadSafety( bool thread_safety );
 		void setType( string type );
+		void reset_failed_counter();
+		void iterate_failed_counter();
 
 		string getIndex() const;
 		string getISP() const;
