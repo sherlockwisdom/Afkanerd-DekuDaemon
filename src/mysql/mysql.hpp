@@ -22,6 +22,7 @@ class MySQL {
 	public:
 	MySQL(string server, string username, string password, string database);
 	MySQL();
+	~MySQL();
 
 	map<string, vector<string>> query( string );
 
