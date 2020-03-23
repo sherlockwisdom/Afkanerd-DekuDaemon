@@ -187,9 +187,11 @@ void modem_sms_listener ( Modem* modem ) {
 }
 
 void Modem::reset_failed_counter() {
-	logger::logger(__FUNCTION__, this->getInfo() + " - Resetting failed counter");
-	this->working_state = true;
-	this->failed_counter = 0;
+	if( this->failed_counter > 0 or !this->working_state ) {
+		logger::logger(__FUNCTION__, this->getInfo() + " - Resetting failed counter");
+		this->working_state = true;
+		this->failed_counter = 0;
+	}
 }
 
 void Modem::iterate_failed_counter() {
