@@ -27,6 +27,10 @@ void Modems::set_modem_sleep_time( int sleep_time ) {
 	this->modem_sleep_time = sleep_time;
 }
 
+void Modems::set_exhaust_count( int modem_exhaust_count ) {
+	this->modem_exhaust_count = modem_exhaust_count;
+}
+
 void Modems::__INIT__( map<string, string> configs ) {
 
 	while( 1 ) { //TODO: Use a variable to control this loop

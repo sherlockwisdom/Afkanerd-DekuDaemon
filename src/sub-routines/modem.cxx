@@ -37,9 +37,12 @@ void Modem::setISP( string ISP ) {
 	this->isp = ISP.find(" ") != string::npos ? helpers::split(ISP, ' ', true)[0] : ISP;
 }
 
+void Modem::set_modem_exhaust( int modem_exhaust_counts ) {
+	this->modem_exhaust_counts = modem_exhaust_counts;
+}
+
 void Modem::setIndex( string index ) {
 	this->index = index;
-	
 	this->type = index.find("192.168.") != string::npos ? SSH : MMCLI;
 }
 
@@ -230,7 +233,7 @@ bool Modem::db_set_working_state( WORKING_STATE working_state )  {
 	}
 
 	//MysQL interaction comes in here
-	string query = "UPDATE MODEM SET __DEKU__.__STATUS__ = 'exhausted' WHERE IMEI = " + this->imei;
+	string query = "UPDATE MODEMS SET __DEKU__.STATE = 'exhausted' WHERE IMEI = " + this->imei;
 	map<string, vector<string>> responds = this->mysqlConnector.query( query );
 
 	//Allows the modem connection to MySQL server, in case of db locking
@@ -271,8 +274,7 @@ void modem_request_listener( Modem* modem ) {
 					//TODO: Delete SMS job
 
 					if(string locked_filename = request["filename"]; !sys_calls::rename_file(locked_filename, modem->getConfigs()["DIR_SUCCESS"] + "/" + request["q_filename"]) and !sys_calls::rename_file(modem->getConfigs()["DIR_SUCCESS"] + "/." + request["q_filename"], modem->getConfigs()["DIR_SUCCESS"] + "/" + request["q_filename"])) {
-						logger::logger(__FUNCTION__, modem->getInfo() + " - Failed to move file to DIR_SUCCESS", "stderr", true);
-						logger::logger_errno( errno );
+						logger::logger(__FUNCTION__, modem->getInfo() + " - Failed to move file to DIR_SUCCESS", "stderr", true); logger::logger_errno( errno );
 					}
 				
 					else {

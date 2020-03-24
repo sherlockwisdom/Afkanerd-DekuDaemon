@@ -31,6 +31,11 @@ int main(int argc, char** argv) {
 	Modems::STATE RUNNING_MODE = Modems::TEST;
 
 	int sleep_time = 10; // 10 seconds
+	int exhaust_count = 3; // 10 seconds
+
+	//Modems modems( Modems::PRODUCTION );
+	Modems modems( RUNNING_MODE );
+
 	if(argc < 2 ) {
 		logger::logger(__FUNCTION__, "Usage: -c <path_to_config_file>", "stderr", true);
 		return 1;
@@ -72,12 +77,25 @@ int main(int argc, char** argv) {
 				if(i+1< argc) {
 					sleep_time = atoi(((string)argv[i+1]).c_str());
 					if( sleep_time < 3 ) {
-						logger::logger(__FUNCTION__, "Min sleep time = 3 seconds, setting default to 10", "stderr", true);
-						sleep_time = 10; //TODO: Change - default should come from config file
+						logger::logger(__FUNCTION__, "min sleep time = 3 seconds, setting default to 10", "stderr", true);
+						sleep_time = 10; //todo: change - default should come from config file
 					}
+					logger::logger(__FUNCTION__, "Setting Modem sleep time at: " + (string)argv[i+1] + " seconds", "stdout", true);
+					modems.set_modem_sleep_time( sleep_time );
 				}
 			}
 
+			else if((string)argv[i] == "--exhaust_count") {
+				if(i+1< argc) {
+					exhaust_count = atoi(((string)argv[i+1]).c_str());
+					if( sleep_time < 1 ) {
+						logger::logger(__FUNCTION__, "min exhaust count = 1 tries, setting default to 3", "stderr", true);
+						exhaust_count = 3; //todo: change - default should come from config file
+					}
+				}
+				logger::logger(__FUNCTION__, "Setting Modem Exhausted at: " + (string)argv[i+1] + " tries", "stdout", true);
+				modems.set_exhaust_count( exhaust_count );
+			}
 		}
 	}
 
@@ -96,10 +114,6 @@ int main(int argc, char** argv) {
 	for(auto i : configs ) {
 		logger::logger("[CONFIGS]:", i.first + "=" + i.second, "stdout", true);
 	}
-
-	//Modems modems( Modems::PRODUCTION );
-	Modems modems( RUNNING_MODE );
-	modems.set_modem_sleep_time( sleep_time );
 
 	//TODO: Pass all configs using refreences, so changes get loaded in real time
 	std::thread tr_modem_listeners = std::thread(&Modems::__INIT__, std::ref(modems), configs);
