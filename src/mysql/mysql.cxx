@@ -64,6 +64,9 @@ map<string, vector<string>> MySQL::query( string query ) {
 	return query_results;
 }
 
-MySQL::~MySQL() {
+void MySQL::close() {
 	mysql_close( this->mysqlConnection );
+}
+
+MySQL::~MySQL() {
 }

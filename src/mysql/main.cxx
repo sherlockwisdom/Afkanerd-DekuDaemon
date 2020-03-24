@@ -1,4 +1,5 @@
 #include <mysql.h>
+#include <iostream>
 
 using namespace std;
 
@@ -10,7 +11,8 @@ int main() {
 	string server = "localhost";
 	string user = "root";
 	string password = "asshole";
-	string database = "__DEKU__";
+	//string database = "__DEKU__";
+	string database = "";
 
 
 	mysqlConnection = mysql_init( NULL );

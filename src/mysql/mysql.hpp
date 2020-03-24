@@ -30,6 +30,7 @@ class MySQL {
 
 	//TODO: Put some getters and setters
 	void setConnectionDetails( string server, string user, string password, string database );
+	void close();
 };
 
 #endif
