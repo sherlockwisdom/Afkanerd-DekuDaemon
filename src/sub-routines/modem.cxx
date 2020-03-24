@@ -223,8 +223,7 @@ void Modem::iterate_failed_counter() {
 	}
 }
 
-Modem::WORKING_STATE Modem::db_get_working_state() const {
-	return this->working_state;
+Modem::WORKING_STATE Modem::db_get_working_state() const { return this->working_state;
 }
 
 bool Modem::db_set_working_state( WORKING_STATE working_state )  {
@@ -242,7 +241,8 @@ bool Modem::db_set_working_state( WORKING_STATE working_state )  {
 	}
 
 	//MysQL interaction comes in here
-	string query = "UPDATE MODEMS SET __DEKU__.STATE = 'exhausted' WHERE IMEI = " + this->imei;
+	//TODO: working_state not a string 'exhausted' like below
+	string query = "UPDATE __DEKU__.MODEMS SET STATE = 'exhausted' WHERE IMEI = " + this->imei;
 	map<string, vector<string>> responds = this->mysqlConnector.query( query );
 
 	//Allows the modem connection to MySQL server, in case of db locking

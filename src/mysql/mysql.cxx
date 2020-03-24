@@ -25,7 +25,7 @@ bool MySQL::connect() {
 	auto mysql_connection_state_good = mysql_real_connect( this->mysqlConnection, this->server.c_str(), this->user.c_str(), this->password.c_str(), this->database.c_str(), 0, NULL, 0);
 
 	if( !mysql_connection_state_good ) {
-		const char *mysql_error_msg = mysql_error( mysqlConnection );
+		const char *mysql_error_msg = mysql_error( this->mysqlConnection );
 		logger::logger(__FUNCTION__, "Failed to connect to database: " + string( mysql_error_msg, strlen(mysql_error_msg)), "stderr");
 
 		return false;
@@ -39,15 +39,16 @@ MySQL::MySQL() {
 }
 
 map<string, vector<string>> MySQL::query( string query ) {
+	logger::logger(__FUNCTION__, "Querying with: " + query );
 	map<string, vector<string>> query_results;
 	auto mysql_query_state = mysql_query( this->mysqlConnection, query.c_str() );
 
 	if( mysql_query_state != 0 ) {
-		const char *mysql_error_msg = mysql_error( mysqlConnection );
+		const char *mysql_error_msg = mysql_error( this->mysqlConnection );
 		logger::logger(__FUNCTION__, "Failed to query database: " + string( mysql_error_msg, strlen(mysql_error_msg)), "stderr");
 	}
 
-	MYSQL_RES *mysqlResult = mysql_use_result( mysqlConnection );
+	MYSQL_RES *mysqlResult = mysql_use_result( this->mysqlConnection );
 
 	MYSQL_FIELD *fields = mysql_fetch_fields( mysqlResult );
 	for(MYSQL_ROW mysqlRow = mysql_fetch_row( mysqlResult ); mysqlRow != NULL ; mysqlRow = mysql_fetch_row( mysqlResult ) ) {
