@@ -6,13 +6,26 @@
 
 using namespace std;
 
-MySQL::MySQL(string server, string username, string password, string database = "" ) {
+MySQL::MySQL(string server, string user, string password, string database = "" ) {
 	this->server = server;
-	this->username = username;
+	this->user = user;
 	this->password = password;
 	this->database = database;
 
 	mysqlConnection = mysql_init( NULL );
+}
+
+bool MySQL::connect() {
+	auto mysql_connection_state_good = mysql_real_connect( this->mysqlConnection, this->server.c_str(), this->user.c_str(), this->password.c_str(), this->database.c_str(), 0, NULL, 0);
+
+	if( !mysql_connection_state_good ) {
+		const char *mysql_error_msg = mysql_error( mysqlConnection );
+		logger::logger(__FUNCTION__, "Failed to connect to database: " + string( mysql_error_msg, strlen(mysql_error_msg)), "stderr");
+
+		return false;
+	}
+
+	return true;
 }
 
 MySQL::MySQL() {}
@@ -22,7 +35,8 @@ map<string, vector<string>> MySQL::query( string query ) {
 	auto mysql_query_state = mysql_query( this->mysqlConnection, query.c_str() );
 
 	if( mysql_query_state != 0 ) {
-		logger::logger(__FUNCTION__, "Failed to query database: " + string(mysql_error( mysqlConnection ), strlen(mysql_error( mysqlConnection))), "stderr");
+		const char *mysql_error_msg = mysql_error( mysqlConnection );
+		logger::logger(__FUNCTION__, "Failed to query database: " + string( mysql_error_msg, strlen(mysql_error_msg)), "stderr");
 	}
 
 	MYSQL_RES *mysqlResult = mysql_use_result( mysqlConnection );

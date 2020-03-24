@@ -13,18 +13,20 @@ class MySQL {
 	
 	private:
 	string server;
-	string username;
+	string user;
 	string password;
 	string database;
 	
 	MYSQL* mysqlConnection;
 	
 	public:
-	MySQL(string server, string username, string password, string database);
+	MySQL(string server, string user, string password, string database);
 	MySQL();
 	~MySQL();
 
 	map<string, vector<string>> query( string );
+
+	bool connect();
 
 	//TODO: Put some getters and setters
 };
