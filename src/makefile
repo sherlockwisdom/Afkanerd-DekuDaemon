@@ -1,11 +1,13 @@
 CC = g++
 CFLAGS = -g -Wall -pthread -std=c++1z
 TARGET = start
+MYSQL_CONFIGS := $(shell mysql_config --cflags)
+MYSQL_LIBS := $(shell mysql_config --libs)
 
 default: $(TARGET)
 
 $(TARGET): $(TARGET).cxx
-	$(CC) $(CFLAGS) -o $(TARGET) $(TARGET).cxx
+	$(CC) $(CFLAGS) -o $(TARGET) $(TARGET).cxx $(MYSQL_CONFIGS) $(MYSQL_LIBS)
 
 epoll: epoll.cxx
 	$(CC) $(CFLAGS) -o epoll epoll.cxx

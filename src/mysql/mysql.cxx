@@ -1,5 +1,4 @@
 // TODO: build test scripts to make sure this works as planned
-#include "mysql.hpp"
 #include "../formatters/helpers.hpp"
 #include <cstring>
 #include <iostream>
@@ -12,7 +11,14 @@ MySQL::MySQL(string server, string user, string password, string database = "" )
 	this->password = password;
 	this->database = database;
 
-	mysqlConnection = mysql_init( NULL );
+	this->mysqlConnection = mysql_init( NULL );
+}
+
+void MySQL::setConnectionDetails( string server, string user, string password, string database = "") {
+	this->server = server;
+	this->user = user;
+	this->password = password;
+	this->database = database;
 }
 
 bool MySQL::connect() {
@@ -28,7 +34,9 @@ bool MySQL::connect() {
 	return true;
 }
 
-MySQL::MySQL() {}
+MySQL::MySQL() {
+	this->mysqlConnection = mysql_init( NULL );
+}
 
 map<string, vector<string>> MySQL::query( string query ) {
 	map<string, vector<string>> query_results;

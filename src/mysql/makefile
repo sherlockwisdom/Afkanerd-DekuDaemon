@@ -2,6 +2,7 @@ CC = g++
 CFLAGS = -g -Wall -pthread -std=c++1z -c 
 MYSQL_CONFIGS := $(shell mysql_config --cflags)
 MYSQL_LIBS := $(shell mysql_config --libs)
+
 TARGET = main
 MYSQL_OBJECTS = mysql
 

@@ -1,3 +1,6 @@
+MYSQL_CONFIGS := $(shell mysql_config --cflags)
+MYSQL_LIBS := $(shell mysql_config --libs)
+
 all:
 	g++ daemon.cxx -o daemon -pthread -g -std=c++1z
 helpers:
