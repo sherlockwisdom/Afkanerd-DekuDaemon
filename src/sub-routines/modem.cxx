@@ -219,7 +219,7 @@ bool Modem::db_set_working_state( WORKING_STATE working_state )  {
 	this->working_state = working_state;
 
 	//TODO: Maybe MYSQL database is passed but not registered here, so keep that in mind
-	this->mysqlConnector.setConnectionDetails( configs["MYSQL_SERVER"], configs["MYSQL_USER"], configs["MYSQL_PASSWORD"]);
+	this->mysqlConnector.setConnectionDetails( configs["MYSQL_SERVER"], configs["MYSQL_USER"], configs["MYSQL_PASSWORD"], configs["MYSQL_DATABASE"]);
 	if( !this->mysqlConnector.connect() ) {
 		logger::logger(__FUNCTION__, "Modem MYSQL connection failed", "stderr", true);
 		exit( 1 );
@@ -302,10 +302,18 @@ void modem_request_listener( Modem* modem ) {
 			helpers::sleep_thread( 3 );
 			continue;
 		}
-		helpers::sleep_thread( 10 );
+		helpers::sleep_thread( modem->get_sleep_time() );
 	}
 	modem->setThreadSafety(false);
 	//logger::logger(__FUNCTION__, modem->getInfo() + " - KeepAlive died!" );
+}
+
+int Modem::get_sleep_time() const {
+	return this->sleep_time;
+}
+
+void Modem::set_sleep_time( int sleep_time ) {
+	this->sleep_time = sleep_time;
 }
 
 void Modem::start() {

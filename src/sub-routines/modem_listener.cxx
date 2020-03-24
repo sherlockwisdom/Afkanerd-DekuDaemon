@@ -23,6 +23,10 @@ Modems::Modems() {
 	logger::show_state = "TESTING";
 }
 
+void Modems::set_modem_sleep_time( int sleep_time ) {
+	this->modem_sleep_time = sleep_time;
+}
+
 void Modems::__INIT__( map<string, string> configs ) {
 
 	while( 1 ) { //TODO: Use a variable to control this loop
@@ -42,6 +46,7 @@ void Modems::__INIT__( map<string, string> configs ) {
 			
 			Modem modem( configs, modem_state );
 			modem.setIndex( index );
+			modem.set_sleep_time( this->modem_sleep_time );
 			string modem_information = modem.getType() == Modem::SSH ? sys_calls::terminal_stdout("ssh root@"+index+" -o 'ServerAliveInterval 10' deku") : sys_calls::terminal_stdout(configs["DIR_SCRIPTS"] + "/modem_information_extraction.sh extract " + index );
 			vector<string> ln_modem_information = helpers::split(modem_information, '\n', true);
 

@@ -9,6 +9,7 @@ using namespace std;
 class Modems {
 	vector<Modem*> modemCollection;
 	map<Modem*, std::thread> threaded_modems;
+	int modem_sleep_time = 10;
 	public:
 		enum STATE{TEST, PRODUCTION};
 		STATE state;
@@ -17,6 +18,7 @@ class Modems {
 
 		void __INIT__( map<string,string> configs );
 		void startAllModems();
+		void set_modem_sleep_time( int );
 		
 		vector<string> getAllIndexes();
 		vector<string> getAllISP();

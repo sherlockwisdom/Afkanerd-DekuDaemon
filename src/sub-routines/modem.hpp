@@ -18,6 +18,7 @@ class Modem {
 	map<string,string> configs;
 	
 	int failed_counter = 0;
+	int sleep_time = 10;
 
 	MySQL mysqlConnector;
 
@@ -41,6 +42,7 @@ class Modem {
 		void setType( string type );
 		void reset_failed_counter();
 		void iterate_failed_counter();
+		void set_sleep_time( int );
 
 		string getIndex() const;
 		string getISP() const;
@@ -72,6 +74,7 @@ class Modem {
 		vector<map<string,string>> get_sms_messages() const;
 
 		int get_failed_counter() const;
+		int get_sleep_time() const;
 	private:
 		TYPE type;
 };
