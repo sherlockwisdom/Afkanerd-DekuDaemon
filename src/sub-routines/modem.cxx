@@ -23,10 +23,18 @@ Modem::Modem(const Modem& modem) {
 	this->configs = modem.getConfigs();
 	this->state = modem.state;
 	this->type = modem.getType();
+	this->failed_counter = modem.get_failed_counter();
+	this->sleep_time = modem.get_sleep_time();
+	this->exhaust_count = modem.get_exhaust_count();
+	this->mysqlConnector = modem.get_mysql_connector();
 }
 
 void Modem::setIMEI( string IMEI ) {
 	this->imei = IMEI;
+}
+
+MySQL Modem::get_mysql_connector() const {
+	return this->mysqlConnector;
 }
 
 int Modem::get_failed_counter() const {
@@ -38,6 +46,7 @@ void Modem::setISP( string ISP ) {
 }
 
 void Modem::set_exhaust_count( int modem_exhaust_counts ) {
+	logger::logger(__FUNCTION__, this->getInfo() + " - Setting Exhaust count to: " + to_string( modem_exhaust_counts ));
 	this->exhaust_count = modem_exhaust_counts;
 }
 
@@ -286,7 +295,11 @@ void modem_request_listener( Modem* modem ) {
 				else {
 					// TODO: Iterate a counter here, and after 3x consider the modem exhausted, send a signal here to make some changes
 					modem->iterate_failed_counter();
-					if( modem->get_failed_counter() >= modem->get_exhaust_count() and modem->db_get_working_state() != Modem::EXHAUSTED) {
+					logger::logger(__FUNCTION__, modem->getInfo() + " - Exhaust count(" + to_string(modem->get_exhaust_count()) + ")");
+					if( modem->get_failed_counter() >= modem->get_exhaust_count()
+					//and 
+					//modem->db_get_working_state() != Modem::EXHAUSTED 
+					){
 						logger::logger(__FUNCTION__, modem->getInfo() + " - Setting DB state to exhausted!");
 						modem->db_set_working_state( Modem::EXHAUSTED );
 					}

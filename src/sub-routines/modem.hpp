@@ -78,6 +78,8 @@ class Modem {
 		int get_failed_counter() const;
 		int get_sleep_time() const;
 		int get_exhaust_count() const;
+
+		MySQL get_mysql_connector() const;
 	private:
 		TYPE type;
 };
