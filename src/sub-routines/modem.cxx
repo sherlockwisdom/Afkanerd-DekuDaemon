@@ -204,11 +204,11 @@ void Modem::reset_failed_counter() {
 }
 
 void Modem::iterate_failed_counter() {
-	logger::logger(__FUNCTION__, this->getInfo() + " - Iterating failed counter");
+	logger::logger(__FUNCTION__, this->getInfo() + " - Iterating failed counter to: " + to_string( this->failed_counter + 1));
 	++this->failed_counter;
 
-	if( this->failed_counter > 3 and this->working_state ) { //TODO: make this changeable from systems settings
-		logger::logger(__FUNCTION__, this->getInfo() + "- Modem Exhaused Based On Fail Counter!", "stderr", true);
+	if( this->failed_counter > 3 and this->working_state == Modem::ACTIVE ) { //TODO: make this changeable from systems settings
+		logger::logger(__FUNCTION__, this->getInfo() + "- Modem Exhausted Based On Fail Counter!", "stderr", true);
 		this->working_state = Modem::EXHAUSTED;
 	}
 }
@@ -255,6 +255,8 @@ void modem_request_listener( Modem* modem ) {
 						sys_calls::make_dir( modem->getConfigs()["DIR_SUCCESS"] );
 					}
 
+					//TODO: Delete SMS job
+
 					if(string locked_filename = request["filename"]; !sys_calls::rename_file(locked_filename, modem->getConfigs()["DIR_SUCCESS"] + "/" + request["q_filename"]) and !sys_calls::rename_file(modem->getConfigs()["DIR_SUCCESS"] + "/." + request["q_filename"], modem->getConfigs()["DIR_SUCCESS"] + "/" + request["q_filename"])) {
 						logger::logger(__FUNCTION__, modem->getInfo() + " - Failed to move file to DIR_SUCCESS", "stderr", true);
 						logger::logger_errno( errno );
@@ -298,9 +300,9 @@ void Modem::start() {
 	std::thread tr_modem_request_listener = std::thread(modem_request_listener, &*this);
 	
 	//TODO: Checks for incoming sms messages here
-	std::thread tr_modem_sms_listener = std::thread(modem_sms_listener, &*this);
+	//std::thread tr_modem_sms_listener = std::thread(modem_sms_listener, &*this);
 	tr_modem_request_listener.join();
-	tr_modem_sms_listener.join();
+	//tr_modem_sms_listener.join();
 }
 
 bool Modem::end() {
