@@ -49,6 +49,18 @@ map<string, vector<string>> MySQL::query( string query ) {
 	}
 
 	MYSQL_RES *mysqlResult = mysql_use_result( this->mysqlConnection );
+	if( !mysqlResult) {
+		// TODO: https://dev.mysql.com/doc/refman/8.0/en/mysql-field-count.html
+		logger::logger(__FUNCTION__, "Number of Affected Rows: " + to_string(mysql_affected_rows(this->mysqlConnection)));
+		return query_results;
+	}
+
+	size_t num_fields = mysql_num_fields( mysqlResult );
+	logger::logger(__FUNCTION__, "Number of SQL results fields: " + to_string( num_fields ));
+
+	if( num_fields < 1 ) {
+		return query_results;
+	}
 
 	MYSQL_FIELD *fields = mysql_fetch_fields( mysqlResult );
 	for(MYSQL_ROW mysqlRow = mysql_fetch_row( mysqlResult ); mysqlRow != NULL ; mysqlRow = mysql_fetch_row( mysqlResult ) ) {
