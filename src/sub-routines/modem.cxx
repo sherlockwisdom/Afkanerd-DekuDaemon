@@ -37,8 +37,8 @@ void Modem::setISP( string ISP ) {
 	this->isp = ISP.find(" ") != string::npos ? helpers::split(ISP, ' ', true)[0] : ISP;
 }
 
-void Modem::set_modem_exhaust( int modem_exhaust_counts ) {
-	this->modem_exhaust_counts = modem_exhaust_counts;
+void Modem::set_exhaust_count( int modem_exhaust_counts ) {
+	this->exhaust_count = modem_exhaust_counts;
 }
 
 void Modem::setIndex( string index ) {
@@ -286,7 +286,7 @@ void modem_request_listener( Modem* modem ) {
 				else {
 					// TODO: Iterate a counter here, and after 3x consider the modem exhausted, send a signal here to make some changes
 					modem->iterate_failed_counter();
-					if( modem->get_failed_counter() > 3 and modem->db_get_working_state() == Modem::EXHAUSTED) {
+					if( modem->get_failed_counter() >= modem->get_exhaust_count() and modem->db_get_working_state() != Modem::EXHAUSTED) {
 						logger::logger(__FUNCTION__, modem->getInfo() + " - Setting DB state to exhausted!");
 						modem->db_set_working_state( Modem::EXHAUSTED );
 					}
@@ -312,6 +312,10 @@ void modem_request_listener( Modem* modem ) {
 
 int Modem::get_sleep_time() const {
 	return this->sleep_time;
+}
+
+int Modem::get_exhaust_count() const {
+	return this->exhaust_count;
 }
 
 void Modem::set_sleep_time( int sleep_time ) {

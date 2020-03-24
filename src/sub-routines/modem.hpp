@@ -19,7 +19,7 @@ class Modem {
 	
 	int failed_counter = 0;
 	int sleep_time = 10;
-	int modem_exhaust_counts = 3;
+	int exhaust_count = 3;
 
 	MySQL mysqlConnector;
 
@@ -41,7 +41,7 @@ class Modem {
 		void start();
 		void setThreadSafety( bool thread_safety );
 		void setType( string type );
-		void set_modem_exhaust( int );
+		void set_exhaust_count( int );
 		void reset_failed_counter();
 		void iterate_failed_counter();
 		void set_sleep_time( int );
@@ -77,6 +77,7 @@ class Modem {
 
 		int get_failed_counter() const;
 		int get_sleep_time() const;
+		int get_exhaust_count() const;
 	private:
 		TYPE type;
 };
