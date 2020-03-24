@@ -1,4 +1,7 @@
+#include <map>
+#include <vector>
 #include <thread>
+#include "../mysql/mysql.hpp"
 #ifndef MODEM_H_INCLUDED_
 #define MODEM_H_INCLUDED_
 using namespace std;
@@ -15,6 +18,8 @@ class Modem {
 	map<string,string> configs;
 	
 	int failed_counter = 0;
+
+	MySQL mysqlConnector;
 
 	public:
 		enum STATE {TEST, PRODUCTION};

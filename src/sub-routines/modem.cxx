@@ -3,6 +3,7 @@
 #include <iostream>
 #include <thread>
 #include <mutex>
+#include "../mysql/mysql.cxx"
 #include "../sys_calls/sys_calls.hpp"
 #include "request_distribution_listener.cxx"
 using namespace std;
@@ -12,6 +13,8 @@ std::mutex blocking_mutex;
 Modem::Modem(map<string,string> configs, STATE state ) {
 	this->configs = configs;
 	this->state = state;
+
+	this->mysqlConnector.setConnectionDetails( configs["server"], configs["user"], configs["password"], configs["database"] );
 }
 
 Modem::Modem(const Modem& modem) {
@@ -210,9 +213,15 @@ void Modem::iterate_failed_counter() {
 }
 
 Modem::WORKING_STATE Modem::db_get_working_state() const {
+	return this->working_state;
 }
 
 bool Modem::db_set_working_state( WORKING_STATE working_state )  {
+	this->working_state = working_state;
+
+	//MysQL interaction comes in here
+	string query = "UPDATE MODEM SET __STATUS__ = 'exhausted' WHERE IMEI = " + this->imei;
+	map<string, vector<string>> responds = this->mysqlConnector.query( query );
 }
 
 
