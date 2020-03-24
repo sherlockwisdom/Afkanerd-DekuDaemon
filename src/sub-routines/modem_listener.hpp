@@ -11,6 +11,8 @@ class Modems {
 	map<Modem*, std::thread> threaded_modems;
 	int modem_sleep_time = 10;
 	int modem_exhaust_count = 3;
+	
+	MySQL mysqlConnection;
 	public:
 		enum STATE{TEST, PRODUCTION};
 		STATE state;

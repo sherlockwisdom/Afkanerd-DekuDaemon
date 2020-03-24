@@ -32,6 +32,13 @@ void Modems::set_exhaust_count( int modem_exhaust_count ) {
 }
 
 void Modems::__INIT__( map<string, string> configs ) {
+	this->mysqlConnection.setConnectionDetails( configs["MYSQL_SERVER"], configs["MYSQL_USER"], configs["MYSQL_PASSWORD"], configs["MYSQL_DATABASE"]);
+	if( !this->mysqlConnection.connect()) {
+		logger::logger(__FUNCTION__, " - Failed connecting to MYSQL database!", "stderr", true);
+		exit( 1 );
+	}
+
+	logger::logger(__FUNCTION__, " - MYSQL Connection Established!", "stdout", true);
 
 	while( 1 ) { //TODO: Use a variable to control this loop
 		logger::logger(__FUNCTION__, "Refreshing modem list..");
@@ -86,6 +93,14 @@ void Modems::__INIT__( map<string, string> configs ) {
 			if(it_modemCollection == this->modemCollection.end()) {
 				logger::logger(__FUNCTION__, modem.getInfo() + " - Not found in list");
 				if(modem) {
+					string insert_modem_query = "INSERT INTO __DEKU__.MODEMS (IMEI, TYPE, STATE, POWER) VALUES("
+					+ modem.getIMEI() 
+					+ "," 
+					+ helpers::to_lowercase(modem.getType() == Modem::MMCLI ? "\"MMCLI\"" : "\"SSH\"") 
+					+ ",\"active\"," +
+					+ "\"plugged\")";
+					this->mysqlConnection.query( insert_modem_query );
+
 					logger::logger(__FUNCTION__, modem.getInfo() + " - Adding modem to list");
 					tmp_modemCollection.push_back( new Modem(modem) );
 				}
