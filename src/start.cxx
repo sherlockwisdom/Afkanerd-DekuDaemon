@@ -80,6 +80,10 @@ int main(int argc, char** argv) {
 	// Then after the checks, it moves set the variables for global use
 	map<string,string> configs = get_system_configs( helpers::read_file( PATH_SYS_FILE ));
 
+	for(auto i : configs ) {
+		logger::logger("[CONFIGS]:", i.first + "=" + i.second, "stdout", true);
+	}
+
 	//Modems modems( Modems::PRODUCTION );
 	Modems modems( RUNNING_MODE );
 

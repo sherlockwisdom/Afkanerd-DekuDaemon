@@ -14,7 +14,8 @@ Modem::Modem(map<string,string> configs, STATE state ) {
 	this->configs = configs;
 	this->state = state;
 
-	this->mysqlConnector.setConnectionDetails( configs["server"], configs["user"], configs["password"], configs["database"] );
+	//TODO: Maybe MYSQL database is passed but not registered here, so keep that in mind
+	this->mysqlConnector.setConnectionDetails( configs["MYSQL_SERVER"], configs["MYSQL_USER"], configs["MYSQL_PASSWORD"]);
 }
 
 Modem::Modem(const Modem& modem) {
@@ -220,7 +221,7 @@ bool Modem::db_set_working_state( WORKING_STATE working_state )  {
 	this->working_state = working_state;
 
 	//MysQL interaction comes in here
-	string query = "UPDATE MODEM SET __STATUS__ = 'exhausted' WHERE IMEI = " + this->imei;
+	string query = "UPDATE MODEM SET __DEKU__.__STATUS__ = 'exhausted' WHERE IMEI = " + this->imei;
 	map<string, vector<string>> responds = this->mysqlConnector.query( query );
 }
 
