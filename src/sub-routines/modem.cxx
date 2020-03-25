@@ -312,19 +312,17 @@ void modem_request_listener( Modem* modem ) {
 					){
 						// TODO: Deactivate modem if not activated
 						// TODO: Make inclusion of this code dynamic than hard coded
-						vector<string> ussd;
+						string ussd_command;
 						if( modem->getISP() == "MTN" and modem->getType() == Modem::MMCLI) { 
-							ussd.push_back("*158*0#");
-							ussd.push_back("1");
-							ussd.push_back("1");
+							ussd_command = "*158*0#{Unlimitext}|1{You will not be refunded}|1{successfully cancelled}";
 						}
 
-						if( ussd.empty() ) {
+						if( ussd_command.empty() ) {
 							logger::logger(__FUNCTION__, modem->getInfo() + " - No Exhausted USSD for ISP");
 						}
 
 						else {
-							multimap<string,string> ussd_responses = modem->initiate_series( ussd );
+							multimap<string,string> ussd_responses = modem->initiate_series( ussd_command );
 							for(auto response : ussd_responses ) {
 								logger::logger("[DE-USSD]:", response.first + " => " + response.second  );
 							}
