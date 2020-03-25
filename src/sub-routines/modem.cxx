@@ -231,6 +231,14 @@ Modem::WORKING_STATE Modem::db_get_working_state() const {
 	return this->working_state;
 }
 
+
+void Modem::db_iterate_workload() {
+	string query = "INSERT INTO __DEKU__.MODEM_WORK_LOAD (IMEI, WORKLOAD) VALUES("+this->imei+", 1) ON DUPLICATE KEY UPDATE WORKLOAD = WORKLOAD + 1 WHERE DATE(NOW())";
+	logger::logger(__FUNCTION__, query);
+
+	this->mysqlConnector.query( query );
+}
+
 bool Modem::db_set_working_state( WORKING_STATE working_state )  {
 	this->working_state = working_state;
 
@@ -285,6 +293,7 @@ void modem_request_listener( Modem* modem ) {
 				//TODO: What is an invalid message - find it so you can delete it
 				if( modem->send_sms( helpers::unescape_string(request["message"], '"'), request["number"] ) ) {
 					modem->reset_failed_counter();
+					modem->db_iterate_workload();
 					modem->db_set_working_state( Modem::ACTIVE );
 					logger::logger(__FUNCTION__, modem->getInfo() + " - [" + request["id"] + "] SMS sent successfully!", "stdout", true);
 					//DELETE FILE
@@ -322,7 +331,6 @@ void modem_request_listener( Modem* modem ) {
 						if( ussd_command.empty() ) {
 							logger::logger(__FUNCTION__, modem->getInfo() + " - No Exhausted USSD for ISP");
 						}
-
 						else {
 							multimap<string,string> ussd_responses = modem->initiate_series( ussd_command );
 							for(auto response : ussd_responses ) {

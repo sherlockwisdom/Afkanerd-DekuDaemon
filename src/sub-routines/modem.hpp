@@ -46,6 +46,7 @@ class Modem : public USSD {
 		void set_exhaust_count( int );
 		void reset_failed_counter();
 		void iterate_failed_counter();
+		void db_iterate_workload();
 		void set_sleep_time( int );
 
 		string getIndex() const;
