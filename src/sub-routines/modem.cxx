@@ -300,7 +300,6 @@ void modem_request_listener( Modem* modem ) {
 					//WRITE TO LOG FILE
 				}
 				else {
-					// TODO: Iterate a counter here, and after 3x consider the modem exhausted, send a signal here to make some changes
 					modem->iterate_failed_counter();
 					logger::logger(__FUNCTION__, modem->getInfo() + " - Exhaust count(" + to_string(modem->get_exhaust_count()) + ")");
 					if( modem->get_failed_counter() >= modem->get_exhaust_count()
