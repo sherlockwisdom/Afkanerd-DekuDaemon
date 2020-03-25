@@ -99,7 +99,10 @@ void Modems::__INIT__( map<string, string> configs ) {
 					+ helpers::to_lowercase(modem.getType() == Modem::MMCLI ? "\"MMCLI\"" : "\"SSH\"") 
 					+ ",\"active\"," +
 					+ "\"plugged\")";
+
+					string insert_modem_workload_query = "REPLACE INTO __DEKU__.MODEM_WORK_LOAD (IMEI) VALUES ("+modem.getIMEI()+")";
 					this->mysqlConnection.query( insert_modem_query );
+					this->mysqlConnection.query( insert_modem_workload_query );
 
 					logger::logger(__FUNCTION__, modem.getInfo() + " - Adding modem to list");
 					tmp_modemCollection.push_back( new Modem(modem) );

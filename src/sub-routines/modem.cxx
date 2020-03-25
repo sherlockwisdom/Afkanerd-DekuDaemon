@@ -253,12 +253,7 @@ Modem::WORKING_STATE Modem::db_get_working_state() const {
 
 
 void Modem::db_iterate_workload() {
-	// string query = "INSERT INTO __DEKU__.MODEM_WORK_LOAD (IMEI, WORK_LOAD) VALUES("+this->imei+", 1) ON DUPLICATE KEY UPDATE WORK_LOAD = WORK_LOAD + 1 WHERE DATE(NOW())";
-
-	string query = 
-	"UPDATE __DEKU__.MODEM_WORK_LOAD SET WORK_LOAD = WORK_LOAD + 1 WHERE DATE = DATE(NOW()) "
-		"IF @@ROWCOUNT = 0"
-	"INSERT INTO __DEKU__.MODEM_WORK_LOAD (IMEI, WORK_LOAD) VALUES ("+this->imei+", 1)";
+	string query = "UPDATE __DEKU__.MODEM_WORK_LOAD SET WORK_LOAD = WORK_LOAD + 1 WHERE DATE = DATE(NOW())";
 	logger::logger(__FUNCTION__, query);
 
 	map<string, vector<string>> responds = this->mysqlConnector.query( query );
