@@ -115,6 +115,24 @@ void Modems::__INIT__( map<string, string> configs ) {
 		logger::logger(__FUNCTION__, "Finished refreshing with " + to_string(tmp_modemCollection.size()) + " modems");
 		this->modemCollection = tmp_modemCollection;
 
+		logger::logger(__FUNCTION__, "Updating Pluged in list");
+		vector<string> list_imei;
+		string unplugged_query = "UPDATE __DEKU__.MODEMS SET POWER = 'not_plugged' WHERE IMEI = ";
+		for(auto modem : this->modemCollection ) {
+			list_imei.push_back( modem->getIMEI());
+		}
+
+		for(size_t i=0;i<list_imei.size();++i ) {
+			string imei = list_imei[i];
+			unplugged_query += imei;
+			if( (i + 1 ) < list_imei.size()) {
+				unplugged_query += " OR IMEI = ";
+			}
+		}
+
+		logger::logger(__FUNCTION__, unplugged_query);
+		this->mysqlConnection.query( unplugged_query );
+			
 		// TODO: Should this take  up to 10 seconds?
 		// TODO: change this time to a variable
 		helpers::sleep_thread( 10 );
