@@ -9,7 +9,7 @@
 using namespace std;
 
 class USSD {
-	private:
+	protected:
 	string modem_index;
 	
 	map<string,string> configs;
@@ -17,6 +17,7 @@ class USSD {
 
 	USSD( map<string,string> );
 	USSD( string, map<string,string> );
+	USSD() {}
 	
 	string respond( string );
 	string status();

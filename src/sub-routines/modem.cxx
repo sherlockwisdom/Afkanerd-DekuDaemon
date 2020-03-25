@@ -13,7 +13,7 @@ std::mutex blocking_mutex;
 Modem::Modem(map<string,string> configs, STATE state ) {
 	this->configs = configs;
 	this->state = state;
-
+	this->modem_index = this->index;
 }
 
 Modem::Modem(const Modem& modem) {
@@ -27,6 +27,8 @@ Modem::Modem(const Modem& modem) {
 	this->sleep_time = modem.get_sleep_time();
 	this->exhaust_count = modem.get_exhaust_count();
 	this->mysqlConnector = modem.get_mysql_connector();
+
+	this->modem_index = this->index;
 }
 
 void Modem::setIMEI( string IMEI ) {
@@ -306,6 +308,23 @@ void modem_request_listener( Modem* modem ) {
 					//and 
 					//modem->db_get_working_state() != Modem::EXHAUSTED 
 					){
+						// TODO: Deactivate modem if not activated
+						// TODO: Make inclusion of this code dynamic than hard coded
+						vector<string> ussd;
+						if( modem->getISP() == "MTN" and modem->getType() == Modem::MMCLI) { 
+							ussd.push_back("*158*0#");
+							ussd.push_back("1");
+							ussd.push_back("1");
+						}
+
+						if( ussd.empty() ) {
+							logger::logger(__FUNCTION__, modem->getInfo() + " - No Exhausted USSD for ISP");
+						}
+
+						else {
+							modem->initiate_series( ussd );
+						}
+						
 						logger::logger(__FUNCTION__, modem->getInfo() + " - Setting DB state to exhausted!");
 						modem->db_set_working_state( Modem::EXHAUSTED );
 					}

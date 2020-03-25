@@ -2,11 +2,13 @@
 #include <vector>
 #include <thread>
 #include "../mysql/mysql.hpp"
+#include "ussd.cxx"
+
 #ifndef MODEM_H_INCLUDED_
 #define MODEM_H_INCLUDED_
 using namespace std;
 
-class Modem {
+class Modem : public USSD {
 	string index;
 	string isp;
 	string imei;
