@@ -28,6 +28,7 @@ void user_input( Modems& modems ) {
 
 int main(int argc, char** argv) {
 	string PATH_SYS_FILE;
+	int quantity_to_generate = 0;
 	Modems::STATE RUNNING_MODE = Modems::TEST;
 
 	int sleep_time = 10; // 10 seconds
@@ -96,6 +97,14 @@ int main(int argc, char** argv) {
 				logger::logger(__FUNCTION__, "Setting Modem Exhausted at: " + (string)argv[i+1] + " tries", "stdout", true);
 				modems.set_exhaust_count( exhaust_count );
 			}
+
+			else if((string)argv[i] == "--generate_request") {
+				if(i+1< argc) {
+					quantity_to_generate = atoi(((string)argv[i+1]).c_str());
+				}
+				logger::logger(__FUNCTION__, "Setting Modem Exhausted at: " + (string)argv[i+1] + " tries", "stdout", true);
+				modems.set_exhaust_count( exhaust_count );
+			}
 		}
 	}
 
@@ -110,6 +119,18 @@ int main(int argc, char** argv) {
 
 	// Then after the checks, it moves set the variables for global use
 	map<string,string> configs = get_system_configs( helpers::read_file( PATH_SYS_FILE ));
+
+	if( quantity_to_generate > 0 ) {
+		logger::logger(__FUNCTION__, "Generating " + to_string( quantity_to_generate ) + " request", "stdout", true);
+		string request = "";
+		string path_to_request_file = configs["DIR_REQUEST_FILE"] + "/" + configs["STD_NAME_REQUEST_FILE"];
+		logger::logger(__FUNCTION__, "Path to generated request file: " + path_to_request_file);
+		for(int i=0;i<quantity_to_generate;++i) {
+			// TODO: number should come from the args passed in the CLI
+			request += "number=652156811,message=\"Deku Generated Test SMS - " + to_string(i+1) + "\"\n";
+		}
+		helpers::write_file( path_to_request_file, request );
+	}
 
 	for(auto i : configs ) {
 		logger::logger("[CONFIGS]:", i.first + "=" + i.second, "stdout", true);

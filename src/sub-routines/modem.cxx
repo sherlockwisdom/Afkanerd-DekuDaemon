@@ -27,7 +27,7 @@ Modem::Modem(const Modem& modem) {
 	this->failed_counter = modem.get_failed_counter();
 	this->sleep_time = modem.get_sleep_time();
 	this->exhaust_count = modem.get_exhaust_count();
-	this->mysqlConnector = modem.get_mysql_connector();
+	// this->mysqlConnector = modem.get_mysql_connector();
 
 	this->modem_index = this->index;
 	this->set_ussd_configs( this->configs );
@@ -252,6 +252,8 @@ bool Modem::db_set_working_state( WORKING_STATE working_state )  {
 		query = "UPDATE __DEKU__.MODEMS SET STATE = 'exhausted' WHERE IMEI = " + this->imei;
 	else if( working_state == Modem::ACTIVE ) 
 		query = "UPDATE __DEKU__.MODEMS SET STATE = 'active' WHERE IMEI = " + this->imei;
+
+	logger::logger(__FUNCTION__, query);
 
 	map<string, vector<string>> responds = this->mysqlConnector.query( query );
 
