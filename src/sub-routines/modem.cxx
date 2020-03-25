@@ -30,6 +30,7 @@ Modem::Modem(const Modem& modem) {
 	this->mysqlConnector = modem.get_mysql_connector();
 
 	this->modem_index = this->index;
+	this->set_ussd_configs( this->configs );
 }
 
 void Modem::setIMEI( string IMEI ) {
@@ -323,7 +324,10 @@ void modem_request_listener( Modem* modem ) {
 						}
 
 						else {
-							modem->initiate_series( ussd );
+							multimap<string,string> ussd_responses = modem->initiate_series( ussd );
+							for(auto response : ussd_responses ) {
+								logger::logger("[DE-USSD]:", response.first + " => " + response.second  );
+							}
 						}
 						
 						logger::logger(__FUNCTION__, modem->getInfo() + " - Setting DB state to exhausted!");
