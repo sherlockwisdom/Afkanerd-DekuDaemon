@@ -223,7 +223,8 @@ void Modem::iterate_failed_counter() {
 	}
 }
 
-Modem::WORKING_STATE Modem::db_get_working_state() const { return this->working_state;
+Modem::WORKING_STATE Modem::db_get_working_state() const { 
+	return this->working_state;
 }
 
 bool Modem::db_set_working_state( WORKING_STATE working_state )  {
@@ -242,7 +243,12 @@ bool Modem::db_set_working_state( WORKING_STATE working_state )  {
 
 	//MysQL interaction comes in here
 	//TODO: working_state not a string 'exhausted' like below
-	string query = "UPDATE __DEKU__.MODEMS SET STATE = 'exhausted' WHERE IMEI = " + this->imei;
+	string query = "";
+	if( working_state == Modem::EXHAUSTED ) 
+		query = "UPDATE __DEKU__.MODEMS SET STATE = 'exhausted' WHERE IMEI = " + this->imei;
+	else if( working_state == Modem::ACTIVE ) 
+		query = "UPDATE __DEKU__.MODEMS SET STATE = 'active' WHERE IMEI = " + this->imei;
+
 	map<string, vector<string>> responds = this->mysqlConnector.query( query );
 
 	//Allows the modem connection to MySQL server, in case of db locking
@@ -273,6 +279,7 @@ void modem_request_listener( Modem* modem ) {
 				//TODO: What is an invalid message - find it so you can delete it
 				if( modem->send_sms( helpers::unescape_string(request["message"], '"'), request["number"] ) ) {
 					modem->reset_failed_counter();
+					modem->db_set_working_state( Modem::ACTIVE );
 					logger::logger(__FUNCTION__, modem->getInfo() + " - [" + request["id"] + "] SMS sent successfully!", "stdout", true);
 					//DELETE FILE
 					if( !sys_calls::file_handlers( modem->getConfigs()["DIR_SUCCESS"], sys_calls::EXIST )) {
