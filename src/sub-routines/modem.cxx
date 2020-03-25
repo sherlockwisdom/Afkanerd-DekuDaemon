@@ -15,6 +15,16 @@ Modem::Modem(map<string,string> configs, STATE state ) {
 	this->state = state;
 	this->modem_index = this->index;
 	this->set_ussd_configs( configs );
+
+	this->mysqlConnector.setConnectionDetails( configs["MYSQL_SERVER"], configs["MYSQL_USER"], configs["MYSQL_PASSWORD"], configs["MYSQL_DATABASE"]);
+	if( !this->mysqlConnector.connect() ) {
+		logger::logger(__FUNCTION__, "Modem MYSQL connection failed", "stderr", true);
+		exit( 1 );
+	}
+
+	else {
+		logger::logger(__FUNCTION__, "MYSQL connection obtained!", "stdout", true);
+	}
 }
 
 Modem::Modem(const Modem& modem) {
@@ -31,6 +41,16 @@ Modem::Modem(const Modem& modem) {
 
 	this->modem_index = this->index;
 	this->set_ussd_configs( this->configs );
+
+	this->mysqlConnector.setConnectionDetails( configs["MYSQL_SERVER"], configs["MYSQL_USER"], configs["MYSQL_PASSWORD"], configs["MYSQL_DATABASE"]);
+	if( !this->mysqlConnector.connect() ) {
+		logger::logger(__FUNCTION__, "Modem MYSQL connection failed", "stderr", true);
+		exit( 1 );
+	}
+
+	else {
+		logger::logger(__FUNCTION__, "MYSQL connection obtained!", "stdout", true);
+	}
 }
 
 void Modem::setIMEI( string IMEI ) {
@@ -233,16 +253,18 @@ Modem::WORKING_STATE Modem::db_get_working_state() const {
 
 
 void Modem::db_iterate_workload() {
-	string query = "INSERT INTO __DEKU__.MODEM_WORK_LOAD (IMEI, WORKLOAD) VALUES("+this->imei+", 1) ON DUPLICATE KEY UPDATE WORKLOAD = WORKLOAD + 1 WHERE DATE(NOW())";
+	// string query = "INSERT INTO __DEKU__.MODEM_WORK_LOAD (IMEI, WORK_LOAD) VALUES("+this->imei+", 1) ON DUPLICATE KEY UPDATE WORK_LOAD = WORK_LOAD + 1 WHERE DATE(NOW())";
+	string query = "INSERT INTO __DEKU__.MODEM_WORK_LOAD (IMEI, WORK_LOAD) VALUES("+this->imei+", 1) ON DUPLICATE KEY UPDATE WORK_LOAD = WORK_LOAD + 1 WHERE DATE(NOW())";
 	logger::logger(__FUNCTION__, query);
 
-	this->mysqlConnector.query( query );
+	map<string, vector<string>> responds = this->mysqlConnector.query( query );
 }
 
 bool Modem::db_set_working_state( WORKING_STATE working_state )  {
 	this->working_state = working_state;
 
 	//TODO: Maybe MYSQL database is passed but not registered here, so keep that in mind
+	/*
 	this->mysqlConnector.setConnectionDetails( configs["MYSQL_SERVER"], configs["MYSQL_USER"], configs["MYSQL_PASSWORD"], configs["MYSQL_DATABASE"]);
 	if( !this->mysqlConnector.connect() ) {
 		logger::logger(__FUNCTION__, "Modem MYSQL connection failed", "stderr", true);
@@ -252,6 +274,7 @@ bool Modem::db_set_working_state( WORKING_STATE working_state )  {
 	else {
 		logger::logger(__FUNCTION__, "MYSQL connection obtained!", "stdout", true);
 	}
+	*/
 
 	//MysQL interaction comes in here
 	//TODO: working_state not a string 'exhausted' like below
