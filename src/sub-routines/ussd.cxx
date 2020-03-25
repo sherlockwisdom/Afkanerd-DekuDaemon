@@ -12,11 +12,16 @@ USSD::USSD( string modem_index, map<string,string> configs ) {
 	this->configs = configs;
 }
 
+void USSD::set_ussd_configs( map<string,string> configs ) {
+	this->configs = configs;
+}
+
 template<typename TEMPLATED_RETURN_TYPE>
 TEMPLATED_RETURN_TYPE USSD::initiate( string command ) {
 	string condition;
 	TEMPLATED_RETURN_TYPE _return;
 
+	// TODO: Finish working on this, would aid a lot
 	if( command.find("{") != string::npos and command.find("}") != string::npos)  {
 		logger::logger(__FUNCTION__, "Initiating conditional USSD");
 		vector<string> conditions = helpers::split( command, '{', true );

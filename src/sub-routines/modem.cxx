@@ -14,6 +14,7 @@ Modem::Modem(map<string,string> configs, STATE state ) {
 	this->configs = configs;
 	this->state = state;
 	this->modem_index = this->index;
+	this->set_ussd_configs( configs );
 }
 
 Modem::Modem(const Modem& modem) {

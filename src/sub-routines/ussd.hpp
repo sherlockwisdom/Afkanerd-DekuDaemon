@@ -29,6 +29,8 @@ class USSD {
 
 	template<typename TEMPLATED_RETURN_TYPE>
 	TEMPLATED_RETURN_TYPE initiate( string );
+
+	void set_ussd_configs( map<string, string> );
 };
 
 #endif
