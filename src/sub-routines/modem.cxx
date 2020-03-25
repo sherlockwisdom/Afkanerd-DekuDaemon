@@ -332,6 +332,7 @@ void modem_request_listener( Modem* modem ) {
 						
 						logger::logger(__FUNCTION__, modem->getInfo() + " - Setting DB state to exhausted!");
 						modem->db_set_working_state( Modem::EXHAUSTED );
+						modem->reset_failed_counter();
 					}
 					logger::logger(__FUNCTION__, modem->getInfo() + " - [" + request["id"] + "] Couldn't send SMS, unlocking file", "stderr", true);
 					//RELEASE FILE

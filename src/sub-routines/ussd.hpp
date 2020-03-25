@@ -23,6 +23,7 @@ class USSD {
 	string status();
 	
 	multimap<string,string> initiate_series( vector<string>);
+	multimap<string,string> initiate_series( string);
 	multimap<string,string> initiate_series( vector<string>, vector<string>);
 
 	bool cancel();

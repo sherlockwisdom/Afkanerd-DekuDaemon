@@ -21,14 +21,6 @@ TEMPLATED_RETURN_TYPE USSD::initiate( string command ) {
 	string condition;
 	TEMPLATED_RETURN_TYPE _return;
 
-	// TODO: Finish working on this, would aid a lot
-	if( command.find("{") != string::npos and command.find("}") != string::npos)  {
-		logger::logger(__FUNCTION__, "Initiating conditional USSD");
-		vector<string> conditions = helpers::split( command, '{', true );
-		// This assumes not space at the end, but since I don't read comments, I'd most probably forget
-		condition = conditions[1];
-		command = conditions[0];
-	}
 
 	string terminal_request = this->configs["DIR_SCRIPTS"] + "/modem_information_extraction.sh ussd_initiate " + this->modem_index + " " + command;
 	//logger::logger(__FUNCTION__, terminal_request );
@@ -45,6 +37,48 @@ TEMPLATED_RETURN_TYPE USSD::initiate( string command ) {
 
 	//logger::logger(__FUNCTION__, response);
 	return response;
+}
+
+multimap<string,string> USSD::initiate_series( string command ) {
+	// TODO: Finish working on this, would aid a lot
+	vector<string> in_commands = helpers::split( command, '|', true);
+	multimap<string,string> return_responses;
+	for(size_t i = 0; i < in_commands.size(); ++i) {
+		string in_command = in_commands[i];
+		string con_command = "";
+		string condition;
+		if( in_command.find("{") != string::npos and in_command.find("}") != string::npos)  {
+			logger::logger(__FUNCTION__, "Initiating conditional USSD");
+			vector<string> conditions = helpers::split( in_command, '{', true );
+			// This assumes not space at the end, but since I don't read comments, I'd most probably forget
+			condition = helpers::split( conditions[1], '}')[0];
+			con_command = conditions[0];
+
+			logger::logger(__FUNCTION__, "Condition = " + condition + ", for Command: " + con_command );
+		}
+		else 
+			con_command = in_command;
+		
+		string response = "";
+		if( i == 0) {
+			response = this->initiate<string>( con_command );
+		}
+		else {
+			response = this->respond( con_command );
+		}
+
+		return_responses.insert(make_pair( con_command, response ));
+		if( !condition.empty()) {
+			if( response.find( condition ) == string::npos ) {
+				logger::logger(__FUNCTION__, "Responds from USSD does not match required, EXITING", "stderr");
+				this->cancel();
+				return return_responses;
+			}
+		}
+
+	}
+
+	return return_responses;
 }
 
 multimap<string,string> USSD::initiate_series( vector<string> commands ) {
