@@ -48,7 +48,7 @@ CREATE TABLE `MODEMS` (
 CREATE TABLE `MODEM_WORK_LOAD` (
   `IMEI` bigint(20) NOT NULL,
   `WORK_LOAD` int(11) NOT NULL DEFAULT 0,
-  `DATE` date NOT NULL DEFAULT current_timestamp(),
+  `DATE` date NOT NULL,
   `MDATE` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
