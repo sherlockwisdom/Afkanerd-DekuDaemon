@@ -132,7 +132,7 @@ void Modems::__INIT__( map<string, string> configs ) {
 			string plugged_query = "UPDATE __DEKU__.MODEMS SET POWER = 'plugged' WHERE IMEI = ";
 			for(size_t i=0;i < this->modemCollection.size(); ++i) {
 				string imei = this->modemCollection[i]->getIMEI();
-				plugged_query += imei;
+				plugged_query += "'" + imei + "'";
 				if( (i + 1 ) < list_imei.size()) {
 					plugged_query += " AND IMEI = ";
 				}
@@ -142,7 +142,7 @@ void Modems::__INIT__( map<string, string> configs ) {
 			string unplugged_query = "UPDATE __DEKU__.MODEMS SET POWER = 'not_plugged' WHERE IMEI != ";
 			for(size_t i=0;i<list_imei.size();++i ) {
 				string imei = list_imei[i];
-				unplugged_query += imei;
+				unplugged_query += "'" + imei + "'";
 				if( (i + 1 ) < list_imei.size()) {
 					unplugged_query += " AND IMEI != ";
 				}
