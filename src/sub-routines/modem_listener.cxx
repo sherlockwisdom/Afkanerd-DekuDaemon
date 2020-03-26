@@ -101,19 +101,22 @@ void Modems::__INIT__( map<string, string> configs ) {
 					+ "\"plugged\")";
 
 					string select_workload_query = "SELECT * FROM __DEKU__.MODEM_WORK_LOAD WHERE IMEI='"+modem.getIMEI()+"' and DATE = DATE(NOW())";
-					map<string, vector<string>> respond = this->mysqlConnection.query( select_workload_query );
-					if( respond.empty()) {
-						logger::logger(__FUNCTION__, "Inserting modem into workload db");
-						string replace_workload_query = "REPLACE INTO __DEKU__.MODEM_WORK_LOAD (IMEI, DATE) VALUES (\'"+modem.getIMEI()+"\', NOW())";
-						map<string, vector<string>> respond = this->mysqlConnection.query( replace_workload_query );
-					}
-					else {
-						logger::logger(__FUNCTION__, "Modem already exist in workload");
-					}
+					try {
+						map<string, vector<string>> respond = this->mysqlConnection.query( select_workload_query );
+						if( respond.empty()) {
+							logger::logger(__FUNCTION__, "Inserting modem into workload db");
+							string replace_workload_query = "REPLACE INTO __DEKU__.MODEM_WORK_LOAD (IMEI, DATE) VALUES (\'"+modem.getIMEI()+"\', NOW())";
+							map<string, vector<string>> respond = this->mysqlConnection.query( replace_workload_query );
+						}
+						else {
+							logger::logger(__FUNCTION__, "Modem already exist in workload");
+						}
 
-					this->mysqlConnection.query( insert_modem_query );
-					logger::logger(__FUNCTION__, modem.getInfo() + " - Adding modem to list");
-					tmp_modemCollection.push_back( new Modem(modem) );
+						this->mysqlConnection.query( insert_modem_query );
+						logger::logger(__FUNCTION__, modem.getInfo() + " - Adding modem to list");
+						tmp_modemCollection.push_back( new Modem(modem) );
+					}
+					catch(std::exception& excep) {}
 				}
 			}
 			else {
@@ -130,7 +133,12 @@ void Modems::__INIT__( map<string, string> configs ) {
 
 		if( this->modemCollection.empty() ) {
 			string none_plugged_query = "UPDATE __DEKU__.MODEMS SET POWER = 'not_plugged' WHERE 1";
-			this->mysqlConnection.query( none_plugged_query );
+
+			try {
+				this->mysqlConnection.query( none_plugged_query );
+			}
+			catch(std::exception& excep) {
+			}
 		}
 		else {
 			vector<string> list_imei;
@@ -145,7 +153,12 @@ void Modems::__INIT__( map<string, string> configs ) {
 					plugged_query += " OR IMEI = ";
 				}
 			}
-			this->mysqlConnection.query( plugged_query );
+
+			try {
+				this->mysqlConnection.query( plugged_query );
+			}
+			catch(std::exception& excep) {
+			}
 
 			string unplugged_query = "UPDATE __DEKU__.MODEMS SET POWER = 'not_plugged' WHERE IMEI != ";
 			for(size_t i=0;i<list_imei.size();++i ) {
@@ -157,7 +170,12 @@ void Modems::__INIT__( map<string, string> configs ) {
 			}
 
 			logger::logger(__FUNCTION__, unplugged_query);
-			this->mysqlConnection.query( unplugged_query );
+			try {
+				this->mysqlConnection.query( unplugged_query );
+			}
+			catch( std::exception& excep) {
+				//logger::logger(__FUNCTION__, "Exception says: " + excep.what());
+			}
 		}
 			
 		// TODO: Should this take  up to 10 seconds?

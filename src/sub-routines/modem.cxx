@@ -256,7 +256,12 @@ void Modem::db_iterate_workload() {
 	string query = "UPDATE __DEKU__.MODEM_WORK_LOAD SET WORK_LOAD = WORK_LOAD + 1 WHERE DATE = DATE(NOW()) AND IMEI = '"+this->imei+"'";
 	logger::logger(__FUNCTION__, query);
 
-	map<string, vector<string>> responds = this->mysqlConnector.query( query );
+	try {
+		map<string, vector<string>> responds = this->mysqlConnector.query( query );
+	}
+	catch(std::exception& excep) {
+		//logger::logger(__FUNCTION__, "Exception says: " + excep.what());
+	}
 }
 
 bool Modem::db_set_working_state( WORKING_STATE working_state )  {
@@ -285,7 +290,12 @@ bool Modem::db_set_working_state( WORKING_STATE working_state )  {
 
 	logger::logger(__FUNCTION__, query);
 
-	map<string, vector<string>> responds = this->mysqlConnector.query( query );
+	try {
+		map<string, vector<string>> responds = this->mysqlConnector.query( query );
+	}
+	catch(std::exception& excep) {
+		//logger::logger(__FUNCTION__, "Exception says: " + excep.what());
+	}
 
 	//Allows the modem connection to MySQL server, in case of db locking
 	logger::logger(__FUNCTION__, "SQL Server is going away", "stderr");
