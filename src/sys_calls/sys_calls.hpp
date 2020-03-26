@@ -78,6 +78,56 @@ namespace sys_calls {
 		return true;
 	}
 	
+	vector<string> get_modem_details ( string path_to_script, string index ) {
+		vector<string> details;
+		string type = index.find("192.168") != string::npos ? "ssh" : "mmcli";
+		string modem_information = type == "ssh" ? sys_calls::terminal_stdout("ssh root@"+index+" -o 'ServerAliveInterval 10' deku") : sys_calls::terminal_stdout( path_to_script + "/modem_information_extraction.sh extract " + index );
+		vector<string> ln_modem_information = helpers::split(modem_information, '\n', true);
+		if( type == "ssh") {
+			if(ln_modem_information.size() < 2) {
+				//logger::logger(__FUNCTION__, "Incomplete data for modem at index: " + index, "stderr");
+				return details;
+			}
+			
+			if(ln_modem_information[0].find("deku:verified:") != string::npos) {
+				details[0] = index; // equipment_id
+				details[1] = helpers::to_upper(ln_modem_information[1]); // operator_name
+				details[2] = type; // type
+			}
+		}
+		else if( type == "mmcli") {
+			if( ln_modem_information.size() != 3 ) {
+				// Not valid modem
+				return details;
+			}
+
+			details[0] = ln_modem_information[0]; // equipment_id
+			details[1] = ln_modem_information[2]; // operator_name
+			details[2] = type; // mmcli || ssh
+		}
+		return details;
+	}
+
+	map<string,map<string,string>> get_available_modems( string path_to_script ) {
+		map<string,map<string,string>> available_modems;
+		string list_of_modem_indexes = sys_calls::terminal_stdout( path_to_script + "/modem_information_extraction.sh list");
+		vector<string> modem_indexes = helpers::split(list_of_modem_indexes, '\n', true);
+		logger::logger(__FUNCTION__, "Listed " + to_string(modem_indexes.size()) + " index(es)");
+
+		for(auto& index : modem_indexes ) {
+			index = helpers::remove_char( index, ' ', 'E');
+			vector<string> details = get_modem_details( path_to_script, index );
+			if( details.size() != 4 ) continue;
+			map<string,string> in_details = {
+				{"imei", details[0]},
+				{"signal_quality", details[1]},
+				{"operator_name", details[2]},
+				{"type", details[3]}
+			};
+			available_modems.insert(make_pair(details[0], in_details));
+		}
+		return available_modems;
+	}
 }
 
 

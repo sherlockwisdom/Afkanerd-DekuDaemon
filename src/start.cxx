@@ -27,15 +27,15 @@ void user_input( Modems& modems ) {
 }
 
 int main(int argc, char** argv) {
-	string PATH_SYS_FILE;
-	int quantity_to_generate = 0;
+	// Default values
 	Modems::STATE RUNNING_MODE = Modems::TEST;
+	string PATH_SYS_FILE;
 
+	int quantity_to_generate = 0;
 	int sleep_time = 10; // 10 seconds
 	int exhaust_count = 3; // 10 seconds
 
-	//Modems modems( Modems::PRODUCTION );
-	Modems modems( RUNNING_MODE );
+
 
 	if(argc < 2 ) {
 		logger::logger(__FUNCTION__, "Usage: -c <path_to_config_file>", "stderr", true);
@@ -82,7 +82,6 @@ int main(int argc, char** argv) {
 						sleep_time = 10; //todo: change - default should come from config file
 					}
 					logger::logger(__FUNCTION__, "Setting Modem sleep time at: " + (string)argv[i+1] + " seconds", "stdout", true);
-					modems.set_modem_sleep_time( sleep_time );
 				}
 			}
 
@@ -95,7 +94,6 @@ int main(int argc, char** argv) {
 					}
 				}
 				logger::logger(__FUNCTION__, "Setting Modem Exhausted at: " + (string)argv[i+1] + " tries", "stdout", true);
-				modems.set_exhaust_count( exhaust_count );
 			}
 
 			else if((string)argv[i] == "--generate_request") {
@@ -103,7 +101,6 @@ int main(int argc, char** argv) {
 					quantity_to_generate = atoi(((string)argv[i+1]).c_str());
 				}
 				logger::logger(__FUNCTION__, "Setting Modem Exhausted at: " + (string)argv[i+1] + " tries", "stdout", true);
-				modems.set_exhaust_count( exhaust_count );
 			}
 		}
 	}
@@ -117,9 +114,16 @@ int main(int argc, char** argv) {
 		return 1;
 	}
 
+
 	// Then after the checks, it moves set the variables for global use
 	map<string,string> configs = get_system_configs( helpers::read_file( PATH_SYS_FILE ));
+	for(auto i : configs ) logger::logger("STARTING ROUTINES - [CONFIGS]:", i.first + "=" + i.second, "stdout", true);
+	//Modems modems( Modems::PRODUCTION );
+	Modems modems( configs, RUNNING_MODE );
+	
+	// TODO: Check if other developers variables are passed as args and set before beginning
 
+	// TODO: Put more work in here, cus fuck it... it's still got a private number lol
 	if( quantity_to_generate > 0 ) {
 		logger::logger(__FUNCTION__, "Generating " + to_string( quantity_to_generate ) + " request", "stdout", true);
 		string request = "";
@@ -132,19 +136,19 @@ int main(int argc, char** argv) {
 		helpers::write_file( path_to_request_file, request );
 	}
 
-	for(auto i : configs ) {
-		logger::logger("[CONFIGS]:", i.first + "=" + i.second, "stdout", true);
-	}
 
-	//TODO: Pass all configs using refreences, so changes get loaded in real time
-	std::thread tr_modem_listeners = std::thread(&Modems::__INIT__, std::ref(modems), configs);
-	std::thread tr_modem_starter = std::thread(&Modems::startAllModems, std::ref(modems));
-	std::thread tr_user_input = std::thread(user_input, std::ref(modems));
-	std::thread tr_request_listeners = std::thread(request_distribution_listener::request_distribution_listener, configs);
-	tr_modem_listeners.join();
-	tr_modem_starter.join();
-	tr_user_input.join();
-	tr_request_listeners.join();
+	// TODO: Pass all configs using refreences, so changes get loaded in real time
+	std::thread tr_modems_scanner = std::thread(&Modems::begin_scanning, std::ref(modems));
+
+	tr_modems_scanner.join();
+	
+	// std::thread tr_modem_starter = std::thread(&Modems::startAllModems, std::ref(modems));
+	// std::thread tr_user_input = std::thread(user_input, std::ref(modems));
+	// std::thread tr_request_listeners = std::thread(request_distribution_listener::request_distribution_listener, configs);
+	// tr_modem_listeners.join();
+	// tr_modem_starter.join();
+	// tr_user_input.join();
+	// tr_request_listeners.join();
 	
 	return 0;
 }

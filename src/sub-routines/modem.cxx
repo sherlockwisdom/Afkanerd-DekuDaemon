@@ -10,73 +10,21 @@ using namespace std;
 std::mutex blocking_mutex;
 
 //class Modem
-Modem::Modem(map<string,string> configs, STATE state ) {
+Modem::Modem(string imei, string isp, string type, map<string,string> configs, MySQL mysqlConnection) {
+	this->imei = imei;
+	this->isp = isp;
+	this->type = type;
 	this->configs = configs;
-	this->state = state;
-	this->modem_index = this->index;
-	this->set_ussd_configs( configs );
-
-	this->mysqlConnector.setConnectionDetails( configs["MYSQL_SERVER"], configs["MYSQL_USER"], configs["MYSQL_PASSWORD"], configs["MYSQL_DATABASE"]);
-	if( !this->mysqlConnector.connect() ) {
-		logger::logger(__FUNCTION__, "Modem MYSQL connection failed", "stderr", true);
-		exit( 1 );
-	}
-
-	else {
-		logger::logger(__FUNCTION__, "MYSQL connection obtained!", "stdout", true);
-	}
-}
-
-Modem::Modem(const Modem& modem) {
-	this->imei = modem.getIMEI();
-	this->isp = modem.getISP();
-	this->index = modem.getIndex();
-	this->configs = modem.getConfigs();
-	this->state = modem.state;
-	this->type = modem.getType();
-	this->failed_counter = modem.get_failed_counter();
-	this->sleep_time = modem.get_sleep_time();
-	this->exhaust_count = modem.get_exhaust_count();
-	// this->mysqlConnector = modem.get_mysql_connector();
-
-	this->modem_index = this->index;
-	this->set_ussd_configs( this->configs );
-
-	this->mysqlConnector.setConnectionDetails( configs["MYSQL_SERVER"], configs["MYSQL_USER"], configs["MYSQL_PASSWORD"], configs["MYSQL_DATABASE"]);
-	if( !this->mysqlConnector.connect() ) {
-		logger::logger(__FUNCTION__, "Modem MYSQL connection failed", "stderr", true);
-		exit( 1 );
-	}
-
-	else {
-		logger::logger(__FUNCTION__, "MYSQL connection obtained!", "stdout", true);
-	}
-}
-
-void Modem::setIMEI( string IMEI ) {
-	this->imei = IMEI;
-}
-
-MySQL Modem::get_mysql_connector() const {
-	return this->mysqlConnector;
+	this->mysqlConnection = mysqlConnection;
 }
 
 int Modem::get_failed_counter() const {
 	return this->failed_counter;
 }
 
-void Modem::setISP( string ISP ) {
-	this->isp = ISP.find(" ") != string::npos ? helpers::split(ISP, ' ', true)[0] : ISP;
-}
-
 void Modem::set_exhaust_count( int modem_exhaust_counts ) {
 	logger::logger(__FUNCTION__, this->getInfo() + " - Setting Exhaust count to: " + to_string( modem_exhaust_counts ));
 	this->exhaust_count = modem_exhaust_counts;
-}
-
-void Modem::setIndex( string index ) {
-	this->index = index;
-	this->type = index.find("192.168.") != string::npos ? SSH : MMCLI;
 }
 
 string Modem::getIndex() const {
@@ -92,10 +40,10 @@ string Modem::getIMEI() const {
 }
 
 string Modem::getInfo() const {
-	return this->getIMEI() + "|" + this->getISP() + "|" + this->getIndex() + "|" + (this->getType() == MMCLI ? "MMCLI" : "SSH");
+	return this->getIMEI() + "|" + this->getISP() + "|" + this->getIndex() + "|" + this->getType();
 }
 
-Modem::TYPE Modem::getType() const {
+string Modem::getType() const {
 	return this->type;
 }
 
@@ -103,54 +51,8 @@ Modem::operator bool() const {
 	return !this->getISP().empty();
 }
 
-bool Modem::operator==( Modem modem ) const {
-	//logger::logger(__FUNCTION__, this->getInfo() + " - " + modem.getInfo());
-	return (
-			modem.getIndex() == this->getIndex() and
-			modem.getISP() == this->getISP() and
-			modem.getIMEI() == this->getIMEI() and 
-			modem.getType() == this->getType()
-	);
-}
-
-bool Modem::operator==( Modem* modem ) const {
-	return (
-			modem->getIndex() == this->getIndex() and
-			modem->getISP() == this->getISP() and
-			modem->getIMEI() == this->getIMEI() and
-			modem->getType() == this->getType()
-	);
-}
-
-
-bool Modem::operator>( Modem modem ) const {
-	return (
-			this->getIMEI() > modem.getIMEI()
-	);
-}
-
-bool Modem::operator<( Modem modem ) const {
-	return (
-			this->getIMEI() < modem.getIMEI()
-	);
-}
-
-void Modem::setKeepAlive( bool keepAlive ) {
-	string changedKeepAlive = keepAlive ? "true" : "false";
-	//logger::logger(__FUNCTION__, this->getInfo() + " - Changing keepAlive to " + changedKeepAlive);
-	this->keepAlive = keepAlive;
-}
-
 bool Modem::getKeepAlive() const {
 	return this->keepAlive;
-}
-
-bool Modem::getThreadSafety() const {
-	return this->thread_safety;
-}
-
-void Modem::setThreadSafety( bool thread_safety ) {
-	this->thread_safety = thread_safety;
 }
 
 map<string,string> Modem::getConfigs() const {
@@ -257,7 +159,7 @@ void Modem::db_iterate_workload() {
 	logger::logger(__FUNCTION__, query);
 
 	try {
-		map<string, vector<string>> responds = this->mysqlConnector.query( query );
+		map<string, vector<string>> responds = this->mysqlConnection.query( query );
 	}
 	catch(std::exception& excep) {
 		//logger::logger(__FUNCTION__, "Exception says: " + excep.what());
@@ -269,8 +171,8 @@ bool Modem::db_set_working_state( WORKING_STATE working_state )  {
 
 	//TODO: Maybe MYSQL database is passed but not registered here, so keep that in mind
 	/*
-	this->mysqlConnector.setConnectionDetails( configs["MYSQL_SERVER"], configs["MYSQL_USER"], configs["MYSQL_PASSWORD"], configs["MYSQL_DATABASE"]);
-	if( !this->mysqlConnector.connect() ) {
+	this->mysqlConnection.setConnectionDetails( configs["MYSQL_SERVER"], configs["MYSQL_USER"], configs["MYSQL_PASSWORD"], configs["MYSQL_DATABASE"]);
+	if( !this->mysqlConnection.connect() ) {
 		logger::logger(__FUNCTION__, "Modem MYSQL connection failed", "stderr", true);
 		exit( 1 );
 	}
@@ -291,7 +193,7 @@ bool Modem::db_set_working_state( WORKING_STATE working_state )  {
 	logger::logger(__FUNCTION__, query);
 
 	try {
-		map<string, vector<string>> responds = this->mysqlConnector.query( query );
+		map<string, vector<string>> responds = this->mysqlConnection.query( query );
 	}
 	catch(std::exception& excep) {
 		//logger::logger(__FUNCTION__, "Exception says: " + excep.what());
@@ -299,17 +201,13 @@ bool Modem::db_set_working_state( WORKING_STATE working_state )  {
 
 	//Allows the modem connection to MySQL server, in case of db locking
 	logger::logger(__FUNCTION__, "SQL Server is going away", "stderr");
-	this->mysqlConnector.close();
+	this->mysqlConnection.close();
 }
 
 
 void modem_request_listener( Modem* modem ) {
-	//logger::logger(__FUNCTION__, modem->getInfo() + " thread started...");
 	logger::logger(__FUNCTION__, "==========> MODEM REQUEST LISTENER | " + modem->getInfo() + " <============");
-	modem->setKeepAlive(true);
-	
-	modem->setThreadSafety( true );
-	while( modem->getKeepAlive() ) {
+	while( 1 ) {
 		if(blocking_mutex.try_lock() ) {
 			//logger::logger(__FUNCTION__,  modem->getInfo() + " - Acquiring mutex", "stdout");
 			map<string,string> request = modem->request_job( modem->getConfigs()["DIR_ISP"] + "/" + modem->getISP() );
@@ -357,7 +255,7 @@ void modem_request_listener( Modem* modem ) {
 						// TODO: Make inclusion of this code dynamic than hard coded
 						// string ussd_command;
 						vector<string> ussd_command;
-						if( modem->getISP() == "MTN" and modem->getType() == Modem::MMCLI) { 
+						if( modem->getISP() == "MTN" and modem->getType() == "MMCLI") { 
 							// ussd_command = "*158*0#|1|1";
 							ussd_command = { "*158*0#", "1", "1" };
 						}
@@ -416,11 +314,6 @@ void Modem::start() {
 	//std::thread tr_modem_sms_listener = std::thread(modem_sms_listener, &*this);
 	tr_modem_request_listener.join();
 	//tr_modem_sms_listener.join();
-}
-
-bool Modem::end() {
-	this->setKeepAlive(false);
-	return true;
 }
 
 string Modem::getErrorLogs() {
@@ -503,23 +396,14 @@ bool Modem::send_sms(string message, string number ) {
 	message = helpers::find_and_replace("\\n", "\n", message);
 	message = helpers::find_and_replace("\\\"", "\"", message);
 	message = helpers::find_and_replace("'", "\'", message);
-	switch( this->getType() ) {
-		case Modem::MMCLI:
-			return this->mmcli_send_sms( message, number);
-		break;
-
-		case Modem::SSH:
-			return this->ssh_send_sms( message, number );
-		break;
-
-		default:
-			logger::logger(__FUNCTION__, this->getInfo() + " - Failed to get type..", "stderr");
-		break;
-	}
+	if( this->getType() == "MMCLI") 
+		return this->mmcli_send_sms( message, number);
+	else if( this->getType() == "SSH") 
+		return this->ssh_send_sms( message, number );
 	return false;
 }
 
 Modem::~Modem() {
-	//logger::logger(__FUNCTION__, this->getInfo() + " - Destructor called...");
-	this->mysqlConnector.close();
+	// logger::logger(__FUNCTION__, this->getInfo() + " - Destructor called...");
+	// this->mysqlConnection.close();
 }

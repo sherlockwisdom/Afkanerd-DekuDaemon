@@ -13,6 +13,7 @@ class Modem : public USSD {
 	string isp;
 	string imei;
 	string errorLogs;
+	string type;
 
 	bool keepAlive = false;
 	bool thread_safety = false;
@@ -23,7 +24,7 @@ class Modem : public USSD {
 	int sleep_time = 10;
 	int exhaust_count = 3;
 
-	MySQL mysqlConnector;
+	MySQL mysqlConnection;
 
 	public:
 		enum STATE {TEST, PRODUCTION};
@@ -32,7 +33,7 @@ class Modem : public USSD {
 
 		STATE state;
 		WORKING_STATE working_state;
-		Modem(map<string,string> configs, STATE state = TEST );
+		Modem(string imei, string isp, string type, map<string, string> configs, MySQL mysqlConnection );
 		Modem(const Modem& modem);
 		~Modem();
 
@@ -54,8 +55,8 @@ class Modem : public USSD {
 		string getIMEI() const;
 		string getErrorLogs();
 		string getInfo() const;
+		string getType() const;
 
-		TYPE getType() const;
 		WORKING_STATE db_get_working_state() const;
 
 		explicit operator bool() const;
@@ -64,7 +65,6 @@ class Modem : public USSD {
 		bool operator>(Modem modem) const;
 		bool operator<(Modem modem) const;
 
-		bool end();
 		bool send_sms(string message, string number);
 		bool mmcli_send_sms(string message, string number);
 		bool ssh_send_sms(string message, string number);
@@ -83,8 +83,6 @@ class Modem : public USSD {
 		int get_exhaust_count() const;
 
 		MySQL get_mysql_connector() const;
-	private:
-		TYPE type;
 };
 
 #endif

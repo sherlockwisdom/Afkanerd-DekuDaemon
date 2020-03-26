@@ -6,7 +6,7 @@
 using namespace std;
 
 //class Modems
-Modems::Modems( STATE state) {
+Modems::Modems( map<string,string> configs, STATE state ) {
 	this->state = state;
 	switch( state ) {
 		case TEST:
@@ -17,10 +17,15 @@ Modems::Modems( STATE state) {
 			logger::show_state = "PRODUCTION";
 		break;
 	}
-}
+	this->mysqlConnection.setConnectionDetails( configs["MYSQL_SERVER"], configs["MYSQL_USER"], configs["MYSQL_PASSWORD"], configs["MYSQL_DATABASE"]);
 
-Modems::Modems() {
-	logger::show_state = "TESTING";
+	// TODO: Add method to set mysql function here
+	if( !this->mysqlConnection.connect()) {
+		logger::logger(__FUNCTION__, " - Failed connecting to MYSQL database!", "stderr", true);
+		exit( 1 );
+	}
+
+	logger::logger(__FUNCTION__, " - MYSQL Connection Established!", "stdout", true);
 }
 
 void Modems::set_modem_sleep_time( int sleep_time ) {
@@ -31,155 +36,79 @@ void Modems::set_exhaust_count( int modem_exhaust_count ) {
 	this->modem_exhaust_count = modem_exhaust_count;
 }
 
-void Modems::__INIT__( map<string, string> configs ) {
-	this->mysqlConnection.setConnectionDetails( configs["MYSQL_SERVER"], configs["MYSQL_USER"], configs["MYSQL_PASSWORD"], configs["MYSQL_DATABASE"]);
-	if( !this->mysqlConnection.connect()) {
-		logger::logger(__FUNCTION__, " - Failed connecting to MYSQL database!", "stderr", true);
-		exit( 1 );
-	}
+void Modems::db_insert_modems_workload( map<string, string> modem ) {
+	string select_workload_query = "SELECT * FROM __DEKU__.MODEM_WORK_LOAD WHERE IMEI='" + modem["imei"] + "' and DATE = DATE(NOW())";
+	logger::logger(__FUNCTION__, "Checking for modem in DB workload");
 
-	logger::logger(__FUNCTION__, " - MYSQL Connection Established!", "stdout", true);
+	map<string, vector<string>> query_respond = this->mysqlConnection.query( select_workload_query );
+	if(query_respond.empty()) {
+		logger::logger(__FUNCTION__, "Modem not in workload - Executing Insert queries");
+		string replace_workload_query = "REPLACE INTO __DEKU__.MODEM_WORK_LOAD (IMEI, DATE) VALUES (\'" + modem["imei"] + "\', NOW())";
+		this->mysqlConnection.query( replace_workload_query );
+
+		return;
+	}
+}
+
+void Modems::db_insert_modems( map<string,string> modem ) {
+	string insert_modem_query = "INSERT INTO __DEKU__.MODEMS (IMEI, TYPE, STATE, POWER) VALUES(\'"
+	+ modem["imei"]
+	+ "\'," 
+	+ helpers::to_lowercase( modem["type"] ) 
+	+ ",\"active\"," +
+	+ "\"plugged\")";
+
+	logger::logger(__FUNCTION__, "Inserting modem into DB");
+
+	// Insert affects rows, but doesn't return anything
+	this->mysqlConnection.query( insert_modem_query );
+}
+
+void Modems::begin_scanning() {
+	// TODO: set exhaust count as default in class declarations
+	// TODO: set sleep time as default in class declaractions
+	// TODO: set modem state PRODUCTION as default in class declarations
+
+	// TODO: If problem with IMEI in modem, change modem to un_plugged
 
 	while( 1 ) { //TODO: Use a variable to control this loop
+		// First it gets all availabe modems
 		logger::logger(__FUNCTION__, "Refreshing modem list..");
-		string list_of_modem_indexes = sys_calls::terminal_stdout(configs["DIR_SCRIPTS"] + "/modem_information_extraction.sh list");
-		vector<string> modem_indexes = helpers::split(list_of_modem_indexes, '\n', true);
-		logger::logger(__FUNCTION__, "Number of indexes: " + to_string(modem_indexes.size()));
-		logger::logger(__FUNCTION__, "Number of collected modems: " + to_string(this->modemCollection.size()));
-		for(auto& index : modem_indexes )	
-			index = helpers::remove_char( index, ' ', 'E');
+		map<string,map<string,string>> available_modems = sys_calls::get_available_modems( this->configs["DIR_SCRIPTS"] );
 
-		vector<Modem*> tmp_modemCollection;
-		for(auto index : modem_indexes) {
-			Modem::STATE modem_state = Modem::TEST;
-			if(this->state == TEST) modem_state = Modem::TEST; 
-			else if(this->state == PRODUCTION) modem_state = Modem::PRODUCTION;
-			
-			Modem modem( configs, modem_state );
-			modem.setIndex( index );
-			modem.set_sleep_time( this->modem_sleep_time );
-			modem.set_exhaust_count( this->modem_exhaust_count );
+		// Second it filters the modems and stores them in database
+		for(auto modem : available_modems) {
+			bool has_modems_imei = this->available_modems.find( modem.first ) != this->available_modems.end() ? true : false;
+			if( !has_modems_imei ) {
+				logger::logger(__FUNCTION__, " ====> NEW MODEM DETECTED <======");
+				logger::logger(__FUNCTION__, "IMEI: " + modem.first );
+				map<string,string> details = modem.second;
+				logger::logger(__FUNCTION__, "TYPE: " + details["type"] );
+				logger::logger(__FUNCTION__, "ISP: " + details["operator_name"] );
+				logger::logger(__FUNCTION__, "==================================");
 
-			logger::logger(__FUNCTION__, "Setting Exhaust count: " + to_string(this->modem_exhaust_count));
-			string modem_information = modem.getType() == Modem::SSH ? sys_calls::terminal_stdout("ssh root@"+index+" -o 'ServerAliveInterval 10' deku") : sys_calls::terminal_stdout(configs["DIR_SCRIPTS"] + "/modem_information_extraction.sh extract " + index );
-			vector<string> ln_modem_information = helpers::split(modem_information, '\n', true);
+				// Thid stores modem in list of modems
+				string imei = modem.first;
+				string isp = details["operator_name"];
+				string type = details["type"];
+				this->available_modems.insert(make_pair( modem.first, new Modem(imei, isp, type, this->configs, this->mysqlConnection)));
 
-			if(modem.getType() == Modem::SSH) {
-				if(ln_modem_information.size() < 2) {
-					logger::logger(__FUNCTION__, "Incomplete data for modem at index: " + index, "stderr");
+				// Forth Starts the modems and let is be free
+				std::thread tr_modem = std::thread(&Modem::start, std::ref(this->available_modems[modem.first]));
+				tr_modem.detach();
+
+				// Optional Fith, tries storing the modems in a sql database
+				try {
+					this->db_insert_modems( details );
+					this->db_insert_modems_workload( details );
 				}
-				else if(ln_modem_information[0].find("deku:verified:") != string::npos) {
-					modem.setISP(helpers::to_upper(ln_modem_information[1]));
-					modem.setIMEI(index);
+				catch(std::exception& e) {
+					logger::logger(__FUNCTION__, e.what(), "stderr" );
 				}
-			}
-			else if(modem.getType() == Modem::MMCLI) {
-				for(auto ln : ln_modem_information) {
-					//logger::logger(__FUNCTION__, "line: " + ln);
-					vector<string> component = helpers::split(ln, ':', true);
-					if((component.size() != 2 or component[1].empty())) {
-						logger::logger(__FUNCTION__, "Incomplete data for modem at index: " + index, "stderr");
-						continue;
-					}
-					else if(component[0] == "equipment_id") modem.setIMEI( component[1]);
-					else if(component[0] == "operator_name") {
-						//logger::logger(__FUNCTION__, "Setting ISP: " + component[1]);
-						modem.setISP( helpers::to_upper(component[1]));
-					}
-				}
-			}
-
-			auto it_modemCollection = std::find_if(this->modemCollection.begin(), this->modemCollection.end(), [&](Modem* modem1){ return *modem1 == modem; });
-			if(it_modemCollection == this->modemCollection.end()) {
-				logger::logger(__FUNCTION__, modem.getInfo() + " - Not found in list");
-				if(modem) {
-					string insert_modem_query = "INSERT INTO __DEKU__.MODEMS (IMEI, TYPE, STATE, POWER) VALUES(\'"
-					+ modem.getIMEI() 
-					+ "\'," 
-					+ helpers::to_lowercase(modem.getType() == Modem::MMCLI ? "\"MMCLI\"" : "\"SSH\"") 
-					+ ",\"active\"," +
-					+ "\"plugged\")";
-
-					string select_workload_query = "SELECT * FROM __DEKU__.MODEM_WORK_LOAD WHERE IMEI='"+modem.getIMEI()+"' and DATE = DATE(NOW())";
-					try {
-						map<string, vector<string>> respond = this->mysqlConnection.query( select_workload_query );
-						if( respond.empty()) {
-							logger::logger(__FUNCTION__, "Inserting modem into workload db");
-							string replace_workload_query = "REPLACE INTO __DEKU__.MODEM_WORK_LOAD (IMEI, DATE) VALUES (\'"+modem.getIMEI()+"\', NOW())";
-							map<string, vector<string>> respond = this->mysqlConnection.query( replace_workload_query );
-						}
-						else {
-							logger::logger(__FUNCTION__, "Modem already exist in workload");
-						}
-
-						this->mysqlConnection.query( insert_modem_query );
-						logger::logger(__FUNCTION__, modem.getInfo() + " - Adding modem to list");
-						tmp_modemCollection.push_back( new Modem(modem) );
-					}
-					catch(std::exception& excep) {}
-				}
-			}
-			else {
-				logger::logger(__FUNCTION__, modem.getInfo() + " - Modem already present...");
-				//Find and store
-				tmp_modemCollection.push_back(*it_modemCollection);
 			}
 		}
-		//logger::logger(__FUNCTION__, "Exited..");
-		logger::logger(__FUNCTION__, "Finished refreshing with " + to_string(tmp_modemCollection.size()) + " modems");
-		this->modemCollection = tmp_modemCollection;
 
-		logger::logger(__FUNCTION__, "Updating Plugged in list");
-
-		if( this->modemCollection.empty() ) {
-			string none_plugged_query = "UPDATE __DEKU__.MODEMS SET POWER = 'not_plugged' WHERE 1";
-
-			try {
-				this->mysqlConnection.query( none_plugged_query );
-			}
-			catch(std::exception& excep) {
-			}
-		}
-		else {
-			vector<string> list_imei;
-			for(auto modem : this->modemCollection ) {
-				list_imei.push_back( modem->getIMEI());
-			}
-			string plugged_query = "UPDATE __DEKU__.MODEMS SET POWER = 'plugged' WHERE IMEI = ";
-			for(size_t i=0;i < this->modemCollection.size(); ++i) {
-				string imei = this->modemCollection[i]->getIMEI();
-				plugged_query += "'" + imei + "'";
-				if( (i + 1 ) < list_imei.size()) {
-					plugged_query += " OR IMEI = ";
-				}
-			}
-
-			try {
-				this->mysqlConnection.query( plugged_query );
-			}
-			catch(std::exception& excep) {
-			}
-
-			string unplugged_query = "UPDATE __DEKU__.MODEMS SET POWER = 'not_plugged' WHERE IMEI != ";
-			for(size_t i=0;i<list_imei.size();++i ) {
-				string imei = list_imei[i];
-				unplugged_query += "'" + imei + "'";
-				if( (i + 1 ) < list_imei.size()) {
-					unplugged_query += " AND IMEI != ";
-				}
-			}
-
-			logger::logger(__FUNCTION__, unplugged_query);
-			try {
-				this->mysqlConnection.query( unplugged_query );
-			}
-			catch( std::exception& excep) {
-				//logger::logger(__FUNCTION__, "Exception says: " + excep.what());
-			}
-		}
-			
-		// TODO: Should this take  up to 10 seconds?
-		// TODO: change this time to a variable
+		// Sixth: Rinse and repeat
 		helpers::sleep_thread( 10 );
 	}
 }
@@ -210,45 +139,4 @@ vector<string> Modems::getAllIMEI() {
 
 vector<Modem*> Modems::getAllModems() {
 	return this->modemCollection;
-}
-
-void Modems::startAllModems() {
-	while( 1 ) {  //TODO: Use an internal variable to control this loop
-		logger::logger(__FUNCTION__, to_string(this->threaded_modems.size()) + " currently threaded modems");
-		for(map<Modem*, std::thread>::iterator it=this->threaded_modems.begin();it!=this->threaded_modems.end();++it ) {
-			//if(std::find(this->modemCollection.begin(), this->modemCollection.end(), it->first) == this->modemCollection.end()) { //This checks against mem values
-			Modem* modem = it->first;
-			if(std::find_if(this->modemCollection.begin(), this->modemCollection.end(), [&](Modem* modem1){ return *modem1 == *modem; }) == this->modemCollection.end()) { //This checks against type of modem
-				logger::logger(__FUNCTION__, it->first->getInfo() + " - Modem not available, stopping thread");
-				if(this->threaded_modems.find(it->first) != this->threaded_modems.end()) {
-					it->first->end();
-					this->threaded_modems.erase(it);
-					if(this->threaded_modems.empty()) {
-						logger::logger(__FUNCTION__, "Currently no modem threads running");
-						break;
-					}
-					else {
-						if(auto tmp_it = ++it; tmp_it == this->threaded_modems.end()) {
-							logger::logger(__FUNCTION__, "Would break the next iteration, exiting loop");
-							break;
-						}
-					}
-					logger::logger(__FUNCTION__, to_string(this->threaded_modems.size()) + " currently threaded modems");
-				}
-			}
-		}
-
-		for(auto& modem : this->modemCollection) {
-			if(this->threaded_modems.find(modem) == this->threaded_modems.end()) {
-				this->threaded_modems.insert(make_pair(modem, std::thread(&Modem::start, modem)));
-				logger::logger(__FUNCTION__, modem->getInfo() + " - Began thread...");
-				this->threaded_modems[modem].detach();
-			}
-			else {
-				logger::logger(__FUNCTION__, modem->getInfo() + " - Already threaded..." );
-			}
-		}
-		helpers::sleep_thread( 5 );
-	}
-	
 }
