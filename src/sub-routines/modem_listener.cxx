@@ -100,10 +100,18 @@ void Modems::__INIT__( map<string, string> configs ) {
 					+ ",\"active\"," +
 					+ "\"plugged\")";
 
-					string insert_modem_workload_query = "REPLACE INTO __DEKU__.MODEM_WORK_LOAD (IMEI, DATE) VALUES (\'"+modem.getIMEI()+"\', NOW())";
-					this->mysqlConnection.query( insert_modem_query );
-					this->mysqlConnection.query( insert_modem_workload_query );
+					string select_workload_query = "SELECT * FROM __DEKU__.MODEM_WORK_LOAD WHERE IMEI='"+modem.getIMEI()+"' and DATE = DATE(NOW())";
+					map<string, vector<string>> respond = this->mysqlConnection.query( select_workload_query );
+					if( respond.empty()) {
+						logger::logger(__FUNCTION__, "Inserting modem into workload db");
+						string replace_workload_query = "REPLACE INTO __DEKU__.MODEM_WORK_LOAD (IMEI, DATE) VALUES (\'"+modem.getIMEI()+"\', NOW())";
+						map<string, vector<string>> respond = this->mysqlConnection.query( replace_workload_query );
+					}
+					else {
+						logger::logger(__FUNCTION__, "Modem already exist in workload");
+					}
 
+					this->mysqlConnection.query( insert_modem_query );
 					logger::logger(__FUNCTION__, modem.getInfo() + " - Adding modem to list");
 					tmp_modemCollection.push_back( new Modem(modem) );
 				}
