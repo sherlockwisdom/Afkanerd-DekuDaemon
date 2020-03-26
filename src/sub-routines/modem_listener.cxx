@@ -142,7 +142,7 @@ void Modems::__INIT__( map<string, string> configs ) {
 				string imei = this->modemCollection[i]->getIMEI();
 				plugged_query += "'" + imei + "'";
 				if( (i + 1 ) < list_imei.size()) {
-					plugged_query += " AND IMEI = ";
+					plugged_query += " OR IMEI = ";
 				}
 			}
 			this->mysqlConnection.query( plugged_query );
