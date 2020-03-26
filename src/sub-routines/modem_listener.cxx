@@ -93,14 +93,14 @@ void Modems::__INIT__( map<string, string> configs ) {
 			if(it_modemCollection == this->modemCollection.end()) {
 				logger::logger(__FUNCTION__, modem.getInfo() + " - Not found in list");
 				if(modem) {
-					string insert_modem_query = "INSERT INTO __DEKU__.MODEMS (IMEI, TYPE, STATE, POWER) VALUES("
+					string insert_modem_query = "INSERT INTO __DEKU__.MODEMS (IMEI, TYPE, STATE, POWER) VALUES(\'"
 					+ modem.getIMEI() 
-					+ "," 
+					+ "\'," 
 					+ helpers::to_lowercase(modem.getType() == Modem::MMCLI ? "\"MMCLI\"" : "\"SSH\"") 
 					+ ",\"active\"," +
 					+ "\"plugged\")";
 
-					string insert_modem_workload_query = "REPLACE INTO __DEKU__.MODEM_WORK_LOAD (IMEI) VALUES ("+modem.getIMEI()+")";
+					string insert_modem_workload_query = "REPLACE INTO __DEKU__.MODEM_WORK_LOAD (IMEI, DATE) VALUES (\'"+modem.getIMEI()+"\', NOW())";
 					this->mysqlConnection.query( insert_modem_query );
 					this->mysqlConnection.query( insert_modem_workload_query );
 
