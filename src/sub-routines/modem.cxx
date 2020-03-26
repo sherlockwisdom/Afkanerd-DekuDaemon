@@ -509,4 +509,5 @@ bool Modem::send_sms(string message, string number ) {
 
 Modem::~Modem() {
 	//logger::logger(__FUNCTION__, this->getInfo() + " - Destructor called...");
+	this->mysqlConnector.close();
 }
