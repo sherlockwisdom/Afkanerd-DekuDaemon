@@ -345,9 +345,11 @@ void modem_request_listener( Modem* modem ) {
 					){
 						// TODO: Deactivate modem if not activated
 						// TODO: Make inclusion of this code dynamic than hard coded
-						string ussd_command;
+						// string ussd_command;
+						vector<string> ussd_command;
 						if( modem->getISP() == "MTN" and modem->getType() == Modem::MMCLI) { 
-							ussd_command = "*158*0#{Unlimitext}|1{You will not be refunded}|1{successfully cancelled}";
+							// ussd_command = "*158*0#|1|1";
+							ussd_command = { "*158*0#", "1", "1" };
 						}
 
 						if( ussd_command.empty() ) {
