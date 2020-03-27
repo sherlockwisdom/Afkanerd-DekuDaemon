@@ -187,7 +187,6 @@ bool Modem::db_set_working_state( WORKING_STATE working_state )  {
 }
 
 void Modem::start() {
-	//std::thread tr_modem_request_listener = std::thread(modem_request_listener, &*this);
 	std::thread tr_modem_request_listener = std::thread(&Modem::request_listener, this);
 	
 	//TODO: Checks for incoming sms messages here

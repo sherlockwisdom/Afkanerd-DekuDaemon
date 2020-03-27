@@ -39,7 +39,7 @@ MySQL::MySQL() {
 }
 
 map<string, vector<string>> MySQL::query( string query ) {
-	logger::logger(__FUNCTION__, "Querying with: " + query );
+	// logger::logger(__FUNCTION__, "Querying with: " + query );
 	map<string, vector<string>> query_results;
 	auto mysql_query_state = mysql_query( this->mysqlConnection, query.c_str() );
 
