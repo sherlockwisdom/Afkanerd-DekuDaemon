@@ -109,12 +109,12 @@ namespace sys_calls {
 			vector<string> split_operator_id = helpers::split(ln_modem_information[3], ':', true);
 			if(split_equipment_id.size() == 2 and (split_operator_name.size() == 2 || split_operator_id.size() == 2)) {
 				details.push_back(helpers::split(ln_modem_information[0], ':', true)[1] );// equipment_id
-				details.push_back(type );// mmcli || ssh
 				if( split_operator_name.size() == 2 )
 				details.push_back(helpers::split(ln_modem_information[2], ':', true)[1] );// operator_name
 				else if( split_operator_id.size() == 2 )
 				details.push_back(helpers::split(ln_modem_information[3], ':', true)[1] );// operator_id
 				else return vector<string>{};
+				details.push_back(type );// mmcli || ssh
 			}
 		}
 		return details;

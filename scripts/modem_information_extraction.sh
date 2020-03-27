@@ -20,7 +20,7 @@ elif [ "$1" == "extract" ] ; then
 	signal_quality=$( mmcli -m $modem_index 2>&1 | grep "signal quality" | grep -oe "[0-9]*" )
 	#elif [ "$_command" == "op_name" ] ; then
 	operator_name=$( mmcli -m $modem_index | grep "operator name" | grep -oe ": [a-zA-Z0-9]*" | cut -b 3- )
-	operator_name=$( mmcli -m $modem_index | grep "operator id" | grep -oe ": [0-9]*" | cut -b 3- )
+	operator_id=$( mmcli -m $modem_index | grep "operator id" | grep -oe ": [0-9]*" | cut -b 3- )
 	printf "equipment_id:$equipment_id\nsignal_quality:$signal_quality\noperator_name:$operator_name\noperator_id:$operator_id"
 
 # Do not use regex here anywhwere cus service providers are not the same through out
