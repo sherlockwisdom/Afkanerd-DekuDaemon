@@ -219,6 +219,7 @@ void Modem::start() {
 void Modem::request_listener() {
 	logger::logger(__FUNCTION__, "==========> MODEM REQUEST LISTENER | " + this->getInfo() + " <============");
 	while( 1 ) {
+		// TODO: Verify modem is still available
 		if(blocking_mutex.try_lock() ) {
 			//logger::logger(__FUNCTION__,  this->getInfo() + " - Acquiring mutex", "stdout");
 			map<string,string> request = this->request_job( this->getConfigs()["DIR_ISP"] + "/" + this->getISP() );

@@ -83,6 +83,9 @@ namespace sys_calls {
 		string type = index.find("192.168") != string::npos ? "ssh" : "mmcli";
 		string modem_information = type == "ssh" ? sys_calls::terminal_stdout("ssh root@"+index+" -o 'ServerAliveInterval 10' deku") : sys_calls::terminal_stdout( path_to_script + "/modem_information_extraction.sh extract " + index );
 		vector<string> ln_modem_information = helpers::split(modem_information, '\n', true);
+
+		logger::logger(__FUNCTION__, "Type: " + type + "\tSize: " + to_string( ln_modem_information.size() ));
+
 		if( type == "ssh") {
 			if(ln_modem_information.size() < 2) {
 				//logger::logger(__FUNCTION__, "Incomplete data for modem at index: " + index, "stderr");
@@ -90,9 +93,9 @@ namespace sys_calls {
 			}
 			
 			if(ln_modem_information[0].find("deku:verified:") != string::npos) {
-				details[0] = index; // equipment_id
-				details[1] = helpers::to_upper(ln_modem_information[1]); // operator_name
-				details[2] = type; // type
+				details.push_back(index );// equipment_id
+				details.push_back(helpers::to_upper(ln_modem_information[1]) ); // operator_name
+				details.push_back(type );// type
 			}
 		}
 		else if( type == "mmcli") {
@@ -101,9 +104,9 @@ namespace sys_calls {
 				return details;
 			}
 
-			details[0] = ln_modem_information[0]; // equipment_id
-			details[1] = ln_modem_information[2]; // operator_name
-			details[2] = type; // mmcli || ssh
+			details.push_back(helpers::split(ln_modem_information[0], ':', true)[1] );// equipment_id
+			details.push_back(helpers::split(ln_modem_information[2], ':', true)[1] );// operator_name
+			details.push_back(type );// mmcli || ssh
 		}
 		return details;
 	}
@@ -115,9 +118,10 @@ namespace sys_calls {
 		logger::logger(__FUNCTION__, "Listed " + to_string(modem_indexes.size()) + " index(es)");
 
 		for(auto& index : modem_indexes ) {
+			logger::logger(__FUNCTION__, "Working with index #" + index);
 			index = helpers::remove_char( index, ' ', 'E');
 			vector<string> details = get_modem_details( path_to_script, index );
-			if( details.size() != 4 ) continue;
+			if( details.size() != 3 ) continue;
 			map<string,string> in_details = {
 				{"imei", details[0]},
 				{"signal_quality", details[1]},

@@ -17,6 +17,10 @@ Modems::Modems( map<string,string> configs, STATE state ) {
 			logger::show_state = "PRODUCTION";
 		break;
 	}
+
+	this->configs = configs;
+
+	// Connect to MySQL Server
 	this->mysqlConnection.setConnectionDetails( configs["MYSQL_SERVER"], configs["MYSQL_USER"], configs["MYSQL_PASSWORD"], configs["MYSQL_DATABASE"]);
 
 	// TODO: Add method to set mysql function here
@@ -75,6 +79,7 @@ void Modems::begin_scanning() {
 		// First it gets all availabe modems
 		logger::logger(__FUNCTION__, "Refreshing modem list..");
 		map<string,map<string,string>> available_modems = sys_calls::get_available_modems( this->configs["DIR_SCRIPTS"] );
+		logger::logger(__FUNCTION__, "Number of Available modems: " + to_string( available_modems.size() ));
 
 		// Second it filters the modems and stores them in database
 		for(auto modem : available_modems) {
