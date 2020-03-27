@@ -49,6 +49,7 @@ class Modem : public USSD {
 		void db_iterate_workload();
 		void set_sleep_time( int );
 		void request_listener();
+		void modem_sms_listener();
 
 		string getIndex() const;
 		string getISP() const;
