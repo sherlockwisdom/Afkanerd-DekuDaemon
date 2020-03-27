@@ -57,10 +57,10 @@ void Modems::db_insert_modems_workload( map<string, string> modem ) {
 void Modems::db_insert_modems( map<string,string> modem ) {
 	string insert_modem_query = "INSERT INTO __DEKU__.MODEMS (IMEI, TYPE, STATE, POWER) VALUES(\'"
 	+ modem["imei"]
-	+ "\'," 
+	+ "','" 
 	+ helpers::to_lowercase( modem["type"] ) 
-	+ ",\"active\"," +
-	+ "\"plugged\")";
+	+ "','active'," +
+	+ "'plugged')";
 
 	logger::logger(__FUNCTION__, "Inserting modem into DB");
 

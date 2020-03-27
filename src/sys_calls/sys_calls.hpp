@@ -124,9 +124,8 @@ namespace sys_calls {
 			if( details.size() != 3 ) continue;
 			map<string,string> in_details = {
 				{"imei", details[0]},
-				{"signal_quality", details[1]},
-				{"operator_name", details[2]},
-				{"type", details[3]}
+				{"operator_name", details[1]},
+				{"type", details[2]}
 			};
 			available_modems.insert(make_pair(details[0], in_details));
 		}
