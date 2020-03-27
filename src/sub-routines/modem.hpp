@@ -33,7 +33,7 @@ class Modem : public USSD {
 
 		STATE state;
 		WORKING_STATE working_state;
-		Modem(string imei, string isp, string type, map<string, string> configs, MySQL mysqlConnection );
+		Modem(string imei, string isp, string type, string index, map<string, string> configs, MySQL mysqlConnection );
 		Modem(const Modem& modem);
 		~Modem();
 

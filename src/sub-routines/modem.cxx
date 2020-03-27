@@ -10,10 +10,11 @@ using namespace std;
 std::mutex blocking_mutex;
 
 //class Modem
-Modem::Modem(string imei, string isp, string type, map<string,string> configs, MySQL mysqlConnection) {
+Modem::Modem(string imei, string isp, string type, string index, map<string,string> configs, MySQL mysqlConnection) {
 	this->imei = imei;
 	this->isp = isp;
 	this->type = type;
+	this->index = index; 
 	this->configs = configs;
 	this->mysqlConnection = mysqlConnection;
 }
@@ -219,7 +220,13 @@ void Modem::start() {
 void Modem::request_listener() {
 	logger::logger(__FUNCTION__, "==========> MODEM REQUEST LISTENER | " + this->getInfo() + " <============");
 	while( 1 ) {
-		// TODO: Verify modem is still available
+		// TODO: Verify modem is still available - extracts it's information and see if it matches
+		vector<string> respond = sys_calls::get_modem_details( this->configs["DIR_SCRIPTS"], this->index );
+		if( respond.empty()) {
+			logger::logger(__FUNCTION__, this->getInfo() + " | Has gone away |", "stdout", true);
+			return;
+		}
+
 		if(blocking_mutex.try_lock() ) {
 			//logger::logger(__FUNCTION__,  this->getInfo() + " - Acquiring mutex", "stdout");
 			map<string,string> request = this->request_job( this->getConfigs()["DIR_ISP"] + "/" + this->getISP() );
@@ -407,6 +414,6 @@ bool Modem::send_sms(string message, string number ) {
 }
 
 Modem::~Modem() {
-	// logger::logger(__FUNCTION__, this->getInfo() + " - Destructor called...");
-	// this->mysqlConnection.close();
+	string unplugged_query = "UPDATE __DEKU__.MODEMS SET POWER = 'not_plugged' WHERE IMEI = '" + this->imei + "'";
+	this->mysqlConnection.query( unplugged_query );
 }

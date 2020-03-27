@@ -125,7 +125,8 @@ namespace sys_calls {
 			map<string,string> in_details = {
 				{"imei", details[0]},
 				{"operator_name", details[1]},
-				{"type", details[2]}
+				{"type", details[2]},
+				{"index", index }
 			};
 			available_modems.insert(make_pair(details[0], in_details));
 		}

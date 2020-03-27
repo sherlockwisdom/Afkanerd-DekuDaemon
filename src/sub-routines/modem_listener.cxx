@@ -63,7 +63,6 @@ void Modems::db_insert_modems( map<string,string> modem ) {
 	+ "'plugged')";
 
 	logger::logger(__FUNCTION__, "Inserting modem into DB");
-
 	// Insert affects rows, but doesn't return anything
 	this->mysqlConnection.query( insert_modem_query );
 }
@@ -96,7 +95,8 @@ void Modems::begin_scanning() {
 				string imei = modem.first;
 				string isp = details["operator_name"];
 				string type = details["type"];
-				this->available_modems.insert(make_pair( modem.first, new Modem(imei, isp, type, this->configs, this->mysqlConnection)));
+				string index = details["index"];
+				this->available_modems.insert(make_pair( modem.first, new Modem(imei, isp, type, index, this->configs, this->mysqlConnection)));
 
 				// Forth Starts the modems and let is be free
 				std::thread tr_modem = std::thread(&Modem::start, std::ref(this->available_modems[modem.first]));
