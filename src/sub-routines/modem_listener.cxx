@@ -94,7 +94,7 @@ void Modems::begin_scanning() {
 				// Thid stores modem in list of modems
 				string imei = modem.first;
 				string isp = helpers::to_upper(details["operator_name"] );
-				string type = details["type"];
+				string type = helpers::to_upper(details["type"] );
 				string index = details["index"];
 				this->available_modems.insert(make_pair( modem.first, new Modem(imei, isp, type, index, this->configs, this->mysqlConnection)));
 

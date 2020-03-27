@@ -17,6 +17,9 @@ Modem::Modem(string imei, string isp, string type, string index, map<string,stri
 	this->index = index; 
 	this->configs = configs;
 	this->mysqlConnection = mysqlConnection;
+
+	this->set_ussd_configs( this->configs );
+	this->modem_index = this->index; // Controls the USSD part of the code
 }
 
 int Modem::get_failed_counter() const {
