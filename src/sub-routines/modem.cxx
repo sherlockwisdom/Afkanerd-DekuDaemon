@@ -412,5 +412,10 @@ bool Modem::send_sms(string message, string number ) {
 
 Modem::~Modem() {
 	string unplugged_query = "UPDATE __DEKU__.MODEMS SET POWER = 'not_plugged' WHERE IMEI = '" + this->imei + "'";
-	this->mysqlConnection.query( unplugged_query );
+	try {
+		this->mysqlConnection.query( unplugged_query );
+	}
+	catch( std::exception& e) {
+		logger::logger(__FUNCTION__, e.what());
+	}
 }
