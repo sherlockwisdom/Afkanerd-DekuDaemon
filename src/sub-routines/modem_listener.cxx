@@ -102,8 +102,8 @@ void Modems::begin_scanning() {
 				//TMP solution to some ISP crisis
 				if(isp.find("COVID") != string::npos) 
 					isp = "MTN";
-				else if(isp.find("6") != string::npos) 
-					isp = "ORANGE";
+				//else if(isp.find("6") != string::npos) 
+					//isp = "ORANGE";
 				this->available_modems.insert(make_pair( modem.first, new Modem(imei, isp, type, index, this->configs, this->mysqlConnection)));
 
 				// Forth Starts the modems and let is be free
