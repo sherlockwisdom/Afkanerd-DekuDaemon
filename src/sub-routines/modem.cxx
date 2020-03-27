@@ -183,10 +183,6 @@ bool Modem::db_set_working_state( WORKING_STATE working_state )  {
 	catch(std::exception& excep) {
 		//logger::logger(__FUNCTION__, "Exception says: " + excep.what());
 	}
-
-	//Allows the modem connection to MySQL server, in case of db locking
-	logger::logger(__FUNCTION__, "SQL Server is going away", "stderr");
-	this->mysqlConnection.close();
 }
 
 void Modem::start() {
