@@ -204,7 +204,7 @@ void Modem::request_listener() {
 			logger::logger(__FUNCTION__, this->getInfo() + " | Has gone away |", "stdout", true);
 			this->available = false;
 			
-			cout << boolalpha << this->available << endl;
+			//cout << boolalpha << this->available << endl;
 			break;
 		}
 
