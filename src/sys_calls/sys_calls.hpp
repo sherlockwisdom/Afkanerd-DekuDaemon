@@ -104,9 +104,13 @@ namespace sys_calls {
 				return details;
 			}
 
-			details.push_back(helpers::split(ln_modem_information[0], ':', true)[1] );// equipment_id
-			details.push_back(helpers::split(ln_modem_information[2], ':', true)[1] );// operator_name
-			details.push_back(type );// mmcli || ssh
+			vector<string> split_equipment_id = helpers::split(ln_modem_information[0], ':', true);
+			vector<string> split_operator_name = helpers::split(ln_modem_information[2], ':', true);
+			if(split_equipment_id.size() == 2 and split_operator_name.size() == 2) {
+				details.push_back(helpers::split(ln_modem_information[0], ':', true)[1] );// equipment_id
+				details.push_back(helpers::split(ln_modem_information[2], ':', true)[1] );// operator_name
+				details.push_back(type );// mmcli || ssh
+			}
 		}
 		return details;
 	}

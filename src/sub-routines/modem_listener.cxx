@@ -118,8 +118,10 @@ void Modems::begin_scanning() {
 			logger::logger(__FUNCTION__, modem.second->getInfo() + " Checking availability");
 			if( !modem.second->is_available() ) {
 				logger::logger(__FUNCTION__, modem.second->getInfo() + " | Delisting Modem...");
-				this->available_modems.erase(it_modem );
-				--it_modem;
+
+				delete modem.second;
+				this->available_modems.erase(modem.first );
+				if(this->available_modems.empty()) break;
 			}
 		}
 		logger::logger(__FUNCTION__, "Number of Available modems (After Delisting): " + to_string( available_modems.size() ));
