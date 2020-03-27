@@ -113,7 +113,18 @@ void Modems::begin_scanning() {
 			}
 		}
 
-		// Sixth: Rinse and repeat
+		for(auto it_modem = this->available_modems.begin(); it_modem != this->available_modems.end(); ++it_modem ) {
+			auto modem = *it_modem;
+			logger::logger(__FUNCTION__, modem.second->getInfo() + " Checking availability");
+			if( !modem.second->is_available() ) {
+				logger::logger(__FUNCTION__, modem.second->getInfo() + " | Delisting Modem...");
+				this->available_modems.erase(it_modem );
+				--it_modem;
+			}
+		}
+		logger::logger(__FUNCTION__, "Number of Available modems (After Delisting): " + to_string( available_modems.size() ));
+
+		// Seventh: Rinse and repeat
 		helpers::sleep_thread( 10 );
 	}
 }

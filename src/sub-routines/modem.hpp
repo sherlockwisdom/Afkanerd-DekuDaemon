@@ -15,8 +15,7 @@ class Modem : public USSD {
 	string errorLogs;
 	string type;
 
-	bool keepAlive = false;
-	bool thread_safety = false;
+	bool available = true;
 
 	map<string,string> configs;
 	
@@ -72,6 +71,7 @@ class Modem : public USSD {
 		bool db_set_working_state( WORKING_STATE );
 		bool getKeepAlive() const;
 		bool getThreadSafety() const;
+		bool is_available() const;
 
 		map<string,string> request_job( string path_dir_request );
 		map<string,string> getConfigs() const;

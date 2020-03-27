@@ -48,12 +48,8 @@ string Modem::getType() const {
 	return this->type;
 }
 
-Modem::operator bool() const {
-	return !this->getISP().empty();
-}
-
-bool Modem::getKeepAlive() const {
-	return this->keepAlive;
+bool Modem::is_available() const {
+	return this->available;
 }
 
 map<string,string> Modem::getConfigs() const {
@@ -224,7 +220,10 @@ void Modem::request_listener() {
 		vector<string> respond = sys_calls::get_modem_details( this->configs["DIR_SCRIPTS"], this->index );
 		if( respond.empty()) {
 			logger::logger(__FUNCTION__, this->getInfo() + " | Has gone away |", "stdout", true);
-			return;
+			this->available = false;
+			
+			cout << boolalpha << this->available << endl;
+			break;
 		}
 
 		if(blocking_mutex.try_lock() ) {
@@ -309,8 +308,6 @@ void Modem::request_listener() {
 		}
 		helpers::sleep_thread( this->get_sleep_time() );
 	}
-	this->setThreadSafety(false);
-	//logger::logger(__FUNCTION__, this->getInfo() + " - KeepAlive died!" );
 }
 
 int Modem::get_sleep_time() const {
