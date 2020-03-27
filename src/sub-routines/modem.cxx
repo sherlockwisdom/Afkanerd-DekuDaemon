@@ -168,21 +168,6 @@ void Modem::db_iterate_workload() {
 bool Modem::db_set_working_state( WORKING_STATE working_state )  {
 	this->working_state = working_state;
 
-	//TODO: Maybe MYSQL database is passed but not registered here, so keep that in mind
-	/*
-	this->mysqlConnection.setConnectionDetails( configs["MYSQL_SERVER"], configs["MYSQL_USER"], configs["MYSQL_PASSWORD"], configs["MYSQL_DATABASE"]);
-	if( !this->mysqlConnection.connect() ) {
-		logger::logger(__FUNCTION__, "Modem MYSQL connection failed", "stderr", true);
-		exit( 1 );
-	}
-
-	else {
-		logger::logger(__FUNCTION__, "MYSQL connection obtained!", "stdout", true);
-	}
-	*/
-
-	//MysQL interaction comes in here
-	//TODO: working_state not a string 'exhausted' like below
 	string query = "";
 	if( working_state == Modem::EXHAUSTED ) 
 		query = "UPDATE __DEKU__.MODEMS SET STATE = 'exhausted' WHERE IMEI = '" + this->imei + "'";
@@ -271,7 +256,7 @@ void Modem::request_listener() {
 					){
 						// TODO: Deactivate modem if not activated
 						// TODO: Make inclusion of this code dynamic than hard coded
-						// string ussd_command;
+
 						vector<string> ussd_command;
 						if( this->getISP() == "MTN" and this->getType() == "MMCLI") { 
 							// ussd_command = "*158*0#|1|1";
