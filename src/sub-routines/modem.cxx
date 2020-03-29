@@ -10,6 +10,7 @@ using namespace std;
 std::mutex blocking_mutex;
 
 //class Modem
+//TODO: Make notifications when required config variables are missing from program e.g DIR_SCRIPTS typo'd as DIR_SCRIPT
 Modem::Modem(string imei, string isp, string type, string index, map<string,string> configs, MySQL mysqlConnection) {
 	this->imei = imei;
 	this->isp = isp;
@@ -401,11 +402,13 @@ bool Modem::send_sms(string message, string number ) {
 }
 
 Modem::~Modem() {
-	string unplugged_query = "UPDATE __DEKU__.MODEMS SET POWER = 'not_plugged' WHERE IMEI = '" + this->imei + "'";
-	try {
-		this->mysqlConnection.query( unplugged_query );
-	}
-	catch( std::exception& e) {
-		logger::logger(__FUNCTION__, e.what());
+	if( this->mysqlConnection.is_init() )  {
+		string unplugged_query = "UPDATE __DEKU__.MODEMS SET POWER = 'not_plugged' WHERE IMEI = '" + this->imei + "'";
+		try {
+			this->mysqlConnection.query( unplugged_query );
+		}
+		catch( std::exception& e) {
+			logger::logger(__FUNCTION__, e.what());
+		}
 	}
 }

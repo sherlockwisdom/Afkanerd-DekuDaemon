@@ -6,7 +6,7 @@ using namespace std;
 int main() {
 	//
 	map<string,string> configs = {
-		{"DIR_SCRIPT", "/home/sherlock/Desktop/open_source_projects/Afkanerd-DekuDaemon/scripts"}
+		{"DIR_SCRIPTS", "/home/sherlock/Desktop/open_source_projects/Afkanerd-DekuDaemon/scripts"}
 	};
 	Modem modem;
 
