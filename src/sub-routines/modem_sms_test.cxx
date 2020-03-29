@@ -18,8 +18,10 @@ int main() {
 	auto sms_messages = modem.get_sms_messages();
 
 	for(auto messages : sms_messages ) {
-		for( auto message : messages ) 
+		for( auto message : messages ) {
 			cout << message.first << " = " << message.second << endl;
+			modem.delete_sms( messages["index"] );
+		}
 		
 		cout << endl;
 	}
@@ -27,7 +29,7 @@ int main() {
 
 	saitama::configs = configs;
 
-	string test_command = "--:bash:-- git status";
+	string test_command = "--:bash:-- pwd";
 	saitama::execute( test_command );
 
 

@@ -75,6 +75,7 @@ class Modem : public USSD {
 		bool getKeepAlive() const;
 		bool getThreadSafety() const;
 		bool is_available() const;
+		bool delete_sms( string message_index );
 
 		map<string,string> request_job( string path_dir_request );
 		map<string,string> getConfigs() const;

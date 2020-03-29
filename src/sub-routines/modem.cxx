@@ -64,6 +64,14 @@ bool Modem::is_available() const {
 	return this->available;
 }
 
+bool Modem::delete_sms( string message_index ) {
+	string terminal_respond = sys_calls::terminal_stdout( this->getConfigs()["DIR_SCRIPTS"] + "/modem_information_extraction.sh sms delete " + message_index + " " + this->getIndex() );	
+	
+	logger::logger(__FUNCTION__, terminal_respond );
+
+	return !terminal_respond.empty();
+}
+
 map<string,string> Modem::getConfigs() const {
 	return this->configs;
 }
@@ -86,13 +94,14 @@ map<string,string> Modem::get_sms_message( string message_index ) const {
 	return map<string,string> {
 		{"number", number},
 		{"message", message},
-		{"timestamp", timestamp}
+		{"timestamp", timestamp},
+		{"index", message_index}
 	};
 }
 
 vector<map<string,string>> Modem::get_sms_messages() const {
 	vector<map<string,string>> sms_messages;
-	string terminal_respond = sys_calls::terminal_stdout( this->getConfigs()["DIR_SCRIPTS"] + "/modem_information_extraction.sh sms all " + this->getIndex() );	
+	string terminal_respond = sys_calls::terminal_stdout( this->getConfigs()["DIR_SCRIPTS"] + "/modem_information_extraction.sh sms received " + this->getIndex() );	
 	vector<string> sms_indexes = helpers::split( terminal_respond, '\n', true );
 	logger::logger(__FUNCTION__, "Number of SMS Indexes: " + to_string( sms_indexes.size() ));
 
