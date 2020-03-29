@@ -20,8 +20,8 @@ int main() {
 	for(auto messages : sms_messages ) {
 		for( auto message : messages ) {
 			cout << message.first << " = " << message.second << endl;
-			modem.delete_sms( messages["index"] );
 		}
+		modem.delete_sms( messages["index"] );
 		
 		cout << endl;
 	}
