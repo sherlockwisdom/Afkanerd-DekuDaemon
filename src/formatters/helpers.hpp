@@ -54,24 +54,31 @@ namespace helpers {
 		return return_string.empty() ? backup_original : return_string;
 	}
 
-	vector<string> split(string _string, char del = ' ', bool strict = false, size_t start_pos = 0) {
+	vector<string> split(string _string, char del = ' ', bool strict = false, size_t start_pos = 0, size_t limit = 0) {
 		vector<string> return_value;
 		string temp_string = "";
+		size_t iterator = 0;
 		size_t found_count = 0;
 		for(auto _char : _string) {
 			if(_char==del) {
-				if(found_count >= start_pos) {
-					if(strict and temp_string.empty()) continue;
+				if(iterator >= start_pos) {
+					// if(strict and temp_string.empty()) continue;
 					return_value.push_back(temp_string);
 					temp_string="";
+					++found_count;
 				}
 				else 
 				temp_string+=_char;
-				++found_count;
+
+				if( limit != 0 and found_count == limit) {
+					temp_string = _string.substr(iterator+1, (_string.size() - iterator));
+					break;
+				}
 			}
 			else {
 				temp_string+=_char;
 			}
+			++iterator;
 		}
 		if(strict and !temp_string.empty()) return_value.push_back(temp_string);
 
