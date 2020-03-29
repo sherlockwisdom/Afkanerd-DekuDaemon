@@ -18,6 +18,8 @@ class MySQL {
 	string database;
 	
 	MYSQL* mysqlConnection;
+
+	bool initialized = false;
 	
 	public:
 	MySQL(string server, string user, string password, string database);
@@ -27,6 +29,7 @@ class MySQL {
 	map<string, vector<string>> query( string );
 
 	bool connect();
+	bool is_init() const;
 
 	//TODO: Put some getters and setters
 	void setConnectionDetails( string server, string user, string password, string database );

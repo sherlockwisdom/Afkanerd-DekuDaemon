@@ -22,6 +22,7 @@ void MySQL::setConnectionDetails( string server, string user, string password, s
 }
 
 bool MySQL::connect() {
+	this->initialized = true;
 	auto mysql_connection_state_good = mysql_real_connect( this->mysqlConnection, this->server.c_str(), this->user.c_str(), this->password.c_str(), this->database.c_str(), 0, NULL, 0);
 
 	if( !mysql_connection_state_good ) {
@@ -32,6 +33,11 @@ bool MySQL::connect() {
 	}
 
 	return true;
+}
+
+
+bool MySQL::is_init() const {
+	return this->initialized;
 }
 
 MySQL::MySQL() {
