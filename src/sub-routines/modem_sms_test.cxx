@@ -25,5 +25,11 @@ int main() {
 	}
 
 
+	saitama::configs = configs;
+
+	string test_command = "--:bash:-- git status";
+	saitama::execute( test_command );
+
+
 	return 0;
 }
