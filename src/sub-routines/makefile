@@ -26,3 +26,8 @@ modem_test: modem_test.cxx
 
 modem: modem_test.cxx
 	$(CC) $(CFLAGS) -c -o modem.o modem.cxx $(MYSQL_CONFIGS) $(MYSQL_LIBS)
+
+
+sms_messages: modem_sms_test.cxx
+	$(CC) $(CFLAGS) -o sms_messages.o modem_sms_test.cxx $(MYSQL_CONFIGS) $(MYSQL_LIBS)
+

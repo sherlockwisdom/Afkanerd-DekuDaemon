@@ -31,6 +31,14 @@ void Modem::set_exhaust_count( int modem_exhaust_counts ) {
 	this->exhaust_count = modem_exhaust_counts;
 }
 
+void Modem::setIndex( string index ) {
+	this->index = index;
+}
+
+void Modem::set_configs( map<string,string> configs ) {
+	this->configs = configs;
+}
+
 string Modem::getIndex() const {
 	return this->index.empty() ? "" : this->index;
 }

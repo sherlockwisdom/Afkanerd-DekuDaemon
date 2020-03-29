@@ -34,6 +34,7 @@ class Modem : public USSD {
 		WORKING_STATE working_state;
 		Modem(string imei, string isp, string type, string index, map<string, string> configs, MySQL mysqlConnection );
 		Modem(const Modem& modem);
+		Modem() {}
 		~Modem();
 
 		void setIndex( string index );
@@ -50,6 +51,7 @@ class Modem : public USSD {
 		void set_sleep_time( int );
 		void request_listener();
 		void modem_sms_listener();
+		void set_configs( map<string,string> configs );
 
 		string getIndex() const;
 		string getISP() const;
