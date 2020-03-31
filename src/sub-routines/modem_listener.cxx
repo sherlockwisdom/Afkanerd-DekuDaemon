@@ -90,12 +90,22 @@ void Modems::begin_scanning() {
 				logger::logger(__FUNCTION__, "TYPE: " + details["type"] );
 				logger::logger(__FUNCTION__, "ISP: " + details["operator_name"] );
 				logger::logger(__FUNCTION__, "==================================");
+				
 
 				// Thid stores modem in list of modems
 				string imei = modem.first;
 				string isp = helpers::to_upper(details["operator_name"] );
 				string type = helpers::to_upper(details["type"] );
 				string index = details["index"];
+
+
+				//TMP solution to some ISP crisis
+				if(isp.find("COVID") != string::npos or isp.find("62401") != string::npos) 
+					isp = "MTN";
+				else if(isp.find("62402") != string::npos)
+					isp = "ORANGE";
+				//else if(isp.find("6") != string::npos) 
+					//isp = "ORANGE";
 				this->available_modems.insert(make_pair( modem.first, new Modem(imei, isp, type, index, this->configs, this->mysqlConnection)));
 
 				// Forth Starts the modems and let is be free

@@ -10,6 +10,7 @@ using namespace std;
 std::mutex blocking_mutex;
 
 //class Modem
+//TODO: Make notifications when required config variables are missing from program e.g DIR_SCRIPTS typo'd as DIR_SCRIPT
 Modem::Modem(string imei, string isp, string type, string index, map<string,string> configs, MySQL mysqlConnection) {
 	this->imei = imei;
 	this->isp = isp;
@@ -29,6 +30,14 @@ int Modem::get_failed_counter() const {
 void Modem::set_exhaust_count( int modem_exhaust_counts ) {
 	logger::logger(__FUNCTION__, this->getInfo() + " - Setting Exhaust count to: " + to_string( modem_exhaust_counts ));
 	this->exhaust_count = modem_exhaust_counts;
+}
+
+void Modem::setIndex( string index ) {
+	this->index = index;
+}
+
+void Modem::set_configs( map<string,string> configs ) {
+	this->configs = configs;
 }
 
 string Modem::getIndex() const {
@@ -55,6 +64,14 @@ bool Modem::is_available() const {
 	return this->available;
 }
 
+bool Modem::delete_sms( string message_index ) {
+	string terminal_respond = sys_calls::terminal_stdout( this->getConfigs()["DIR_SCRIPTS"] + "/modem_information_extraction.sh sms delete " + message_index + " " + this->getIndex() );	
+	
+	logger::logger(__FUNCTION__, terminal_respond );
+
+	return !terminal_respond.empty();
+}
+
 map<string,string> Modem::getConfigs() const {
 	return this->configs;
 }
@@ -77,13 +94,14 @@ map<string,string> Modem::get_sms_message( string message_index ) const {
 	return map<string,string> {
 		{"number", number},
 		{"message", message},
-		{"timestamp", timestamp}
+		{"timestamp", timestamp},
+		{"index", message_index}
 	};
 }
 
 vector<map<string,string>> Modem::get_sms_messages() const {
 	vector<map<string,string>> sms_messages;
-	string terminal_respond = sys_calls::terminal_stdout( this->getConfigs()["DIR_SCRIPTS"] + "/modem_information_extraction.sh sms all " + this->getIndex() );	
+	string terminal_respond = sys_calls::terminal_stdout( this->getConfigs()["DIR_SCRIPTS"] + "/modem_information_extraction.sh sms received " + this->getIndex() );	
 	vector<string> sms_indexes = helpers::split( terminal_respond, '\n', true );
 	logger::logger(__FUNCTION__, "Number of SMS Indexes: " + to_string( sms_indexes.size() ));
 
@@ -183,10 +201,6 @@ bool Modem::db_set_working_state( WORKING_STATE working_state )  {
 	catch(std::exception& excep) {
 		//logger::logger(__FUNCTION__, "Exception says: " + excep.what());
 	}
-
-	//Allows the modem connection to MySQL server, in case of db locking
-	logger::logger(__FUNCTION__, "SQL Server is going away", "stderr");
-	this->mysqlConnection.close();
 }
 
 void Modem::start() {
@@ -208,7 +222,7 @@ void Modem::request_listener() {
 			logger::logger(__FUNCTION__, this->getInfo() + " | Has gone away |", "stdout", true);
 			this->available = false;
 			
-			cout << boolalpha << this->available << endl;
+			//cout << boolalpha << this->available << endl;
 			break;
 		}
 
@@ -397,11 +411,13 @@ bool Modem::send_sms(string message, string number ) {
 }
 
 Modem::~Modem() {
-	string unplugged_query = "UPDATE __DEKU__.MODEMS SET POWER = 'not_plugged' WHERE IMEI = '" + this->imei + "'";
-	try {
-		this->mysqlConnection.query( unplugged_query );
-	}
-	catch( std::exception& e) {
-		logger::logger(__FUNCTION__, e.what());
+	if( this->mysqlConnection.is_init() )  {
+		string unplugged_query = "UPDATE __DEKU__.MODEMS SET POWER = 'not_plugged' WHERE IMEI = '" + this->imei + "'";
+		try {
+			this->mysqlConnection.query( unplugged_query );
+		}
+		catch( std::exception& e) {
+			logger::logger(__FUNCTION__, e.what());
+		}
 	}
 }

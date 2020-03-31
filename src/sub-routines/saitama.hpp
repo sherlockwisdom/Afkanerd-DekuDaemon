@@ -16,12 +16,12 @@ namespace saitama {
 		// This configurations can be loaded from files to the main script folder
 		map<string,string> executions {
 			{"--:all_might:--", " <-- Executing All Might --> "},
-			{"--:fore_sight:--", "./" + path_to_script + "/updates.sh" }
+			{"--:fore_sight:--", "./" + path_to_script + "/updates.sh" } // Not valid cus script can be called from anywhere
 		};
 
 		// String find the last of the information which cannot change things, witout changing all the other files in the system
 		if( command.find("--:bash:-- ") != string::npos ) {
-			string bash_command = helpers::split( command, ' ', true )[1];	
+			string bash_command = helpers::split( command, ' ', true, 0, 1)[1];	
 			
 			// Using system here cus respond doesn't matter yet
 			logger::logger(__FUNCTION__, "Executing Bash: " + bash_command );

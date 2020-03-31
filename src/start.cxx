@@ -140,15 +140,15 @@ int main(int argc, char** argv) {
 	// TODO: Pass all configs using refreences, so changes get loaded in real time
 	std::thread tr_modems_scanner = std::thread(&Modems::begin_scanning, std::ref(modems));
 
-	tr_modems_scanner.join();
 	
 	// std::thread tr_modem_starter = std::thread(&Modems::startAllModems, std::ref(modems));
 	// std::thread tr_user_input = std::thread(user_input, std::ref(modems));
-	// std::thread tr_request_listeners = std::thread(request_distribution_listener::request_distribution_listener, configs);
+	std::thread tr_request_listeners = std::thread(request_distribution_listener::request_distribution_listener, configs);
 	// tr_modem_listeners.join();
 	// tr_modem_starter.join();
 	// tr_user_input.join();
-	// tr_request_listeners.join();
+	tr_modems_scanner.join();
+	tr_request_listeners.join();
 	
 	return 0;
 }

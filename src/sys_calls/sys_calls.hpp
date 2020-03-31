@@ -99,16 +99,21 @@ namespace sys_calls {
 			}
 		}
 		else if( type == "mmcli") {
-			if( ln_modem_information.size() != 3 ) {
+			if( ln_modem_information.size() != 4 ) {
 				// Not valid modem
 				return details;
 			}
 
 			vector<string> split_equipment_id = helpers::split(ln_modem_information[0], ':', true);
 			vector<string> split_operator_name = helpers::split(ln_modem_information[2], ':', true);
-			if(split_equipment_id.size() == 2 and split_operator_name.size() == 2) {
+			vector<string> split_operator_id = helpers::split(ln_modem_information[3], ':', true);
+			if(split_equipment_id.size() == 2 and (split_operator_name.size() == 2 || split_operator_id.size() == 2)) {
 				details.push_back(helpers::split(ln_modem_information[0], ':', true)[1] );// equipment_id
+				if( split_operator_name.size() == 2 )
 				details.push_back(helpers::split(ln_modem_information[2], ':', true)[1] );// operator_name
+				else if( split_operator_id.size() == 2 )
+				details.push_back(helpers::split(ln_modem_information[3], ':', true)[1] );// operator_id
+				else return vector<string>{};
 				details.push_back(type );// mmcli || ssh
 			}
 		}

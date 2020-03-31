@@ -27,4 +27,6 @@ _Project's root dir_\
 ##### `--show_isp [number]`
 ##### `--run_ussd [code]`
 ##### `--run_ussd_script <path to file>`
-
+##### `--exhaust_count [number]` _warning: do not set less than 3 if using MTN or say, could be very dangerous if automated_
+##### `--show_isp [number]`
+##### `--generate_request [number]`
