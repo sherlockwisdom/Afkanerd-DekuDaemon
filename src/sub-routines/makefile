@@ -22,7 +22,7 @@ modem_listener_test: modem_listener_test.cxx
 	$(CC) $(CFLAGS) -o modem_listener_test modem_listener_test.cxx
 
 modem_test: modem_test.cxx
-	$(CC) $(CFLAGS) -o modem_test modem_test.cxx
+	$(CC) $(CFLAGS) -o modem_test modem_test.cxx $(MYSQL_CONFIGS) $(MYSQL_LIBS)
 
 modem: modem_test.cxx
 	$(CC) $(CFLAGS) -c -o modem.o modem.cxx $(MYSQL_CONFIGS) $(MYSQL_LIBS)

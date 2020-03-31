@@ -2,7 +2,7 @@
 #include "saitama.hpp"
 
 int main() {
-	string modem_index = "1";
+	/*string modem_index = "1";
 	map<string,string> configs {
 		{"DIR_SCRIPTS", "../../scripts"}
 	};
@@ -30,6 +30,12 @@ int main() {
 
 	message = "--:fore_sight:--";
 	saitama::execute( message );
+	*/
+
+	string formatters = "652156811   ";
+	string output = helpers::remove_char_advanced( formatters, ' ' );
+	cout << output << endl;
+	cout << output.size() << endl;
 
 	return 0;
 }
