@@ -10,11 +10,7 @@ using namespace std;
 
 namespace helpers {
 	string remove_char_advanced( string input, char del ) {
-		for(size_t i=0;i<input.size();++i) {
-			if( input[i] == del ) {
-				input.erase(i, 1);
-			}
-		}
+		input.erase(std::remove(input.begin(), input.end(), del ), input.end());
 		return input;
 	}
 	string unescape_string( string input, char del ) {
