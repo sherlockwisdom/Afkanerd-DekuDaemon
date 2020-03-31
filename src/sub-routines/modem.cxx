@@ -239,7 +239,8 @@ void Modem::request_listener() {
 				logger::logger(__FUNCTION__, this->getInfo() + " - locked on file: " + request["filename"]);
 				//From here we can know which message went and which failed, based on the ID
 				//TODO: What is an invalid message - find it so you can delete it
-				if( this->send_sms( helpers::unescape_string(request["message"], '"'), request["number"] ) ) {
+				string send_sms_status = this->send_sms( helpers::unescape_string(request["message"], '"'), request["number"] );
+				if(  send_sms_status == "done" ) {
 					this->reset_failed_counter();
 					this->db_iterate_workload();
 					this->db_set_working_state( Modem::ACTIVE );
@@ -262,7 +263,7 @@ void Modem::request_listener() {
 
 					//WRITE TO LOG FILE
 				}
-				else {
+				else if( send_sms_status == "failed" ) {
 					this->iterate_failed_counter();
 					logger::logger(__FUNCTION__, this->getInfo() + " - Exhaust count(" + to_string(this->get_exhaust_count()) + ")");
 					if( this->get_failed_counter() >= this->get_exhaust_count()
@@ -297,6 +298,23 @@ void Modem::request_listener() {
 					if(string unlocked_filename = request["u_filename"]; !sys_calls::rename_file(request["filename"], unlocked_filename)) {
 						logger::logger(__FUNCTION__, this->getInfo() + " - Failed to release job: ", "stderr", true);
 						logger::logger_errno( errno );
+					}
+				}
+				else if( send_sms_status == "error") {
+					
+					if( !sys_calls::file_handlers( this->getConfigs()["DIR_SUCCESS"], sys_calls::EXIST )) {
+						logger::logger(__FUNCTION__, "Creating success dir");
+						sys_calls::make_dir( this->getConfigs()["DIR_SUCCESS"] );
+					}
+
+					//TODO: Delete SMS job
+
+					if(string locked_filename = request["filename"]; !sys_calls::rename_file(locked_filename, this->getConfigs()["DIR_ERROR"] + "/" + request["q_filename"]) and !sys_calls::rename_file(this->getConfigs()["DIR_ERROR"] + "/." + request["q_filename"], this->getConfigs()["DIR_ERROR"] + "/" + request["q_filename"])) {
+						logger::logger(__FUNCTION__, this->getInfo() + " - Failed to move file to DIR_SUCCESS", "stderr", true); logger::logger_errno( errno );
+					}
+				
+					else {
+						logger::logger(__FUNCTION__, this->getInfo() + " - Moved file to successfull", "stdout", true);
 					}
 				}
 			}
@@ -373,32 +391,33 @@ map<string,string> Modem::request_job( string path_dir_request) {
 	return request;
 }
 
-bool Modem::mmcli_send_sms( string message, string number ) {
+string Modem::mmcli_send_sms( string message, string number ) {
 	logger::logger(__FUNCTION__, "SENDING - [" + message + "] - [" + number + "]");
 	string sms_results = sys_calls::terminal_stdout(this->configs["DIR_SCRIPTS"] + "/modem_information_extraction.sh sms send \"" + message + "\" \"" + helpers::remove_char_advanced(number, ' ') + "\" " + this->getIndex());
 	sms_results = helpers::to_lowercase( sms_results );
-	if( sms_results.find("successfully") != string::npos ) return true;
+	if( sms_results.find("successfully") != string::npos ) return "done";
+	else if( sms_results.find( "invalid" ) != string::npos ) return "error";
 	else {
 		logger::logger(__FUNCTION__, "SMS Failed log: " + sms_results, "stderr", true);
 	}
 	
-	return false;
+	return "failed";
 }
 
-bool Modem::ssh_send_sms( string message, string number ) {
+string Modem::ssh_send_sms( string message, string number ) {
 	logger::logger(__FUNCTION__, "SENDING - [" + message + "] - [" + number + "]");
 	string sms_results = sys_calls::terminal_stdout("ssh root@" + this->getIndex() + " -o 'ServerAliveInterval 20' \"sendsms " + number + " '" + message + "'\"" );
 	//logger::logger(__FUNCTION__, sms_results);
 	sms_results = helpers::to_lowercase( sms_results );
-	if( sms_results.find("success") != string::npos ) return true;  //TODO: Add a config list for possibel HTTP code 200 here
+	if( sms_results.find("success") != string::npos ) return "done";  //TODO: Add a config list for possibel HTTP code 200 here
 	else {
 		logger::logger(__FUNCTION__, this->getInfo() + " - SMS Failed log: " + sms_results, "stderr", true);
 	}
 	
-	return false;
+	return "failed";
 }
 
-bool Modem::send_sms(string message, string number ) {
+string Modem::send_sms(string message, string number ) {
 	logger::logger(__FUNCTION__, this->getInfo() + " - About to send SMS", "stdout", true);
 	message = helpers::find_and_replace("\\n", "\n", message);
 	message = helpers::find_and_replace("\\\"", "\"", message);
@@ -407,7 +426,7 @@ bool Modem::send_sms(string message, string number ) {
 		return this->mmcli_send_sms( message, number);
 	else if( this->getType() == "SSH") 
 		return this->ssh_send_sms( message, number );
-	return false;
+	return "failed";
 }
 
 Modem::~Modem() {

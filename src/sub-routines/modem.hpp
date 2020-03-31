@@ -68,9 +68,9 @@ class Modem : public USSD {
 		bool operator>(Modem modem) const;
 		bool operator<(Modem modem) const;
 
-		bool send_sms(string message, string number);
-		bool mmcli_send_sms(string message, string number);
-		bool ssh_send_sms(string message, string number);
+		string send_sms(string message, string number);
+		string mmcli_send_sms(string message, string number);
+		string ssh_send_sms(string message, string number);
 		bool db_set_working_state( WORKING_STATE );
 		bool getKeepAlive() const;
 		bool getThreadSafety() const;
