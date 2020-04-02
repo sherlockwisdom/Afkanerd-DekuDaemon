@@ -263,8 +263,8 @@ void Modem::request_listener() {
 
 					//WRITE TO LOG FILE
 				}
-				else if( send_sms_status == "failed" ) {
-					this->iterate_failed_counter();
+				else if( send_sms_status == "failed" or send_sms_status == "unknown" ) {
+					if( send_sms_status != "unknown" ) this->iterate_failed_counter();
 					logger::logger(__FUNCTION__, this->getInfo() + " - Exhaust count(" + to_string(this->get_exhaust_count()) + ")");
 					if( this->get_failed_counter() >= this->get_exhaust_count()
 					//and 
@@ -397,8 +397,9 @@ string Modem::mmcli_send_sms( string message, string number ) {
 	sms_results = helpers::to_lowercase( sms_results );
 	if( sms_results.find("successfully") != string::npos ) return "done";
 	else if( sms_results.find( "invalid" ) != string::npos ) return "error";
+	else if( sms_results.find( "unknown" ) != string::npos ) return "unknown";
 	else {
-		logger::logger(__FUNCTION__, "SMS Failed log: " + sms_results, "stderr", true);
+		logger::logger(__FUNCTION__, this->getInfo() + " - SMS Failed log: " + sms_results, "stderr", true);
 	}
 	
 	return "failed";
