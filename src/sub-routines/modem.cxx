@@ -302,19 +302,19 @@ void Modem::request_listener() {
 				}
 				else if( send_sms_status == "error") {
 					
-					if( !sys_calls::file_handlers( this->getConfigs()["DIR_SUCCESS"], sys_calls::EXIST )) {
-						logger::logger(__FUNCTION__, "Creating success dir");
-						sys_calls::make_dir( this->getConfigs()["DIR_SUCCESS"] );
+					if( !sys_calls::file_handlers( this->getConfigs()["DIR_ERROR"], sys_calls::EXIST )) {
+						logger::logger(__FUNCTION__, "Error Directory");
+						sys_calls::make_dir( this->getConfigs()["DIR_ERROR"] );
 					}
 
 					//TODO: Delete SMS job
 
 					if(string locked_filename = request["filename"]; !sys_calls::rename_file(locked_filename, this->getConfigs()["DIR_ERROR"] + "/" + request["q_filename"]) and !sys_calls::rename_file(this->getConfigs()["DIR_ERROR"] + "/." + request["q_filename"], this->getConfigs()["DIR_ERROR"] + "/" + request["q_filename"])) {
-						logger::logger(__FUNCTION__, this->getInfo() + " - Failed to move file to DIR_SUCCESS", "stderr", true); logger::logger_errno( errno );
+						logger::logger(__FUNCTION__, this->getInfo() + " - Failed to move file to ERROR", "stderr", true); logger::logger_errno( errno );
 					}
 				
 					else {
-						logger::logger(__FUNCTION__, this->getInfo() + " - Moved file to successfull", "stdout", true);
+						logger::logger(__FUNCTION__, this->getInfo() + " - Moved file to successfull", "stderr", true);
 					}
 				}
 			}
