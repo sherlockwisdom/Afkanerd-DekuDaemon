@@ -12,7 +12,7 @@
 > `sudo apt install mysql-server`
 > ###### manjaro
 >`sudo pacman -S mysql`
-- Doxygen _(optional)_
+- Doxygen _(optional)_ - https://riptutorial.com/doxygen
  > ###### ubuntu
 > `sudo apt install doxygen`
 > ###### manjaro
