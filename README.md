@@ -13,7 +13,7 @@
 #### How to build and run
 _Project's root dir_\
 `make -B start`\
-`./start --c <path to file> --mode TEST`
+`./src/start --c <path to file> --mode TEST`
 #### Start arguments
 ##### `--c [configuration file]`
 * `DIR_ISP=""`
