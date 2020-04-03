@@ -47,6 +47,7 @@ make -C src/start
 ##### `--exhaust_count [number]` _warning: do not set less than 3 if using MTN or say, could be very dangerous if automated_
 ##### `--show_isp [number]`
 ##### `--generate_request [number]`
+##### `--st [number]` _sleep time for modems, before iterating to check again_
 
 ---
 ##### TODO - The following needs to be built... please help
