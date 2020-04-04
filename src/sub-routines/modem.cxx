@@ -213,6 +213,8 @@ void Modem::start() {
 	// tr_modem_sms_listener.join();
 }
 
+
+// TODO: Remove sms index after messages have been sent
 void Modem::request_listener() {
 	logger::logger(__FUNCTION__, "==========> MODEM REQUEST LISTENER | " + this->getInfo() + " <============");
 	while( 1 ) {
@@ -239,7 +241,18 @@ void Modem::request_listener() {
 				logger::logger(__FUNCTION__, this->getInfo() + " - locked on file: " + request["filename"]);
 				//From here we can know which message went and which failed, based on the ID
 				//TODO: What is an invalid message - find it so you can delete it
-				string send_sms_status = this->send_sms( helpers::unescape_string(request["message"], '"'), request["number"] );
+				string message = helpers::unescape_string( request["message"], '"');
+				string number = request["number"];
+				string number_isp = isp_determiner::get_isp( number );
+				if( number_isp != this->getISP() ) {
+					// TODO: Move the file to the right isp 	
+					logger::logger(__FUNCTION__, " - Wrong ISP determined, moving from [" + this->getISP() + "] to [" + number_isp + "]", "stderr", true );
+					sys_calls::rename_file( request["filename"],
+					this->getConfigs()["DIR_ISP"] + "/" + number_isp );
+					helpers::sleep_thread( this->get_sleep_time() );
+					continue;
+				}
+				string send_sms_status = this->send_sms( message, number );
 				if(  send_sms_status == "done" ) {
 					this->reset_failed_counter();
 					this->db_iterate_workload();
@@ -391,11 +404,12 @@ map<string,string> Modem::request_job( string path_dir_request) {
 	return request;
 }
 
+// TODO: Check error message when wrong ISP
 string Modem::mmcli_send_sms( string message, string number ) {
 	logger::logger(__FUNCTION__, "SENDING - [" + message + "] - [" + number + "]");
 	string sms_results = sys_calls::terminal_stdout(this->configs["DIR_SCRIPTS"] + "/modem_information_extraction.sh sms send \"" + message + "\" \"" + helpers::remove_char_advanced(number, ' ') + "\" " + this->getIndex());
 	sms_results = helpers::to_lowercase( sms_results );
-	if( sms_results.find("successfully") != string::npos ) return "done";
+	if( sms_results.find("successfully") != string::npos || sms_results.find("success") != string::npos) return "done";
 	else if( sms_results.find( "invalid" ) != string::npos ) return "error";
 	else if( sms_results.find( "unknown" ) != string::npos ) return "unknown";
 	else {
