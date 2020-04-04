@@ -247,8 +247,7 @@ void Modem::request_listener() {
 				if( number_isp != this->getISP() ) {
 					// TODO: Move the file to the right isp 	
 					logger::logger(__FUNCTION__, " - Wrong ISP determined, moving from [" + this->getISP() + "] to [" + number_isp + "]", "stderr", true );
-					sys_calls::rename_file( request["filename"],
-					this->getConfigs()["DIR_ISP"] + "/" + number_isp );
+					sys_calls::rename_file( request["filename"], this->getConfigs()["DIR_ISP"] + "/" + number_isp );
 					helpers::sleep_thread( this->get_sleep_time() );
 					continue;
 				}
