@@ -31,7 +31,6 @@
 - MYSQL_USER=""
 - MYSQL_PASSWORD=""
 ```
-
 ##### How to build and run
 ```bash
 make -C src/start
