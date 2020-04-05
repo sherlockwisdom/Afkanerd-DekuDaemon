@@ -19,6 +19,12 @@
 >`sudo pacman -S doxygen`
 - ModemManager - _comes installed on most Linux systems_
 
+#### For Testing we use the CppUTest; https://cpputest.github.io/manual.html
+> ###### ubuntu
+> `sudo apt install cpputest`
+> ###### manjaro
+>`sudo pacman -S cpputest`
+
 ###### VARIABLES OF CONFIGURATION FILE (.ENV)
 ```env
 - DIR_ISP=""
