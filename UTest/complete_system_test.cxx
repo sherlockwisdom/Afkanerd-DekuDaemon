@@ -8,10 +8,32 @@
 
 TEST_GROUP(Helpers) {};
 
+// Testing: helpers::remove_char(string, char)
 TEST(Helpers, remove_char) {
 	std::string input_string = "hello;;world";
 	std::string expected_string = "helloworld";
 	std::string output_string = helpers::remove_char( input_string, ';');
+
+	// (expected, actual)
+	STRCMP_EQUAL(expected_string.c_str(), output_string.c_str()); 
+}
+
+// Testing: helpers::unescape_string(string, char)
+TEST(Helpers, unescape_string) {
+	std::string input_string = "hello\"world";
+	std::string expected_string = "hello\\\"world";
+	std::string output_string = helpers::unescape_string( input_string, ';');
+
+	// (expected, actual)
+	STRCMP_EQUAL(expected_string.c_str(), output_string.c_str()); 
+}
+
+// Testing: helpers::vector_to_whole_x( template vector, char = ' ')
+TEST(Helpers, vector_to_whole_string) {
+	char seperation_del = ' ';
+	std::vector<std::string> input_vector{"hello","world"};
+	std::string expected_string = "hello world";
+	std::string output_string = helpers::vector_to_whole_x<string>( input_vector,seperation_del);
 
 	// (expected, actual)
 	STRCMP_EQUAL(expected_string.c_str(), output_string.c_str()); 
