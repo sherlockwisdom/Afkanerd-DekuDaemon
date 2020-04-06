@@ -64,19 +64,36 @@ TEST(Helpers, find_and_replace_substr) {
 
 // Testing:: helpers::string_split( string, char, bool, size_t )
 TEST(Helpers, str_split) {
-	std::string input_string = "hello world ";
+	std::string input_string = "hello world";
 	std::vector<string> expected_vector{"hello", "world"};
 	char seperation_del = ' ';
 	std::vector<string> output_vector = helpers::string_split( input_string, seperation_del);
 
 	size_t expected_vector_size = expected_vector.size();
-	size_t output_string_size = output_vector.size();
+	size_t output_vector_size = output_vector.size();
 	
 	// (expected, actual)
-	CHECK_FALSE( output_string_size == expected_vector_size and 
-			output_vector[0] == expected_vector[0] and
-			output_vector[1] == expected_vector[1]
-		   );
+	CHECK_EQUAL( expected_vector_size, output_vector_size );
+	CHECK_EQUAL( expected_vector[0], output_vector[0] );
+	CHECK_EQUAL( expected_vector[1], output_vector[1] );
+}
+
+// Testing: helpers::to_uppercase( string )
+TEST(Helpers, to_uppercase) {
+	std::string input_string = "hello world";
+	std::string expected_string = "HELLO WORLD";
+	std::string output_string = helpers::to_uppercase( input_string );
+
+	STRCMP_EQUAL( expected_string.c_str(), output_string.c_str() );
+}
+
+// Testing: helpers::to_lowercase( string )
+TEST(Helpers, to_lowercase) {
+	std::string input_string = "HELLO WORLD";
+	std::string expected_string = "hello world";
+	std::string output_string = helpers::to_lowercase( input_string );
+
+	STRCMP_EQUAL( expected_string.c_str(), output_string.c_str() );
 }
 
 int main( int argc, char** argv ) {
