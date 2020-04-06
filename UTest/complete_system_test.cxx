@@ -50,6 +50,35 @@ TEST(Helpers, vector_to_whole_numbers) {
 	LONGS_EQUAL(expected_int, output_int); 
 }
 
+// Testing: helpers::find_and_replace_substr( string, string, string )
+TEST(Helpers, find_and_replace_substr) {
+	std::string find_string = "world";
+	std::string replace_string = "sherlock";
+	std::string input_string = "hello world";
+	std::string expected_string = "hello sherlock";
+	std::string output_string = helpers::find_and_replace_substr( find_string, replace_string, input_string);
+	
+	// (expected, actual)
+	STRCMP_EQUAL(expected_string.c_str(), output_string.c_str()); 
+}
+
+// Testing:: helpers::string_split( string, char, bool, size_t )
+TEST(Helpers, str_split) {
+	std::string input_string = "hello world ";
+	std::vector<string> expected_vector{"hello", "world"};
+	char seperation_del = ' ';
+	std::vector<string> output_vector = helpers::string_split( input_string, seperation_del);
+
+	size_t expected_vector_size = expected_vector.size();
+	size_t output_string_size = output_vector.size();
+	
+	// (expected, actual)
+	CHECK_FALSE( output_string_size == expected_vector_size and 
+			output_vector[0] == expected_vector[0] and
+			output_vector[1] == expected_vector[1]
+		   );
+}
+
 int main( int argc, char** argv ) {
 	// Testing to see how the recording works in this aspect
 	return CommandLineTestRunner::RunAllTests(argc, argv);
