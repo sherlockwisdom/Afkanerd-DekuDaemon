@@ -301,7 +301,10 @@ void Modem::request_listener() {
 
 					//TODO: Delete SMS job
 
-					if(string locked_filename = request["filename"]; !sys_calls::rename_file(locked_filename, this->getConfigs()["DIR_SUCCESS"] + "/" + request["q_filename"]) and !sys_calls::rename_file(this->getConfigs()["DIR_SUCCESS"] + "/." + request["q_filename"], this->getConfigs()["DIR_SUCCESS"] + "/" + request["q_filename"])) {
+					if(string locked_filename = request["filename"]; 
+					!sys_calls::rename_file(locked_filename, this->getConfigs()["DIR_SUCCESS"] + "/" + request["q_filename"]) 
+					and 
+					!sys_calls::rename_file(this->getConfigs()["DIR_SUCCESS"] + "/." + request["q_filename"], this->getConfigs()["DIR_SUCCESS"] + "/" + request["q_filename"])) {
 						logger::logger(__FUNCTION__, this->getInfo() + " - Failed to move file to DIR_SUCCESS", "stderr", true); logger::logger_errno( errno );
 					}
 				
