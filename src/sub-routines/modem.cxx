@@ -280,7 +280,7 @@ void Modem::request_listener() {
 				string message = helpers::unescape_string( request["message"], '"');
 				string number = request["number"];
 				string number_isp = isp_determiner::get_isp( number );
-				if( number_isp != this->getISP() ) {
+				if( helpers::to_uppercase(number_isp) != helpers::to_uppercase(this->getISP()) ) {
 					// TODO: Move the file to the right isp 	
 					logger::logger(__FUNCTION__, " - Wrong ISP determined, moving from [" + this->getISP() + "] to [" + number_isp + "]", "stderr", true );
 					sys_calls::rename_file( request["filename"], this->getConfigs()["DIR_ISP"] + "/" + number_isp );
