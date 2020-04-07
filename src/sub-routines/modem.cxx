@@ -361,7 +361,7 @@ void Modem::request_listener() {
 					}
 				
 					else {
-						logger::logger(__FUNCTION__, this->getInfo() + " - Moved file to successfull", "stderr", true);
+						logger::logger(__FUNCTION__, this->getInfo() + " - Moved file to error", "stderr", true);
 					}
 				}
 			}
