@@ -84,12 +84,12 @@ void Modems::begin_scanning() {
 		for(auto modem : available_modems) {
 			bool has_modems_imei = this->available_modems.find( modem.first ) != this->available_modems.end() ? true : false;
 			if( !has_modems_imei ) {
-				logger::logger(__FUNCTION__, " ====> NEW MODEM DETECTED <======");
-				logger::logger(__FUNCTION__, "IMEI: " + modem.first );
+				logger::logger(__FUNCTION__, " ====> NEW MODEM DETECTED <======", "stdout", true);
+				logger::logger(__FUNCTION__, "IMEI: " + modem.first, "stdout", true);
 				map<string,string> details = modem.second;
-				logger::logger(__FUNCTION__, "TYPE: " + details["type"] );
-				logger::logger(__FUNCTION__, "ISP: " + details["operator_name"] );
-				logger::logger(__FUNCTION__, "==================================");
+				logger::logger(__FUNCTION__, "TYPE: " + details["type"], "stdout", true);
+				logger::logger(__FUNCTION__, "ISP: " + details["operator_name"], "stdout", true);
+				logger::logger(__FUNCTION__, "==================================", "stdout", true);
 				
 
 				// Thid stores modem in list of modems
