@@ -52,6 +52,7 @@ class Modem : public USSD {
 		void request_listener();
 		void modem_sms_listener();
 		void set_configs( map<string,string> configs );
+		void set_mysql_connection( MySQL );
 
 		string getIndex() const;
 		string getISP() const;

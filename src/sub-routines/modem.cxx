@@ -27,6 +27,10 @@ int Modem::get_failed_counter() const {
 	return this->failed_counter;
 }
 
+void Modem::set_mysql_connection( MySQL mysqlConnection ) {
+	this->mysqlConnection = mysqlConnection;
+}
+
 void Modem::set_exhaust_count( int modem_exhaust_counts ) {
 	logger::logger(__FUNCTION__, this->getInfo() + " - Setting Exhaust count to: " + to_string( modem_exhaust_counts ));
 	this->exhaust_count = modem_exhaust_counts;
@@ -34,6 +38,10 @@ void Modem::set_exhaust_count( int modem_exhaust_counts ) {
 
 void Modem::setIndex( string index ) {
 	this->index = index;
+}
+
+void Modem::setIMEI( string IMEI ) {
+	this->imei = IMEI;
 }
 
 void Modem::set_configs( map<string,string> configs ) {
@@ -213,14 +221,14 @@ void Modem::start() {
 	// tr_modem_sms_listener.join();
 }
 
-int Modem::db_get_workload() {
+int Modem::db_get_workload() { // TODO: Should take in date as a variable
 	int workload = 0;
-	string query = "SELECT * __DEKU__.MODEM_WORK_LOAD WHERE IMEI='"+this->imei+"' AND DATE(NOW())";
+	string query = "SELECT * FROM __DEKU__.MODEM_WORK_LOAD WHERE IMEI='"+this->imei+"' AND DATE = DATE(NOW())";
 	logger::logger(__FUNCTION__, query);
 
 	try {
 		map<string, vector<string>> responds = this->mysqlConnection.query( query );
-		workload = atoi(responds["MODEM_WORK_LOAD"][0].c_str());
+		workload = atoi(responds["WORK_LOAD"][0].c_str());
 	}
 	catch(std::exception& excep) {
 		//logger::logger(__FUNCTION__, "Exception says: " + excep.what());
