@@ -94,8 +94,8 @@ void Modems::begin_scanning() {
 
 				// Thid stores modem in list of modems
 				string imei = modem.first;
-				string isp = helpers::to_upper(details["operator_name"] );
-				string type = helpers::to_upper(details["type"] );
+				string isp = helpers::to_uppercase(details["operator_name"] );
+				string type = helpers::to_uppercase(details["type"] );
 				string index = details["index"];
 
 

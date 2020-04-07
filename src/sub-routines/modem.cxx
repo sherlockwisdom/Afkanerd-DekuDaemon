@@ -79,7 +79,7 @@ map<string,string> Modem::getConfigs() const {
 map<string,string> Modem::get_sms_message( string message_index ) const {
 	string terminal_respond = sys_calls::terminal_stdout( this->getConfigs()["DIR_SCRIPTS"] + "/modem_information_extraction.sh sms read_sms " + message_index + " " + this->getIndex() );	
 	
-	vector<string> message_body = helpers::split( terminal_respond, '\n', true);
+	vector<string> message_body = helpers::string_split( terminal_respond, '\n', true);
 	//TODO: if less than 3... somethings wrong
 	/*
 	for( auto message_line : message_body ) {
@@ -102,7 +102,7 @@ map<string,string> Modem::get_sms_message( string message_index ) const {
 vector<map<string,string>> Modem::get_sms_messages() const {
 	vector<map<string,string>> sms_messages;
 	string terminal_respond = sys_calls::terminal_stdout( this->getConfigs()["DIR_SCRIPTS"] + "/modem_information_extraction.sh sms received " + this->getIndex() );	
-	vector<string> sms_indexes = helpers::split( terminal_respond, '\n', true );
+	vector<string> sms_indexes = helpers::string_split( terminal_respond, '\n', true );
 	logger::logger(__FUNCTION__, "Number of SMS Indexes: " + to_string( sms_indexes.size() ));
 
 	for(auto message_index : sms_indexes) {
@@ -381,7 +381,7 @@ map<string,string> Modem::request_job( string path_dir_request) {
 		return request;
 	}
 
-	string filename = helpers::split(filenames, '\n', true)[0];
+	string filename = helpers::string_split(filenames, '\n', true)[0];
 	if(filename.empty() or filename == "") {
 		logger::logger(__FUNCTION__, this->getInfo() + " - Seems no request available at this time");
 		return request;
@@ -406,7 +406,7 @@ map<string,string> Modem::request_job( string path_dir_request) {
 // TODO: Check error message when wrong ISP
 string Modem::mmcli_send_sms( string message, string number ) {
 	logger::logger(__FUNCTION__, "SENDING - [" + message + "] - [" + number + "]");
-	string sms_results = sys_calls::terminal_stdout(this->configs["DIR_SCRIPTS"] + "/modem_information_extraction.sh sms send \"" + message + "\" \"" + helpers::remove_char_advanced(number, ' ') + "\" " + this->getIndex());
+	string sms_results = sys_calls::terminal_stdout(this->configs["DIR_SCRIPTS"] + "/modem_information_extraction.sh sms send \"" + message + "\" \"" + helpers::remove_char(number, ' ') + "\" " + this->getIndex());
 	sms_results = helpers::to_lowercase( sms_results );
 	if( sms_results.find("successfully") != string::npos || sms_results.find("success") != string::npos) return "done";
 	else if( sms_results.find( "invalid" ) != string::npos ) return "error";
@@ -433,9 +433,9 @@ string Modem::ssh_send_sms( string message, string number ) {
 
 string Modem::send_sms(string message, string number ) {
 	logger::logger(__FUNCTION__, this->getInfo() + " - About to send SMS", "stdout", true);
-	message = helpers::find_and_replace("\\n", "\n", message);
-	message = helpers::find_and_replace("\\\"", "\"", message);
-	message = helpers::find_and_replace("'", "\'", message);
+	message = helpers::find_and_replace_substr("\\n", "\n", message);
+	message = helpers::find_and_replace_substr("\\\"", "\"", message);
+	message = helpers::find_and_replace_substr("'", "\'", message);
 	if( this->getType() == "MMCLI") 
 		return this->mmcli_send_sms( message, number);
 	else if( this->getType() == "SSH") 
