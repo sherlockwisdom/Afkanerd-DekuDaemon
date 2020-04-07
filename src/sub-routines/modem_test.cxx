@@ -19,5 +19,10 @@ int main() {
 	int workload = modem.db_get_workload();
 
 	cout << "Workload: " << workload << endl;
+
+	modem.db_reset_workload();
+	workload = modem.db_get_workload();
+
+	cout << "Workload: " << workload << endl;
 	return 0;
 }

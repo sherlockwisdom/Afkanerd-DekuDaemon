@@ -237,6 +237,18 @@ int Modem::db_get_workload() { // TODO: Should take in date as a variable
 	return workload;
 }
 
+void Modem::db_reset_workload() {
+	string query = "UPDATE __DEKU__.MODEM_WORK_LOAD SET WORK_LOAD = 0 WHERE IMEI='"+this->imei+"' AND DATE = DATE(NOW())";
+	logger::logger(__FUNCTION__, query);
+
+	try {
+		map<string, vector<string>> responds = this->mysqlConnection.query( query );
+	}
+	catch(std::exception& excep) {
+		//logger::logger(__FUNCTION__, "Exception says: " + excep.what());
+	}
+}
+
 
 // TODO: Remove sms index after messages have been sent
 void Modem::request_listener() {
@@ -325,6 +337,7 @@ void Modem::request_listener() {
 						
 						logger::logger(__FUNCTION__, this->getInfo() + " - Setting DB state to exhausted!");
 						this->db_set_working_state( Modem::EXHAUSTED );
+						this->db_reset_workload();
 						this->reset_failed_counter();
 					}
 					logger::logger(__FUNCTION__, this->getInfo() + " - [" + request["id"] + "] Couldn't send SMS, unlocking file", "stderr", true);
