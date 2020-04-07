@@ -86,6 +86,7 @@ class Modem : public USSD {
 		int get_failed_counter() const;
 		int get_sleep_time() const;
 		int get_exhaust_count() const;
+		int db_get_workload();
 
 		MySQL get_mysql_connector() const;
 };

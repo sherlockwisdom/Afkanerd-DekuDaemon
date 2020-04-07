@@ -213,6 +213,22 @@ void Modem::start() {
 	// tr_modem_sms_listener.join();
 }
 
+int Modem::db_get_workload() {
+	int workload = 0;
+	string query = "SELECT * __DEKU__.MODEM_WORK_LOAD WHERE IMEI='"+this->imei+"' AND DATE(NOW())";
+	logger::logger(__FUNCTION__, query);
+
+	try {
+		map<string, vector<string>> responds = this->mysqlConnection.query( query );
+		workload = atoi(responds["MODEM_WORK_LOAD"][0].c_str());
+	}
+	catch(std::exception& excep) {
+		//logger::logger(__FUNCTION__, "Exception says: " + excep.what());
+	}
+
+	return workload;
+}
+
 
 // TODO: Remove sms index after messages have been sent
 void Modem::request_listener() {
@@ -275,13 +291,11 @@ void Modem::request_listener() {
 
 					//WRITE TO LOG FILE
 				}
-				else if( send_sms_status == "failed" or send_sms_status == "unknown" ) {
-					if( send_sms_status != "unknown" ) this->iterate_failed_counter();
+				else if( send_sms_status == "failed") {
+					this->iterate_failed_counter();
 					logger::logger(__FUNCTION__, this->getInfo() + " - Exhaust count(" + to_string(this->get_exhaust_count()) + ")");
-					if( this->get_failed_counter() >= this->get_exhaust_count()
-					//and 
-					//this->db_get_working_state() != Modem::EXHAUSTED 
-					){
+					// TODO: Abstract this information to make sure if another ISP wants to use it, they can
+					if( this->get_failed_counter() >= this->get_exhaust_count() and this->db_get_workload() > 80){ // TODO: Move 80 to depend on each modem
 						// TODO: Deactivate modem if not activated
 						// TODO: Make inclusion of this code dynamic than hard coded
 
@@ -410,7 +424,6 @@ string Modem::mmcli_send_sms( string message, string number ) {
 	sms_results = helpers::to_lowercase( sms_results );
 	if( sms_results.find("successfully") != string::npos || sms_results.find("success") != string::npos) return "done";
 	else if( sms_results.find( "invalid" ) != string::npos ) return "error";
-	else if( sms_results.find( "unknown" ) != string::npos ) return "unknown";
 	else {
 		logger::logger(__FUNCTION__, this->getInfo() + " - SMS Failed log: " + sms_results, "stderr", true);
 	}
