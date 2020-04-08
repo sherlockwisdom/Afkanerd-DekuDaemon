@@ -18,11 +18,12 @@ TEST(Helpers, remove_char) {
 	STRCMP_EQUAL(expected_string.c_str(), output_string.c_str()); 
 }
 
-// Testing: helpers::unescape_string(string, char)
+// Testing: helpers::escape_string(string, char)
 TEST(Helpers, unescape_string) {
 	std::string input_string = "hello\"world"; // hello"world
 	std::string expected_string = "hello\\\"world"; // hello\"world
-	std::string output_string = helpers::unescape_string( input_string, ';');
+	char delimeter = '"';
+	std::string output_string = helpers::escape_string( input_string, delimeter);
 
 	// (expected, actual)
 	STRCMP_EQUAL(expected_string.c_str(), output_string.c_str()); 
