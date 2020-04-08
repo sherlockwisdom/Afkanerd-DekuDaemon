@@ -2,40 +2,27 @@
 #include "saitama.hpp"
 
 int main() {
-	/*string modem_index = "1";
+	MySQL mysqlConnection("localhost", "root", "asshole", "__DEKU__");
+	mysqlConnection.connect();
+
+	string modem_index = "1";
+	string modem_imei = "358812037638331";
 	map<string,string> configs {
-		{"DIR_SCRIPTS", "../../scripts"}
+		{"DIR_SCRIPTS", "../../scripts"},
 	};
-	Modem modem( configs );
+	Modem modem;
+	modem.set_configs ( configs );
 	modem.setIndex( modem_index );
+	modem.setIMEI( modem_imei );
+	modem.set_mysql_connection( mysqlConnection );
 
-	vector<map<string,string>> sms_messages = modem.get_sms_messages();
+	int workload = modem.db_get_workload();
 
-	for(auto sms_message : sms_messages) {
-		for(auto component : sms_message) {
-			logger::logger(__FUNCTION__, component.first + " -> " + component.second);
-		}
-		cout << endl;
-	}
+	cout << "Workload: " << workload << endl;
 
-	saitama::configs = configs;
+	modem.db_reset_workload();
+	workload = modem.db_get_workload();
 
-	// string message = "--:all_might:--";
-	// saitama::execute( message );
-
-	string message = "--:bash:-- gnome-terminal";
-	saitama::execute( message );
-
-	cout << "===========" << endl;
-
-	message = "--:fore_sight:--";
-	saitama::execute( message );
-	*/
-
-	string formatters = "652156811   ";
-	string output = helpers::remove_char_advanced( formatters, ' ' );
-	cout << output << endl;
-	cout << output.size() << endl;
-
+	cout << "Workload: " << workload << endl;
 	return 0;
 }

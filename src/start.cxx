@@ -69,7 +69,7 @@ int main(int argc, char** argv) {
 			else if((string)argv[i] == "--mode") {
 				if(i+1 < argc ) {
 					string mode = (string)argv[i+1];
-					if( helpers::to_upper(mode) == "PRODUCTION") RUNNING_MODE = Modems::PRODUCTION;
+					if( helpers::to_uppercase(mode) == "PRODUCTION") RUNNING_MODE = Modems::PRODUCTION;
 					else RUNNING_MODE = Modems::TEST;
 				}
 			}

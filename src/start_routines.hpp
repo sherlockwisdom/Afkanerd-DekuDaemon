@@ -25,7 +25,7 @@ bool system_check( string path_to_sys_file) {
 
 	for(auto config_line: sys_file_contents) {
 		logger::logger(__FUNCTION__, config_line);
-		vector<string> configs = helpers::split(config_line, '=', true);
+		vector<string> configs = helpers::string_split(config_line, '=', true);
 		if(configs[0] == "DIR_REQUEST_FILE") {
 			string dir_request_file = configs[1];
 			if(!helpers::file_exist( dir_request_file ) ) {
@@ -66,7 +66,7 @@ bool system_check( string path_to_sys_file) {
 map<string,string> get_system_configs( vector<string> sys_config_lines ) {
 	map<string,string> configs;
 	for(auto config_line: sys_config_lines) {
-		vector<string> tmp_configs = helpers::split(config_line, '=', true);
+		vector<string> tmp_configs = helpers::string_split(config_line, '=', true);
 		if(tmp_configs.size() > 1) configs.insert(make_pair( tmp_configs[0], tmp_configs[1]));
 		else {
 			logger::logger(__FUNCTION__, "Error reading configs...", "stderr", true);

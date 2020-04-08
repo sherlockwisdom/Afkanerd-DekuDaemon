@@ -28,7 +28,7 @@ namespace sys_calls {
 
 	void make_dir( string path_dirname ) {
 		size_t start_pos = path_dirname[0] == '/' ? 1 : 0;
-		vector<string> recursive_paths = helpers::split(path_dirname, '/', true, start_pos);
+		vector<string> recursive_paths = helpers::string_split(path_dirname, '/', true, start_pos);
 		string make_me = recursive_paths[0];
 		for(size_t i=0;i<recursive_paths.size();++i) {
 			//logger::logger(__FUNCTION__, "Making dir: " + make_me, "stdout", false);
@@ -82,7 +82,7 @@ namespace sys_calls {
 		vector<string> details;
 		string type = index.find("192.168") != string::npos ? "ssh" : "mmcli";
 		string modem_information = type == "ssh" ? sys_calls::terminal_stdout("ssh root@"+index+" -o 'ServerAliveInterval 10' deku") : sys_calls::terminal_stdout( path_to_script + "/modem_information_extraction.sh extract " + index );
-		vector<string> ln_modem_information = helpers::split(modem_information, '\n', true);
+		vector<string> ln_modem_information = helpers::string_split(modem_information, '\n', true);
 
 		logger::logger(__FUNCTION__, "Type: " + type + "\tSize: " + to_string( ln_modem_information.size() ));
 
@@ -94,7 +94,7 @@ namespace sys_calls {
 			
 			if(ln_modem_information[0].find("deku:verified:") != string::npos) {
 				details.push_back(index );// equipment_id
-				details.push_back(helpers::to_upper(ln_modem_information[1]) ); // operator_name
+				details.push_back(helpers::to_uppercase(ln_modem_information[1]) ); // operator_name
 				details.push_back(type );// type
 			}
 		}
@@ -104,15 +104,15 @@ namespace sys_calls {
 				return details;
 			}
 
-			vector<string> split_equipment_id = helpers::split(ln_modem_information[0], ':', true);
-			vector<string> split_operator_name = helpers::split(ln_modem_information[2], ':', true);
-			vector<string> split_operator_id = helpers::split(ln_modem_information[3], ':', true);
+			vector<string> split_equipment_id = helpers::string_split(ln_modem_information[0], ':', true);
+			vector<string> split_operator_name = helpers::string_split(ln_modem_information[2], ':', true);
+			vector<string> split_operator_id = helpers::string_split(ln_modem_information[3], ':', true);
 			if(split_equipment_id.size() == 2 and (split_operator_name.size() == 2 || split_operator_id.size() == 2)) {
-				details.push_back(helpers::split(ln_modem_information[0], ':', true)[1] );// equipment_id
+				details.push_back(helpers::string_split(ln_modem_information[0], ':', true)[1] );// equipment_id
 				if( split_operator_name.size() == 2 )
-				details.push_back(helpers::split(ln_modem_information[2], ':', true)[1] );// operator_name
+				details.push_back(helpers::string_split(ln_modem_information[2], ':', true)[1] );// operator_name
 				else if( split_operator_id.size() == 2 )
-				details.push_back(helpers::split(ln_modem_information[3], ':', true)[1] );// operator_id
+				details.push_back(helpers::string_split(ln_modem_information[3], ':', true)[1] );// operator_id
 				else return vector<string>{};
 				details.push_back(type );// mmcli || ssh
 			}
@@ -123,12 +123,12 @@ namespace sys_calls {
 	map<string,map<string,string>> get_available_modems( string path_to_script ) {
 		map<string,map<string,string>> available_modems;
 		string list_of_modem_indexes = sys_calls::terminal_stdout( path_to_script + "/modem_information_extraction.sh list");
-		vector<string> modem_indexes = helpers::split(list_of_modem_indexes, '\n', true);
+		vector<string> modem_indexes = helpers::string_split(list_of_modem_indexes, '\n', true);
 		logger::logger(__FUNCTION__, "Listed " + to_string(modem_indexes.size()) + " index(es)");
 
 		for(auto& index : modem_indexes ) {
 			logger::logger(__FUNCTION__, "Working with index #" + index);
-			index = helpers::remove_char( index, ' ', 'E');
+			index = helpers::remove_char( index, ' ');
 			vector<string> details = get_modem_details( path_to_script, index );
 			if( details.size() != 3 ) continue;
 			map<string,string> in_details = {

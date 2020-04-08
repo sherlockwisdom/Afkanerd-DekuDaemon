@@ -27,6 +27,10 @@ int Modem::get_failed_counter() const {
 	return this->failed_counter;
 }
 
+void Modem::set_mysql_connection( MySQL mysqlConnection ) {
+	this->mysqlConnection = mysqlConnection;
+}
+
 void Modem::set_exhaust_count( int modem_exhaust_counts ) {
 	logger::logger(__FUNCTION__, this->getInfo() + " - Setting Exhaust count to: " + to_string( modem_exhaust_counts ));
 	this->exhaust_count = modem_exhaust_counts;
@@ -34,6 +38,10 @@ void Modem::set_exhaust_count( int modem_exhaust_counts ) {
 
 void Modem::setIndex( string index ) {
 	this->index = index;
+}
+
+void Modem::setIMEI( string IMEI ) {
+	this->imei = IMEI;
 }
 
 void Modem::set_configs( map<string,string> configs ) {
@@ -79,7 +87,7 @@ map<string,string> Modem::getConfigs() const {
 map<string,string> Modem::get_sms_message( string message_index ) const {
 	string terminal_respond = sys_calls::terminal_stdout( this->getConfigs()["DIR_SCRIPTS"] + "/modem_information_extraction.sh sms read_sms " + message_index + " " + this->getIndex() );	
 	
-	vector<string> message_body = helpers::split( terminal_respond, '\n', true);
+	vector<string> message_body = helpers::string_split( terminal_respond, '\n', true);
 	//TODO: if less than 3... somethings wrong
 	/*
 	for( auto message_line : message_body ) {
@@ -102,7 +110,7 @@ map<string,string> Modem::get_sms_message( string message_index ) const {
 vector<map<string,string>> Modem::get_sms_messages() const {
 	vector<map<string,string>> sms_messages;
 	string terminal_respond = sys_calls::terminal_stdout( this->getConfigs()["DIR_SCRIPTS"] + "/modem_information_extraction.sh sms received " + this->getIndex() );	
-	vector<string> sms_indexes = helpers::split( terminal_respond, '\n', true );
+	vector<string> sms_indexes = helpers::string_split( terminal_respond, '\n', true );
 	logger::logger(__FUNCTION__, "Number of SMS Indexes: " + to_string( sms_indexes.size() ));
 
 	for(auto message_index : sms_indexes) {
@@ -213,6 +221,34 @@ void Modem::start() {
 	// tr_modem_sms_listener.join();
 }
 
+int Modem::db_get_workload() { // TODO: Should take in date as a variable
+	int workload = 0;
+	string query = "SELECT * FROM __DEKU__.MODEM_WORK_LOAD WHERE IMEI='"+this->imei+"' AND DATE = DATE(NOW())";
+	logger::logger(__FUNCTION__, query);
+
+	try {
+		map<string, vector<string>> responds = this->mysqlConnection.query( query );
+		workload = atoi(responds["WORK_LOAD"][0].c_str());
+	}
+	catch(std::exception& excep) {
+		//logger::logger(__FUNCTION__, "Exception says: " + excep.what());
+	}
+
+	return workload;
+}
+
+void Modem::db_reset_workload() {
+	string query = "UPDATE __DEKU__.MODEM_WORK_LOAD SET WORK_LOAD = 0 WHERE IMEI='"+this->imei+"' AND DATE = DATE(NOW())";
+	logger::logger(__FUNCTION__, query);
+
+	try {
+		map<string, vector<string>> responds = this->mysqlConnection.query( query );
+	}
+	catch(std::exception& excep) {
+		//logger::logger(__FUNCTION__, "Exception says: " + excep.what());
+	}
+}
+
 
 // TODO: Remove sms index after messages have been sent
 void Modem::request_listener() {
@@ -244,10 +280,10 @@ void Modem::request_listener() {
 				string message = helpers::escape_string( request["message"], '"');
 				string number = request["number"];
 				string number_isp = isp_determiner::get_isp( number );
-				if( number_isp != this->getISP() ) {
+				if( helpers::to_uppercase(number_isp) != helpers::to_uppercase(this->getISP()) ) {
 					// TODO: Move the file to the right isp 	
 					logger::logger(__FUNCTION__, " - Wrong ISP determined, moving from [" + this->getISP() + "] to [" + number_isp + "]", "stderr", true );
-					sys_calls::rename_file( request["filename"], this->getConfigs()["DIR_ISP"] + "/" + number_isp );
+					sys_calls::rename_file( request["filename"], this->getConfigs()["DIR_ISP"] + "/" + number_isp + "/" + request["filename"] );
 					helpers::sleep_thread( this->get_sleep_time() );
 					continue;
 				}
@@ -265,7 +301,10 @@ void Modem::request_listener() {
 
 					//TODO: Delete SMS job
 
-					if(string locked_filename = request["filename"]; !sys_calls::rename_file(locked_filename, this->getConfigs()["DIR_SUCCESS"] + "/" + request["q_filename"]) and !sys_calls::rename_file(this->getConfigs()["DIR_SUCCESS"] + "/." + request["q_filename"], this->getConfigs()["DIR_SUCCESS"] + "/" + request["q_filename"])) {
+					if(string locked_filename = request["filename"]; 
+					!sys_calls::rename_file(locked_filename, this->getConfigs()["DIR_SUCCESS"] + "/" + request["q_filename"]) 
+					and 
+					!sys_calls::rename_file(this->getConfigs()["DIR_SUCCESS"] + "/." + request["q_filename"], this->getConfigs()["DIR_SUCCESS"] + "/" + request["q_filename"])) {
 						logger::logger(__FUNCTION__, this->getInfo() + " - Failed to move file to DIR_SUCCESS", "stderr", true); logger::logger_errno( errno );
 					}
 				
@@ -275,13 +314,11 @@ void Modem::request_listener() {
 
 					//WRITE TO LOG FILE
 				}
-				else if( send_sms_status == "failed" or send_sms_status == "unknown" ) {
-					if( send_sms_status != "unknown" ) this->iterate_failed_counter();
+				else if( send_sms_status == "failed") {
+					this->iterate_failed_counter();
 					logger::logger(__FUNCTION__, this->getInfo() + " - Exhaust count(" + to_string(this->get_exhaust_count()) + ")");
-					if( this->get_failed_counter() >= this->get_exhaust_count()
-					//and 
-					//this->db_get_working_state() != Modem::EXHAUSTED 
-					){
+					// TODO: Abstract this information to make sure if another ISP wants to use it, they can
+					if( this->get_failed_counter() >= this->get_exhaust_count() and this->db_get_workload() > 80){ // TODO: Move 80 to depend on each modem
 						// TODO: Deactivate modem if not activated
 						// TODO: Make inclusion of this code dynamic than hard coded
 
@@ -303,6 +340,7 @@ void Modem::request_listener() {
 						
 						logger::logger(__FUNCTION__, this->getInfo() + " - Setting DB state to exhausted!");
 						this->db_set_working_state( Modem::EXHAUSTED );
+						this->db_reset_workload();
 						this->reset_failed_counter();
 					}
 					logger::logger(__FUNCTION__, this->getInfo() + " - [" + request["id"] + "] Couldn't send SMS, unlocking file", "stderr", true);
@@ -326,7 +364,7 @@ void Modem::request_listener() {
 					}
 				
 					else {
-						logger::logger(__FUNCTION__, this->getInfo() + " - Moved file to successfull", "stderr", true);
+						logger::logger(__FUNCTION__, this->getInfo() + " - Moved file to error", "stderr", true);
 					}
 				}
 			}
@@ -381,7 +419,7 @@ map<string,string> Modem::request_job( string path_dir_request) {
 		return request;
 	}
 
-	string filename = helpers::split(filenames, '\n', true)[0];
+	string filename = helpers::string_split(filenames, '\n', true)[0];
 	if(filename.empty() or filename == "") {
 		logger::logger(__FUNCTION__, this->getInfo() + " - Seems no request available at this time");
 		return request;
@@ -406,11 +444,13 @@ map<string,string> Modem::request_job( string path_dir_request) {
 // TODO: Check error message when wrong ISP
 string Modem::mmcli_send_sms( string message, string number ) {
 	logger::logger(__FUNCTION__, "SENDING - [" + message + "] - [" + number + "]");
-	string sms_results = sys_calls::terminal_stdout(this->configs["DIR_SCRIPTS"] + "/modem_information_extraction.sh sms send \"" + message + "\" \"" + helpers::remove_char_advanced(number, ' ') + "\" " + this->getIndex());
+	string sms_results = sys_calls::terminal_stdout(this->configs["DIR_SCRIPTS"] + "/modem_information_extraction.sh sms send \"" + message + "\" \"" + helpers::remove_char(number, ' ') + "\" " + this->getIndex());
 	sms_results = helpers::to_lowercase( sms_results );
 	if( sms_results.find("successfully") != string::npos || sms_results.find("success") != string::npos) return "done";
-	else if( sms_results.find( "invalid" ) != string::npos ) return "error";
-	else if( sms_results.find( "unknown" ) != string::npos ) return "unknown";
+	else if( sms_results.find( "invalid" ) != string::npos ) {
+		logger::logger(__FUNCTION__, this->getInfo() + " - SMS Failed log: " + sms_results, "stderr", true);
+		return "error";
+	}
 	else {
 		logger::logger(__FUNCTION__, this->getInfo() + " - SMS Failed log: " + sms_results, "stderr", true);
 	}
@@ -433,9 +473,9 @@ string Modem::ssh_send_sms( string message, string number ) {
 
 string Modem::send_sms(string message, string number ) {
 	logger::logger(__FUNCTION__, this->getInfo() + " - About to send SMS", "stdout", true);
-	message = helpers::find_and_replace("\\n", "\n", message);
-	message = helpers::find_and_replace("\\\"", "\"", message);
-	message = helpers::find_and_replace("'", "\'", message);
+	message = helpers::find_and_replace_substr("\\n", "\n", message);
+	message = helpers::find_and_replace_substr("\\\"", "\"", message);
+	message = helpers::find_and_replace_substr("'", "\'", message);
 	if( this->getType() == "MMCLI") 
 		return this->mmcli_send_sms( message, number);
 	else if( this->getType() == "SSH") 

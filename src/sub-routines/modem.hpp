@@ -52,6 +52,8 @@ class Modem : public USSD {
 		void request_listener();
 		void modem_sms_listener();
 		void set_configs( map<string,string> configs );
+		void set_mysql_connection( MySQL );
+		void db_reset_workload();
 
 		string getIndex() const;
 		string getISP() const;
@@ -86,6 +88,7 @@ class Modem : public USSD {
 		int get_failed_counter() const;
 		int get_sleep_time() const;
 		int get_exhaust_count() const;
+		int db_get_workload();
 
 		MySQL get_mysql_connector() const;
 };

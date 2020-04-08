@@ -41,7 +41,7 @@ TEMPLATED_RETURN_TYPE USSD::initiate( string command ) {
 
 multimap<string,string> USSD::initiate_series( string command ) {
 	// TODO: Finish working on this, would aid a lot
-	vector<string> in_commands = helpers::split( command, '|', true);
+	vector<string> in_commands = helpers::string_split( command, '|', true);
 	multimap<string,string> return_responses;
 	for(size_t i = 0; i < in_commands.size(); ++i) {
 		string in_command = in_commands[i];
@@ -49,9 +49,9 @@ multimap<string,string> USSD::initiate_series( string command ) {
 		string condition;
 		if( in_command.find("{") != string::npos and in_command.find("}") != string::npos)  {
 			logger::logger(__FUNCTION__, "Initiating conditional USSD");
-			vector<string> conditions = helpers::split( in_command, '{', true );
+			vector<string> conditions = helpers::string_split( in_command, '{', true );
 			// This assumes not space at the end, but since I don't read comments, I'd most probably forget
-			condition = helpers::split( conditions[1], '}')[0];
+			condition = helpers::string_split( conditions[1], '}')[0];
 			con_command = conditions[0];
 
 			logger::logger(__FUNCTION__, "Condition = " + condition + ", for Command: " + con_command );
