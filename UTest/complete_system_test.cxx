@@ -20,8 +20,8 @@ TEST(Helpers, remove_char) {
 
 // Testing: helpers::unescape_string(string, char)
 TEST(Helpers, unescape_string) {
-	std::string input_string = "hello\"world";
-	std::string expected_string = "hello\\\"world";
+	std::string input_string = "hello\"world"; // hello"world
+	std::string expected_string = "hello\\\"world"; // hello\"world
 	std::string output_string = helpers::unescape_string( input_string, ';');
 
 	// (expected, actual)
