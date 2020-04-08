@@ -241,7 +241,7 @@ void Modem::request_listener() {
 				logger::logger(__FUNCTION__, this->getInfo() + " - locked on file: " + request["filename"]);
 				//From here we can know which message went and which failed, based on the ID
 				//TODO: What is an invalid message - find it so you can delete it
-				string message = helpers::unescape_string( request["message"], '"');
+				string message = helpers::escape_string( request["message"], '"');
 				string number = request["number"];
 				string number_isp = isp_determiner::get_isp( number );
 				if( number_isp != this->getISP() ) {

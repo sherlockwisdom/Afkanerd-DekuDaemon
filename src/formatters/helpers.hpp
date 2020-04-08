@@ -72,7 +72,7 @@ namespace helpers {
 		return return_string.empty() ? backup_original : return_string;
 	}
 
-	vector<string> string_split(string _string, char del = ' ', bool strict = false, size_t start_pos = 0, size_t limit = 0) {
+	vector<string> string_split(string _string, char del = ' ', size_t start_pos = 0, size_t limit = 0) {
 		vector<string> return_value;
 		string temp_string = "";
 		size_t iterator = 0;
@@ -98,7 +98,7 @@ namespace helpers {
 			}
 			++iterator;
 		}
-		if(strict and !temp_string.empty()) return_value.push_back(temp_string);
+		if(!temp_string.empty()) return_value.push_back(temp_string);
 
 		return return_value;
 	}
