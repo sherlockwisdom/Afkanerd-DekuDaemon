@@ -28,7 +28,7 @@ namespace sys_calls {
 
 	void make_dir( string path_dirname ) {
 		size_t start_pos = path_dirname[0] == '/' ? 1 : 0;
-		vector<string> recursive_paths = helpers::string_split(path_dirname, '/', true, start_pos);
+		vector<string> recursive_paths = helpers::string_split(path_dirname, '/', start_pos);
 		string make_me = recursive_paths[0];
 		for(size_t i=0;i<recursive_paths.size();++i) {
 			//logger::logger(__FUNCTION__, "Making dir: " + make_me, "stdout", false);
