@@ -87,7 +87,7 @@ map<string,string> Modem::getConfigs() const {
 map<string,string> Modem::get_sms_message( string message_index ) const {
 	string terminal_respond = sys_calls::terminal_stdout( this->getConfigs()["DIR_SCRIPTS"] + "/modem_information_extraction.sh sms read_sms " + message_index + " " + this->getIndex() );	
 	
-	vector<string> message_body = helpers::string_split( terminal_respond, '\n', true);
+	vector<string> message_body = helpers::string_split( terminal_respond, '\n');
 	//TODO: if less than 3... somethings wrong
 	/*
 	for( auto message_line : message_body ) {
@@ -110,7 +110,7 @@ map<string,string> Modem::get_sms_message( string message_index ) const {
 vector<map<string,string>> Modem::get_sms_messages() const {
 	vector<map<string,string>> sms_messages;
 	string terminal_respond = sys_calls::terminal_stdout( this->getConfigs()["DIR_SCRIPTS"] + "/modem_information_extraction.sh sms received " + this->getIndex() );	
-	vector<string> sms_indexes = helpers::string_split( terminal_respond, '\n', true );
+	vector<string> sms_indexes = helpers::string_split( terminal_respond, '\n' );
 	logger::logger(__FUNCTION__, "Number of SMS Indexes: " + to_string( sms_indexes.size() ));
 
 	for(auto message_index : sms_indexes) {
@@ -396,6 +396,8 @@ string Modem::getErrorLogs() {
 }
 
 map<string,string> Modem::request_job( string path_dir_request) {
+	//TODO: Remove all sanitation checks from functions
+	if( path_dir_request[path_dir_request.size() - 1] == '/') path_dir_request.erase(path_dir_request.size() -1, 1);
 	map<string,string> request;
 	logger::logger(__FUNCTION__, this->getInfo() + " - Requesting job at: " + path_dir_request);
 	map<string,string> ls_returned_values;
@@ -419,7 +421,7 @@ map<string,string> Modem::request_job( string path_dir_request) {
 		return request;
 	}
 
-	string filename = helpers::string_split(filenames, '\n', true)[0];
+	string filename = helpers::string_split(filenames, '\n')[0];
 	if(filename.empty() or filename == "") {
 		logger::logger(__FUNCTION__, this->getInfo() + " - Seems no request available at this time");
 		return request;
