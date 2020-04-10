@@ -132,7 +132,10 @@ namespace sys_calls {
 			logger::logger(__FUNCTION__, "Working with index #" + index);
 			index = helpers::remove_char( index, ' ');
 			vector<string> details = get_modem_details( path_to_script, index );
-			if( details.size() != 3 ) continue;
+			if( details.size() != 3 ) {
+				logger::logger(__FUNCTION__, "Not enough details for modem index: " + index, "stderr");
+				continue;
+			}
 			map<string,string> in_details = {
 				{"imei", details[0]},
 				{"operator_name", details[1]},

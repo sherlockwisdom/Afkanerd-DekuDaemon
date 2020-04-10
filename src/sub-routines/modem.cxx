@@ -254,6 +254,7 @@ void Modem::db_reset_workload() {
 void Modem::request_listener() {
 	logger::logger(__FUNCTION__, "==========> MODEM REQUEST LISTENER | " + this->getInfo() + " <============");
 	while( 1 ) {
+		logger::logger(__FUNCTION__, this->getInfo() + " - Scanning for pending request");
 		// TODO: Verify modem is still available - extracts it's information and see if it matches
 		vector<string> respond = sys_calls::get_modem_details( this->configs["DIR_SCRIPTS"], this->index );
 		if( respond.empty()) {

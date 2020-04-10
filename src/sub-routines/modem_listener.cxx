@@ -82,7 +82,9 @@ void Modems::begin_scanning() {
 
 		// Second it filters the modems and stores them in database
 		for(auto modem : available_modems) {
-			bool has_modems_imei = this->available_modems.find( modem.first ) != this->available_modems.end() ? true : false;
+			bool has_modems_imei = false;
+			if(!this->available_modems.empty()) 
+				this->available_modems.find( modem.first ) != this->available_modems.end() ? true : false;
 			if( !has_modems_imei ) {
 				logger::logger(__FUNCTION__, " ====> NEW MODEM DETECTED <======", "stdout", true);
 				logger::logger(__FUNCTION__, "IMEI: " + modem.first, "stdout", true);
@@ -113,6 +115,7 @@ void Modems::begin_scanning() {
 				this->available_modems.insert(make_pair( modem.first, new Modem(imei, isp, type, index, this->configs, this->mysqlConnection)));
 
 				// Forth Starts the modems and let is be free
+				logger::logger(__FUNCTION__, this->available_modems[modem.first]->getInfo() + " Starting...");
 				std::thread tr_modem = std::thread(&Modem::start, std::ref(this->available_modems[modem.first]));
 				tr_modem.detach();
 
@@ -124,6 +127,9 @@ void Modems::begin_scanning() {
 				catch(std::exception& e) {
 					logger::logger(__FUNCTION__, e.what(), "stderr" );
 				}
+			}
+			else {
+				logger::logger(__FUNCTION__, this->available_modems[modem.first]->getInfo() + " - Already present in system");
 			}
 		}
 
