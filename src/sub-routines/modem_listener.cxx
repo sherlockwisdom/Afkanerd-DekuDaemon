@@ -67,8 +67,8 @@ void Modems::db_insert_modems( map<string,string> modem ) {
 	auto responds = this->mysqlConnection.query( insert_modem_query );
 }
 
-void Modems::db_switch_power_modems( map<string,string> modem ) {
-	string switch_modem_power_query = "UPDATE __DEKU__.MODEMS SET POWER = 'not_plugged' WHERE IMEI='" + modem["imei"] + "'";
+void Modems::db_switch_power_modems( map<string,string> modem, string state ) {
+	string switch_modem_power_query = "UPDATE __DEKU__.MODEMS SET POWER = '"+state+"' WHERE IMEI='" + modem["imei"] + "'";
 	logger::logger(__FUNCTION__, modem["imei"] + " - Switch modem power state");
 	auto responds = this->mysqlConnection.query( switch_modem_power_query );
 }
@@ -137,7 +137,7 @@ void Modems::begin_scanning() {
 			}
 			else {
 				logger::logger(__FUNCTION__, this->available_modems[modem.first]->getInfo() + " - Already present in system");
-				this->db_switch_power_modems( modem.second );
+				this->db_switch_power_modems( modem.second, "plugged" );
 			}
 		}
 
@@ -149,6 +149,7 @@ void Modems::begin_scanning() {
 
 				delete modem.second;
 				this->available_modems.erase(modem.first );
+				this->db_switch_power_modems( map<string,string>{{"imei", modem.second->getIMEI()}}, "not_plugged" );
 				if(this->available_modems.empty()) break;
 			}
 		}

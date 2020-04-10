@@ -69,7 +69,12 @@ map<string,string> get_system_configs( vector<string> sys_config_lines ) {
 	map<string,string> configs;
 	for(auto config_line: sys_config_lines) {
 		vector<string> tmp_configs = helpers::string_split(config_line, '=');
-		if(tmp_configs.size() > 1) configs.insert(make_pair( tmp_configs[0], tmp_configs[1]));
+		if(tmp_configs.size() > 1) {
+			string value = tmp_configs[1];
+			if(value[value.size() -1] == '/')
+				value.erase(value.size() -1, 1);
+			configs.insert(make_pair( tmp_configs[0], value));
+		}
 		else {
 			logger::logger(__FUNCTION__, "Error reading configs...", "stderr", true);
 		}
