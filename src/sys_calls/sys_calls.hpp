@@ -113,11 +113,19 @@ namespace sys_calls {
 			vector<string> split_operator_id = helpers::string_split(ln_modem_information[3], ':');
 			if(split_equipment_id.size() == 2 and (split_operator_name.size() == 2 || split_operator_id.size() == 2)) {
 				details.push_back(helpers::string_split(ln_modem_information[0], ':')[1] );// equipment_id
-				if( split_operator_name.size() == 2 )
-				details.push_back(helpers::string_split(ln_modem_information[2], ':')[1] );// operator_name
-				else if( split_operator_id.size() == 2 )
-				details.push_back(helpers::string_split(ln_modem_information[3], ':')[1] );// operator_id
-				else return vector<string>{};
+
+				string isp, isp_id;
+				if( split_operator_name.size() == 2 ){
+					isp = helpers::string_split(ln_modem_information[2], ':')[1];// operator_name
+				if( split_operator_id.size() == 2 )
+					isp_id = helpers::string_split(ln_modem_information[3], ':')[1];// operator_id
+				if( isp.empty())
+					if( isp_id.empty()) 
+						return vector<string>{};
+					else
+						isp = isp_id;
+				}
+				details.push_back( isp );
 				details.push_back(type );// mmcli || ssh
 			}
 		}
