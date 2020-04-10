@@ -64,7 +64,13 @@ void Modems::db_insert_modems( map<string,string> modem ) {
 
 	logger::logger(__FUNCTION__, "Inserting modem into DB");
 	// Insert affects rows, but doesn't return anything
-	this->mysqlConnection.query( insert_modem_query );
+	auto responds = this->mysqlConnection.query( insert_modem_query );
+}
+
+void Modems::db_switch_power_modems( map<string,string> modem, string state ) {
+	string switch_modem_power_query = "UPDATE __DEKU__.MODEMS SET POWER = '"+state+"' WHERE IMEI='" + modem["imei"] + "'";
+	logger::logger(__FUNCTION__, modem["imei"] + " - Switch modem power state");
+	auto responds = this->mysqlConnection.query( switch_modem_power_query );
 }
 
 void Modems::begin_scanning() {
@@ -82,11 +88,14 @@ void Modems::begin_scanning() {
 
 		// Second it filters the modems and stores them in database
 		for(auto modem : available_modems) {
-			bool has_modems_imei = this->available_modems.find( modem.first ) != this->available_modems.end() ? true : false;
+			bool has_modems_imei = false;
+			if(!this->available_modems.empty()) 
+				has_modems_imei = this->available_modems.find( modem.first ) != this->available_modems.end() ? true : false;
 			if( !has_modems_imei ) {
+				map<string,string> details = modem.second;
+
 				logger::logger(__FUNCTION__, " ====> NEW MODEM DETECTED <======", "stdout", true);
 				logger::logger(__FUNCTION__, "IMEI: " + modem.first, "stdout", true);
-				map<string,string> details = modem.second;
 				logger::logger(__FUNCTION__, "TYPE: " + details["type"], "stdout", true);
 				logger::logger(__FUNCTION__, "ISP: " + details["operator_name"], "stdout", true);
 				logger::logger(__FUNCTION__, "==================================", "stdout", true);
@@ -97,6 +106,10 @@ void Modems::begin_scanning() {
 				string isp = helpers::to_uppercase(details["operator_name"] );
 				string type = helpers::to_uppercase(details["type"] );
 				string index = details["index"];
+				if( isp.empty() ) {
+					logger::logger(__FUNCTION__, imei + "|" + index + " - No ISP", "stderr", true);
+					continue;
+				}
 
 
 				//TMP solution to some ISP crisis
@@ -109,6 +122,7 @@ void Modems::begin_scanning() {
 				this->available_modems.insert(make_pair( modem.first, new Modem(imei, isp, type, index, this->configs, this->mysqlConnection)));
 
 				// Forth Starts the modems and let is be free
+				logger::logger(__FUNCTION__, this->available_modems[modem.first]->getInfo() + " Starting...");
 				std::thread tr_modem = std::thread(&Modem::start, std::ref(this->available_modems[modem.first]));
 				tr_modem.detach();
 
@@ -121,6 +135,10 @@ void Modems::begin_scanning() {
 					logger::logger(__FUNCTION__, e.what(), "stderr" );
 				}
 			}
+			else {
+				logger::logger(__FUNCTION__, this->available_modems[modem.first]->getInfo() + " - Already present in system");
+				this->db_switch_power_modems( modem.second, "plugged" );
+			}
 		}
 
 		for(auto it_modem = this->available_modems.begin(); it_modem != this->available_modems.end(); ++it_modem ) {
@@ -131,6 +149,7 @@ void Modems::begin_scanning() {
 
 				delete modem.second;
 				this->available_modems.erase(modem.first );
+				this->db_switch_power_modems( map<string,string>{{"imei", modem.second->getIMEI()}}, "not_plugged" );
 				if(this->available_modems.empty()) break;
 			}
 		}

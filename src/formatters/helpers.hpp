@@ -18,11 +18,15 @@ namespace helpers {
 
 	/** escapes special characters in a string */
 	// TODO: This function doesn't make any sense in the first place
-	string unescape_string( string input, char del ) {
+	string escape_string( string input, char del ) {
 		for(size_t i=0;i<input.size();++i) {
 			if( input[i] == del ) {
 				input.erase(i, 1);
-				input.insert(i, "\\"+del);
+				string tmp_string = "";
+				tmp_string += del;
+				tmp_string = "\\\\" + tmp_string;
+				input.insert(i, tmp_string);
+				i = i + 3;
 			}
 		}
 		return input;
@@ -72,41 +76,28 @@ namespace helpers {
 		return return_string.empty() ? backup_original : return_string;
 	}
 
-	vector<string> string_split(string _string, char del = ' ', bool strict = false, size_t start_pos = 0, size_t limit = 0) {
-		vector<string> return_value;
-		string temp_string = "";
-		size_t iterator = 0;
-		size_t found_count = 0;
-		for(auto _char : _string) {
-			if(_char==del) {
-				if(iterator >= start_pos) {
-					// if(strict and temp_string.empty()) continue;
-					return_value.push_back(temp_string);
-					temp_string="";
-					++found_count;
-				}
-				else 
-				temp_string+=_char;
+	vector<string> string_split(string _string, char del = ' ', size_t start_pos = 0) { // TODO: Add start delimeter, test other sections of models which require this part of code
+		// 
+		vector<string> return_vector;
+		size_t is_delimeter = _string.find( del );
+		size_t pos = 0;
+		while( is_delimeter != string::npos ) {
+			if( pos < start_pos ) continue;
+			string hold_to_del = _string.substr(0, is_delimeter);
+			return_vector.push_back( hold_to_del );
+			_string.erase(0, is_delimeter + 1);
 
-				if( limit != 0 and found_count == limit) {
-					temp_string = _string.substr(iterator+1, (_string.size() - iterator));
-					break;
-				}
-			}
-			else {
-				temp_string+=_char;
-			}
-			++iterator;
+			is_delimeter = _string.find( del );
+			++pos;
 		}
-		if(strict and !temp_string.empty()) return_value.push_back(temp_string);
-
-		return return_value;
+		return_vector.push_back( _string );
+		return return_vector;
 	}
 
 	/** Creates a dir in Linux */
 	void make_dir( string path_dirname ) {
 		size_t start_pos = path_dirname[0] == '/' ? 1 : 0;
-		vector<string> recursive_paths = helpers::string_split(path_dirname, '/', true, start_pos);
+		vector<string> recursive_paths = helpers::string_split(path_dirname, '/', start_pos);
 		string make_me = recursive_paths[0];
 		for(size_t i=0;i<recursive_paths.size();++i) {
 			logger::logger(__FUNCTION__, "Making dir: " + make_me, "stdout", false);

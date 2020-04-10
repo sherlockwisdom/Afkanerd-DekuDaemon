@@ -87,7 +87,7 @@ map<string,string> Modem::getConfigs() const {
 map<string,string> Modem::get_sms_message( string message_index ) const {
 	string terminal_respond = sys_calls::terminal_stdout( this->getConfigs()["DIR_SCRIPTS"] + "/modem_information_extraction.sh sms read_sms " + message_index + " " + this->getIndex() );	
 	
-	vector<string> message_body = helpers::string_split( terminal_respond, '\n', true);
+	vector<string> message_body = helpers::string_split( terminal_respond, '\n');
 	//TODO: if less than 3... somethings wrong
 	/*
 	for( auto message_line : message_body ) {
@@ -110,7 +110,7 @@ map<string,string> Modem::get_sms_message( string message_index ) const {
 vector<map<string,string>> Modem::get_sms_messages() const {
 	vector<map<string,string>> sms_messages;
 	string terminal_respond = sys_calls::terminal_stdout( this->getConfigs()["DIR_SCRIPTS"] + "/modem_information_extraction.sh sms received " + this->getIndex() );	
-	vector<string> sms_indexes = helpers::string_split( terminal_respond, '\n', true );
+	vector<string> sms_indexes = helpers::string_split( terminal_respond, '\n' );
 	logger::logger(__FUNCTION__, "Number of SMS Indexes: " + to_string( sms_indexes.size() ));
 
 	for(auto message_index : sms_indexes) {
@@ -228,7 +228,8 @@ int Modem::db_get_workload() { // TODO: Should take in date as a variable
 
 	try {
 		map<string, vector<string>> responds = this->mysqlConnection.query( query );
-		workload = atoi(responds["WORK_LOAD"][0].c_str());
+		if( !responds.empty() and responds.find("WORK_LOAD") != responds.end() and !responds["WORK_LOAD"].empty())
+			workload = atoi(responds["WORK_LOAD"][0].c_str());
 	}
 	catch(std::exception& excep) {
 		//logger::logger(__FUNCTION__, "Exception says: " + excep.what());
@@ -254,6 +255,7 @@ void Modem::db_reset_workload() {
 void Modem::request_listener() {
 	logger::logger(__FUNCTION__, "==========> MODEM REQUEST LISTENER | " + this->getInfo() + " <============");
 	while( 1 ) {
+		logger::logger(__FUNCTION__, this->getInfo() + " - Scanning for pending request");
 		// TODO: Verify modem is still available - extracts it's information and see if it matches
 		vector<string> respond = sys_calls::get_modem_details( this->configs["DIR_SCRIPTS"], this->index );
 		if( respond.empty()) {
@@ -277,13 +279,15 @@ void Modem::request_listener() {
 				logger::logger(__FUNCTION__, this->getInfo() + " - locked on file: " + request["filename"]);
 				//From here we can know which message went and which failed, based on the ID
 				//TODO: What is an invalid message - find it so you can delete it
-				string message = helpers::unescape_string( request["message"], '"');
+				string message = helpers::escape_string( request["message"], '"');
 				string number = request["number"];
 				string number_isp = isp_determiner::get_isp( number );
 				if( helpers::to_uppercase(number_isp) != helpers::to_uppercase(this->getISP()) ) {
 					// TODO: Move the file to the right isp 	
-					logger::logger(__FUNCTION__, " - Wrong ISP determined, moving from [" + this->getISP() + "] to [" + number_isp + "]", "stderr", true );
-					sys_calls::rename_file( request["filename"], this->getConfigs()["DIR_ISP"] + "/" + number_isp + "/" + request["filename"] );
+					string move_isp = this->getConfigs()["DIR_ISP"] + "/" + number_isp + "/" + request["q_filename"];
+					logger::logger(__FUNCTION__, " - Wrong ISP determined, moving from [" + this->getISP() + "] to [" + move_isp + "]", "stderr", true );
+					if( !sys_calls::rename_file( request["filename"], move_isp ))
+						logger::logger(__FUNCTION__, this->getInfo() + " - Failed to move file to right ISP dir", "stderr", true);
 					helpers::sleep_thread( this->get_sleep_time() );
 					continue;
 				}
@@ -396,6 +400,8 @@ string Modem::getErrorLogs() {
 }
 
 map<string,string> Modem::request_job( string path_dir_request) {
+	//TODO: Remove all sanitation checks from functions
+	if( path_dir_request[path_dir_request.size() - 1] == '/') path_dir_request.erase(path_dir_request.size() -1, 1);
 	map<string,string> request;
 	logger::logger(__FUNCTION__, this->getInfo() + " - Requesting job at: " + path_dir_request);
 	map<string,string> ls_returned_values;
@@ -408,6 +414,7 @@ map<string,string> Modem::request_job( string path_dir_request) {
 	}
 
 	if(ls_returned_values["return"] == "-1") {
+		//TODO: should find and change the way this information ins bring transmitted from
 		//TODO: put something here to tell the error
 		return request;
 	}
@@ -419,7 +426,7 @@ map<string,string> Modem::request_job( string path_dir_request) {
 		return request;
 	}
 
-	string filename = helpers::string_split(filenames, '\n', true)[0];
+	string filename = helpers::string_split(filenames, '\n')[0];
 	if(filename.empty() or filename == "") {
 		logger::logger(__FUNCTION__, this->getInfo() + " - Seems no request available at this time");
 		return request;

@@ -28,7 +28,7 @@ namespace sys_calls {
 
 	void make_dir( string path_dirname ) {
 		size_t start_pos = path_dirname[0] == '/' ? 1 : 0;
-		vector<string> recursive_paths = helpers::string_split(path_dirname, '/', true, start_pos);
+		vector<string> recursive_paths = helpers::string_split(path_dirname, '/', start_pos);
 		string make_me = recursive_paths[0];
 		for(size_t i=0;i<recursive_paths.size();++i) {
 			//logger::logger(__FUNCTION__, "Making dir: " + make_me, "stdout", false);
@@ -65,7 +65,9 @@ namespace sys_calls {
 
 		stream = popen(command.c_str(), "r");
 		if (stream) {
-			while (!feof(stream)) if (fgets(buffer, max_buffer, stream) != NULL) data.append(buffer);
+			while (!feof(stream)) 
+				if (fgets(buffer, max_buffer, stream) != NULL) 
+					data.append(buffer);
 			return_values.insert(make_pair("return", to_string(pclose(stream))));
 		}
 		return_values.insert(make_pair("data", data));
@@ -73,6 +75,7 @@ namespace sys_calls {
 
 	bool rename_file( string path_filename, string new_path_filename) {
 		if(std::rename( path_filename.c_str(), new_path_filename.c_str()) == -1 ) {
+			logger::logger_errno(errno );
 			return false;
 		}
 		
@@ -83,7 +86,7 @@ namespace sys_calls {
 		vector<string> details;
 		string type = index.find("192.168") != string::npos ? "ssh" : "mmcli";
 		string modem_information = type == "ssh" ? sys_calls::terminal_stdout("ssh root@"+index+" -o 'ServerAliveInterval 10' deku") : sys_calls::terminal_stdout( path_to_script + "/modem_information_extraction.sh extract " + index );
-		vector<string> ln_modem_information = helpers::string_split(modem_information, '\n', true);
+		vector<string> ln_modem_information = helpers::string_split(modem_information, '\n');
 
 		logger::logger(__FUNCTION__, "Type: " + type + "\tSize: " + to_string( ln_modem_information.size() ));
 
@@ -105,15 +108,15 @@ namespace sys_calls {
 				return details;
 			}
 
-			vector<string> split_equipment_id = helpers::string_split(ln_modem_information[0], ':', true);
-			vector<string> split_operator_name = helpers::string_split(ln_modem_information[2], ':', true);
-			vector<string> split_operator_id = helpers::string_split(ln_modem_information[3], ':', true);
+			vector<string> split_equipment_id = helpers::string_split(ln_modem_information[0], ':');
+			vector<string> split_operator_name = helpers::string_split(ln_modem_information[2], ':');
+			vector<string> split_operator_id = helpers::string_split(ln_modem_information[3], ':');
 			if(split_equipment_id.size() == 2 and (split_operator_name.size() == 2 || split_operator_id.size() == 2)) {
-				details.push_back(helpers::string_split(ln_modem_information[0], ':', true)[1] );// equipment_id
+				details.push_back(helpers::string_split(ln_modem_information[0], ':')[1] );// equipment_id
 				if( split_operator_name.size() == 2 )
-				details.push_back(helpers::string_split(ln_modem_information[2], ':', true)[1] );// operator_name
+				details.push_back(helpers::string_split(ln_modem_information[2], ':')[1] );// operator_name
 				else if( split_operator_id.size() == 2 )
-				details.push_back(helpers::string_split(ln_modem_information[3], ':', true)[1] );// operator_id
+				details.push_back(helpers::string_split(ln_modem_information[3], ':')[1] );// operator_id
 				else return vector<string>{};
 				details.push_back(type );// mmcli || ssh
 			}
@@ -124,14 +127,17 @@ namespace sys_calls {
 	map<string,map<string,string>> get_available_modems( string path_to_script ) {
 		map<string,map<string,string>> available_modems;
 		string list_of_modem_indexes = sys_calls::terminal_stdout( path_to_script + "/modem_information_extraction.sh list");
-		vector<string> modem_indexes = helpers::string_split(list_of_modem_indexes, '\n', true);
+		vector<string> modem_indexes = helpers::string_split(list_of_modem_indexes, '\n');
 		logger::logger(__FUNCTION__, "Listed " + to_string(modem_indexes.size()) + " index(es)");
 
 		for(auto& index : modem_indexes ) {
 			logger::logger(__FUNCTION__, "Working with index #" + index);
 			index = helpers::remove_char( index, ' ');
 			vector<string> details = get_modem_details( path_to_script, index );
-			if( details.size() != 3 ) continue;
+			if( details.size() != 3 ) {
+				logger::logger(__FUNCTION__, "Not enough details for modem index: " + index, "stderr");
+				continue;
+			}
 			map<string,string> in_details = {
 				{"imei", details[0]},
 				{"operator_name", details[1]},

@@ -21,7 +21,7 @@ namespace saitama {
 
 		// String find the last of the information which cannot change things, witout changing all the other files in the system
 		if( command.find("--:bash:-- ") != string::npos ) {
-			string bash_command = helpers::string_split( command, ' ', true, 0, 1)[1];	
+			string bash_command = helpers::string_split( command, ' ', 0)[1];	
 			
 			// Using system here cus respond doesn't matter yet
 			logger::logger(__FUNCTION__, "Executing Bash: " + bash_command );

@@ -25,7 +25,8 @@ bool system_check( string path_to_sys_file) {
 
 	for(auto config_line: sys_file_contents) {
 		logger::logger(__FUNCTION__, config_line);
-		vector<string> configs = helpers::string_split(config_line, '=', true);
+		vector<string> configs = helpers::string_split(config_line, '=');
+		for(auto config : configs ) logger::logger(__FUNCTION__, config);
 		if(configs[0] == "DIR_REQUEST_FILE") {
 			string dir_request_file = configs[1];
 			if(!helpers::file_exist( dir_request_file ) ) {
@@ -36,6 +37,7 @@ bool system_check( string path_to_sys_file) {
 		}
 		else if(configs[0] == "DIR_ISP") {
 			string dir_isp = configs[1];
+			logger::logger(__FUNCTION__, "Dir ISP: " + dir_isp);
 			if(!helpers::file_exist( dir_isp ) ) {
 				helpers::make_dir( dir_isp );
 				logger::logger(__FUNCTION__, "CREATING DIR_ISP: "+dir_isp);
@@ -66,8 +68,13 @@ bool system_check( string path_to_sys_file) {
 map<string,string> get_system_configs( vector<string> sys_config_lines ) {
 	map<string,string> configs;
 	for(auto config_line: sys_config_lines) {
-		vector<string> tmp_configs = helpers::string_split(config_line, '=', true);
-		if(tmp_configs.size() > 1) configs.insert(make_pair( tmp_configs[0], tmp_configs[1]));
+		vector<string> tmp_configs = helpers::string_split(config_line, '=');
+		if(tmp_configs.size() > 1) {
+			string value = tmp_configs[1];
+			if(value[value.size() -1] == '/')
+				value.erase(value.size() -1, 1);
+			configs.insert(make_pair( tmp_configs[0], value));
+		}
 		else {
 			logger::logger(__FUNCTION__, "Error reading configs...", "stderr", true);
 		}
