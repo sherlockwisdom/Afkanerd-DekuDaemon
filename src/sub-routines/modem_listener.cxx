@@ -64,7 +64,13 @@ void Modems::db_insert_modems( map<string,string> modem ) {
 
 	logger::logger(__FUNCTION__, "Inserting modem into DB");
 	// Insert affects rows, but doesn't return anything
-	this->mysqlConnection.query( insert_modem_query );
+	auto responds = this->mysqlConnection.query( insert_modem_query );
+}
+
+void Modems::db_switch_power_modems( map<string,string> modem ) {
+	string switch_modem_power_query = "UPDATE __DEKU__.MODEMS SET POWER = 'not_plugged' WHERE IMEI='" + modem["imei"] + "'";
+	logger::logger(__FUNCTION__, modem["imei"] + " - Switch modem power state");
+	auto responds = this->mysqlConnection.query( switch_modem_power_query );
 }
 
 void Modems::begin_scanning() {
@@ -86,9 +92,10 @@ void Modems::begin_scanning() {
 			if(!this->available_modems.empty()) 
 				has_modems_imei = this->available_modems.find( modem.first ) != this->available_modems.end() ? true : false;
 			if( !has_modems_imei ) {
+				map<string,string> details = modem.second;
+
 				logger::logger(__FUNCTION__, " ====> NEW MODEM DETECTED <======", "stdout", true);
 				logger::logger(__FUNCTION__, "IMEI: " + modem.first, "stdout", true);
-				map<string,string> details = modem.second;
 				logger::logger(__FUNCTION__, "TYPE: " + details["type"], "stdout", true);
 				logger::logger(__FUNCTION__, "ISP: " + details["operator_name"], "stdout", true);
 				logger::logger(__FUNCTION__, "==================================", "stdout", true);
@@ -130,6 +137,7 @@ void Modems::begin_scanning() {
 			}
 			else {
 				logger::logger(__FUNCTION__, this->available_modems[modem.first]->getInfo() + " - Already present in system");
+				this->db_switch_power_modems( modem.second );
 			}
 		}
 

@@ -29,6 +29,7 @@ class Modems {
 		void set_exhaust_count( int );
 		void db_insert_modems_workload( map<string,string> modem );
 		void db_insert_modems( map<string,string> modem );
+		void db_switch_power_modems( map<string,string> modem);
 		
 		vector<string> getAllIndexes();
 		vector<string> getAllISP();

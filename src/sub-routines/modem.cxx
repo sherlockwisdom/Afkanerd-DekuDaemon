@@ -228,7 +228,8 @@ int Modem::db_get_workload() { // TODO: Should take in date as a variable
 
 	try {
 		map<string, vector<string>> responds = this->mysqlConnection.query( query );
-		workload = atoi(responds["WORK_LOAD"][0].c_str());
+		if( !responds.empty() and responds.find("WORK_LOAD") != responds.end() and !responds["WORK_LOAD"].empty())
+			workload = atoi(responds["WORK_LOAD"][0].c_str());
 	}
 	catch(std::exception& excep) {
 		//logger::logger(__FUNCTION__, "Exception says: " + excep.what());
