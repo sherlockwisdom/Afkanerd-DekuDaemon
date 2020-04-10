@@ -84,7 +84,7 @@ void Modems::begin_scanning() {
 		for(auto modem : available_modems) {
 			bool has_modems_imei = false;
 			if(!this->available_modems.empty()) 
-				this->available_modems.find( modem.first ) != this->available_modems.end() ? true : false;
+				has_modems_imei = this->available_modems.find( modem.first ) != this->available_modems.end() ? true : false;
 			if( !has_modems_imei ) {
 				logger::logger(__FUNCTION__, " ====> NEW MODEM DETECTED <======", "stdout", true);
 				logger::logger(__FUNCTION__, "IMEI: " + modem.first, "stdout", true);
@@ -101,7 +101,7 @@ void Modems::begin_scanning() {
 				string index = details["index"];
 				if( isp.empty() ) {
 					logger::logger(__FUNCTION__, imei + "|" + index + " - No ISP", "stderr", true);
-					break;
+					continue;
 				}
 
 
