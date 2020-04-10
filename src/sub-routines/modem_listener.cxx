@@ -97,6 +97,10 @@ void Modems::begin_scanning() {
 				string isp = helpers::to_uppercase(details["operator_name"] );
 				string type = helpers::to_uppercase(details["type"] );
 				string index = details["index"];
+				if( isp.empty() ) {
+					logger::logger(__FUNCTION__, imei + "|" + index + " - No ISP", "stderr", true);
+					break;
+				}
 
 
 				//TMP solution to some ISP crisis

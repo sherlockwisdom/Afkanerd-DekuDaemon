@@ -410,6 +410,7 @@ map<string,string> Modem::request_job( string path_dir_request) {
 	}
 
 	if(ls_returned_values["return"] == "-1") {
+		//TODO: should find and change the way this information ins bring transmitted from
 		//TODO: put something here to tell the error
 		return request;
 	}
