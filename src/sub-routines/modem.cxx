@@ -284,8 +284,10 @@ void Modem::request_listener() {
 				string number_isp = isp_determiner::get_isp( number );
 				if( helpers::to_uppercase(number_isp) != helpers::to_uppercase(this->getISP()) ) {
 					// TODO: Move the file to the right isp 	
-					logger::logger(__FUNCTION__, " - Wrong ISP determined, moving from [" + this->getISP() + "] to [" + number_isp + "]", "stderr", true );
-					sys_calls::rename_file( request["filename"], this->getConfigs()["DIR_ISP"] + "/" + number_isp + "/" + request["filename"] );
+					string move_isp = this->getConfigs()["DIR_ISP"] + "/" + number_isp + "/" + request["q_filename"];
+					logger::logger(__FUNCTION__, " - Wrong ISP determined, moving from [" + this->getISP() + "] to [" + move_isp + "]", "stderr", true );
+					if( !sys_calls::rename_file( request["filename"], move_isp ))
+						logger::logger(__FUNCTION__, this->getInfo() + " - Failed to move file to right ISP dir", "stderr", true);
 					helpers::sleep_thread( this->get_sleep_time() );
 					continue;
 				}
