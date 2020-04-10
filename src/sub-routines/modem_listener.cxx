@@ -94,31 +94,29 @@ void Modems::begin_scanning() {
 			if( !has_modems_imei ) {
 				map<string,string> details = modem.second;
 
-				logger::logger(__FUNCTION__, " ====> NEW MODEM DETECTED <======", "stdout", true);
-				logger::logger(__FUNCTION__, "IMEI: " + modem.first, "stdout", true);
-				logger::logger(__FUNCTION__, "TYPE: " + details["type"], "stdout", true);
-				logger::logger(__FUNCTION__, "ISP: " + details["operator_name"], "stdout", true);
-				logger::logger(__FUNCTION__, "==================================", "stdout", true);
-				
-
 				// Thid stores modem in list of modems
 				string imei = modem.first;
 				string isp = helpers::to_uppercase(details["operator_name"] );
 				string type = helpers::to_uppercase(details["type"] );
 				string index = details["index"];
+				
+				// TODO: Abstract this to a better solution
+				if(isp.find("COVID") != string::npos or isp.find("62401") != string::npos) 
+					isp = "MTN";
+				else if(isp.find("62402") != string::npos)
+					isp = "ORANGE";
 				if( isp.empty() ) {
 					logger::logger(__FUNCTION__, imei + "|" + index + " - No ISP", "stderr", true);
 					continue;
 				}
 
+				logger::logger(__FUNCTION__, " ====> NEW MODEM DETECTED <======", "stdout", true);
+				logger::logger(__FUNCTION__, "INDEX: " + details["index"], "stdout", true);
+				logger::logger(__FUNCTION__, "IMEI: " + modem.first, "stdout", true);
+				logger::logger(__FUNCTION__, "TYPE: " + details["type"], "stdout", true);
+				logger::logger(__FUNCTION__, "ISP: " + details["operator_name"], "stdout", true);
+				logger::logger(__FUNCTION__, "==================================", "stdout", true);
 
-				//TMP solution to some ISP crisis
-				if(isp.find("COVID") != string::npos or isp.find("62401") != string::npos) 
-					isp = "MTN";
-				else if(isp.find("62402") != string::npos)
-					isp = "ORANGE";
-				//else if(isp.find("6") != string::npos) 
-					//isp = "ORANGE";
 				this->available_modems.insert(make_pair( modem.first, new Modem(imei, isp, type, index, this->configs, this->mysqlConnection)));
 
 				// Forth Starts the modems and let is be free
