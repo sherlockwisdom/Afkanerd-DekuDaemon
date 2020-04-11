@@ -30,6 +30,7 @@ int main(int argc, char** argv) {
 	// Default values
 	Modems::STATE RUNNING_MODE = Modems::TEST;
 	string PATH_SYS_FILE;
+	string custom_filename;
 
 	int quantity_to_generate = 0;
 	int sleep_time = 10; // 10 seconds
@@ -102,6 +103,18 @@ int main(int argc, char** argv) {
 				}
 				logger::logger(__FUNCTION__, "Setting Modem Exhausted at: " + (string)argv[i+1] + " tries", "stdout", true);
 			}
+
+			// TODO: finish working on this
+			else if((string)argv[i]== "-f") {
+				if(i+1 < argc) {
+					custom_filename = argv[i+1];
+					++i;
+				}
+				else {
+					logger::logger(__FUNCTION__, "Incomplete args\nUsage: -f <path_to_config_file>", "stderr", true);
+					return 1;
+				}
+			}
 		}
 	}
 
@@ -131,15 +144,14 @@ int main(int argc, char** argv) {
 		logger::logger(__FUNCTION__, "Path to generated request file: " + path_to_request_file);
 		for(int i=0;i<quantity_to_generate;++i) {
 			// TODO: number should come from the args passed in the CLI
-			request += "number=652156811,message=\"Deku Generated Test SMS - " + to_string(i+1) + "\"\n";
+			// request += "number=652156811,message=\"AfkanerdDevelopers\\n2020-02-03\\n52515\\nSHERLOCK2\\nFCs Test Region, Afkanerd Developers\\nAFB, 1+\\n12345\\nXpert, MTB DETECTED (LOW) RIF resistance indeterminate\\nURINE LF-LAM, NEGATIVE\\n\\nHelpline/Ligne 670656041\"\n";
+			request += "number=652156811,message=\"TAYONG GABRIEL\\n999999999\\nBAMENDA RH\\nMTB DETECTED\\nMon Mar 09\\n2020\\nNot yet recorded as starting TB Rx\\nN’est pas enregistrer a commencer le T3 TB\\nHelpline 656659119\"\n";
 		}
 		helpers::write_file( path_to_request_file, request );
 	}
 
-
 	// TODO: Pass all configs using refreences, so changes get loaded in real time
 	std::thread tr_modems_scanner = std::thread(&Modems::begin_scanning, std::ref(modems));
-
 	
 	// std::thread tr_modem_starter = std::thread(&Modems::startAllModems, std::ref(modems));
 	// std::thread tr_user_input = std::thread(user_input, std::ref(modems));
