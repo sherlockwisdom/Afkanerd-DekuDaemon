@@ -82,7 +82,10 @@ namespace helpers {
 		size_t is_delimeter = _string.find( del );
 		size_t pos = 0;
 		while( is_delimeter != string::npos ) {
-			if( pos < start_pos ) continue;
+			if( pos < start_pos ) {
+				++pos;
+				continue;
+			}
 			string hold_to_del = _string.substr(0, is_delimeter);
 			return_vector.push_back( hold_to_del );
 			_string.erase(0, is_delimeter + 1);

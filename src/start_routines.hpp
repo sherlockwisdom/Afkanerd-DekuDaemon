@@ -30,8 +30,8 @@ bool system_check( string path_to_sys_file) {
 		if(configs[0] == "DIR_REQUEST_FILE") {
 			string dir_request_file = configs[1];
 			if(!helpers::file_exist( dir_request_file ) ) {
-				helpers::make_dir( dir_request_file );
 				logger::logger(__FUNCTION__, "CREATING DIR_REQUEST_FILE: "+dir_request_file);
+				helpers::make_dir( dir_request_file );
 			}
 			else logger::logger(__FUNCTION__, "DIR_REQUEST_FILE already exist" );
 		}
@@ -39,8 +39,8 @@ bool system_check( string path_to_sys_file) {
 			string dir_isp = configs[1];
 			logger::logger(__FUNCTION__, "Dir ISP: " + dir_isp);
 			if(!helpers::file_exist( dir_isp ) ) {
-				helpers::make_dir( dir_isp );
 				logger::logger(__FUNCTION__, "CREATING DIR_ISP: "+dir_isp);
+				helpers::make_dir( dir_isp );
 			}
 			else logger::logger(__FUNCTION__, "DIR_ISP exist already exist" );
 		}
@@ -55,8 +55,8 @@ bool system_check( string path_to_sys_file) {
 		else if(configs[0] == "DIR_SUCCESS") {
 			string dir_success = configs[1];
 			if(!helpers::file_exist( dir_success )) {
-				sys_calls::make_dir( dir_success );
 				logger::logger(__FUNCTION__, "CREATING DIR SUCCESS...", "stderr", true);
+				sys_calls::make_dir( dir_success );
 			}
 			else logger::logger(__FUNCTION__, "DIR_SUCCESS already exist");
 		}
