@@ -47,7 +47,7 @@ int main(int argc, char** argv) {
 			string shortcode = (string)argv[i+1];
 			i++;
 			
-			request = helpers::split(shortcode, '|', true);
+			request = helpers::string_split(shortcode, '|', true);
 			continue;
 		}
 		else if((string)argv[i] == "-f") {
@@ -56,7 +56,7 @@ int main(int argc, char** argv) {
 
 			// It should all go in one line and seperated the usual way |
 			for( auto args : helpers::read_file( filepath ) ) 
-				arguments.push_back( helpers::split( args, '|', true ));
+				arguments.push_back( helpers::string_split( args, '|', true ));
 			continue;
 		}
 	}
@@ -89,7 +89,7 @@ int main(int argc, char** argv) {
 		else {
 			for(size_t i=0;i<arguments.size();++i ) {
 				vector<string> arg = arguments[i];
-				logger::logger(__FUNCTION__, "Executing with args: " + helpers::vector_to_string(arg, ' '));
+				logger::logger(__FUNCTION__, "Executing with args: " + helpers::vector_to_whole_string(arg, ' '));
 				multimap<string,string> values = ussd.initiate_series( arg, request);
 				for(auto value : values ) {
 					logger::logger(__FUNCTION__, value.first + "\n====>\n" + value.second + "\n", "stdout", true);
@@ -104,7 +104,7 @@ int main(int argc, char** argv) {
 					continue;
 				}
 				else if(_continue == "repeat") {
-					logger::logger(__FUNCTION__, "Repeating with args: " + helpers::vector_to_string( arg, ' '));
+					logger::logger(__FUNCTION__, "Repeating with args: " + helpers::vector_to_whole_string( arg, ' '));
 					helpers::sleep_thread( 3 );
 					ussd.cancel();
 					--i;
