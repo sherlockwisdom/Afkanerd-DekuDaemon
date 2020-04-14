@@ -47,7 +47,7 @@ int main(int argc, char** argv) {
 			string shortcode = (string)argv[i+1];
 			i++;
 			
-			request = helpers::string_split(shortcode, '|', true);
+			request = helpers::string_split(shortcode, '|');
 			continue;
 		}
 		else if((string)argv[i] == "-f") {
@@ -56,7 +56,7 @@ int main(int argc, char** argv) {
 
 			// It should all go in one line and seperated the usual way |
 			for( auto args : helpers::read_file( filepath ) ) 
-				arguments.push_back( helpers::string_split( args, '|', true ));
+				arguments.push_back( helpers::string_split( args, '|' ));
 			continue;
 		}
 	}
