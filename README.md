@@ -53,6 +53,7 @@ make -C src/start
 ##### `--show_isp [number]`
 ##### `--generate_request [number]`
 ##### `--st [number]` _sleep time for modems, before iterating to check again_
+##### `--f [filename]`
 
 ---
 ##### TODO - The following needs to be built... please help
