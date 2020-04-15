@@ -322,7 +322,7 @@ void Modem::request_listener() {
 					this->iterate_failed_counter();
 					logger::logger(__FUNCTION__, this->getInfo() + " - Exhaust count(" + to_string(this->get_exhaust_count()) + ")");
 					// TODO: Abstract this information to make sure if another ISP wants to use it, they can
-					if( this->get_failed_counter() >= this->get_exhaust_count() and this->db_get_workload() > 29){ // TODO: Move 80 to depend on each modem
+					if( this->get_failed_counter() >= this->get_exhaust_count()){ // TODO: Move 80 to depend on each modem
 						// TODO: Deactivate modem if not activated
 						// TODO: Make inclusion of this code dynamic than hard coded
 
