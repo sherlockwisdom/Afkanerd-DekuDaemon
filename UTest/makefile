@@ -1,6 +1,6 @@
 CC = g++
 CFLAGS = -g -Wall -pthread -std=c++1z -I$(CPPUTEST_HOME)/include
-TARGET = complete_system_test
+TARGET = helpers_test
 MYSQL_CONFIGS := $(shell mysql_config --cflags)
 MYSQL_LIBS := $(shell mysql_config --libs)
 
