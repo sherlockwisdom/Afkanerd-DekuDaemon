@@ -9,6 +9,8 @@ int main(int argc, char** argv) {
 		return 1;
 	}
 
+	int start_at = 0;
+
 	vector<string> request;
 	//vector<string> arguments {"5", "2"};
 	vector< vector<string> > arguments;
@@ -59,6 +61,11 @@ int main(int argc, char** argv) {
 				arguments.push_back( helpers::string_split( args, '|' ));
 			continue;
 		}
+		else if((string)argv[i] == "-start_at") {
+			start_at = atoi(((string)argv[i+1]).c_str());
+			++i;
+			logger::logger(__FUNCTION__, "Starting at: " + to_string(start_at));
+		}
 	}
 
 	if( modem_index.empty()) {
@@ -87,7 +94,7 @@ int main(int argc, char** argv) {
 			}
 		}
 		else {
-			for(size_t i=0;i<arguments.size();++i ) {
+			for(size_t i=start_at;i<arguments.size();++i ) {
 				vector<string> arg = arguments[i];
 				logger::logger(__FUNCTION__, "Executing with args: " + helpers::vector_to_whole_string(arg, ' '));
 				multimap<string,string> values = ussd.initiate_series( arg, request);
