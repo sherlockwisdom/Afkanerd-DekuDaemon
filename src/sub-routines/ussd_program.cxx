@@ -106,11 +106,11 @@ int main(int argc, char** argv) {
 				cout << __FUNCTION__ << "=> Done executing... continue? [yes|no|repeat]: ";
 				getline(cin, _continue);
 
-				if(_continue == "yes") {
+				if(_continue == "yes" or _continue == "y") {
 					helpers::sleep_thread( 3 );
 					continue;
 				}
-				else if(_continue == "repeat") {
+				else if(_continue == "repeat" or _continue == "r") {
 					logger::logger(__FUNCTION__, "Repeating with args: " + helpers::vector_to_whole_string( arg, ' '));
 					helpers::sleep_thread( 3 );
 					ussd.cancel();
