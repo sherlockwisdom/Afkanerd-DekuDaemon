@@ -9,3 +9,5 @@ default: $(TARGET)
 $(TARGET): $(TARGET).cxx
 	$(CC) $(CFLAGS) -o $(TARGET).o $(TARGET).cxx -L$(CPPUTEST_HOME)/lib -lCppUTest -lCppUTestExt
 
+parsers: parsers_test.cxx
+	$(CC) $(CFLAGS) -o parsers_test.o parsers_test.cxx -L$(CPPUTEST_HOME)/lib -lCppUTest -lCppUTestExt
