@@ -324,34 +324,7 @@ void Modem::request_listener() {
 				else if( send_sms_status == "failed") {
 					this->iterate_failed_counter();
 					logger::logger(__FUNCTION__, this->getInfo() + " - Exhaust count(" + to_string(this->get_exhaust_count()) + ")");
-					// TODO: Abstract this information to make sure if another ISP wants to use it, they can
-					if( this->get_failed_counter() >= this->get_exhaust_count()){ // TODO: Move 80 to depend on each modem
-						// TODO: Deactivate modem if not activated
-						// TODO: Make inclusion of this code dynamic than hard coded
-
-						vector<string> ussd_command;
-						if( this->getISP() == "MTN" and this->getType() == "MMCLI") { 
-							// ussd_command = "*158*0#|1|1";
-							ussd_command = { "*158*0#", "1", "1" };
-						}
-
-						if( ussd_command.empty() ) {
-							logger::logger(__FUNCTION__, this->getInfo() + " - No Exhausted USSD for ISP");
-						}
-						else {
-							multimap<string,string> ussd_responses = this->initiate_series( ussd_command );
-							for(auto response : ussd_responses ) {
-								logger::logger("[DE-USSD]:", response.first + " => " + response.second  );
-							}
-						}
-						
-						logger::logger(__FUNCTION__, this->getInfo() + " - Setting DB state to exhausted!");
-						this->db_set_working_state( Modem::EXHAUSTED );
-						this->db_reset_workload();
-						this->reset_failed_counter();
-					}
-					logger::logger(__FUNCTION__, this->getInfo() + " - [" + request["id"] + "] Couldn't send SMS, unlocking file", "stderr", true);
-					//RELEASE FILE
+					/// Releasing locked file for another modem - only after being sure modem didn't send it
 					if(string unlocked_filename = request["u_filename"]; !sys_calls::rename_file(request["filename"], unlocked_filename)) {
 						logger::logger(__FUNCTION__, this->getInfo() + " - Failed to release job: ", "stderr", true);
 						logger::logger_errno( errno );
