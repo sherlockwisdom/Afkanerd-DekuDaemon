@@ -296,6 +296,8 @@ void Modem::request_listener() {
 				/*
 				- If message is sent, previous messages which have failed can be considered delivered
 				- This role applies only in cases where modem has not been declared exhausted
+				- 
+				- Modems needs to continue in their previous states in other to not overly send messages
 				*/
 				if(  send_sms_status == "done" ) {
 
@@ -304,7 +306,7 @@ void Modem::request_listener() {
 
 					// this->db_iterate_workload(); // TODO: Allow after running test
 					// this->db_set_working_state( Modem::ACTIVE );
-					logger::logger(__FUNCTION__, this->getInfo() + " - [" + request["id"] + "] SMS sent successfully!", "stdout", true);
+					logger::logger(__FUNCTION__, this->getInfo() + " - [" + request["id"] + "] SMS 200", "stdout", true);
 
 					string full_path_locked_request_filename = request["filename"];
 					string open_request_filename = request["q_filename"];
@@ -315,9 +317,10 @@ void Modem::request_listener() {
 					}
 					else {
 						logger::logger(__FUNCTION__, this->getInfo() + " - FAILED MOVED TO 200", "stderr", true);
-						// TODO: Do something, else would remain hidden and could be made unhidden
+						// TODO: Delete file
 					}
 				}
+
 				else if( send_sms_status == "failed") {
 					this->iterate_failed_counter();
 					logger::logger(__FUNCTION__, this->getInfo() + " - Exhaust count(" + to_string(this->get_exhaust_count()) + ")");
