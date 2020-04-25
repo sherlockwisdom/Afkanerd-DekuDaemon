@@ -53,7 +53,7 @@ string Modem::getIndex() const {
 }
 
 string Modem::getISP() const{
-	return this->isp.empty() ? "" : this->isp;
+	return this->isp.empty() ? "" : helpers::to_uppercase(this->isp);
 }
 
 string Modem::getIMEI() const {
@@ -251,23 +251,24 @@ void Modem::db_reset_workload() {
 }
 
 
+bool Modem::is_available() const {
+	vector<string> respond = sys_calls::get_modem_details( this->configs["DIR_SCRIPTS"], this->index );
+	return !respond.empty();
+}
+
+
 // TODO: Remove sms index after messages have been sent
 void Modem::request_listener() {
 	logger::logger(__FUNCTION__, "==========> MODEM REQUEST LISTENER | " + this->getInfo() + " <============");
 	while( 1 ) {
 		logger::logger(__FUNCTION__, this->getInfo() + " - Scanning for pending request");
-		// TODO: Verify modem is still available - extracts it's information and see if it matches
-		vector<string> respond = sys_calls::get_modem_details( this->configs["DIR_SCRIPTS"], this->index );
-		if( respond.empty()) {
+		if(this->is_available()) 
 			logger::logger(__FUNCTION__, this->getInfo() + " | Has gone away |", "stdout", true);
 			this->available = false;
-			
-			//cout << boolalpha << this->available << endl;
 			break;
 		}
 
 		if(blocking_mutex.try_lock() ) {
-			//logger::logger(__FUNCTION__,  this->getInfo() + " - Acquiring mutex", "stdout");
 			map<string,string> request = this->request_job( this->getConfigs()["DIR_ISP"] + "/" + this->getISP() );
 			if( request.empty()) {
 				logger::logger(__FUNCTION__, this->getInfo() + " - No request...", "stdout", true);
@@ -275,22 +276,21 @@ void Modem::request_listener() {
 			}
 			else {
 				blocking_mutex.unlock();
-				//logger::logger(__FUNCTION__, this->getInfo() + " - Got a request!", "stdout", true);
 				logger::logger(__FUNCTION__, this->getInfo() + " - locked on file: " + request["filename"]);
-				//From here we can know which message went and which failed, based on the ID
-				//TODO: What is an invalid message - find it so you can delete it
+
 				string message = helpers::escape_string( request["message"], '"');
 				string number = request["number"];
 				string number_isp = isp_determiner::get_isp( number );
-				if( helpers::to_uppercase(number_isp) != helpers::to_uppercase(this->getISP()) ) {
-					// TODO: Move the file to the right isp 	
+
+				if( number_isp != this->getISP() ) {
 					string move_isp = this->getConfigs()["DIR_ISP"] + "/" + number_isp + "/" + request["q_filename"];
 					logger::logger(__FUNCTION__, " - Wrong ISP determined, moving from [" + this->getISP() + "] to [" + move_isp + "]", "stderr", true );
 					if( !sys_calls::rename_file( request["filename"], move_isp ))
 						logger::logger(__FUNCTION__, this->getInfo() + " - Failed to move file to right ISP dir", "stderr", true);
-					helpers::sleep_thread( this->get_sleep_time() );
+					//helpers::sleep_thread( this->get_sleep_time() );
 					continue;
 				}
+
 				string send_sms_status = this->send_sms( message, number );
 				if(  send_sms_status == "done" ) {
 					this->reset_failed_counter();
