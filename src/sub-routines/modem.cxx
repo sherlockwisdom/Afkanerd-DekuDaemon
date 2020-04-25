@@ -293,37 +293,30 @@ void Modem::request_listener() {
 
 				/// Sending SMS message to number
 				string send_sms_status = this->send_sms( message, number );
+				/*
+				- If message is sent, previous messages which have failed can be considered delivered
+				- This role applies only in cases where modem has not been declared exhausted
+				*/
 				if(  send_sms_status == "done" ) {
 
-					/*
-					- If message is sent, previous messages which have failed can be considered delivered
-					- This role applies only in cases where modem has not been declared exhausted
-					*/
-
+					//this->revoke_pending_messages();
 					this->reset_failed_counter();
-					this->db_iterate_workload();
-					this->db_set_working_state( Modem::ACTIVE );
+
+					// this->db_iterate_workload(); // TODO: Allow after running test
+					// this->db_set_working_state( Modem::ACTIVE );
 					logger::logger(__FUNCTION__, this->getInfo() + " - [" + request["id"] + "] SMS sent successfully!", "stdout", true);
-					//DELETE FILE
-					if( !sys_calls::file_handlers( this->getConfigs()["DIR_SUCCESS"], sys_calls::EXIST )) {
-						logger::logger(__FUNCTION__, "Creating success dir");
-						sys_calls::make_dir( this->getConfigs()["DIR_SUCCESS"] );
-					}
 
-					//TODO: Delete SMS job
-
-					if(string locked_filename = request["filename"]; 
-					!sys_calls::rename_file(locked_filename, this->getConfigs()["DIR_SUCCESS"] + "/" + request["q_filename"]) 
-					and 
-					!sys_calls::rename_file(this->getConfigs()["DIR_SUCCESS"] + "/." + request["q_filename"], this->getConfigs()["DIR_SUCCESS"] + "/" + request["q_filename"])) {
-						logger::logger(__FUNCTION__, this->getInfo() + " - Failed to move file to DIR_SUCCESS", "stderr", true); logger::logger_errno( errno );
+					string full_path_locked_request_filename = request["filename"];
+					string open_request_filename = request["q_filename"];
+					string full_path_open_request_filename_success = this->getConfigs()["DIR_SUCCESS"] + "/" + open_request_filename;
+					bool opened_request_file = sys_calls::rename_file(full_path_locked_request_filename, full_path_open_request_filename_success);
+					if(opened_request_file) {
+						logger::logger(__FUNCTION__, this->getInfo() + " - MOVED TO 200", "stdout", true);
 					}
-				
 					else {
-						logger::logger(__FUNCTION__, this->getInfo() + " - Moved file to successfull", "stdout", true);
+						logger::logger(__FUNCTION__, this->getInfo() + " - FAILED MOVED TO 200", "stderr", true);
+						// TODO: Do something, else would remain hidden and could be made unhidden
 					}
-
-					//WRITE TO LOG FILE
 				}
 				else if( send_sms_status == "failed") {
 					this->iterate_failed_counter();
