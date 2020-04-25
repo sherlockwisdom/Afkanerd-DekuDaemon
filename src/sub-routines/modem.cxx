@@ -282,17 +282,24 @@ void Modem::request_listener() {
 				string number = request["number"];
 				string number_isp = isp_determiner::get_isp( number );
 
+				/// Checking receiving SMS ISP if it matches ISP of modem
 				if( number_isp != this->getISP() ) {
 					string move_isp = this->getConfigs()["DIR_ISP"] + "/" + number_isp + "/" + request["q_filename"];
 					logger::logger(__FUNCTION__, " - Wrong ISP determined, moving from [" + this->getISP() + "] to [" + move_isp + "]", "stderr", true );
 					if( !sys_calls::rename_file( request["filename"], move_isp ))
 						logger::logger(__FUNCTION__, this->getInfo() + " - Failed to move file to right ISP dir", "stderr", true);
-					//helpers::sleep_thread( this->get_sleep_time() );
 					continue;
 				}
 
+				/// Sending SMS message to number
 				string send_sms_status = this->send_sms( message, number );
 				if(  send_sms_status == "done" ) {
+
+					/*
+					- If message is sent, previous messages which have failed can be considered delivered
+					- This role applies only in cases where modem has not been declared exhausted
+					*/
+
 					this->reset_failed_counter();
 					this->db_iterate_workload();
 					this->db_set_working_state( Modem::ACTIVE );
