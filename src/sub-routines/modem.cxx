@@ -324,7 +324,7 @@ void Modem::request_listener() {
 				else if( send_sms_status == "failed") {
 					this->iterate_failed_counter();
 					logger::logger(__FUNCTION__, this->getInfo() + " - Exhaust count(" + to_string(this->get_exhaust_count()) + ")");
-					/// Releasing locked file for another modem - only after being sure modem didn't send it
+					/// Releasing locked file for another modem - ONLY AFTER BEING SURE WASN'T SENT
 					if(string unlocked_filename = request["u_filename"]; !sys_calls::rename_file(request["filename"], unlocked_filename)) {
 						logger::logger(__FUNCTION__, this->getInfo() + " - Failed to release job: ", "stderr", true);
 						logger::logger_errno( errno );
