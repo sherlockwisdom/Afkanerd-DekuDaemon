@@ -1,5 +1,5 @@
 // Custom header files
-#include "../src/mysql/mysql/mysql.hpp"
+#include "../src/mysql/mysql.cxx"
 
 #include "CppUTest/TestHarness_c.h"
 #include "CppUTest/CommandLineTestRunner.h"
