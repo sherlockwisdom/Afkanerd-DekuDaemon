@@ -53,7 +53,7 @@ string Modem::getIndex() const {
 }
 
 string Modem::getISP() const{
-	return this->isp.empty() ? "" : this->isp;
+	return this->isp.empty() ? "" : helpers::to_uppercase(this->isp);
 }
 
 string Modem::getIMEI() const {
@@ -251,23 +251,24 @@ void Modem::db_reset_workload() {
 }
 
 
+bool Modem::is_available() const {
+	vector<string> respond = sys_calls::get_modem_details( this->configs["DIR_SCRIPTS"], this->index );
+	return !respond.empty();
+}
+
+
 // TODO: Remove sms index after messages have been sent
 void Modem::request_listener() {
 	logger::logger(__FUNCTION__, "==========> MODEM REQUEST LISTENER | " + this->getInfo() + " <============");
 	while( 1 ) {
 		logger::logger(__FUNCTION__, this->getInfo() + " - Scanning for pending request");
-		// TODO: Verify modem is still available - extracts it's information and see if it matches
-		vector<string> respond = sys_calls::get_modem_details( this->configs["DIR_SCRIPTS"], this->index );
-		if( respond.empty()) {
+		if(this->is_available()) 
 			logger::logger(__FUNCTION__, this->getInfo() + " | Has gone away |", "stdout", true);
 			this->available = false;
-			
-			//cout << boolalpha << this->available << endl;
 			break;
 		}
 
 		if(blocking_mutex.try_lock() ) {
-			//logger::logger(__FUNCTION__,  this->getInfo() + " - Acquiring mutex", "stdout");
 			map<string,string> request = this->request_job( this->getConfigs()["DIR_ISP"] + "/" + this->getISP() );
 			if( request.empty()) {
 				logger::logger(__FUNCTION__, this->getInfo() + " - No request...", "stdout", true);
@@ -275,80 +276,55 @@ void Modem::request_listener() {
 			}
 			else {
 				blocking_mutex.unlock();
-				//logger::logger(__FUNCTION__, this->getInfo() + " - Got a request!", "stdout", true);
 				logger::logger(__FUNCTION__, this->getInfo() + " - locked on file: " + request["filename"]);
-				//From here we can know which message went and which failed, based on the ID
-				//TODO: What is an invalid message - find it so you can delete it
+
 				string message = helpers::escape_string( request["message"], '"');
 				string number = request["number"];
 				string number_isp = isp_determiner::get_isp( number );
-				if( helpers::to_uppercase(number_isp) != helpers::to_uppercase(this->getISP()) ) {
-					// TODO: Move the file to the right isp 	
+
+				/// Checking receiving SMS ISP if it matches ISP of modem
+				if( number_isp != this->getISP() ) {
 					string move_isp = this->getConfigs()["DIR_ISP"] + "/" + number_isp + "/" + request["q_filename"];
 					logger::logger(__FUNCTION__, " - Wrong ISP determined, moving from [" + this->getISP() + "] to [" + move_isp + "]", "stderr", true );
 					if( !sys_calls::rename_file( request["filename"], move_isp ))
 						logger::logger(__FUNCTION__, this->getInfo() + " - Failed to move file to right ISP dir", "stderr", true);
-					helpers::sleep_thread( this->get_sleep_time() );
 					continue;
 				}
+
+				/// Sending SMS message to number
 				string send_sms_status = this->send_sms( message, number );
+				/*
+				- If message is sent, previous messages which have failed can be considered delivered
+				- This role applies only in cases where modem has not been declared exhausted
+				- 
+				- Modems needs to continue in their previous states in other to not overly send messages
+				*/
 				if(  send_sms_status == "done" ) {
+
+					//this->revoke_pending_messages();
 					this->reset_failed_counter();
-					this->db_iterate_workload();
-					this->db_set_working_state( Modem::ACTIVE );
-					logger::logger(__FUNCTION__, this->getInfo() + " - [" + request["id"] + "] SMS sent successfully!", "stdout", true);
-					//DELETE FILE
-					if( !sys_calls::file_handlers( this->getConfigs()["DIR_SUCCESS"], sys_calls::EXIST )) {
-						logger::logger(__FUNCTION__, "Creating success dir");
-						sys_calls::make_dir( this->getConfigs()["DIR_SUCCESS"] );
-					}
 
-					//TODO: Delete SMS job
+					// this->db_iterate_workload(); // TODO: Allow after running test
+					// this->db_set_working_state( Modem::ACTIVE );
+					logger::logger(__FUNCTION__, this->getInfo() + " - [" + request["id"] + "] SMS 200", "stdout", true);
 
-					if(string locked_filename = request["filename"]; 
-					!sys_calls::rename_file(locked_filename, this->getConfigs()["DIR_SUCCESS"] + "/" + request["q_filename"]) 
-					and 
-					!sys_calls::rename_file(this->getConfigs()["DIR_SUCCESS"] + "/." + request["q_filename"], this->getConfigs()["DIR_SUCCESS"] + "/" + request["q_filename"])) {
-						logger::logger(__FUNCTION__, this->getInfo() + " - Failed to move file to DIR_SUCCESS", "stderr", true); logger::logger_errno( errno );
+					string full_path_locked_request_filename = request["filename"];
+					string open_request_filename = request["q_filename"];
+					string full_path_open_request_filename_success = this->getConfigs()["DIR_SUCCESS"] + "/" + open_request_filename;
+					bool opened_request_file = sys_calls::rename_file(full_path_locked_request_filename, full_path_open_request_filename_success);
+					if(opened_request_file) {
+						logger::logger(__FUNCTION__, this->getInfo() + " - MOVED TO 200", "stdout", true);
 					}
-				
 					else {
-						logger::logger(__FUNCTION__, this->getInfo() + " - Moved file to successfull", "stdout", true);
+						logger::logger(__FUNCTION__, this->getInfo() + " - FAILED MOVED TO 200", "stderr", true);
+						// TODO: Delete file
 					}
-
-					//WRITE TO LOG FILE
 				}
+
 				else if( send_sms_status == "failed") {
 					this->iterate_failed_counter();
 					logger::logger(__FUNCTION__, this->getInfo() + " - Exhaust count(" + to_string(this->get_exhaust_count()) + ")");
-					// TODO: Abstract this information to make sure if another ISP wants to use it, they can
-					if( this->get_failed_counter() >= this->get_exhaust_count() and this->db_get_workload() > 80){ // TODO: Move 80 to depend on each modem
-						// TODO: Deactivate modem if not activated
-						// TODO: Make inclusion of this code dynamic than hard coded
-
-						vector<string> ussd_command;
-						if( this->getISP() == "MTN" and this->getType() == "MMCLI") { 
-							// ussd_command = "*158*0#|1|1";
-							ussd_command = { "*158*0#", "1", "1" };
-						}
-
-						if( ussd_command.empty() ) {
-							logger::logger(__FUNCTION__, this->getInfo() + " - No Exhausted USSD for ISP");
-						}
-						else {
-							multimap<string,string> ussd_responses = this->initiate_series( ussd_command );
-							for(auto response : ussd_responses ) {
-								logger::logger("[DE-USSD]:", response.first + " => " + response.second  );
-							}
-						}
-						
-						logger::logger(__FUNCTION__, this->getInfo() + " - Setting DB state to exhausted!");
-						this->db_set_working_state( Modem::EXHAUSTED );
-						this->db_reset_workload();
-						this->reset_failed_counter();
-					}
-					logger::logger(__FUNCTION__, this->getInfo() + " - [" + request["id"] + "] Couldn't send SMS, unlocking file", "stderr", true);
-					//RELEASE FILE
+					/// Releasing locked file for another modem - ONLY AFTER BEING SURE WASN'T SENT
 					if(string unlocked_filename = request["u_filename"]; !sys_calls::rename_file(request["filename"], unlocked_filename)) {
 						logger::logger(__FUNCTION__, this->getInfo() + " - Failed to release job: ", "stderr", true);
 						logger::logger_errno( errno );

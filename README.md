@@ -45,7 +45,7 @@ make -C src/start
 ---
 #### Start arguments
 ##### `--c [configuration file]`
-##### `--modem PRODUCTION|TEST` _changes what the console outputs_
+##### `--mode PRODUCTION|TEST` _changes what the console outputs_
 ##### `--show_isp [number]`
 ##### `--run_ussd [code]`
 ##### `--run_ussd_script <path to file>`

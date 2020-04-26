@@ -9,6 +9,8 @@ int main(int argc, char** argv) {
 		return 1;
 	}
 
+	int start_at = 0;
+
 	vector<string> request;
 	//vector<string> arguments {"5", "2"};
 	vector< vector<string> > arguments;
@@ -47,7 +49,7 @@ int main(int argc, char** argv) {
 			string shortcode = (string)argv[i+1];
 			i++;
 			
-			request = helpers::split(shortcode, '|', true);
+			request = helpers::string_split(shortcode, '|');
 			continue;
 		}
 		else if((string)argv[i] == "-f") {
@@ -56,8 +58,13 @@ int main(int argc, char** argv) {
 
 			// It should all go in one line and seperated the usual way |
 			for( auto args : helpers::read_file( filepath ) ) 
-				arguments.push_back( helpers::split( args, '|', true ));
+				arguments.push_back( helpers::string_split( args, '|' ));
 			continue;
+		}
+		else if((string)argv[i] == "-start_at") {
+			start_at = atoi(((string)argv[i+1]).c_str());
+			++i;
+			logger::logger(__FUNCTION__, "Starting at: " + to_string(start_at));
 		}
 	}
 
@@ -87,9 +94,9 @@ int main(int argc, char** argv) {
 			}
 		}
 		else {
-			for(size_t i=0;i<arguments.size();++i ) {
+			for(size_t i=start_at;i<arguments.size();++i ) {
 				vector<string> arg = arguments[i];
-				logger::logger(__FUNCTION__, "Executing with args: " + helpers::vector_to_string(arg, ' '));
+				logger::logger(__FUNCTION__, "Executing with args: " + helpers::vector_to_whole_string(arg, ' '));
 				multimap<string,string> values = ussd.initiate_series( arg, request);
 				for(auto value : values ) {
 					logger::logger(__FUNCTION__, value.first + "\n====>\n" + value.second + "\n", "stdout", true);
@@ -99,12 +106,12 @@ int main(int argc, char** argv) {
 				cout << __FUNCTION__ << "=> Done executing... continue? [yes|no|repeat]: ";
 				getline(cin, _continue);
 
-				if(_continue == "yes") {
+				if(_continue == "yes" or _continue == "y") {
 					helpers::sleep_thread( 3 );
 					continue;
 				}
-				else if(_continue == "repeat") {
-					logger::logger(__FUNCTION__, "Repeating with args: " + helpers::vector_to_string( arg, ' '));
+				else if(_continue == "repeat" or _continue == "r") {
+					logger::logger(__FUNCTION__, "Repeating with args: " + helpers::vector_to_whole_string( arg, ' '));
 					helpers::sleep_thread( 3 );
 					ussd.cancel();
 					--i;

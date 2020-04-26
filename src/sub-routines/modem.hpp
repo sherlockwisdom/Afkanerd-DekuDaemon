@@ -21,7 +21,7 @@ class Modem : public USSD {
 	
 	int failed_counter = 0;
 	int sleep_time = 10;
-	int exhaust_count = 3;
+	int exhaust_count = 7;
 
 	MySQL mysqlConnection;
 
@@ -78,6 +78,7 @@ class Modem : public USSD {
 		bool getThreadSafety() const;
 		bool is_available() const;
 		bool delete_sms( string message_index );
+		bool is_available() const;
 
 		map<string,string> request_job( string path_dir_request );
 		map<string,string> getConfigs() const;
