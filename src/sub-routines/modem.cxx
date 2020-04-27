@@ -288,6 +288,23 @@ vector<string> Modem::release_pending_files() {
 }
 
 
+void Modem::declare_pending( string filename ) {
+	string new_filename = ".PENDING_" + this->getIMEI() + "_" + filename;
+	string full_path = this->getConfigs()["DIR_ISP"] + "/" + this->getISP() + "/";
+
+	filename = full_path + filename;
+	new_filename = full_path + new_filename;
+
+	if( !sys_calls::rename_file( filename, new_filename) ) {
+		logger::logger(__FUNCTION__, " - FAILED TO DECLARE PENDING: " + filename, "stderr");
+	}
+
+	else {
+		logger::logger(__FUNCTION__, " - 200 DECLARED PENDING: " + filename, "stdout");
+	}
+}
+
+
 // TODO: Remove sms index after messages have been sent
 void Modem::request_listener() {
 	logger::logger(__FUNCTION__, "==========> MODEM REQUEST LISTENER | " + this->getInfo() + " <============");
@@ -330,6 +347,9 @@ void Modem::request_listener() {
 				- 
 				- Modems needs to continue in their previous states in other to not overly send messages
 				*/
+				string full_path_locked_request_filename = request["filename"];
+				string open_request_filename = request["q_filename"];
+				string full_path_open_request_filename_success = this->getConfigs()["DIR_SUCCESS"] + "/" + open_request_filename;
 				if(  send_sms_status == "done" ) {
 
 					//this->revoke_pending_messages();
@@ -339,9 +359,6 @@ void Modem::request_listener() {
 					// this->db_set_working_state( Modem::ACTIVE );
 					logger::logger(__FUNCTION__, this->getInfo() + " - [" + request["id"] + "] SMS 200", "stdout", true);
 
-					string full_path_locked_request_filename = request["filename"];
-					string open_request_filename = request["q_filename"];
-					string full_path_open_request_filename_success = this->getConfigs()["DIR_SUCCESS"] + "/" + open_request_filename;
 					bool opened_request_file = sys_calls::rename_file(full_path_locked_request_filename, full_path_open_request_filename_success);
 					if(opened_request_file) {
 						logger::logger(__FUNCTION__, this->getInfo() + " - MOVED TO 200", "stdout", true);
@@ -355,7 +372,7 @@ void Modem::request_listener() {
 				else if( send_sms_status == "failed") {
 					/// once declared exhausted, pending files are released for other modems
 					this->iterate_failed_counter();
-					logger::logger(__FUNCTION__, this->getInfo() + " - Exhaust count(" + to_string(this->get_exhaust_count()) + ")");
+					logger::logger(__FUNCTION__, this->getInfo() + "- FAILED| " + to_string(this->get_failed_counter()) + "/" + to_string(this->get_exhaust_count()));
 
 					if( this->get_failed_counter() >= this->get_exhaust_count() ) {
 						/// release pending files
@@ -363,6 +380,11 @@ void Modem::request_listener() {
 
 						/// declare modem exhausted
 						// this->set_modem_state(EXHAUSTED);
+					}
+					
+					else {
+						/// create pending file
+						this->declare_pending( full_path_locked_request_filename );
 					}
 				}
 				else if( send_sms_status == "error") {
