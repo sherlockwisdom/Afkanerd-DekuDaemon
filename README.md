@@ -6,24 +6,26 @@
 > ###### ubuntu
 > `sudo apt install build-essentails`
 > ###### manjaro
->`sudo pacman -S base-devel`
+> `sudo pacman -S base-devel`
 - MySQL server
  > ###### ubuntu
 > `sudo apt install mysql-server`
+> `sudo apt install libmysqld-dev`
 > ###### manjaro
->`sudo pacman -S mysql`
+> `sudo pacman -S mysql`
+> `sudo pacman -S libmysqld-dev`
 - Doxygen _(optional)_ - https://riptutorial.com/doxygen
  > ###### ubuntu
 > `sudo apt install doxygen`
 > ###### manjaro
->`sudo pacman -S doxygen`
+> `sudo pacman -S doxygen`
 - ModemManager - _comes installed on most Linux systems_
 
 #### For Testing we use the CppUTest; https://cpputest.github.io/manual.html
 > ###### ubuntu
 > `sudo apt install cpputest`
 > ###### manjaro
->`sudo pacman -S cpputest`
+> `sudo pacman -S cpputest`
 
 ###### VARIABLES OF CONFIGURATION FILE (.ENV)
 ```env
