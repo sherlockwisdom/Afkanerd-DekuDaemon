@@ -6,10 +6,12 @@
 
 TEST_GROUP( Modem ) {};
 
+MySQL mysqlConnection;
+
 std::string imei = "test_imei";
 std::string isp = "test_isp";
 std::string type = "test_type";
-std::string index = "test_index";
+std::string _index = "test_index";
 
 std::string DIR_ISP = "";
 std::string DIR_REQUEST_FILE = "";
@@ -34,10 +36,11 @@ std::map<string,string> configs {
 	{"MYSQL_PASSWORD", MYSQL_PASSWORD},
 	{"MYSQL_DATABASE", MYSQL_DATABASE}	
 };
-MySQL mysqlConnection;
 
 TEST(Modem, constructor) {
+	Modem modem(imei, isp, type, _index, configs, mysqlConnection);
 
+	CHECK( modem == true );
 }
 
 TEST(Modem, get_failed_counter) {
