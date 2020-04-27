@@ -8,3 +8,6 @@ parsers: parsers_test.cxx
 
 mysql_test: mysql_test.cxx
 	$(CC) $(CFLAGS) -o $@.o $@.cxx -L$(CPPUTEST_HOME)/lib -lCppUTest -lCppUTestExt $(MYSQL_CONFIGS) $(MYSQL_LIBS)
+
+modem_test: modem_test.cxx
+	$(CC) $(CFLAGS) -o $@.o $@.cxx -L$(CPPUTEST_HOME)/lib -lCppUTest -lCppUTestExt $(MYSQL_CONFIGS) $(MYSQL_LIBS)
