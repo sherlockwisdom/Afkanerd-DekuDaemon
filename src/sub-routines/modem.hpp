@@ -65,7 +65,7 @@ class Modem : public USSD {
 
 		WORKING_STATE db_get_working_state() const;
 
-		explicit operator bool() const;
+		operator bool() const;
 		bool operator==(Modem modem) const;
 		bool operator==(Modem* modem) const;
 		bool operator>(Modem modem) const;

@@ -111,6 +111,14 @@ Modem::operator bool() const {
 		!this->index.empty();
 }
 
+bool Modem::operator ==(Modem modem) const {
+	return 
+		modem.getISP() == this->getISP() and
+		modem.getIMEI() == this->getIMEI() and
+		modem.getType() == this->getType() and
+		modem.getIndex() == this->getIndex();
+}
+
 vector<map<string,string>> Modem::get_sms_messages() const {
 	vector<map<string,string>> sms_messages;
 	string terminal_respond = sys_calls::terminal_stdout( this->getConfigs()["DIR_SCRIPTS"] + "/modem_information_extraction.sh sms received " + this->getIndex() );	
