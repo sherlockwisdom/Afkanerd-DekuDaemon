@@ -350,6 +350,7 @@ void Modem::request_listener() {
 				string full_path_locked_request_filename = request["filename"];
 				string open_request_filename = request["q_filename"];
 				string full_path_open_request_filename_success = this->getConfigs()["DIR_SUCCESS"] + "/" + open_request_filename;
+
 				if(  send_sms_status == "done" ) {
 
 					//this->revoke_pending_messages();
@@ -372,7 +373,7 @@ void Modem::request_listener() {
 				else if( send_sms_status == "failed") {
 					/// once declared exhausted, pending files are released for other modems
 					this->iterate_failed_counter();
-					logger::logger(__FUNCTION__, this->getInfo() + "- FAILED| " + to_string(this->get_failed_counter()) + "/" + to_string(this->get_exhaust_count()));
+					logger::logger(__FUNCTION__, this->getInfo() + "- SMS 400| " + to_string(this->get_failed_counter()) + "/" + to_string(this->get_exhaust_count()), "stderr");
 
 					if( this->get_failed_counter() >= this->get_exhaust_count() ) {
 						/// release pending files
