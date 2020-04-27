@@ -77,7 +77,6 @@ class Modem : public USSD {
 		bool db_set_working_state( WORKING_STATE );
 		bool getKeepAlive() const;
 		bool getThreadSafety() const;
-		bool is_available() const;
 		bool delete_sms( string message_index );
 		bool is_available() const;
 

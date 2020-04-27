@@ -1,13 +1,13 @@
 CC = g++
 CFLAGS = -g -Wall -pthread -std=c++1z
-TARGET = isp_determiner_test
+TARGET = modem
 MYSQL_CONFIGS := $(shell mysql_config --cflags)
 MYSQL_LIBS := $(shell mysql_config --libs)
 
 default: $(TARGET)
 
 $(TARGET): $(TARGET).cxx
-	$(CC) $(CFLAGS) -o $(TARGET) $(TARGET).cxx
+	$(CC) $(CFLAGS) -c -o $(TARGET).o $(TARGET).cxx $(MYSQL_CONFIGS) $(MYSQL_LIBS)
 
 ussd_test: ussd_test.cxx
 	$(CC) $(CFLAGS) -o ussd_test ussd_test.cxx

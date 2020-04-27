@@ -68,10 +68,6 @@ string Modem::getType() const {
 	return this->type;
 }
 
-bool Modem::is_available() const {
-	return this->available;
-}
-
 bool Modem::delete_sms( string message_index ) {
 	string terminal_respond = sys_calls::terminal_stdout( this->getConfigs()["DIR_SCRIPTS"] + "/modem_information_extraction.sh sms delete " + message_index + " " + this->getIndex() );	
 	
@@ -252,7 +248,7 @@ void Modem::db_reset_workload() {
 
 
 bool Modem::is_available() const {
-	vector<string> respond = sys_calls::get_modem_details( this->configs["DIR_SCRIPTS"], this->index );
+	vector<string> respond = sys_calls::get_modem_details( this->getConfigs()["DIR_SCRIPTS"], this->index );
 	return !respond.empty();
 }
 
@@ -310,7 +306,7 @@ void Modem::request_listener() {
 	logger::logger(__FUNCTION__, "==========> MODEM REQUEST LISTENER | " + this->getInfo() + " <============");
 	while( 1 ) {
 		logger::logger(__FUNCTION__, this->getInfo() + " - Scanning for pending request");
-		if(this->is_available()) 
+		if(this->is_available()) {
 			logger::logger(__FUNCTION__, this->getInfo() + " | Has gone away |", "stdout", true);
 			this->available = false;
 			break;
