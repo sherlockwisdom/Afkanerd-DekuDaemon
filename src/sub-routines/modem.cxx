@@ -103,6 +103,14 @@ map<string,string> Modem::get_sms_message( string message_index ) const {
 	};
 }
 
+Modem::operator bool() const {
+	return 
+		!this->imei.empty() and
+		!this->isp.empty() and
+		!this->type.empty() and
+		!this->index.empty();
+}
+
 vector<map<string,string>> Modem::get_sms_messages() const {
 	vector<map<string,string>> sms_messages;
 	string terminal_respond = sys_calls::terminal_stdout( this->getConfigs()["DIR_SCRIPTS"] + "/modem_information_extraction.sh sms received " + this->getIndex() );	
