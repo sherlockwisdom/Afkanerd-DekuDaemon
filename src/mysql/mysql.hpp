@@ -34,6 +34,12 @@ class MySQL {
 	//TODO: Put some getters and setters
 	void setConnectionDetails( string server, string user, string password, string database );
 	void close();
+
+
+	string get_server() const;
+	string get_user() const;
+	string get_password() const;
+	string get_database() const;
 };
 
 #endif

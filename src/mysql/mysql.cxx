@@ -1,5 +1,6 @@
 // TODO: build test scripts to make sure this works as planned
 #include "../formatters/helpers.hpp"
+#include "mysql.hpp"
 #include <cstring>
 #include <iostream>
 
@@ -33,6 +34,22 @@ bool MySQL::connect() {
 	}
 
 	return true;
+}
+
+string MySQL::get_server() const {
+	return this->server;
+}
+
+string MySQL::get_user() const {
+	return this->user;
+}
+
+string MySQL::get_password() const {
+	return this->password;
+}
+
+string MySQL::get_database() const {
+	return this->database;
 }
 
 
