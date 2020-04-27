@@ -35,6 +35,10 @@ TEST(Mysql, setConnectionDetails) {
 	STRCMP_EQUAL( mysqlDatabase.c_str(), mysql.get_database().c_str());
 }
 
+TEST(Mysql, connect) {
+	
+}
+
 
 int main( int argc, char** argv ) {
 	// Testing to see how the recording works in this aspect
