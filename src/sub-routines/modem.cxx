@@ -385,7 +385,6 @@ void Modem::request_listener() {
 					}
 				}
 				else if( send_sms_status == "error") {
-					
 					if( !sys_calls::file_handlers( this->getConfigs()["DIR_ERROR"], sys_calls::EXIST )) {
 						logger::logger(__FUNCTION__, "Error Directory");
 						sys_calls::make_dir( this->getConfigs()["DIR_ERROR"] );
