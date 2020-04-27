@@ -6,11 +6,25 @@
 
 TEST_GROUP( Modem ) {};
 
-std::string imei = "";
-std::string isp = "";
-std::string type = "";
-std::string index = "";
-std::map<string,string> configs {};
+std::string imei = "test_imei";
+std::string isp = "test_isp";
+std::string type = "test_type";
+std::string index = "test_index";
+
+std::string DIR_ISP = "";
+std::string DIR_REQUEST_FILE = "";
+std::string DIR_SUCCESS = "";
+std::string DIR_ERROR = "";
+std::string DIR_SCRIPTS = "";
+std::string STD_NAME_REQUEST_FILE = "";
+std::string MYSQL_SERVER = "";
+std::string MYSQL_USER = "";
+std::string MYSQL_PASSWORD = "";
+std::string MYSQL_DATABASE = "";
+
+std::map<string,string> configs {
+	
+};
 MySQL mysqlConnection;
 
 TEST(Modem, constructor) {
