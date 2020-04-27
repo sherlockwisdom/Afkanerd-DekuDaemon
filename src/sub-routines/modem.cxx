@@ -384,7 +384,7 @@ void Modem::request_listener() {
 					
 					else {
 						/// create pending file
-						this->declare_pending( full_path_locked_request_filename );
+						this->declare_pending( open_request_filename );
 					}
 				}
 				else if( send_sms_status == "error") {
