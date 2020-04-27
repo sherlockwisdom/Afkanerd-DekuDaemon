@@ -257,6 +257,37 @@ bool Modem::is_available() const {
 }
 
 
+vector<string> Modem::release_pending_files() {
+	string path_dir_request = this->getConfigs()["DIR_SCRIPTS"];
+	
+	/// Releasing locked file for another modem - ONLY AFTER BEING SURE WASN'T SENT
+	if( path_dir_request[path_dir_request.size() - 1] == '/') path_dir_request.erase(path_dir_request.size() -1, 1); // just some cleansing cus don't trust rules are always followed
+
+	map<string,string> ls_returned_values;
+	string pending_string_handle = ".PENDING_" + this->getIMEI() + "_";
+	sys_calls::terminal_stdout(ls_returned_values, pending_string_handle + path_dir_request);
+
+	vector<string> filenames = helpers::string_split(ls_returned_values["data"], '\n');
+
+	for( auto file : filenames ) {
+		string source_file = this->getConfigs()["DIR_ISP"] + "/" + this->getISP() + "/" + file;
+
+		file.erase(0, 1); // Remove the . in front of the filename
+
+		string new_file = this->getConfigs()["DIR_ISP"] + "/" + this->getISP() + "/" + file;
+
+		if( !sys_calls::rename_file( source_file, new_file )) {
+			logger::logger(__FUNCTION__, " - FAILED RELEASING PENDING FILES: " + source_file, "stderr");
+			logger::logger_errno(errno);
+		}
+		else {
+			logger::logger(__FUNCTION__, " - 200 RELEASED PENDING FILE: " + file, "stdout");
+		}
+	}
+	return filenames;
+}
+
+
 // TODO: Remove sms index after messages have been sent
 void Modem::request_listener() {
 	logger::logger(__FUNCTION__, "==========> MODEM REQUEST LISTENER | " + this->getInfo() + " <============");
@@ -322,12 +353,16 @@ void Modem::request_listener() {
 				}
 
 				else if( send_sms_status == "failed") {
+					/// once declared exhausted, pending files are released for other modems
 					this->iterate_failed_counter();
 					logger::logger(__FUNCTION__, this->getInfo() + " - Exhaust count(" + to_string(this->get_exhaust_count()) + ")");
-					/// Releasing locked file for another modem - ONLY AFTER BEING SURE WASN'T SENT
-					if(string unlocked_filename = request["u_filename"]; !sys_calls::rename_file(request["filename"], unlocked_filename)) {
-						logger::logger(__FUNCTION__, this->getInfo() + " - Failed to release job: ", "stderr", true);
-						logger::logger_errno( errno );
+
+					if( this->get_failed_counter() >= this->get_exhaust_count() ) {
+						/// release pending files
+						this->release_pending_files();
+
+						/// declare modem exhausted
+						// this->set_modem_state(EXHAUSTED);
 					}
 				}
 				else if( send_sms_status == "error") {
