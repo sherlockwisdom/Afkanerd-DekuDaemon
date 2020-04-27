@@ -23,6 +23,17 @@ Modem::Modem(string imei, string isp, string type, string index, map<string,stri
 	this->modem_index = this->index; // Controls the USSD part of the code
 }
 
+Modem::Modem(string imei, string isp, string type, string index, map<string,string> configs) {
+	this->imei = imei;
+	this->isp = isp;
+	this->type = type;
+	this->index = index; 
+	this->configs = configs;
+
+	this->set_ussd_configs( this->configs );
+	this->modem_index = this->index; // Controls the USSD part of the code
+}
+
 int Modem::get_failed_counter() const {
 	return this->failed_counter;
 }
