@@ -54,6 +54,7 @@ class Modem : public USSD {
 		void set_configs( map<string,string> configs );
 		void set_mysql_connection( MySQL );
 		void db_reset_workload();
+		void declare_pending( string filename );
 
 		string getIndex() const;
 		string getISP() const;
@@ -85,6 +86,7 @@ class Modem : public USSD {
 		map<string, string> get_sms_message( string modem_index ) const;
 
 		vector<map<string,string>> get_sms_messages() const;
+		vector<string> release_pending_files();
 
 		int get_failed_counter() const;
 		int get_sleep_time() const;
