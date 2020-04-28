@@ -144,12 +144,12 @@ int main(int argc, char** argv) {
 		logger::logger(__FUNCTION__, "Path to generated request file: " + path_to_request_file);
 		for(int i=0;i<quantity_to_generate;++i) {
 			// TODO: number should come from the args passed in the CLI
-			// request += "number=652156811,message=\"AfkanerdDevelopers\\n2020-02-03\\n52515\\nSHERLOCK2\\nFCs Test Region, Afkanerd Developers\\nAFB, 1+\\n12345\\nXpert, MTB DETECTED (LOW) RIF resistance indeterminate\\nURINE LF-LAM, NEGATIVE\\n\\nHelpline/Ligne 670656041\"\n";
+			request += "number=652156811,message=\"AfkanerdDevelopers\\n2020-02-03\\n52515\\nSHERLOCK2\\nFCs Test Region, Afkanerd Developers\\nAFB, 1+\\n12345\\nXpert, MTB DETECTED (LOW) RIF resistance indeterminate\\nURINE LF-LAM, NEGATIVE\\n\\nHelpline/Ligne 670656041\"\n";
 			// TODO: This has the french symbols in it
-			//request += "number=652156811,message=\"TAYONG GABRIEL\\n999999999\\nBAMENDA RH\\nMTB DETECTED\\nMon Mar 09\\n2020\\nNot yet recorded as starting TB Rx\\nN’est pas enregistrer a commencer le T3 TB\\nHelpline 656659119\"\n";
+			// request += "number=652156811,message=\"TAYONG GABRIEL\\n999999999\\nBAMENDA RH\\nMTB DETECTED\\nMon Mar 09\\n2020\\nNot yet recorded as starting TB Rx\\nN’est pas enregistrer a commencer le T3 TB\\nHelpline 656659119\"\n";
 
 			// TODO: French symbols removed from this one
-			request += "number=652156811,message=\"TAYONG GABRIEL\\n999999999\\nBAMENDA RH\\nMTB DETECTED\\nMon Mar 09\\n2020\\nNot yet recorded as starting TB Rx\\nN est pas enregistrer a commencer le T3 TB\\nHelpline\"\n";
+			// request += "number=652156811,message=\"TAYONG GABRIEL\\n999999999\\nBAMENDA RH\\nMTB DETECTED\\nMon Mar 09\\n2020\\nNot yet recorded as starting TB Rx\\nN est pas enregistrer a commencer le T3 TB\\nHelpline\"\n";
 		}
 		helpers::write_file( path_to_request_file, request );
 	}
