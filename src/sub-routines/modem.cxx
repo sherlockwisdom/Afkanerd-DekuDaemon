@@ -547,6 +547,10 @@ string Modem::send_sms(string message, string number ) {
 	message = helpers::find_and_replace_substr("\\n", "\n", message);
 	message = helpers::find_and_replace_substr("\\\"", "\"", message);
 	message = helpers::find_and_replace_substr("'", "\'", message);
+
+	/// Truncate each message to 150 chars and run the epxeriement
+	message = message.substr(0, 150); // TODO: remove 150=> send this in as custom masterial
+	// message = message.substr(0, this->get_sms_limit());
 	if( this->getType() == "MMCLI") 
 		return this->mmcli_send_sms( message, number);
 	else if( this->getType() == "SSH") 
