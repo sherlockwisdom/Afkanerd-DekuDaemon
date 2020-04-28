@@ -298,11 +298,11 @@ vector<string> Modem::release_pending_files() {
 	vector<string> filenames = helpers::string_split(ls_returned_values["data"], '\n');
 
 	for( auto file : filenames ) {
-		string source_file = this->getConfigs()["DIR_ISP"] + "/" + this->getISP() + "/" + file;
+		string source_file = path_dir_request + "/" + this->getISP() + "/" + file;
 
 		file.erase(0, 1); // Remove the . in front of the filename
 
-		string new_file = this->getConfigs()["DIR_ISP"] + "/" + this->getISP() + "/" + file;
+		string new_file = path_dir_request + "/" + this->getISP() + "/" + file;
 
 		if( !sys_calls::rename_file( source_file, new_file )) {
 			logger::logger(__FUNCTION__, " - FAILED RELEASING PENDING FILES: " + source_file, "stderr");
