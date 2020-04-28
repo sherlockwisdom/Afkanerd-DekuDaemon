@@ -9,5 +9,17 @@
 import os
 
 HOME = os.environ['HOME'];
-path = HOME + "/Deku/ISP/MTN";
-print(os.listdir( path ))
+PATH = HOME + "/Deku/ISP/MTN";
+
+# print(os.listdir( path ))
+
+files = os.listdir( PATH );
+
+for _file in files:
+    print("> Working with file: ", _file);
+    
+    _file = open( PATH + "/" + _file, "r");
+    _file = _file.read();
+
+    print( _file );
+    print();
