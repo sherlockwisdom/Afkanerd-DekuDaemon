@@ -381,6 +381,7 @@ void Modem::request_listener() {
 		*/
 		string full_path_locked_request_filename = request["filename"];
 		string open_request_filename = request["q_filename"];
+		string locked_request_filename = "." + request["q_filename"];
 		string full_path_open_request_filename_success = this->getConfigs()["DIR_SUCCESS"] + "/" + open_request_filename;
 
 		/// SMS sent successfully
@@ -419,7 +420,7 @@ void Modem::request_listener() {
 			
 			else {
 				/// create pending file
-				this->declare_pending( open_request_filename );
+				this->declare_pending( locked_request_filename );
 			}
 		}
 
