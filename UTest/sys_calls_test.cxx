@@ -8,7 +8,7 @@
 
 TEST_GROUP(Sys_calls) {};
 
-TEST(Sys_calls, terminal_stdout_void) {
+TEST(Sys_calls, terminal_stdout_void_invalid) {
 	map<string,string> ls_output, ls_output1;
 
 	string command = "ls -1 __invalid_file";
@@ -21,7 +21,23 @@ TEST(Sys_calls, terminal_stdout_void) {
 	// logger::logger(__FUNCTION__, "Data: " + ls_output["data"]);
 	// logger::logger_errno(errno);
 	
-	CHECK( atoi(ls_output["return"].c_str()) != 0  and atoi(ls_output1["return"].c_str()) != 0);
+	CHECK( atoi(ls_output["return"].c_str()) != 0 and atoi(ls_output1["return"].c_str()) != 0);
+}
+
+TEST(Sys_calls, terminal_stdout_void_valid) {
+	map<string,string> ls_output, ls_output1;
+
+	string command = "ls -1 *";
+	string command1 = "ls -1 *.cxx";
+
+	sys_calls::terminal_stdout(ls_output, command);
+	sys_calls::terminal_stdout(ls_output1, command1);
+
+	// logger::logger(__FUNCTION__, "Return: " + ls_output["return"]);
+	// logger::logger(__FUNCTION__, "Data: " + ls_output["data"]);
+	// logger::logger_errno(errno);
+	
+	CHECK( atoi(ls_output["return"].c_str()) == 0 and atoi(ls_output1["return"].c_str()) == 0);
 }
 
 
