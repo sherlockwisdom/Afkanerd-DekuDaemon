@@ -16,10 +16,19 @@ PATH = HOME + "/Deku/ISP/MTN";
 files = os.listdir( PATH );
 
 for _file in files:
-    print("> Working with file: ", _file);
+    print("> Working with file:", _file);
     
     _file = open( PATH + "/" + _file, "r");
     _file = _file.read();
 
-    print( _file );
-    print();
+    # print( _file );
+    # print();
+
+    split_file = _file.split(',')
+    # print(split_file)
+    # print('\n');
+
+    for split in split_file:
+        equal_split = split.split('=');
+        if( equal_split[0] == "message" ):
+            print(equal_split[1])
