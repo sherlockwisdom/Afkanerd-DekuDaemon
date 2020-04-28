@@ -281,7 +281,7 @@ bool Modem::is_available() const {
 
 
 vector<string> Modem::release_pending_files() {
-	string path_dir_request = this->getConfigs()["DIR_SCRIPTS"];
+	string path_dir_request = this->getConfigs()["DIR_ISP"];
 	
 	/// Releasing locked file for another modem - ONLY AFTER BEING SURE WASN'T SENT
 	if( path_dir_request[path_dir_request.size() - 1] == '/') path_dir_request.erase(path_dir_request.size() -1, 1); // just some cleansing cus don't trust rules are always followed
