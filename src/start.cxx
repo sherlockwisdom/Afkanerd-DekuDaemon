@@ -149,7 +149,7 @@ int main(int argc, char** argv) {
 			//request += "number=652156811,message=\"TAYONG GABRIEL\\n999999999\\nBAMENDA RH\\nMTB DETECTED\\nMon Mar 09\\n2020\\nNot yet recorded as starting TB Rx\\nN’est pas enregistrer a commencer le T3 TB\\nHelpline 656659119\"\n";
 
 			// TODO: French symbols removed from this one
-			request += "number=652156811,message=\"TAYONG GABRIEL\\n999999999\\nBAMENDA RH\\nMTB DETECTED\\nMon Mar 09\\n2020\\nNot yet recorded as starting TB Rx\\nN est pas enregistrer a commencer le T3 TB\\nHelpline 656659119\"\n";
+			request += "number=652156811,message=\"TAYONG GABRIEL\\n999999999\\nBAMENDA RH\\nMTB DETECTED\\nMon Mar 09\\n2020\\nNot yet recorded as starting TB Rx\\nN est pas enregistrer a commencer le T3 TB\\nHelpline\"\n";
 		}
 		helpers::write_file( path_to_request_file, request );
 	}

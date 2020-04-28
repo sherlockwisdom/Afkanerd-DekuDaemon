@@ -538,7 +538,7 @@ string Modem::ssh_send_sms( string message, string number ) {
 	else {
 		logger::logger(__FUNCTION__, this->getInfo() + " - SMS Failed log: " + sms_results, "stderr", true);
 	}
-	
+
 	return "failed";
 }
 
