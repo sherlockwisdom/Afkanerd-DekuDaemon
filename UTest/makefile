@@ -12,5 +12,5 @@ mysql_test: mysql_test.cxx
 modem_test: modem_test.cxx
 	$(CC) $(CFLAGS) -o $@.o $@.cxx -L$(CPPUTEST_HOME)/lib -lCppUTest -lCppUTestExt $(MYSQL_CONFIGS) $(MYSQL_LIBS)
 
-sys_calls_test: sys_calls.cxx
+sys_calls_test: sys_calls_test.cxx
 	$(CC) $(CFLAGS) -o $@.o $@.cxx -L$(CPPUTEST_HOME)/lib -lCppUTest -lCppUTestExt $(MYSQL_CONFIGS) $(MYSQL_LIBS)
