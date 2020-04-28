@@ -333,7 +333,7 @@ void Modem::request_listener() {
 	logger::logger(__FUNCTION__, "==========> MODEM REQUEST LISTENER | " + this->getInfo() + " <============");
 	while( 1 ) {
 		logger::logger(__FUNCTION__, this->getInfo() + " - Scanning for pending request");
-		if(this->is_available()) {
+		if(!this->is_available()) {
 			logger::logger(__FUNCTION__, this->getInfo() + " | Has gone away |", "stdout", true);
 			this->available = false;
 			break;
