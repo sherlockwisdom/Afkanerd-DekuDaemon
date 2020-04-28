@@ -498,6 +498,7 @@ map<string,string> Modem::request_job( string path_dir_request) {
 		logger::logger_errno( errno );
 		return request;
 	}
+
 	string request_content = helpers::read_file(path_dir_request + "/." + filename)[0];
 	if(request_content.empty()) {
 		logger::logger(__FUNCTION__, this->getInfo() + " - Request file is empty... this shouldn't happen...", "stderr", true);

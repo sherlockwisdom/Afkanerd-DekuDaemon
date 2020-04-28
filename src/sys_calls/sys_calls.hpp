@@ -117,9 +117,10 @@ namespace sys_calls {
 				string isp, isp_id;
 				if( split_operator_name.size() == 2 ){
 					isp = helpers::string_split(ln_modem_information[2], ':')[1];// operator_name
+				}
 				if( split_operator_id.size() == 2 )
 					isp_id = helpers::string_split(ln_modem_information[3], ':')[1];// operator_id
-				if( isp.empty())
+				if( isp.empty()) {
 					if( isp_id.empty()) 
 						return vector<string>{};
 					else
