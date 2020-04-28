@@ -31,4 +31,9 @@ for _file in files:
     for split in split_file:
         equal_split = split.split('=');
         if( equal_split[0] == "message" ):
-            print(equal_split[1])
+            # print(equal_split[1])
+            message = equal_split[1]
+
+            split_message = message.split("\\n")
+            print(split_message)
+            print()
