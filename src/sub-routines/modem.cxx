@@ -288,12 +288,14 @@ vector<string> Modem::release_pending_files() {
 
 	map<string,string> ls_returned_values;
 	string pending_string_handle = ".PENDING_" + this->getIMEI() + "_";
-	// sys_calls::terminal_stdout(ls_returned_values, "ls -1 " + path_dir_request + "/" + pending_string_handle + "*" );
-	string ls_commands = "ls -1 " + path_dir_request + "/" + pending_string_handle + "*";
-	logger::logger(__FUNCTION__, this->getInfo() + " - " + ls_commands);
+	sys_calls::terminal_stdout(ls_returned_values, "ls -1 " + path_dir_request + "/" + pending_string_handle + "*" );
 
-	string responds = sys_calls::terminal_stdout(ls_commands);
-	vector<string> filenames = helpers::string_split(responds, '\n');
+	if( atoi(ls_returned_values["return"].c_str()) != 0 ) {
+		logger::logger(__FUNCTION__, this->getInfo() + " - NOTHING PENDING FOR RELEASE");
+		return vector<string>{};
+	}
+
+	vector<string> filenames = helpers::string_split(ls_returned_values["data"], '\n');
 
 	for( auto file : filenames ) {
 		string source_file = this->getConfigs()["DIR_ISP"] + "/" + this->getISP() + "/" + file;
