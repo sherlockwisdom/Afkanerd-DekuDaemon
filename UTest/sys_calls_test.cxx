@@ -9,13 +9,19 @@
 TEST_GROUP(Sys_calls) {};
 
 TEST(Sys_calls, terminal_stdout_void) {
-	map<string,string> ls_output;
+	map<string,string> ls_output, ls_output1;
 
 	string command = "ls -1 __invalid_file";
-	sys_calls::terminal_stdout(ls_output, command);
+	string command1 = command + "*";
 
-	logger::logger(__FUNCTION__, "Return: " + ls_output["return"]);
-	logger::logger(__FUNCTION__, "Data: " + ls_output["data"]);
+	sys_calls::terminal_stdout(ls_output, command);
+	sys_calls::terminal_stdout(ls_output1, command1);
+
+	// logger::logger(__FUNCTION__, "Return: " + ls_output["return"]);
+	// logger::logger(__FUNCTION__, "Data: " + ls_output["data"]);
+	// logger::logger_errno(errno);
+	
+	CHECK( atoi(ls_output["return"].c_str()) != 0  and atoi(ls_output1["return"].c_str()) != 0);
 }
 
 
