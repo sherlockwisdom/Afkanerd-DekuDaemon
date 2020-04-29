@@ -335,8 +335,9 @@ void Modem::declare_pending( string filename ) {
 
 bool Modem::release_request_file( string locked_filename ) {
 	// remove . from locked_filename
-	string old_filename = locked_filename;
+	string old_filename = this->getConfigs()["DIR_ISP"] + "/" + this->getISP() + "/" + locked_filename;
 	locked_filename.erase(0,1);
+	locked_filename = this->getConfigs()["DIR_ISP"] + "/" + this->getISP() + "/" + locked_filename;
 
 	return sys_calls::rename_file( old_filename, locked_filename);
 }
