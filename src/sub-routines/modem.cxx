@@ -420,7 +420,8 @@ void Modem::request_listener() {
 		}
 
 		/// SMS failed
-		else if( send_sms_status == "failed") {
+		// else if( send_sms_status == "failed") {
+		else {
 			/// once declared exhausted, pending files are released for other modems
 			this->iterate_failed_counter();
 			logger::logger(__FUNCTION__, this->getInfo() + "- SMS 400| " + to_string(this->get_failed_counter()) + "/" + to_string(this->get_exhaust_count()), "stderr");
@@ -443,23 +444,6 @@ void Modem::request_listener() {
 			}
 		}
 
-		/// SMS failed due to an error
-		else if( send_sms_status == "error") {
-			if( !sys_calls::file_handlers( this->getConfigs()["DIR_ERROR"], sys_calls::EXIST )) {
-				logger::logger(__FUNCTION__, "Error Directory");
-				sys_calls::make_dir( this->getConfigs()["DIR_ERROR"] );
-			}
-
-			//TODO: Delete SMS job
-
-			if(string locked_filename = request["filename"]; !sys_calls::rename_file(locked_filename, this->getConfigs()["DIR_ERROR"] + "/" + request["q_filename"]) and !sys_calls::rename_file(this->getConfigs()["DIR_ERROR"] + "/." + request["q_filename"], this->getConfigs()["DIR_ERROR"] + "/" + request["q_filename"])) {
-				logger::logger(__FUNCTION__, this->getInfo() + " - Failed to move file to ERROR", "stderr", true); logger::logger_errno( errno );
-			}
-		
-			else {
-				logger::logger(__FUNCTION__, this->getInfo() + " - Moved file to error", "stderr", true);
-			}
-		}
 		helpers::sleep_thread( this->get_sleep_time() );
 	}
 }
