@@ -425,7 +425,7 @@ void Modem::request_listener() {
 			
 			else {
 				/// create pending file
-				this->declare_pending( locked_request_filename );
+				// this->declare_pending( locked_request_filename );
 			}
 		}
 
