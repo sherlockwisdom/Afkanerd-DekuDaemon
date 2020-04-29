@@ -333,6 +333,15 @@ void Modem::declare_pending( string filename ) {
 }
 
 
+bool Modem::release_request_file( string locked_filename ) {
+	// remove . from locked_filename
+	string old_filename = locked_filename;
+	locked_filename.erase(0,1);
+
+	return sys_calls::rename_file( old_filename, locked_filename);
+}
+
+
 // TODO: Remove sms index after messages have been sent
 void Modem::request_listener() {
 	logger::logger(__FUNCTION__, "==========> MODEM REQUEST LISTENER | " + this->getInfo() + " <============");
@@ -415,9 +424,13 @@ void Modem::request_listener() {
 			this->iterate_failed_counter();
 			logger::logger(__FUNCTION__, this->getInfo() + "- SMS 400| " + to_string(this->get_failed_counter()) + "/" + to_string(this->get_exhaust_count()), "stderr");
 
+			if( !this->release_request_file( locked_request_filename ) ) {
+				logger::logger(__FUNCTION__, this->getInfo() + " - 400 UNLOCKING FILE", "stderr", true);
+			}
+
 			if( this->get_failed_counter() >= this->get_exhaust_count() ) {
 				/// release pending files
-				this->release_pending_files();
+				// this->release_pending_files();
 
 				/// declare modem exhausted
 				// this->set_modem_state(EXHAUSTED);
