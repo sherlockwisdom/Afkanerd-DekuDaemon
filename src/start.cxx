@@ -27,7 +27,34 @@ void user_input( Modems& modems ) {
 }
 
 
-void generate_request( int number ) {
+void generate_request( map<string,string> configs, int quantity_to_generate ) {
+	// TODO: Put more work in here, cus fuck it... it's still got a private number lol
+	logger::logger(__FUNCTION__, "Generating " + to_string( quantity_to_generate ) + " request", "stdout", true);
+	string request = "";
+	string path_to_request_file = configs["DIR_REQUEST_FILE"] + "/" + configs["STD_NAME_REQUEST_FILE"];
+	logger::logger(__FUNCTION__, "Path to generated request file: " + path_to_request_file);
+	for(int i=0;i<quantity_to_generate;++i) {
+		// TODO: number should come from the args passed in the CLI
+		request += "number=652156811,message=\"AfkanerdDevelopers\\n2020-02-03\\n52515\\nSHERLOCK2\\nFCs Test Region, Afkanerd Developers\\nAFB, 1+\\n12345\\nXpert, MTB DETECTED (LOW) RIF resistance indeterminate\\nURINE LF-LAM, NEGATIVE\\n\\nHelpline/Ligne 670656041\"\n";
+		// TODO: This has the french symbols in it
+		// request += "number=652156811,message=\"TAYONG GABRIEL\\n999999999\\nBAMENDA RH\\nMTB DETECTED\\nMon Mar 09\\n2020\\nNot yet recorded as starting TB Rx\\nN’est pas enregistrer a commencer le T3 TB\\nHelpline 656659119\"\n";
+
+		// TODO: French symbols removed from this one
+		// request += "number=652156811,message=\"TAYONG GABRIEL\\n999999999\\nBAMENDA RH\\nMTB DETECTED\\nMon Mar 09\\n2020\\nNot yet recorded as starting TB Rx\\nN est pas enregistrer a commencer le T3 TB\\nHelpline\"\n";
+	}
+	helpers::write_file( path_to_request_file, request );
+}
+
+void cleanse( map<string,string> configs ) {
+	string dir_isp = configs["DIR_ISP"];
+	
+	vector<string> isp_dirs = helpers::string_split(sys_calls::terminal_stdout("ls -1 " + dir_isp), '\n');
+
+	for(auto dir : isp_dirs ) {
+		string full_dir = dis_isp + "/" + dir + "/";
+		logger::logger(__FUNCTION__, "ClEANSING: " + full_dir );
+		sys_calls::terminal_stdout("rm -r " + full_dir + "*");
+	}
 }
 
 int main(int argc, char** argv) {
@@ -139,28 +166,22 @@ int main(int argc, char** argv) {
 	// Then after the checks, it moves set the variables for global use
 	map<string,string> configs = get_system_configs( helpers::read_file( PATH_SYS_FILE ));
 	for(auto i : configs ) logger::logger("STARTING ROUTINES - [CONFIGS]:", i.first + "=" + i.second, "stdout", true);
+
+	// Generate test request TODO: Make better so dynamic test messages can be passed into system
+	if( quantity_to_generate > 0 ) {
+		generate_request( configs, quantity_to_generate );
+	}
+
+	if( cleanse ) {
+		logger::logger(__FUNCTION__, "COMMENSING A CLEANSE", "stdout", true);
+		cleanse( configs );
+	}
+
 	//Modems modems( Modems::PRODUCTION );
 	Modems modems( configs, RUNNING_MODE );
 	
 	// TODO: Check if other developers variables are passed as args and set before beginning
 
-	// TODO: Put more work in here, cus fuck it... it's still got a private number lol
-	if( quantity_to_generate > 0 ) {
-		logger::logger(__FUNCTION__, "Generating " + to_string( quantity_to_generate ) + " request", "stdout", true);
-		string request = "";
-		string path_to_request_file = configs["DIR_REQUEST_FILE"] + "/" + configs["STD_NAME_REQUEST_FILE"];
-		logger::logger(__FUNCTION__, "Path to generated request file: " + path_to_request_file);
-		for(int i=0;i<quantity_to_generate;++i) {
-			// TODO: number should come from the args passed in the CLI
-			request += "number=652156811,message=\"AfkanerdDevelopers\\n2020-02-03\\n52515\\nSHERLOCK2\\nFCs Test Region, Afkanerd Developers\\nAFB, 1+\\n12345\\nXpert, MTB DETECTED (LOW) RIF resistance indeterminate\\nURINE LF-LAM, NEGATIVE\\n\\nHelpline/Ligne 670656041\"\n";
-			// TODO: This has the french symbols in it
-			// request += "number=652156811,message=\"TAYONG GABRIEL\\n999999999\\nBAMENDA RH\\nMTB DETECTED\\nMon Mar 09\\n2020\\nNot yet recorded as starting TB Rx\\nN’est pas enregistrer a commencer le T3 TB\\nHelpline 656659119\"\n";
-
-			// TODO: French symbols removed from this one
-			// request += "number=652156811,message=\"TAYONG GABRIEL\\n999999999\\nBAMENDA RH\\nMTB DETECTED\\nMon Mar 09\\n2020\\nNot yet recorded as starting TB Rx\\nN est pas enregistrer a commencer le T3 TB\\nHelpline\"\n";
-		}
-		helpers::write_file( path_to_request_file, request );
-	}
 
 	// TODO: Pass all configs using refreences, so changes get loaded in real time
 	std::thread tr_modems_scanner = std::thread(&Modems::begin_scanning, std::ref(modems));
