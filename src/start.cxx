@@ -45,7 +45,7 @@ void generate_request( map<string,string> configs, int quantity_to_generate ) {
 	helpers::write_file( path_to_request_file, request );
 }
 
-void cleanse( map<string,string> configs ) {
+void request_cleanse( map<string,string> configs ) {
 	string dir_isp = configs["DIR_ISP"];
 	
 	vector<string> isp_dirs = helpers::string_split(sys_calls::terminal_stdout("ls -1 " + dir_isp), '\n');
@@ -174,7 +174,7 @@ int main(int argc, char** argv) {
 
 	if( cleanse ) {
 		logger::logger(__FUNCTION__, "COMMENSING A CLEANSE", "stdout", true);
-		cleanse( configs );
+		request_cleanse( configs );
 	}
 
 	//Modems modems( Modems::PRODUCTION );
