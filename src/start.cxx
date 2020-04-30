@@ -51,7 +51,7 @@ void cleanse( map<string,string> configs ) {
 	vector<string> isp_dirs = helpers::string_split(sys_calls::terminal_stdout("ls -1 " + dir_isp), '\n');
 
 	for(auto dir : isp_dirs ) {
-		string full_dir = dis_isp + "/" + dir + "/";
+		string full_dir = dir_isp + "/" + dir + "/";
 		logger::logger(__FUNCTION__, "ClEANSING: " + full_dir );
 		sys_calls::terminal_stdout("rm -r " + full_dir + "*");
 	}
@@ -67,7 +67,7 @@ int main(int argc, char** argv) {
 	int sleep_time = 10; // 10 seconds
 	int exhaust_count = 3; // 10 seconds
 
-
+	bool cleanse = false;
 
 	if(argc < 2 ) {
 		logger::logger(__FUNCTION__, "Usage: -c <path_to_config_file>", "stderr", true);
