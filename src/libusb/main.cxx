@@ -1,7 +1,7 @@
 #include <iostream>
 #include <libusb-1.0/libusb.h>
 
-int main() {
+int main(int argc, char** argv) {
 	libusb_device** devices;
 	libusb_context* context = NULL;
 	
@@ -62,8 +62,9 @@ int main() {
 		std::cout << "Manf_desc: " << pnt_str_output << std::endl;
 		*/
 
+		int desc_index = atoi(argv[1]);
 		unsigned char* data;
-		auto device_descriptor = libusb_get_string_descriptor_ascii(dev_handle, LIBUSB_DT_CONFIG, data, 1024);
+		auto device_descriptor = libusb_get_string_descriptor_ascii(dev_handle, desc_index, data, 1024);
 
 		if( device_descriptor == 0 ) {
 			std::cerr << "Failed to get device descriptor" << std::endl;
