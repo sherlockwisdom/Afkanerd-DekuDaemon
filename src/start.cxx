@@ -26,6 +26,10 @@ void user_input( Modems& modems ) {
 	}
 }
 
+
+void generate_request( int number ) {
+}
+
 int main(int argc, char** argv) {
 	// Default values
 	Modems::STATE RUNNING_MODE = Modems::TEST;
@@ -114,6 +118,10 @@ int main(int argc, char** argv) {
 					logger::logger(__FUNCTION__, "Incomplete args\nUsage: -f <path_to_config_file>", "stderr", true);
 					return 1;
 				}
+			}
+
+			else if((string)argv[i] == "--cleanse") {
+				cleanse = true;
 			}
 		}
 	}
