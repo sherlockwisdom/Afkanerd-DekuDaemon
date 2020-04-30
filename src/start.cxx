@@ -51,6 +51,7 @@ void request_cleanse( map<string,string> configs ) {
 	vector<string> isp_dirs = helpers::string_split(sys_calls::terminal_stdout("ls -1 " + dir_isp), '\n');
 
 	for(auto dir : isp_dirs ) {
+		if( dir.empty() ) continue;
 		string full_dir = dir_isp + "/" + dir + "/";
 		logger::logger(__FUNCTION__, "ClEANSING: " + full_dir );
 		sys_calls::terminal_stdout("rm -r " + full_dir + "*");
