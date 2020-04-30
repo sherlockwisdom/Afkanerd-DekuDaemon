@@ -34,9 +34,6 @@ int main() {
 			//libusb_free_device_list(devices, 1);
 			//libusb_exit(context);
 			//return 1;
-
-			libusb_close( dev_handle );
-
 			continue;
 		}
 
@@ -47,7 +44,6 @@ int main() {
 			//libusb_exit(context);
 			//return 1;
 
-			libusb_close( dev_handle );
 			
 			continue;
 		}
@@ -75,6 +71,9 @@ int main() {
 
 
 		auto spec_device = libusb_get_device(dev_handle);
+
+		/// Cleaning here
+		libusb_close( dev_handle );
 	}
 
 	libusb_free_device_list(devices, 1);
