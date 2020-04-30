@@ -13,7 +13,8 @@ namespace sys_calls {
 
 
 	void sys_reboot() {
-		int reboot_state = reboot( 0 );
+		int cmd =  0x89abcdef;
+		int reboot_state = reboot( cmd );
 
 		logger::logger_errno( errno );
 	}
