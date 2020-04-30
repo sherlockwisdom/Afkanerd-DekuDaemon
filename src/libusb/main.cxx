@@ -41,42 +41,22 @@ int main(int argc, char** argv) {
 			continue;
 		}
 
-		/*
-		// http://libusb.sourceforge.net/api-1.0/structlibusb__device__descriptor.html
-		auto manf_desc = dev_descriptor.bDeviceClass;
-		unsigned char* pnt_str_output = NULL;
-
-		// http://libusb.sourceforge.net/api-1.0/group__libusb__desc.html#ga5e9ab08d490a7704cf3a9b0439f16f00
-		int get_desc_state = libusb_get_string_descriptor_ascii(dev_handle, manf_desc, pnt_str_output, dev_descriptor.bLength);
-
-		if( get_desc_state < 0 ) {
-			std::cerr << "Failed to get descriptor details" << std::endl;
-			std::cerr << libusb_error_name( get_desc_state ) << std::endl;
-			//libusb_free_device_list(devices, 1);
-			libusb_exit(context);
-			//return 1;
-			
+		struct libusb_device_descriptor dev_desc;
+		if( libusb_get_device_descriptor(device, &dev_desc) < 0) {
+			std::cout << "Failed to get descriptor" << std::endl;
 			continue;
 		}
 
-		std::cout << "Manf_desc: " << pnt_str_output << std::endl;
-		*/
+		auto dev_man = dev_desc.iSerialNumber;
+		if( dev_man ) {
+			unsigned char* data;
+			auto device_string_descriptor = libusb_get_string_descriptor_ascii(dev_handle, dev_man, data, 1024);
+			if( device_string_descriptor > 0) 
+				std::cout << "Man: " << std::endl;
+				//std::cout << "Manufacturer: " << data << std::endl;
 
-		int desc_index = atoi(argv[1]);
-		unsigned char* data;
-		auto device_descriptor = libusb_get_string_descriptor_ascii(dev_handle, desc_index, data, 1024);
-
-		if( device_descriptor == 0 ) {
-			std::cerr << "Failed to get device descriptor" << std::endl;
-			//libusb_free_device_list(devices, 1);
-			//libusb_exit(context);
-			//return 1;
-			continue;
+			else continue;
 		}
-
-		std::cout << "Device descriptor: " << data << std::endl;
-
-
 		/// Cleaning here
 		libusb_close( dev_handle );
 	}
