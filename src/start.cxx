@@ -175,6 +175,7 @@ int main(int argc, char** argv) {
 	if( cleanse ) {
 		logger::logger(__FUNCTION__, "COMMENSING A CLEANSE", "stdout", true);
 		request_cleanse( configs );
+		return 0;
 	}
 
 	//Modems modems( Modems::PRODUCTION );
