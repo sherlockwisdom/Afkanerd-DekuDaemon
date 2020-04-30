@@ -20,24 +20,32 @@ int main() {
 	}
 
 	for(size_t i=0;i<number_of_devices;++i) {
-		auto dev = devices[i];
+		auto device = devices[i];
+
 		libusb_device_descriptor dev_descriptor;
-		auto desc_state = libusb_get_device_descriptor(dev, &dev_descriptor);
+		libusb_device_handle* dev_handle;
+
+		auto desc_state = libusb_get_device_descriptor(device, &dev_descriptor);
+
 		if( desc_state != 0 ) {
 			std::cerr << "Failed to get device descriptor" << std::endl;
 			libusb_free_device_list(devices, 1);
 			libusb_exit(context);
-			return 1;
-		}
-		libusb_device_handle* dev_handle;
+			//return 1;
 
-		auto open_state = libusb_open(dev, &dev_handle);
+			continue;
+		}
+
+		auto open_state = libusb_open(device, &dev_handle);
+
 		if( open_state != 0) {
 			std::cerr << "Failed to open device " << std::endl;
 			std::cerr << libusb_error_name( open_state ) << std::endl;
 			libusb_free_device_list(devices, 1);
 			libusb_exit(context);
-			return 1;
+			//return 1;
+			
+			continue;
 		}
 
 		// http://libusb.sourceforge.net/api-1.0/structlibusb__device__descriptor.html
