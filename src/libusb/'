@@ -19,7 +19,7 @@ int main() {
 
 	}
 
-	for(size_t i=0;i<number_of_devices;++i, std::cout<<std::endl) {
+	for(size_t i=0;i<number_of_devices;++i, std::cout<< std::endl) {
 		std::cout << "> Device " << i+1 << "/" << number_of_devices << std::endl;
 		auto device = devices[i];
 
@@ -31,8 +31,8 @@ int main() {
 
 		if( desc_state != 0 ) {
 			std::cerr << "Failed to get device descriptor" << std::endl;
-			//libusb_free_device_list(devices, 1);
-			//libusb_exit(context);
+			libusb_free_device_list(devices, 1);
+			libusb_exit(context);
 			//return 1;
 
 			continue;
@@ -41,8 +41,8 @@ int main() {
 		if( open_state != 0) {
 			std::cerr << "Failed to open device " << std::endl;
 			std::cerr << libusb_error_name( open_state ) << std::endl;
-			//libusb_free_device_list(devices, 1);
-			//libusb_exit(context);
+			libusb_free_device_list(devices, 1);
+			libusb_exit(context);
 			//return 1;
 			
 			continue;
