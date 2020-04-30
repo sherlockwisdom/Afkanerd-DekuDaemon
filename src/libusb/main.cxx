@@ -47,6 +47,7 @@ int main(int argc, char** argv) {
 			continue;
 		}
 
+		//https://github.com/libusb/libusb/blob/master/examples/testlibusb.c
 		auto dev_man = dev_desc.iSerialNumber;
 		if( dev_man ) {
 			unsigned char* data;
