@@ -13,9 +13,10 @@ namespace sys_calls {
 
 
 	void sys_reboot() {
-		int cmd =  0x89abcdef;
-		int reboot_state = reboot( cmd );
-
+		int cmd =  0x1234567; /// Aggressive af!!
+		sync(); /// Linux write all files to their filesystem
+		int reboot_state = reboot( cmd ); /// It is done, the below should not been seen if done properly
+		logger::logger(__FUNCTION__, "REBOOT RETURNED: " + to_string( reboot_state));
 		logger::logger_errno( errno );
 	}
 
