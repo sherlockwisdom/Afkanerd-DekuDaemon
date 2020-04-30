@@ -152,7 +152,7 @@ int main(int argc, char** argv) {
 				cleanse = true;
 			}
 
-			else if((string)argv[i] == "--cleanse_only") {
+			else if((string)argv[i] == "--cleanse-only") {
 				cleanse_only = true;
 			}
 		}
@@ -177,13 +177,13 @@ int main(int argc, char** argv) {
 		generate_request( configs, quantity_to_generate );
 	}
 
-	if( cleanse ) {
+	if( cleanse_only ) {
 		logger::logger(__FUNCTION__, "COMMENSING A CLEANSE", "stdout", true);
 		request_cleanse( configs );
 		return 0;
 	}
 
-	if( cleanse_only ) {
+	if( cleanse ) {
 		logger::logger(__FUNCTION__, "COMMENSING A CLEANSE", "stdout", true);
 		request_cleanse( configs );
 	}
