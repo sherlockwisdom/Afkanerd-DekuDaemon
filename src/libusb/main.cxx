@@ -23,19 +23,12 @@ int main() {
 		std::cout << "> Device " << i+1 << "/" << number_of_devices << std::endl;
 		auto device = devices[i];
 
-		libusb_device_descriptor dev_descriptor;
+		//libusb_device_descriptor dev_descriptor;
 		libusb_device_handle* dev_handle;
 
-		auto desc_state = libusb_get_device_descriptor(device, &dev_descriptor);
+		//auto desc_state = libusb_get_device_descriptor(device, &dev_descriptor);
 		auto open_state = libusb_open(device, &dev_handle);
 
-		if( desc_state != 0 ) {
-			std::cerr << "Failed to get device descriptor" << std::endl;
-			//libusb_free_device_list(devices, 1);
-			//libusb_exit(context);
-			//return 1;
-			continue;
-		}
 
 		if( open_state != 0) {
 			std::cerr << "Failed to open device " << std::endl;
@@ -69,8 +62,19 @@ int main() {
 		std::cout << "Manf_desc: " << pnt_str_output << std::endl;
 		*/
 
+		unsigned char* data;
+		auto device_descriptor = libusb_get_string_descriptor_ascii(dev_handle, LIBUSB_DT_CONFIG, data, 1024);
 
-		auto spec_device = libusb_get_device(dev_handle);
+		if( device_descriptor == 0 ) {
+			std::cerr << "Failed to get device descriptor" << std::endl;
+			//libusb_free_device_list(devices, 1);
+			//libusb_exit(context);
+			//return 1;
+			continue;
+		}
+
+		std::cout << "Device descriptor: " << data << std::endl;
+
 
 		/// Cleaning here
 		libusb_close( dev_handle );
