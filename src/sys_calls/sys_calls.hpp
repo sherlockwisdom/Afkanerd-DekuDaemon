@@ -1,6 +1,8 @@
 #include <sys/stat.h> //mkdir
 #include <fstream>
 #include <typeinfo>
+#include <unistd.h>
+#include <sys/reboot.h>
 #include "../formatters/helpers.hpp"
 #ifndef SYS_CALLS_H_INCLUDED_
 #define SYS_CALLS_H_INCLUDED_
@@ -8,6 +10,13 @@ using namespace std;
 
 namespace sys_calls {
 	enum FILE_FLAG{EXIST, DEL};
+
+
+	void sys_reboot() {
+		int reboot_state = reboot( 0 );
+
+		logger::logger_errno( errno );
+	}
 
 	bool file_handlers( string file_path, FILE_FLAG flag) {
 		switch( flag ) {
