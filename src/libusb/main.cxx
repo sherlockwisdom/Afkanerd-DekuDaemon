@@ -35,6 +35,8 @@ int main() {
 			//libusb_exit(context);
 			//return 1;
 
+			libusb_close( dev_handle );
+
 			continue;
 		}
 
@@ -44,26 +46,35 @@ int main() {
 			//libusb_free_device_list(devices, 1);
 			//libusb_exit(context);
 			//return 1;
+
+			libusb_close( dev_handle );
 			
 			continue;
 		}
 
+		/*
 		// http://libusb.sourceforge.net/api-1.0/structlibusb__device__descriptor.html
 		auto manf_desc = dev_descriptor.bDeviceClass;
 		unsigned char* pnt_str_output = NULL;
 
 		// http://libusb.sourceforge.net/api-1.0/group__libusb__desc.html#ga5e9ab08d490a7704cf3a9b0439f16f00
 		int get_desc_state = libusb_get_string_descriptor_ascii(dev_handle, manf_desc, pnt_str_output, dev_descriptor.bLength);
-		std::cout << get_desc_state << " Bytes returned" << std::endl;
+
 		if( get_desc_state < 0 ) {
 			std::cerr << "Failed to get descriptor details" << std::endl;
 			std::cerr << libusb_error_name( get_desc_state ) << std::endl;
-			libusb_free_device_list(devices, 1);
+			//libusb_free_device_list(devices, 1);
 			libusb_exit(context);
-			return 1;
+			//return 1;
+			
+			continue;
 		}
 
 		std::cout << "Manf_desc: " << pnt_str_output << std::endl;
+		*/
+
+
+		auto spec_device = libusb_get_device(dev_handle);
 	}
 
 	libusb_free_device_list(devices, 1);
