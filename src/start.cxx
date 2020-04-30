@@ -68,7 +68,7 @@ int main(int argc, char** argv) {
 	int sleep_time = 10; // 10 seconds
 	int exhaust_count = 3; // 10 seconds
 
-	bool cleanse = false;
+	bool cleanse = false, cleanse_only = false;
 
 	if(argc < 2 ) {
 		logger::logger(__FUNCTION__, "Usage: -c <path_to_config_file>", "stderr", true);
@@ -151,6 +151,10 @@ int main(int argc, char** argv) {
 			else if((string)argv[i] == "--cleanse") {
 				cleanse = true;
 			}
+
+			else if((string)argv[i] == "--cleanse_only") {
+				cleanse_only = true;
+			}
 		}
 	}
 
@@ -177,6 +181,11 @@ int main(int argc, char** argv) {
 		logger::logger(__FUNCTION__, "COMMENSING A CLEANSE", "stdout", true);
 		request_cleanse( configs );
 		return 0;
+	}
+
+	if( cleanse_only ) {
+		logger::logger(__FUNCTION__, "COMMENSING A CLEANSE", "stdout", true);
+		request_cleanse( configs );
 	}
 
 	//Modems modems( Modems::PRODUCTION );
