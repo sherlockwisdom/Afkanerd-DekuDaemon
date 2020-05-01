@@ -63,8 +63,16 @@ int main(int argc, char** argv) {
 			logger::logger_errno( errno );
 			continue;
 		}
-
 		cout << "> Data: " << data << endl;
+
+
+		//4. Reset device
+		ret = libusb_reset_device(dev_handle);
+		if( ret != 0 ) {
+			logger::logger_errno( errno );
+		}
+
+
 		/// Cleaning here
 		libusb_close( dev_handle );
 		std::cout << "DONE" << std::endl;
