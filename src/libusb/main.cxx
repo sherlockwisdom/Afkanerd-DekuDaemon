@@ -28,11 +28,6 @@ int main(int argc, char** argv) {
 		if( open_state != 0) {
 			std::cerr << "Failed to open device " << std::endl;
 			std::cerr << libusb_error_name( open_state ) << std::endl;
-			//libusb_free_device_list(devices, 1);
-			//libusb_exit(context);
-			//return 1;
-
-			
 			continue;
 		}
 
@@ -50,12 +45,12 @@ int main(int argc, char** argv) {
 			unsigned char* data;
 			int device_string_descriptor = libusb_get_string_descriptor_ascii(dev_handle, 0x02, data, 1024);
 			if( device_string_descriptor > 0) {
-				// std::cout << "Man: " << std::endl;
 				std::cout << "Manufacturer: " << data << std::endl;
 			}
 
 		}
 		std::cout << "DONE" << std::endl;
+		
 		/// Cleaning here
 		libusb_close( dev_handle );
 	}
