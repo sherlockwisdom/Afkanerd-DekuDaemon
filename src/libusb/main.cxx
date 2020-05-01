@@ -21,15 +21,10 @@ int main(int argc, char** argv) {
 
 	for(size_t i=0;i<number_of_devices;++i, std::cout<<std::endl) {
 		std::cout << "> Device " << i+1 << "/" << number_of_devices << std::endl;
-		auto device = devices[i];
+		libusb_device* device = devices[i];
 
-		//libusb_device_descriptor dev_descriptor;
 		libusb_device_handle* dev_handle;
-
-		//auto desc_state = libusb_get_device_descriptor(device, &dev_descriptor);
 		auto open_state = libusb_open(device, &dev_handle);
-
-
 		if( open_state != 0) {
 			std::cerr << "Failed to open device " << std::endl;
 			std::cerr << libusb_error_name( open_state ) << std::endl;
@@ -41,23 +36,24 @@ int main(int argc, char** argv) {
 			continue;
 		}
 
-		struct libusb_device_descriptor dev_desc;
+		libusb_device_descriptor dev_desc;
 		if( libusb_get_device_descriptor(device, &dev_desc) < 0) {
 			std::cout << "Failed to get descriptor" << std::endl;
 			continue;
 		}
 
 		//https://github.com/libusb/libusb/blob/master/examples/testlibusb.c
-		auto dev_man = dev_desc.iSerialNumber;
+		int dev_man = dev_desc.bNumConfigurations;
+		std::cout << dev_man << std::endl;
 		if( dev_man ) {
 			unsigned char* data;
-			auto device_string_descriptor = libusb_get_string_descriptor_ascii(dev_handle, dev_man, data, 1024);
+			int device_string_descriptor = libusb_get_string_descriptor_ascii(dev_handle, dev_desc.iManufacturer, data, 1024);
 			if( device_string_descriptor > 0) 
 				std::cout << "Man: " << std::endl;
 				//std::cout << "Manufacturer: " << data << std::endl;
 
-			else continue;
 		}
+		std::cout << "DONE" << std::endl;
 		/// Cleaning here
 		libusb_close( dev_handle );
 	}
