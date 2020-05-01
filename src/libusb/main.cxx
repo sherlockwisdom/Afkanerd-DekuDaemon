@@ -49,9 +49,10 @@ int main(int argc, char** argv) {
 			//std::cout << dev_man << std::endl;
 			unsigned char* data;
 			int device_string_descriptor = libusb_get_string_descriptor_ascii(dev_handle, 0x02, data, 1024);
-			if( device_string_descriptor > 0) 
-				std::cout << "Man: " << std::endl;
-				//std::cout << "Manufacturer: " << data << std::endl;
+			if( device_string_descriptor > 0) {
+				// std::cout << "Man: " << std::endl;
+				std::cout << "Manufacturer: " << data << std::endl;
+			}
 
 		}
 		std::cout << "DONE" << std::endl;
