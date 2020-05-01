@@ -36,7 +36,7 @@ int main(int argc, char** argv) {
 			continue;
 		}
 
-		libusb_device_descriptor dev_desc;
+		/*libusb_device_descriptor dev_desc;
 		if( libusb_get_device_descriptor(device, &dev_desc) < 0) {
 			std::cout << "Failed to get descriptor" << std::endl;
 			continue;
@@ -44,10 +44,11 @@ int main(int argc, char** argv) {
 
 		//https://github.com/libusb/libusb/blob/master/examples/testlibusb.c
 		int dev_man = dev_desc.bNumConfigurations;
-		std::cout << dev_man << std::endl;
-		if( dev_man ) {
+		*/
+		if( true ) {
+			//std::cout << dev_man << std::endl;
 			unsigned char* data;
-			int device_string_descriptor = libusb_get_string_descriptor_ascii(dev_handle, dev_desc.iManufacturer, data, 1024);
+			int device_string_descriptor = libusb_get_string_descriptor_ascii(dev_handle, 0x02, data, 1024);
 			if( device_string_descriptor > 0) 
 				std::cout << "Man: " << std::endl;
 				//std::cout << "Manufacturer: " << data << std::endl;
