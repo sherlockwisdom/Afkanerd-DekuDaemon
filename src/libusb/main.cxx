@@ -27,6 +27,7 @@ int main(int argc, char** argv) {
 		libusb_device* device = devices[i];
 
 		//1. Open device
+		cout << "+ Opening devices...";
 		struct libusb_device_handle* dev_handle;
 		int ret = libusb_open(device, &dev_handle);
 		if( ret != 0) {
@@ -34,8 +35,11 @@ int main(int argc, char** argv) {
 			logger::logger_errno( errno );
 			continue;
 		}
+		cout << " done" << endl;
 
 		//2. Get device descriptor
+		/*
+		cout << "+ Getting device descriptors...";
 		struct libusb_device_descriptor* device_descriptor;
 		ret = libusb_get_device_descriptor( device, device_descriptor );
 		if( ret < 0 ) {
@@ -43,23 +47,24 @@ int main(int argc, char** argv) {
 			logger::logger_errno( errno );
 			continue;
 		}
-
+		cout << " done" << endl;
 		uint8_t num_dev_configs = device_descriptor->bNumConfigurations;
 		uint8_t dev_serial_num = device_descriptor->iSerialNumber;
 		cout << "# configs: " << (unsigned int)num_dev_configs << endl;
 		cout << "Index of serial #: " << (unsigned int)dev_serial_num << endl;
+		*/
 
 		//3. Get descriptor
 		unsigned char* data;
 		// static int descriptor = libusb_get_descriptor(dev_handle, LIBUSB_DT_DEVICE, dev_serial_num, data, 1024);
-		int descriptor = libusb_get_string_descriptor_ascii(dev_handle, dev_serial_num, data, 255);
+		int descriptor = libusb_get_string_descriptor_ascii(dev_handle, 1, data, 255);
 		if( descriptor < 0 ) {
 			// cerr << errno << endl;
 			logger::logger_errno( errno );
 			continue;
 		}
 
-		cout << "Data: " << data << endl;
+		cout << "> Data: " << data << endl;
 		/// Cleaning here
 		libusb_close( dev_handle );
 		std::cout << "DONE" << std::endl;
