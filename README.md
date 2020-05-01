@@ -56,6 +56,8 @@ make -C src/start
 ##### `--generate_request [number]`
 ##### `--st [number]` _sleep time for modems, before iterating to check again_
 ##### `--f [filename]`
+##### `--cleanse`
+##### `--cleanse-only`
 
 ---
 ##### TODO - The following needs to be built... please help
