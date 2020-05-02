@@ -208,6 +208,7 @@ int main(int argc, char** argv) {
 			Modem modem( modem_details["imei"], modem_details["isp"], modem_details["type"], modem_details["index"], configs);
 
 			logger::logger("> STAT: ", modem.getInfo(), "stdout", true);
+			return 0;
 		}
 	}
 
