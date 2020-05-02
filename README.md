@@ -58,6 +58,7 @@ make -C src/start
 ##### `--f [filename]`
 ##### `--cleanse`
 ##### `--cleanse-only`
+##### `--stat-only`
 
 ---
 ##### TODO - The following needs to be built... please help
