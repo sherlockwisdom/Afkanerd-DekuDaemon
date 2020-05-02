@@ -102,8 +102,14 @@ int main(int argc, char** argv) {
 			else if((string)argv[i] == "--mode") {
 				if(i+1 < argc ) {
 					string mode = (string)argv[i+1];
-					if( helpers::to_uppercase(mode) == "PRODUCTION") RUNNING_MODE = Modems::PRODUCTION;
-					else RUNNING_MODE = Modems::TEST;
+					if( helpers::to_uppercase(mode) == "PRODUCTION") {
+						RUNNING_MODE = Modems::PRODUCTION;
+						logger::show_state = "PRODUCTION";
+					}
+					else {
+						RUNNING_MODE = Modems::TEST;
+						logger::show_state = "TEST";
+					}
 				}
 			}
 
@@ -156,11 +162,11 @@ int main(int argc, char** argv) {
 				cleanse_only = true;
 			}
 
-			else if((string)argv[1] == "--reboot") {
+			else if((string)argv[i] == "--reboot") {
 				sys_calls::sys_reboot();
 			}
 
-			else if((string)argv[1] == "--stat-only") {
+			else if((string)argv[i] == "--stat-only") {
 				stat_only = true;
 			}
 		}
@@ -208,8 +214,8 @@ int main(int argc, char** argv) {
 			Modem modem( modem_details["imei"], modem_details["isp"], modem_details["type"], modem_details["index"], configs);
 
 			logger::logger("> STAT: ", modem.getInfo(), "stdout", true);
-			return 0;
 		}
+		return 0;
 	}
 
 	
