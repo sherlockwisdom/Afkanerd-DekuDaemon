@@ -159,6 +159,10 @@ int main(int argc, char** argv) {
 			else if((string)argv[1] == "--reboot") {
 				sys_calls::sys_reboot();
 			}
+
+			else if((string)argv[1] == "--reboot") {
+				sys_calls::sys_reboot();
+			}
 		}
 	}
 

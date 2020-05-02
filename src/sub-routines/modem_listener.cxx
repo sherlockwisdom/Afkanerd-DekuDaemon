@@ -73,7 +73,7 @@ void Modems::db_switch_power_modems( map<string,string> modem, string state ) {
 	auto responds = this->mysqlConnection.query( switch_modem_power_query );
 }
 
-map<string,map<string,string>> Modem::get_available_modems() {
+map<string,map<string,string>> Modems::get_available_modems() {
 	map<string,map<string,string>> available_modems = sys_calls::get_available_modems( this->configs["DIR_SCRIPTS"] );
 		logger::logger(__FUNCTION__, "Number of Available modems: " + to_string( available_modems.size() ));
 
@@ -84,7 +84,7 @@ map<string, string> Modems::get_modem_details( map<string, string> modem ) {
 	string imei = modem["imei"];
 	string isp = helpers::to_uppercase(modem["operator_name"] );
 	string type = helpers::to_uppercase(modem["type"] );
-	string index = details["index"];
+	string index = modem["index"];
 	
 	// TODO: Abstract this to a better solution
 	if(isp.find("COVID") != string::npos or isp.find("62401") != string::npos) 
@@ -97,10 +97,10 @@ map<string, string> Modems::get_modem_details( map<string, string> modem ) {
 	}
 
 	map<string,string> modem_details {
-		{"imei" : imei },
-		{"isp" : isp },
-		{"type" : type },
-		{"index" : index } 
+		{"imei" , imei },
+		{"isp" , isp },
+		{"type" , type },
+		{"index" , index } 
 	};
 
 	// logger::logger(__FUNCTION__, " ====> NEW MODEM DETECTED <======", "stdout", true);
@@ -150,8 +150,8 @@ void Modems::begin_scanning() {
 
 				// Optional Fith, tries storing the modems in a sql database
 				try {
-					this->db_insert_modems( details );
-					this->db_insert_modems_workload( details );
+					this->db_insert_modems( modem_details );
+					this->db_insert_modems_workload( modem_details );
 				}
 				catch(std::exception& e) {
 					logger::logger(__FUNCTION__, e.what(), "stderr" );

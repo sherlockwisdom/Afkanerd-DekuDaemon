@@ -36,6 +36,9 @@ class Modems {
 		vector<string> getAllIMEI();
 
 		vector<Modem*> getAllModems();
+
+		map<string,map<string,string>> get_available_modems();
+		map<string,string> get_modem_details( map<string, string> modem );
 };
 
 #endif

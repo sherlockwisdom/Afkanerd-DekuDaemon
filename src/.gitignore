@@ -3,3 +3,4 @@ mem_leak
 mem_leak1
 start
 start_test
+*.sw*
