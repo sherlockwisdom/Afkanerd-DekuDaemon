@@ -73,6 +73,13 @@ void Modems::db_switch_power_modems( map<string,string> modem, string state ) {
 	auto responds = this->mysqlConnection.query( switch_modem_power_query );
 }
 
+map<string,map<string,string>> Modem::get_available_modems() {
+		map<string,map<string,string>> available_modems = sys_calls::get_available_modems( this->configs["DIR_SCRIPTS"] );
+		logger::logger(__FUNCTION__, "Number of Available modems: " + to_string( available_modems.size() ));
+
+		return available_modems;
+}
+
 void Modems::begin_scanning() {
 	// TODO: set exhaust count as default in class declarations
 	// TODO: set sleep time as default in class declaractions
@@ -83,8 +90,7 @@ void Modems::begin_scanning() {
 	while( 1 ) { //TODO: Use a variable to control this loop
 		// First it gets all availabe modems
 		logger::logger(__FUNCTION__, "Refreshing modem list..");
-		map<string,map<string,string>> available_modems = sys_calls::get_available_modems( this->configs["DIR_SCRIPTS"] );
-		logger::logger(__FUNCTION__, "Number of Available modems: " + to_string( available_modems.size() ));
+		auto available_modems = this->get_available_modems();
 
 		// Second it filters the modems and stores them in database
 		for(auto modem : available_modems) {
