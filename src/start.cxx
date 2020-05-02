@@ -206,10 +206,14 @@ int main(int argc, char** argv) {
 	if( stat_only ) {
 		logger::logger(__FUNCTION__, "=======> MODEM STATS", "stdout", true);
 		auto available_modems = modems.get_available_modems();
+		if( available_modems.empty()) {
+			logger::logger(__FUNCTION__, "NO AVAILABLE MODEMS", "stdout", true);
+			return 0;
+		}
 		for( auto modem_ : available_modems ) {
 			auto modem_details = modems.get_modem_details( modem_.second );
 			
-			if( modem_details.empty() ) continue;
+			if( modem_details.empty() ) continue;;
 
 			Modem modem( modem_details["imei"], modem_details["isp"], modem_details["type"], modem_details["index"], configs);
 
