@@ -74,10 +74,43 @@ void Modems::db_switch_power_modems( map<string,string> modem, string state ) {
 }
 
 map<string,map<string,string>> Modem::get_available_modems() {
-		map<string,map<string,string>> available_modems = sys_calls::get_available_modems( this->configs["DIR_SCRIPTS"] );
+	map<string,map<string,string>> available_modems = sys_calls::get_available_modems( this->configs["DIR_SCRIPTS"] );
 		logger::logger(__FUNCTION__, "Number of Available modems: " + to_string( available_modems.size() ));
 
 		return available_modems;
+}
+
+map<string, string> Modems::get_modem_details( map<string, string> modem ) {
+	string imei = modem["imei"];
+	string isp = helpers::to_uppercase(modem["operator_name"] );
+	string type = helpers::to_uppercase(modem["type"] );
+	string index = details["index"];
+	
+	// TODO: Abstract this to a better solution
+	if(isp.find("COVID") != string::npos or isp.find("62401") != string::npos) 
+		isp = "MTN";
+	else if(isp.find("62402") != string::npos)
+		isp = "ORANGE";
+	if( isp.empty() ) {
+		logger::logger(__FUNCTION__, imei + "|" + index + " - No ISP", "stderr", true);
+		return map<string,string>{};
+	}
+
+	map<string,string> modem_details {
+		{"imei" : imei },
+		{"isp" : isp },
+		{"type" : type },
+		{"index" : index } 
+	};
+
+	// logger::logger(__FUNCTION__, " ====> NEW MODEM DETECTED <======", "stdout", true);
+	// logger::logger(__FUNCTION__, "INDEX: " + details["index"], "stdout", true);
+	// logger::logger(__FUNCTION__, "IMEI: " + modem.first, "stdout", true);
+	// logger::logger(__FUNCTION__, "TYPE: " + details["type"], "stdout", true);
+	// logger::logger(__FUNCTION__, "ISP: " + details["operator_name"], "stdout", true);
+	// logger::logger(__FUNCTION__, "==================================", "stdout", true);
+	
+	return modem_details;
 }
 
 void Modems::begin_scanning() {
@@ -98,30 +131,15 @@ void Modems::begin_scanning() {
 			if(!this->available_modems.empty()) 
 				has_modems_imei = this->available_modems.find( modem.first ) != this->available_modems.end() ? true : false;
 			if( !has_modems_imei ) {
-				map<string,string> details = modem.second;
+				map<string,string> modem_details = this->get_modem_details( modem.second );
+				if( modem_details.empty() ) continue;
+				
+				string imei = modem_details["imei"];
+				string isp = modem_details["isp"];
+				string type = modem_details["type"];
+				string index = modem_details["index"];
 
 				// Thid stores modem in list of modems
-				string imei = modem.first;
-				string isp = helpers::to_uppercase(details["operator_name"] );
-				string type = helpers::to_uppercase(details["type"] );
-				string index = details["index"];
-				
-				// TODO: Abstract this to a better solution
-				if(isp.find("COVID") != string::npos or isp.find("62401") != string::npos) 
-					isp = "MTN";
-				else if(isp.find("62402") != string::npos)
-					isp = "ORANGE";
-				if( isp.empty() ) {
-					logger::logger(__FUNCTION__, imei + "|" + index + " - No ISP", "stderr", true);
-					continue;
-				}
-
-				logger::logger(__FUNCTION__, " ====> NEW MODEM DETECTED <======", "stdout", true);
-				logger::logger(__FUNCTION__, "INDEX: " + details["index"], "stdout", true);
-				logger::logger(__FUNCTION__, "IMEI: " + modem.first, "stdout", true);
-				logger::logger(__FUNCTION__, "TYPE: " + details["type"], "stdout", true);
-				logger::logger(__FUNCTION__, "ISP: " + details["operator_name"], "stdout", true);
-				logger::logger(__FUNCTION__, "==================================", "stdout", true);
 
 				this->available_modems.insert(make_pair( modem.first, new Modem(imei, isp, type, index, this->configs, this->mysqlConnection)));
 
