@@ -43,7 +43,7 @@ TEST(Mysql, connect) {
 TEST(Mysql, query) {
 	MySQL mysql(mysqlServer, mysqlUser, mysqlPassword, mysqlDatabase);
 
-	string query = "";
+	string query = "CREATE TABLE MYSQL_TEST_DATABASE";
 	map<string,string> output_results = mysql.query( query );
 }
 
