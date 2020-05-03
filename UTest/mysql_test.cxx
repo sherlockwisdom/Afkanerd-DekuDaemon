@@ -25,11 +25,6 @@ TEST(Mysql, Constructor) {
 }
 
 TEST(Mysql, setConnectionDetails) {
-	std::string mysqlServer = "localhost";
-	std::string mysqlUser = "root";
-	std::string mysqlPassword = "asshole";
-	std::string mysqlDatabase = "__DEKU__";
-
 	MySQL mysql;
 	mysql.setConnectionDetails( mysqlServer, mysqlUser, mysqlPassword, mysqlDatabase );
 
@@ -43,6 +38,13 @@ TEST(Mysql, connect) {
 	MySQL mysql(mysqlServer, mysqlUser, mysqlPassword, mysqlDatabase);
 
 	CHECK( mysql.connect() );
+}
+
+TEST(Mysql, query) {
+	MySQL mysql(mysqlServer, mysqlUser, mysqlPassword, mysqlDatabase);
+
+	string query = "";
+	map<string,string> output_results = mysql.query( query );
 }
 
 
