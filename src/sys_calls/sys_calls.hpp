@@ -13,9 +13,8 @@ namespace sys_calls {
 
 
 	void sys_reboot() {
-		int cmd =  0x1234567; /// Aggressive af!!
-		sync(); /// Linux write all files to their filesystem
-		int reboot_state = reboot( cmd ); /// It is done, the below should not been seen if done properly
+		int cmd =  0x1234567;
+		int reboot_state = reboot( cmd );
 		logger::logger(__FUNCTION__, "REBOOT RETURNED: " + to_string( reboot_state));
 		logger::logger_errno( errno );
 	}
@@ -96,7 +95,7 @@ namespace sys_calls {
 	vector<string> get_modem_details ( string path_to_script, string index ) {
 		vector<string> details;
 		string type = index.find("192.168") != string::npos ? "ssh" : "mmcli";
-		string modem_information = type == "ssh" ? sys_calls::terminal_stdout("ssh root@"+index+" -o 'ServerAliveInterval 10' deku") : sys_calls::terminal_stdout( path_to_script + "/modem_information_extraction.sh extract " + index );
+		string modem_information = type == "ssh" ? sys_calls::terminal_stdout("ssh root@"+index+" -oPasswordAuthentication=no deku") : sys_calls::terminal_stdout( path_to_script + "/modem_information_extraction.sh extract " + index );
 		vector<string> ln_modem_information = helpers::string_split(modem_information, '\n');
 
 		logger::logger(__FUNCTION__, "Type: " + type + "\tSize: " + to_string( ln_modem_information.size() ));

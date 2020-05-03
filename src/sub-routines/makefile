@@ -9,24 +9,11 @@ default: $(TARGET)
 $(TARGET): $(TARGET).cxx
 	$(CC) $(CFLAGS) -c -o $(TARGET).o $(TARGET).cxx $(MYSQL_CONFIGS) $(MYSQL_LIBS)
 
-ussd_test: ussd_test.cxx
-	$(CC) $(CFLAGS) -o ussd_test ussd_test.cxx
-
 ussd_program: ussd_program.cxx
 	$(CC) $(CFLAGS) -o ussd_program ussd_program.cxx
 
-request_distribution_listener_test: request_distribution_listener_test.cxx
-	$(CC) $(CFLAGS) -o request_distribution_listener_test request_distribution_listener_test.cxx
-
-modem_listener_test: modem_listener_test.cxx
-	$(CC) $(CFLAGS) -o modem_listener_test modem_listener_test.cxx
-
-modem_test: modem_test.cxx
-	$(CC) $(CFLAGS) -o modem_test modem_test.cxx $(MYSQL_CONFIGS) $(MYSQL_LIBS)
-
-modem: modem_test.cxx
-	$(CC) $(CFLAGS) -c -o modem.o modem.cxx $(MYSQL_CONFIGS) $(MYSQL_LIBS)
-
+modem_listener: modem_listener.cxx
+	$(CC) $(CFLAGS) -c -o $@.o $@.cxx $(MYSQL_CONFIGS) $(MYSQL_LIBS)
 
 sms_messages: modem_sms_test.cxx
 	$(CC) $(CFLAGS) -o sms_messages.o modem_sms_test.cxx $(MYSQL_CONFIGS) $(MYSQL_LIBS)

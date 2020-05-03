@@ -4,7 +4,7 @@
 - Make - https://www.tutorialspoint.com/unix_commands/make.htm
 - g++ 4.8 or later - https://courses.cs.washington.edu/courses/cse373/99au/unix/g++.html
 > ###### ubuntu
-> `sudo apt install build-essentails`
+> `sudo apt install build-essential`
 > ###### manjaro
 > `sudo pacman -S base-devel`
 - MySQL server
@@ -58,6 +58,7 @@ make -C src/start
 ##### `--f [filename]`
 ##### `--cleanse`
 ##### `--cleanse-only`
+##### `--stat-only`
 
 ---
 ##### TODO - The following needs to be built... please help

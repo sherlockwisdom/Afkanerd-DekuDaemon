@@ -68,7 +68,7 @@ int main(int argc, char** argv) {
 	int sleep_time = 10; // 10 seconds
 	int exhaust_count = 3; // 10 seconds
 
-	bool cleanse = false, cleanse_only = false;
+	bool cleanse = false, cleanse_only = false, stat_only = false;
 
 	if(argc < 2 ) {
 		logger::logger(__FUNCTION__, "Usage: -c <path_to_config_file>", "stderr", true);
@@ -102,8 +102,14 @@ int main(int argc, char** argv) {
 			else if((string)argv[i] == "--mode") {
 				if(i+1 < argc ) {
 					string mode = (string)argv[i+1];
-					if( helpers::to_uppercase(mode) == "PRODUCTION") RUNNING_MODE = Modems::PRODUCTION;
-					else RUNNING_MODE = Modems::TEST;
+					if( helpers::to_uppercase(mode) == "PRODUCTION") {
+						RUNNING_MODE = Modems::PRODUCTION;
+						logger::show_state = "PRODUCTION";
+					}
+					else {
+						RUNNING_MODE = Modems::TEST;
+						logger::show_state = "TEST";
+					}
 				}
 			}
 
@@ -156,8 +162,12 @@ int main(int argc, char** argv) {
 				cleanse_only = true;
 			}
 
-			else if((string)argv[1] == "--reboot") {
+			else if((string)argv[i] == "--reboot") {
 				sys_calls::sys_reboot();
+			}
+
+			else if((string)argv[i] == "--stat-only") {
+				stat_only = true;
 			}
 		}
 	}
@@ -175,6 +185,7 @@ int main(int argc, char** argv) {
 	// Then after the checks, it moves set the variables for global use
 	map<string,string> configs = get_system_configs( helpers::read_file( PATH_SYS_FILE ));
 	for(auto i : configs ) logger::logger("STARTING ROUTINES - [CONFIGS]:", i.first + "=" + i.second, "stdout", true);
+	Modems modems( configs, RUNNING_MODE );
 
 	// Generate test request TODO: Make better so dynamic test messages can be passed into system
 	if( quantity_to_generate > 0 ) {
@@ -192,8 +203,25 @@ int main(int argc, char** argv) {
 		request_cleanse( configs );
 	}
 
-	//Modems modems( Modems::PRODUCTION );
-	Modems modems( configs, RUNNING_MODE );
+	if( stat_only ) {
+		logger::logger(__FUNCTION__, "=======> MODEM STATS", "stdout", true);
+		auto available_modems = modems.get_available_modems();
+		if( available_modems.empty()) {
+			logger::logger(__FUNCTION__, "NO AVAILABLE MODEMS", "stdout", true);
+			return 0;
+		}
+		for( auto modem_ : available_modems ) {
+			auto modem_details = modems.get_modem_details( modem_.second );
+			
+			if( modem_details.empty() ) continue;;
+
+			Modem modem( modem_details["imei"], modem_details["isp"], modem_details["type"], modem_details["index"], configs);
+
+			logger::logger("> STAT: ", modem.getInfo(), "stdout", true);
+		}
+		return 0;
+	}
+
 	
 	// TODO: Check if other developers variables are passed as args and set before beginning
 
