@@ -47,9 +47,9 @@ bool MySQL::create_database( string database ) {
 	// TODO: Above function is deprecated!!
 	
 	string create_db_query = "CREATE DATABASE " + database;
-	auto create_db_state = this->query( create_db_query );
+	bool create_db_state = this->query<bool>( create_db_query );
 
-	return false;
+	return create_db_state;
 }
 
 bool MySQL::has_database( string database ) const {
@@ -97,21 +97,27 @@ MySQL::MySQL() {
 	this->mysqlConnection = mysql_init( NULL );
 }
 
-map<string, vector<string>> MySQL::query( string query ) {
+template<class T>
+T MySQL::query( string query ) {
 	// logger::logger(__FUNCTION__, "Querying with: " + query );
 	map<string, vector<string>> query_results;
+	T results;
 	auto mysql_query_state = mysql_query( this->mysqlConnection, query.c_str() );
 
 	if( mysql_query_state != 0 ) {
 		const char *mysql_error_msg = mysql_error( this->mysqlConnection );
 		logger::logger(__FUNCTION__, "Failed to query database: " + string( mysql_error_msg, strlen(mysql_error_msg)), "stderr");
+
+		results = false;
+		return results;
 	}
 
 	MYSQL_RES *mysqlResult = mysql_use_result( this->mysqlConnection );
 	if( !mysqlResult) {
 		// TODO: https://dev.mysql.com/doc/refman/8.0/en/mysql-field-count.html
 		logger::logger(__FUNCTION__, "Number of Affected Rows: " + to_string(mysql_affected_rows(this->mysqlConnection)));
-		return query_results;
+		results = true;
+		return results;
 	}
 
 	size_t num_fields = mysql_num_fields( mysqlResult );

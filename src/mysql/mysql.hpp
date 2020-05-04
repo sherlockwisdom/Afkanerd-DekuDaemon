@@ -26,7 +26,8 @@ class MySQL {
 	MySQL();
 	~MySQL();
 
-	map<string, vector<string>> query( string );
+	template<class T>
+	T query( string );
 
 	bool connect();
 	bool is_init() const;
