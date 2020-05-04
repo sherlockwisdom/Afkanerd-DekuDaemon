@@ -9,6 +9,9 @@ using namespace std;
 
 
 bool system_check( string path_to_sys_file) {
+	//TODO: Check if mysql database exist - if not create it
+	//TODO: Check integrety of mysql database, if not create it
+
 	logger::logger( __FUNCTION__, "Running system check at: " + path_to_sys_file, "stdout", true);
 
 	if( !helpers::file_exist(path_to_sys_file)) {

@@ -47,7 +47,7 @@ TEST(Mysql, connect) {
 //TODO: Test = delete database table
 
 TEST(Mysql, create_database_query) {
-	MySQL mysql(mysqlServer, mysqlUser, mysqlPassword, mysqlDatabase);
+	MySQL mysql(mysqlServer, mysqlUser, mysqlPassword);
 	CHECK( mysql.connect() );
 
 	std::string query = "CREATE TABLE MYSQL_TEST_DATABASE";

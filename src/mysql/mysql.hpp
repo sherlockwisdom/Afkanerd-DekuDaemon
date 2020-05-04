@@ -23,6 +23,7 @@ class MySQL {
 	
 	public:
 	MySQL(string server, string user, string password, string database);
+	// MySQL(string server, string user, string password) : server(server), user(user), password(password){}
 	MySQL();
 	~MySQL();
 
@@ -34,7 +35,6 @@ class MySQL {
 	//TODO: Put some getters and setters
 	void setConnectionDetails( string server, string user, string password, string database );
 	void close();
-
 
 	string get_server() const;
 	string get_user() const;
