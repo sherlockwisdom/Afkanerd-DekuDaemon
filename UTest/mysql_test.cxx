@@ -91,7 +91,7 @@ TEST(Mysql_integration, delete_database) {
 	bool delete_database_state = mysql.delete_database( mysqlDatabase );
 	bool has_database = mysql.has_database( mysqlDatabase );
 
-	CHECK( delete_database_state == true and  has_database == false );
+	CHECK( delete_database_state == true and has_database == false );
 }
 
 int main( int argc, char** argv ) {
