@@ -46,14 +46,21 @@ TEST(Mysql, connect) {
 //TODO: Test = create database table
 //TODO: Test = delete database table
 
-TEST(Mysql, query) {
+TEST(Mysql, create_database_query) {
 	MySQL mysql(mysqlServer, mysqlUser, mysqlPassword, mysqlDatabase);
 
-	// string query = "CREATE TABLE MYSQL_TEST_DATABASE";
-	string query = "INSERT INTO 
-	map<string,string> output_results = mysql.query( query );
+	std::string query = "CREATE TABLE MYSQL_TEST_DATABASE";
+	map<string,vector<string>> output_results = mysql.query( query );
 }
 
+/*
+TEST(Mysql, select_query) {
+	MySQL mysql(mysqlServer, mysqlUser, mysqlPassword, mysqlDatabase);
+
+
+	map<string,string> output_results = mysql.query( query );
+}
+*/
 
 int main( int argc, char** argv ) {
 	// Testing to see how the recording works in this aspect
