@@ -45,7 +45,11 @@ bool MySQL::set_database( string database ) {
 bool MySQL::create_database( string database ) {
 	// auto created_database = mysql_create_db(this->mysqlConnection, database.c_str());
 	// TODO: Above function is deprecated!!
-	return created_database == 0 ? true : false;
+	
+	string create_db_query = "CREATE DATABASE " + database;
+	auto create_db_state = this->query( create_db_query );
+
+	return false;
 }
 
 bool MySQL::has_database( string database ) const {
