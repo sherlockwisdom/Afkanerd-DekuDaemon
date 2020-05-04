@@ -46,6 +46,9 @@ bool MySQL::create_database( string database ) {
 
 }
 
+bool MySQL::has_database( string database ) const {
+}
+
 string MySQL::get_server() const {
 	return this->server;
 }

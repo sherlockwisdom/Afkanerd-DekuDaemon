@@ -41,7 +41,8 @@ class MySQL {
 	string get_database() const;
 
 	bool set_database( string database );
-	bool has_database( string database );
+	bool has_database( string database ) const;
+	bool create_database( string database );
 };
 
 #endif
