@@ -47,6 +47,16 @@ bool MySQL::create_database( string database ) {
 }
 
 bool MySQL::has_database( string database ) const {
+	auto list_of_databases = mysql_list_dbs(this->mysqlConnection, database.c_str() );
+
+	if( list_of_databases == NULL ) return false;
+
+	bool database_found = false;
+	for(MYSQL_ROW mysqlRow = mysql_fetch_row( list_of_databases ); mysqlRow != NULL ; mysqlRow = mysql_fetch_row( list_of_databases ) ) {
+		logger::logger(__FUNCTION__, mysqlRow[0]);
+	}
+
+	return database_found;
 }
 
 string MySQL::get_server() const {

@@ -11,7 +11,7 @@
 std::string mysqlServer = "localhost";
 std::string mysqlUser = "root";
 std::string mysqlPassword = "asshole";
-std::string mysqlDatabase = "__DEKU__";
+std::string mysqlDatabase = "CPPUTEST_MYSQL_TEST_DATABASE";
 
 TEST_GROUP(Mysql) {};
 TEST_GROUP(Mysql_integration) {};
@@ -60,7 +60,11 @@ TEST(Mysql_integration, has_database_pass ) {
 	MySQL mysql(mysqlServer, mysqlUser, mysqlPassword);
 	CHECK( mysql.connect() );
 
-	CHECK( mysql.has_database( mysqlDatabase ) == true );
+	bool create_database_state = mysql.create_database( mysqlDatabase );
+	bool has_database = mysql.has_database( mysqlDatabase );
+	bool delete_database = mysql.delete_database( mysqlDatabase );
+
+	CHECK( create_database_state == has_database == delete_database);
 }
 
 TEST(Mysql_integration, has_database_fail ) {
