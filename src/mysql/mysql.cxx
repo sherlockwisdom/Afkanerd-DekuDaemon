@@ -36,11 +36,14 @@ bool MySQL::connect() {
 	return true;
 }
 
-
 bool MySQL::set_database( string database ) {
 	bool selected_database = mysql_select_db(this->mysqlConnection, database.c_str());
 
-	return select_database == 0 ? true : false;
+	return selected_database == 0 ? true : false;
+}
+
+bool MySQL::create_database( string database ) {
+
 }
 
 string MySQL::get_server() const {
