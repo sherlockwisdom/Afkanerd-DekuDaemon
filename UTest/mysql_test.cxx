@@ -14,6 +14,7 @@ std::string mysqlPassword = "asshole";
 std::string mysqlDatabase = "__DEKU__";
 
 TEST_GROUP(Mysql) {};
+TEST_GROUP(Mysql_integration) {};
 
 TEST(Mysql, Constructor) {
 	MySQL mysql(mysqlServer, mysqlUser, mysqlPassword, mysqlDatabase);
@@ -40,20 +41,39 @@ TEST(Mysql, connect) {
 	CHECK( mysql.connect() );
 }
 
-
-TEST(Mysql, create_database_query_pass) {
+TEST(Mysql_integration, set_database_pass) {
 	MySQL mysql(mysqlServer, mysqlUser, mysqlPassword);
 	CHECK( mysql.connect() );
 
-	CHECK( mysql.set_database( database ));
+	CHECK( mysql.set_database( database ) == true );
 }
 
-TEST(Mysql, create_database_query_fail) {
+TEST(Mysql_integration, set_database_fail) {
 	MySQL mysql(mysqlServer, mysqlUser, mysqlPassword);
 	CHECK( mysql.connect() );
 
 	std::string non_existent_database = "__DEKU__non_existent__";
-	CHECK( mysql.set_database( non_existent_database ));
+	CHECK( mysql.set_database( non_existent_database ) == false );
+}
+
+TEST(Mysql_integration, create_database) {
+	MySQL mysql(mysqlServer, mysqlUser, mysqlPassword);
+	CHECK( mysql.connect() );
+
+	bool create_database_state = mysql.create_database( database );
+	bool has_database = mysql.has_database( database );
+
+	CHECK( create_database_state == has_database );
+}
+
+TEST(Mysql, has_database ) {
+	MySQL mysql(mysqlServer, mysqlUser, mysqlPassword);
+	CHECK( mysql.connect() );
+	//Creates it
+	mysql.create(
+
+	std::string non_existent_database = "__DEKU__non_existent__";
+	CHECK( mysql.set_database( non_existent_database ) == false );
 }
 
 int main( int argc, char** argv ) {
