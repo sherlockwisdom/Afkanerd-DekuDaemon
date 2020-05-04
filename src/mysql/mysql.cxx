@@ -98,27 +98,6 @@ MySQL::MySQL() {
 }
 
 map<string,map<string,string> get_results() {
-}
-
-bool MySQL::query( string query ) {
-	// logger::logger(__FUNCTION__, "Querying with: " + query );
-	map<string, vector<string>> query_results;
-	auto mysql_query_state = mysql_query( this->mysqlConnection, query.c_str() );
-
-	if( mysql_query_state != 0 ) {
-		const char *mysql_error_msg = mysql_error( this->mysqlConnection );
-		// TODO: set this to be gotten latter
-		// logger::logger(__FUNCTION__, "Failed to query database: " + string( mysql_error_msg, strlen(mysql_error_msg)), "stderr");
-		return false;
-	}
-
-	this->mysqlResult = mysql_use_result( this->mysqlConnection );
-	if( !mysqlResult) {
-		// TODO: https://dev.mysql.com/doc/refman/8.0/en/mysql-field-count.html
-		logger::logger(__FUNCTION__, "Number of Affected Rows: " + to_string(mysql_affected_rows(this->mysqlConnection)));
-		return query_results;
-	}
-
 	size_t num_fields = mysql_num_fields( mysqlResult );
 	logger::logger(__FUNCTION__, "Number of SQL results fields: " + to_string( num_fields ));
 
@@ -139,6 +118,31 @@ bool MySQL::query( string query ) {
 	mysql_free_result ( mysqlResult );
 
 	return query_results;
+}
+
+bool MySQL::query( string query ) {
+	// logger::logger(__FUNCTION__, "Querying with: " + query );
+	map<string, vector<string>> query_results;
+	auto mysql_query_state = mysql_query( this->mysqlConnection, query.c_str() );
+
+	if( mysql_query_state != 0 ) {
+		const char *mysql_error_msg = mysql_error( this->mysqlConnection );
+		// TODO: set this to be gotten latter
+		// logger::logger(__FUNCTION__, "Failed to query database: " + string( mysql_error_msg, strlen(mysql_error_msg)), "stderr");
+		return false;
+	}
+
+	this->mysqlResult = mysql_use_result( this->mysqlConnection );
+	
+	/*
+	if( !mysqlResult) {
+		// TODO: https://dev.mysql.com/doc/refman/8.0/en/mysql-field-count.html
+		logger::logger(__FUNCTION__, "Number of Affected Rows: " + to_string(mysql_affected_rows(this->mysqlConnection)));
+		return query_results;
+	}
+	*/
+
+	return true;
 }
 
 void MySQL::close() {
