@@ -56,7 +56,7 @@ TEST(Mysql_integration, set_database_fail) {
 	CHECK( mysql.set_database( non_existent_database ) == false );
 }
 
-TEST(Mysql_integration, has_database_pass ) {
+TEST(Mysql_integration, has_database ) {
 	MySQL mysql(mysqlServer, mysqlUser, mysqlPassword);
 	CHECK( mysql.connect() );
 
@@ -65,13 +65,11 @@ TEST(Mysql_integration, has_database_pass ) {
 	bool delete_database = mysql.delete_database( mysqlDatabase );
 
 	CHECK( create_database_state == true and has_database == true and delete_database == true);
-}
 
-TEST(Mysql_integration, has_database_fail ) {
-	MySQL mysql(mysqlServer, mysqlUser, mysqlPassword);
-	CHECK( mysql.connect() );
+	has_database = mysql.has_database( mysqlDatabase );
+	delete_database = mysql.delete_database( mysqlDatabase );
 
-	CHECK( mysql.has_database( mysqlDatabase ) == false );
+	CHECK( has_database == false and delete_database == false);
 }
 
 TEST(Mysql_integration, create_database) {
