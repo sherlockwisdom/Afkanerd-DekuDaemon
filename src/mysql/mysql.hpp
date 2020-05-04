@@ -23,7 +23,6 @@ class MySQL {
 	
 	public:
 	MySQL(string server, string user, string password, string database);
-	// MySQL(string server, string user, string password) : server(server), user(user), password(password){}
 	MySQL();
 	~MySQL();
 
@@ -40,6 +39,8 @@ class MySQL {
 	string get_user() const;
 	string get_password() const;
 	string get_database() const;
+
+	bool set_database( string database );
 };
 
 #endif
