@@ -41,16 +41,11 @@ TEST(Mysql, connect) {
 	CHECK( mysql.connect() );
 }
 
-TEST(Mysql_integration, set_database_pass) {
+TEST(Mysql_integration, set_database) {
 	MySQL mysql(mysqlServer, mysqlUser, mysqlPassword);
 	CHECK( mysql.connect() );
 
 	CHECK( mysql.set_database( mysqlDatabase ) == true );
-}
-
-TEST(Mysql_integration, set_database_fail) {
-	MySQL mysql(mysqlServer, mysqlUser, mysqlPassword);
-	CHECK( mysql.connect() );
 
 	std::string non_existent_database = "__DEKU__non_existent__";
 	CHECK( mysql.set_database( non_existent_database ) == false );
