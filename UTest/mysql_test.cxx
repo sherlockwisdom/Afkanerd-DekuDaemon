@@ -56,16 +56,6 @@ TEST(Mysql_integration, set_database_fail) {
 	CHECK( mysql.set_database( non_existent_database ) == false );
 }
 
-TEST(Mysql_integration, create_database) {
-	MySQL mysql(mysqlServer, mysqlUser, mysqlPassword);
-	CHECK( mysql.connect() );
-
-	bool create_database_state = mysql.create_database( database );
-	bool has_database = mysql.has_database( database );
-
-	CHECK( create_database_state == has_database );
-}
-
 TEST(Mysql_integration, has_database_pass ) {
 	MySQL mysql(mysqlServer, mysqlUser, mysqlPassword);
 	CHECK( mysql.connect() );
@@ -78,6 +68,16 @@ TEST(Mysql_integration, has_database_fail ) {
 	CHECK( mysql.connect() );
 
 	CHECK( mysql.has_database( database ) == false );
+}
+
+TEST(Mysql_integration, create_database) {
+	MySQL mysql(mysqlServer, mysqlUser, mysqlPassword);
+	CHECK( mysql.connect() );
+
+	bool create_database_state = mysql.create_database( database );
+	bool has_database = mysql.has_database( database );
+
+	CHECK( create_database_state == has_database );
 }
 
 int main( int argc, char** argv ) {
