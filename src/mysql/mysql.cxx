@@ -37,13 +37,13 @@ bool MySQL::connect() {
 }
 
 bool MySQL::set_database( string database ) {
-	bool selected_database = mysql_select_db(this->mysqlConnection, database.c_str());
+	auto selected_database = mysql_select_db(this->mysqlConnection, database.c_str());
 
 	return selected_database == 0 ? true : false;
 }
 
 bool MySQL::create_database( string database ) {
-	int created_database = mysql_create_db(this->mysqlConnection, database.c_str());
+	auto created_database = mysql_create_db(this->mysqlConnection, database.c_str());
 	return created_database == 0 ? true : false;
 }
 
