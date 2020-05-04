@@ -66,6 +66,9 @@ bool MySQL::has_database( string database ) const {
 }
 
 bool MySQL::delete_database( string database ) {
+	//TODO: Default method is already deprecated!
+	string delete_db_query = "DROP DATABASE " + database;
+	auto drop_db_state = this->query( delete_db_query );
 	return false;
 }
 
