@@ -74,7 +74,7 @@ TEST(Mysql_integration, create_database) {
 	bool create_database_state = mysql.create_database( mysqlDatabase );
 	bool has_database = mysql.has_database( mysqlDatabase );
 
-	CHECK( create_database_state == has_database );
+	CHECK( create_database_state == true and has_database == true );
 }
 
 TEST(Mysql_integration, delete_database) {
