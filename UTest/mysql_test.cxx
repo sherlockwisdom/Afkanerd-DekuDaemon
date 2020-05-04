@@ -100,6 +100,9 @@ TEST(Mysql_integration, has_table ) {
 TEST(Mysql_integration, create_table) {
 }
 
+TEST(Mysql_integration, delete_table) {
+}
+
 int main( int argc, char** argv ) {
 	// Testing to see how the recording works in this aspect
 	return CommandLineTestRunner::RunAllTests(argc, argv);
