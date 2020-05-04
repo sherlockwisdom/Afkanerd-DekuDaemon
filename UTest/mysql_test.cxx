@@ -66,14 +66,18 @@ TEST(Mysql_integration, create_database) {
 	CHECK( create_database_state == has_database );
 }
 
-TEST(Mysql, has_database ) {
+TEST(Mysql_integration, has_database_pass ) {
 	MySQL mysql(mysqlServer, mysqlUser, mysqlPassword);
 	CHECK( mysql.connect() );
-	//Creates it
-	mysql.create(
 
-	std::string non_existent_database = "__DEKU__non_existent__";
-	CHECK( mysql.set_database( non_existent_database ) == false );
+	CHECK( mysql.has_database( database ) == true );
+}
+
+TEST(Mysql_integration, has_database_fail ) {
+	MySQL mysql(mysqlServer, mysqlUser, mysqlPassword);
+	CHECK( mysql.connect() );
+
+	CHECK( mysql.has_database( database ) == false );
 }
 
 int main( int argc, char** argv ) {
