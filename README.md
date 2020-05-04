@@ -64,5 +64,6 @@ make -C src/start
 ##### TODO - The following needs to be built... please help
 - Update mechanism: Allowing for remote updates
 - Modem state reports: Logs each modems state with: _active_, _not_active_
-- Store every request in a local sql database with state: _sent_, _not_sent_
+- Store every request in a local sql database with state: _sent_, _not_sent__
 - Include Unit testing for every component
+- Use .cnf files to store configurations
