@@ -45,7 +45,7 @@ TEST(Mysql_integration, set_database_pass) {
 	MySQL mysql(mysqlServer, mysqlUser, mysqlPassword);
 	CHECK( mysql.connect() );
 
-	CHECK( mysql.set_database( database ) == true );
+	CHECK( mysql.set_database( mysqlDatabase ) == true );
 }
 
 TEST(Mysql_integration, set_database_fail) {
@@ -60,22 +60,22 @@ TEST(Mysql_integration, has_database_pass ) {
 	MySQL mysql(mysqlServer, mysqlUser, mysqlPassword);
 	CHECK( mysql.connect() );
 
-	CHECK( mysql.has_database( database ) == true );
+	CHECK( mysql.has_database( mysqlDatabase ) == true );
 }
 
 TEST(Mysql_integration, has_database_fail ) {
 	MySQL mysql(mysqlServer, mysqlUser, mysqlPassword);
 	CHECK( mysql.connect() );
 
-	CHECK( mysql.has_database( database ) == false );
+	CHECK( mysql.has_database( mysqlDatabase ) == false );
 }
 
 TEST(Mysql_integration, create_database) {
 	MySQL mysql(mysqlServer, mysqlUser, mysqlPassword);
 	CHECK( mysql.connect() );
 
-	bool create_database_state = mysql.create_database( database );
-	bool has_database = mysql.has_database( database );
+	bool create_database_state = mysql.create_database( mysqlDatabase );
+	bool has_database = mysql.has_database( mysqlDatabase );
 
 	CHECK( create_database_state == has_database );
 }
