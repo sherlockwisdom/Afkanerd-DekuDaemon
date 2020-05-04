@@ -41,12 +41,19 @@ TEST(Mysql, connect) {
 }
 
 
-TEST(Mysql, create_database_query) {
+TEST(Mysql, create_database_query_pass) {
 	MySQL mysql(mysqlServer, mysqlUser, mysqlPassword);
 	CHECK( mysql.connect() );
 
-	std::string query = "CREATE TABLE MYSQL_TEST_DATABASE";
-	map<string,vector<string>> output_results = mysql.query( query );
+	CHECK( mysql.set_database( database ));
+}
+
+TEST(Mysql, create_database_query_fail) {
+	MySQL mysql(mysqlServer, mysqlUser, mysqlPassword);
+	CHECK( mysql.connect() );
+
+	std::string non_existent_database = "__DEKU__non_existent__";
+	CHECK( mysql.set_database( non_existent_database ));
 }
 
 int main( int argc, char** argv ) {
