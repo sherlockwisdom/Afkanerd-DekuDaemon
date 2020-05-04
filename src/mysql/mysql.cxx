@@ -68,8 +68,8 @@ bool MySQL::has_database( string database ) const {
 bool MySQL::delete_database( string database ) {
 	//TODO: Default method is already deprecated!
 	string delete_db_query = "DROP DATABASE " + database;
-	bool drop_db_state = this->query<bool>( delete_db_query );
-	return drop_db_state;
+	auto drop_db_state = this->query( delete_db_query );
+	return false;
 }
 
 string MySQL::get_server() const {
@@ -97,8 +97,7 @@ MySQL::MySQL() {
 	this->mysqlConnection = mysql_init( NULL );
 }
 
-template<class T>
-T MySQL::query( string query ) {
+map<string,map<string,string>> MySQL::query( string query ) {
 	// logger::logger(__FUNCTION__, "Querying with: " + query );
 	map<string, vector<string>> query_results;
 	T results;
@@ -116,21 +115,14 @@ T MySQL::query( string query ) {
 	if( !mysqlResult) {
 		// TODO: https://dev.mysql.com/doc/refman/8.0/en/mysql-field-count.html
 		logger::logger(__FUNCTION__, "Number of Affected Rows: " + to_string(mysql_affected_rows(this->mysqlConnection)));
-		results = true;
+		return query_results;
 	}
-	return results;
-}
 
-/*
-template<class A>
-A MySQL::query( string query ) {
-	auto mysql_query_state = mysql_query( this->mysqlConnection, query.c_str() );
 	size_t num_fields = mysql_num_fields( mysqlResult );
 	logger::logger(__FUNCTION__, "Number of SQL results fields: " + to_string( num_fields ));
 
 	if( num_fields < 1 ) {
-		results = query_results;
-		return results;
+		return query_results;
 	}
 
 	MYSQL_FIELD *fields = mysql_fetch_fields( mysqlResult );
@@ -145,10 +137,8 @@ A MySQL::query( string query ) {
 	}
 	mysql_free_result ( mysqlResult );
 
-	results = query_results;
-	return results;
+	return query_results;
 }
-*/
 
 void MySQL::close() {
 	mysql_close( this->mysqlConnection );
