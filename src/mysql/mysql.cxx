@@ -97,21 +97,22 @@ MySQL::MySQL() {
 	this->mysqlConnection = mysql_init( NULL );
 }
 
-map<string,map<string,string>> MySQL::query( string query ) {
+map<string,map<string,string> get_results() {
+}
+
+bool MySQL::query( string query ) {
 	// logger::logger(__FUNCTION__, "Querying with: " + query );
 	map<string, vector<string>> query_results;
-	T results;
 	auto mysql_query_state = mysql_query( this->mysqlConnection, query.c_str() );
 
 	if( mysql_query_state != 0 ) {
 		const char *mysql_error_msg = mysql_error( this->mysqlConnection );
-		logger::logger(__FUNCTION__, "Failed to query database: " + string( mysql_error_msg, strlen(mysql_error_msg)), "stderr");
-
-		results = false;
-		return results;
+		// TODO: set this to be gotten latter
+		// logger::logger(__FUNCTION__, "Failed to query database: " + string( mysql_error_msg, strlen(mysql_error_msg)), "stderr");
+		return false;
 	}
 
-	MYSQL_RES *mysqlResult = mysql_use_result( this->mysqlConnection );
+	this->mysqlResult = mysql_use_result( this->mysqlConnection );
 	if( !mysqlResult) {
 		// TODO: https://dev.mysql.com/doc/refman/8.0/en/mysql-field-count.html
 		logger::logger(__FUNCTION__, "Number of Affected Rows: " + to_string(mysql_affected_rows(this->mysqlConnection)));

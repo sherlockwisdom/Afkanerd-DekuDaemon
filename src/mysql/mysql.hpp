@@ -18,6 +18,7 @@ class MySQL {
 	string database;
 	
 	MYSQL* mysqlConnection;
+	MYSQL_RESULT* mysqlResult;
 
 	bool initialized = false;
 	
