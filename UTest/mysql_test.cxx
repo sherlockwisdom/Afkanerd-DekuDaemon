@@ -40,10 +40,17 @@ TEST(Mysql, connect) {
 	CHECK( mysql.connect() );
 }
 
+
+//TODO: Test = database table exist
+//TODO: Test = database columns exist
+//TODO: Test = create database table
+//TODO: Test = delete database table
+
 TEST(Mysql, query) {
 	MySQL mysql(mysqlServer, mysqlUser, mysqlPassword, mysqlDatabase);
 
-	string query = "CREATE TABLE MYSQL_TEST_DATABASE";
+	// string query = "CREATE TABLE MYSQL_TEST_DATABASE";
+	string query = "INSERT INTO 
 	map<string,string> output_results = mysql.query( query );
 }
 
