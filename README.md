@@ -3,6 +3,7 @@
 #### Dependencies
 - Make - https://www.tutorialspoint.com/unix_commands/make.htm
 - g++ 4.8 or later - https://courses.cs.washington.edu/courses/cse373/99au/unix/g++.html
+- Most development was done with mysql-dev 5.7 in ubuntu, should change that to 8.0
 > ###### ubuntu
 > `sudo apt install build-essential`
 > ###### manjaro
