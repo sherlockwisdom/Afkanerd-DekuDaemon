@@ -48,6 +48,7 @@ TEST(Mysql, connect) {
 
 TEST(Mysql, create_database_query) {
 	MySQL mysql(mysqlServer, mysqlUser, mysqlPassword, mysqlDatabase);
+	CHECK( mysql.connect() );
 
 	std::string query = "CREATE TABLE MYSQL_TEST_DATABASE";
 	map<string,vector<string>> output_results = mysql.query( query );
