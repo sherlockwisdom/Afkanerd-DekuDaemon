@@ -43,7 +43,8 @@ bool MySQL::set_database( string database ) {
 }
 
 bool MySQL::create_database( string database ) {
-
+	int created_database = mysql_create_db(this->mysqlConnection, database.c_str());
+	return created_database == 0 ? true : false;
 }
 
 bool MySQL::has_database( string database ) const {
@@ -60,7 +61,7 @@ bool MySQL::has_database( string database ) const {
 }
 
 bool MySQL::delete_database( string database ) {
-
+	return false;
 }
 
 string MySQL::get_server() const {
