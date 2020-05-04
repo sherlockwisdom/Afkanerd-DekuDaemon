@@ -43,7 +43,8 @@ bool MySQL::set_database( string database ) {
 }
 
 bool MySQL::create_database( string database ) {
-	auto created_database = mysql_create_db(this->mysqlConnection, database.c_str());
+	// auto created_database = mysql_create_db(this->mysqlConnection, database.c_str());
+	// TODO: Above function is deprecated!!
 	return created_database == 0 ? true : false;
 }
 
