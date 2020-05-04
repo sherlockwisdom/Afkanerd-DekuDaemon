@@ -29,6 +29,9 @@ class MySQL {
 	template<class T>
 	T query( string );
 
+	template<class A>
+	A query( string );
+
 	bool connect();
 	bool is_init() const;
 
