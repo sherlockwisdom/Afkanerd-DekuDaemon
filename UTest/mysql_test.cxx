@@ -64,7 +64,7 @@ TEST(Mysql_integration, has_database_pass ) {
 	bool has_database = mysql.has_database( mysqlDatabase );
 	bool delete_database = mysql.delete_database( mysqlDatabase );
 
-	CHECK( create_database_state == has_database == delete_database);
+	CHECK( create_database_state == true and has_database == true and delete_database == true);
 }
 
 TEST(Mysql_integration, has_database_fail ) {
@@ -82,6 +82,16 @@ TEST(Mysql_integration, create_database) {
 	bool has_database = mysql.has_database( mysqlDatabase );
 
 	CHECK( create_database_state == has_database );
+}
+
+TEST(Mysql_integration, delete_database) {
+	MySQL mysql(mysqlServer, mysqlUser, mysqlPassword);
+	CHECK( mysql.connect() );
+
+	bool delete_database_state = mysql.delete_database( mysqlDatabase );
+	bool has_database = mysql.has_database( mysqlDatabase );
+
+	CHECK( delete_database_state == true and  has_database == false );
 }
 
 int main( int argc, char** argv ) {
