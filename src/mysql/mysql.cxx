@@ -59,6 +59,10 @@ bool MySQL::has_database( string database ) const {
 	return database_found;
 }
 
+bool MySQL::delete_database( string database ) {
+
+}
+
 string MySQL::get_server() const {
 	return this->server;
 }
