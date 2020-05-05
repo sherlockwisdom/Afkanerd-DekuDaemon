@@ -58,8 +58,13 @@ bool MySQL::has_database( string database ) const {
 	if( list_of_databases == NULL ) return false;
 
 	bool database_found = false;
-	for(MYSQL_ROW mysqlRow = mysql_fetch_row( list_of_databases ); mysqlRow != NULL ; mysqlRow = mysql_fetch_row( list_of_databases ) ) {
-		logger::logger(__FUNCTION__, mysqlRow[0]);
+	int field_iterator = 0;
+	for(MYSQL_ROW mysqlRow = mysql_fetch_row( list_of_databases ); mysqlRow != NULL ; mysqlRow = mysql_fetch_row( list_of_databases ), ++field_iterator ) {
+		// logger::logger(__FUNCTION__, mysqlRow[0]);
+		if( database == mysqlRow[field_iterator] ) {
+			database_found = true;
+			break;
+		}
 	}
 
 	return database_found;
