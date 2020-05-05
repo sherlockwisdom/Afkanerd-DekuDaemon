@@ -207,12 +207,7 @@ void Modem::db_iterate_workload() {
 	string query = "UPDATE __DEKU__.MODEM_WORK_LOAD SET WORK_LOAD = WORK_LOAD + 1 WHERE DATE = DATE(NOW()) AND IMEI = '"+this->imei+"'";
 	logger::logger(__FUNCTION__, query);
 
-	try {
-		map<string, vector<string>> responds = this->mysqlConnection.query( query );
-	}
-	catch(std::exception& excep) {
-		//logger::logger(__FUNCTION__, "Exception says: " + excep.what());
-	}
+	bool responds = this->mysqlConnection.query( query );
 }
 
 bool Modem::db_set_working_state( WORKING_STATE working_state )  {
@@ -224,14 +219,11 @@ bool Modem::db_set_working_state( WORKING_STATE working_state )  {
 	else if( working_state == Modem::ACTIVE ) 
 		query = "UPDATE __DEKU__.MODEMS SET STATE = 'active' WHERE IMEI = '" + this->imei + "'";
 
-	logger::logger(__FUNCTION__, query);
+	// logger::logger(__FUNCTION__, query);
 
-	try {
-		map<string, vector<string>> responds = this->mysqlConnection.query( query );
-	}
-	catch(std::exception& excep) {
-		//logger::logger(__FUNCTION__, "Exception says: " + excep.what());
-	}
+	bool responds = this->mysqlConnection.query( query );
+
+	return responds;
 }
 
 void Modem::start() {
@@ -245,32 +237,27 @@ void Modem::start() {
 }
 
 int Modem::db_get_workload() { // TODO: Should take in date as a variable
-	int workload = 0;
+	int workload = -1;
 	string query = "SELECT * FROM __DEKU__.MODEM_WORK_LOAD WHERE IMEI='"+this->imei+"' AND DATE = DATE(NOW())";
-	logger::logger(__FUNCTION__, query);
+	// logger::logger(__FUNCTION__, query);
 
-	try {
-		map<string, vector<string>> responds = this->mysqlConnection.query( query );
-		if( !responds.empty() and responds.find("WORK_LOAD") != responds.end() and !responds["WORK_LOAD"].empty())
-			workload = atoi(responds["WORK_LOAD"][0].c_str());
-	}
-	catch(std::exception& excep) {
-		//logger::logger(__FUNCTION__, "Exception says: " + excep.what());
+	bool responds = this->mysqlConnection.query( query );
+	if( !responds ) {
+		return workload;
 	}
 
+	auto work_load = this->mysqlConnection.get_results();
+	if( !work_load.empty() and work_load.find("WORK_LOAD") != work_load.end() and !work_load["WORK_LOAD"].empty()) {
+		workload = atoi(work_load["WORK_LOAD"][0].c_str());
+	}
 	return workload;
 }
 
 void Modem::db_reset_workload() {
 	string query = "UPDATE __DEKU__.MODEM_WORK_LOAD SET WORK_LOAD = 0 WHERE IMEI='"+this->imei+"' AND DATE = DATE(NOW())";
-	logger::logger(__FUNCTION__, query);
+	// logger::logger(__FUNCTION__, query);
 
-	try {
-		map<string, vector<string>> responds = this->mysqlConnection.query( query );
-	}
-	catch(std::exception& excep) {
-		//logger::logger(__FUNCTION__, "Exception says: " + excep.what());
-	}
+	bool responds = this->mysqlConnection.query( query );
 }
 
 

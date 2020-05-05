@@ -42,11 +42,12 @@ void Modems::set_exhaust_count( int modem_exhaust_count ) {
 
 void Modems::db_insert_modems_workload( map<string, string> modem ) {
 	string select_workload_query = "SELECT * FROM __DEKU__.MODEM_WORK_LOAD WHERE IMEI='" + modem["imei"] + "' and DATE = DATE(NOW())";
-	logger::logger(__FUNCTION__, "Checking for modem in DB workload");
+	// logger::logger(__FUNCTION__, "Checking for modem in DB workload");
 
-	map<string, vector<string>> query_respond = this->mysqlConnection.query( select_workload_query );
+	bool responds = this->mysqlConnection.query( select_workload_query );
+	map<string, vector<string>> query_respond = this->mysqlConnection.get_results();
 	if(query_respond.empty()) {
-		logger::logger(__FUNCTION__, "Modem not in workload - Executing Insert queries");
+		// logger::logger(__FUNCTION__, "Modem not in workload - Executing Insert queries");
 		string replace_workload_query = "REPLACE INTO __DEKU__.MODEM_WORK_LOAD (IMEI, DATE) VALUES (\'" + modem["imei"] + "\', NOW())";
 		this->mysqlConnection.query( replace_workload_query );
 

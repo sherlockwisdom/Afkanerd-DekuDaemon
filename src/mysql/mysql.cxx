@@ -77,6 +77,9 @@ bool MySQL::delete_database( string database ) {
 	return drop_db_state;
 }
 
+bool MySQL::has_table( string table ) const {
+}
+
 string MySQL::get_server() const {
 	return this->server;
 }
