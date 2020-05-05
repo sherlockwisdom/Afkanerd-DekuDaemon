@@ -88,6 +88,10 @@ string MySQL::get_database() const {
 	return this->database;
 }
 
+string MySQL::get_error_message() const {
+	return this->error_message;
+}
+
 
 bool MySQL::is_init() const {
 	return this->initialized;

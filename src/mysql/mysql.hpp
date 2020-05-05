@@ -43,6 +43,7 @@ class MySQL {
 	string get_user() const;
 	string get_password() const;
 	string get_database() const;
+	string get_error_message() const;
 
 	bool set_database( string database );
 	bool has_database( string database ) const;
