@@ -80,16 +80,6 @@ TEST(Mysql_integration, create_database) {
 	CHECK( delete_database_state == true and has_database == false );
 }
 
-TEST(Mysql_integration, delete_database) {
-	MySQL mysql(mysqlServer, mysqlUser, mysqlPassword);
-	CHECK( mysql.connect() );
-
-	bool delete_database_state = mysql.delete_database( mysqlDatabase );
-	bool has_database = mysql.has_database( mysqlDatabase );
-
-	CHECK( delete_database_state == true and has_database == false );
-}
-
 TEST(Mysql_integration, has_table ) {
 }
 
