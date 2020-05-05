@@ -75,6 +75,8 @@ TEST(Mysql_integration, create_database) {
 	MySQL mysql(mysqlServer, mysqlUser, mysqlPassword);
 	CHECK( mysql.connect() );
 
+	if( mysql.has_database( mysqlDatabase ) )
+		mysql.delete_database( mysqlDatabase );
 	bool create_database_state = mysql.create_database( mysqlDatabase );
 	bool has_database = mysql.has_database( mysqlDatabase );
 	CHECK( create_database_state == true and has_database == true );
