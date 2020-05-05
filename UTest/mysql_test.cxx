@@ -45,10 +45,14 @@ TEST(Mysql_integration, set_database) {
 	MySQL mysql(mysqlServer, mysqlUser, mysqlPassword);
 	CHECK( mysql.connect() );
 
-	CHECK( mysql.set_database( mysqlDatabase ) == true );
+	// bool create_database_state = mysql.create_database( mysqlDatabase );
+	mysql.create_database( mysqlDatabase );
+	bool has_database_state = mysql.has_database( mysqlDatabase );
+	CHECK( has_database_state == true and mysql.set_database( mysqlDatabase ) == true );
 
-	std::string non_existent_database = "__DEKU__non_existent__";
-	CHECK( mysql.set_database( non_existent_database ) == false );
+	bool delete_database_state = mysql.delete_database( mysqlDatabase );
+	has_database_state = mysql.has_database( mysqlDatabase );
+	CHECK( delete_database_state == true and has_database_state == false and mysql.set_database( mysqlDatabase ) == false );
 }
 
 TEST(Mysql_integration, has_database ) {
