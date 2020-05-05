@@ -98,16 +98,18 @@ MySQL::MySQL() {
 }
 
 map<string,map<string,string> get_results() {
-	size_t num_fields = mysql_num_fields( mysqlResult );
+	map<string, vector<string>> query_results;
+
+	size_t num_fields = mysql_num_fields( this->mysqlResult );
 	logger::logger(__FUNCTION__, "Number of SQL results fields: " + to_string( num_fields ));
 
 	if( num_fields < 1 ) {
 		return query_results;
 	}
 
-	MYSQL_FIELD *fields = mysql_fetch_fields( mysqlResult );
-	for(MYSQL_ROW mysqlRow = mysql_fetch_row( mysqlResult ); mysqlRow != NULL ; mysqlRow = mysql_fetch_row( mysqlResult ) ) {
-		auto num_of_fields = mysql_num_fields( mysqlResult );
+	MYSQL_FIELD *fields = mysql_fetch_fields( this->mysqlResult );
+	for(MYSQL_ROW mysqlRow = mysql_fetch_row( this->mysqlResult ); mysqlRow != NULL ; mysqlRow = mysql_fetch_row( mysqlResult ) ) {
+		auto num_of_fields = mysql_num_fields( this->mysqlResult );
 		for( size_t i = 0; i< num_of_fields; ++i) {
 			string row_header = fields[i].name;
 			if( query_results.find( row_header ) != query_results.end() ) 
@@ -115,14 +117,13 @@ map<string,map<string,string> get_results() {
 			query_results[row_header].push_back( mysqlRow[i] );
 		}
 	}
-	mysql_free_result ( mysqlResult );
+	mysql_free_result ( this->mysqlResult );
 
 	return query_results;
 }
 
 bool MySQL::query( string query ) {
 	// logger::logger(__FUNCTION__, "Querying with: " + query );
-	map<string, vector<string>> query_results;
 	auto mysql_query_state = mysql_query( this->mysqlConnection, query.c_str() );
 
 	if( mysql_query_state != 0 ) {

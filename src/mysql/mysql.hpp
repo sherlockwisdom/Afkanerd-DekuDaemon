@@ -27,10 +27,11 @@ class MySQL {
 	MySQL();
 	~MySQL();
 
-	map<string,map<string,string>> query( string );
+	map<string,map<string,string>> get_results( string );
 
 	bool connect();
 	bool is_init() const;
+	bool query( string query );
 
 	//TODO: Put some getters and setters
 	void setConnectionDetails( string server, string user, string password, string database );
