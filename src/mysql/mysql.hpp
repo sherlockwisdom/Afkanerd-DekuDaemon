@@ -16,6 +16,7 @@ class MySQL {
 	string user;
 	string password;
 	string database;
+	string error_message;
 	
 	MYSQL* mysqlConnection;
 	MYSQL_RES* mysqlResult;
@@ -35,6 +36,7 @@ class MySQL {
 
 	//TODO: Put some getters and setters
 	void setConnectionDetails( string server, string user, string password, string database );
+	void set_error_message( const char* );
 	void close();
 
 	string get_server() const;

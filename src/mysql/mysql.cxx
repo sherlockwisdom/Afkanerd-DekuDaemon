@@ -122,13 +122,17 @@ map<string,vector<string>> MySQL::get_results() {
 	return query_results;
 }
 
+void MySQL::set_error_message( const char* error_msg ) {
+	this->error_message = string( error_msg, strlen( error_msg ) );
+}
+
 bool MySQL::query( string query ) {
 	// logger::logger(__FUNCTION__, "Querying with: " + query );
 	auto mysql_query_state = mysql_query( this->mysqlConnection, query.c_str() );
 
 	if( mysql_query_state != 0 ) {
 		const char *mysql_error_msg = mysql_error( this->mysqlConnection );
-		// TODO: set this to be gotten latter
+		this->set_error_message( mysql_error_msg );
 		// logger::logger(__FUNCTION__, "Failed to query database: " + string( mysql_error_msg, strlen(mysql_error_msg)), "stderr");
 		return false;
 	}
