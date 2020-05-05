@@ -47,7 +47,7 @@ bool MySQL::create_database( string database ) {
 	// TODO: Above function is deprecated!!
 	
 	string create_db_query = "CREATE DATABASE " + database;
-	bool create_db_state = this->query<bool>( create_db_query );
+	bool create_db_state = this->query( create_db_query );
 
 	return create_db_state;
 }
@@ -97,7 +97,7 @@ MySQL::MySQL() {
 	this->mysqlConnection = mysql_init( NULL );
 }
 
-map<string,map<string,string> get_results() {
+map<string,vector<string>> MySQL::get_results() {
 	map<string, vector<string>> query_results;
 
 	size_t num_fields = mysql_num_fields( this->mysqlResult );

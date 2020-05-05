@@ -18,7 +18,7 @@ class MySQL {
 	string database;
 	
 	MYSQL* mysqlConnection;
-	MYSQL_RESULT* mysqlResult;
+	MYSQL_RES* mysqlResult;
 
 	bool initialized = false;
 	
@@ -27,7 +27,7 @@ class MySQL {
 	MySQL();
 	~MySQL();
 
-	map<string,map<string,string>> get_results( string );
+	map<string,vector<string>> get_results();
 
 	bool connect();
 	bool is_init() const;
