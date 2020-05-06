@@ -44,7 +44,7 @@ bool USSD::initiate( string command ) {
 	string response = sys_calls::terminal_stdout( terminal_request );
 	if( response.empty()) return state;
 
-	this->response = response;
+	this->response = response.substr(std_response_header.size() +1, response.size());
 
 	// Doing this using strict methods of extracting the exact match of what the response should be
 	string std_header_loc = response.substr(0, std_response_header.size());
@@ -86,9 +86,11 @@ bool USSD::respond( string command ) {
 	string terminal_request = this->configs["DIR_SCRIPTS"] + "/modem_information_extraction.sh ussd_respond " + this->modem_index + " " + command;
 	//logger::logger(__FUNCTION__, terminal_request );
 
-	this->reply = sys_calls::terminal_stdout( terminal_request );
-	logger::logger(__FUNCTION__, this->reply);
-	string is_header = this->reply.substr(0, std_response_header.size());
+	string reply = sys_calls::terminal_stdout( terminal_request );
+	// logger::logger(__FUNCTION__, this->reply);
+	string is_header = reply.substr(0, std_response_header.size());
+
+	this->reply = reply.substr(std_response_header.size() +1, reply.size());
 	state = is_header == std_response_header;
 	return state;
 }
