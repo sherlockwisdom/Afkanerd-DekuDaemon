@@ -3,6 +3,8 @@ CFLAGS = -g -Wall -pthread -std=c++1z -I$(CPPUTEST_HOME)/include
 MYSQL_CONFIGS := $(shell mysql_config --cflags)
 MYSQL_LIBS := $(shell mysql_config --libs)
 
+ussd_test: ussd_test.cxx
+	$(CC) $(CFLAGS) -o $@.o $@.cxx -L$(CPPUTEST_HOME)/lib -lCppUTest -lCppUTestExt $(MYSQL_CONFIGS) $(MYSQL_LIBS)
 mysql_test: mysql_test.cxx
 	$(CC) $(CFLAGS) -o $@.o $@.cxx -L$(CPPUTEST_HOME)/lib -lCppUTest -lCppUTestExt $(MYSQL_CONFIGS) $(MYSQL_LIBS)
 

@@ -32,9 +32,12 @@ TEST_GROUP( USSD ) {};
 
 TEST( USSD, initiate ) {
 	string command = "135*8#"; // MTN CMR USSD to extract phonenumber
+	std::string modem_index = "0";
 
-	USSD ussd( configs );
-	ussd.initiate( command );
+	USSD ussd( modem_index, configs );
+	bool command_state = ussd.initiate( command );
+
+	CHECK( command_state );
 }
 
 int main( int argc, char** argv ) {
