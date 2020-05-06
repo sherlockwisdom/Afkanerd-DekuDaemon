@@ -16,6 +16,10 @@ void USSD::set_ussd_configs( map<string,string> configs ) {
 	this->configs = configs;
 }
 
+string USSD::get_response() const {
+	return this->response;
+}
+
 bool USSD::initiate( string command ) {
 	bool state = false;
 
@@ -23,6 +27,9 @@ bool USSD::initiate( string command ) {
 
 	logger::logger(__FUNCTION__, terminal_request );
 	string response = sys_calls::terminal_stdout( terminal_request );
+	if( response.empty()) return state;
+
+	this->response = response;
 
 	// Doing this using strict methods of extracting the exact match of what the response should be
 	string std_header_loc = response.substr(0, std_response_header.size());
