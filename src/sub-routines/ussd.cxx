@@ -54,9 +54,13 @@ bool USSD::initiate_series( vector<string> commands ) {
 	bool state = false;
 
 	bool command_state = this->initiate( commands[0] );
+	if( commands.size() == 1 )
+		return command_state;
+
 	string terminal_response = this->get_response();
 	if( terminal_response.empty()) return state;
 	this->response = terminal_response;
+	logger::logger(__FUNCTION__, response );
 
 	this->responses.insert(make_pair(commands[0], terminal_response));
 	for(auto command = commands.begin() + 1; command != commands.end(); ++command) {
@@ -75,6 +79,7 @@ string USSD::respond( string command ) {
 	//logger::logger(__FUNCTION__, terminal_request );
 
 	string response = sys_calls::terminal_stdout( terminal_request );
+	response = response.substr(0, std_response_header.size());
 	//logger::logger(__FUNCTION__, response);
 	return response;
 }

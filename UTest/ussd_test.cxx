@@ -54,6 +54,10 @@ TEST( USSD, initiate_series ) {
 	command.pop_back();
 	command_state = ussd.initiate_series( command );
 	CHECK( command_state == true);
+
+	command = {"*123#", "7"}; // MTN CMR USSD to change the network default language
+	command_state = ussd.initiate_series( command );
+	CHECK( command_state == true);
 }
 
 int main( int argc, char** argv ) {
