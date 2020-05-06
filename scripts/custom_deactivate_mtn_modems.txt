@@ -1,7 +1,0 @@
-[class ISP=MTN]
-execute=deactivate
-
-[EXECUTE deactivate]
-routine=ussd
-sh="*158*0#|1|1"
-

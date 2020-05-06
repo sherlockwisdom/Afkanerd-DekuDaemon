@@ -104,23 +104,10 @@ map<string, string> Modems::get_modem_details( map<string, string> modem ) {
 		{"index" , index } 
 	};
 
-	// logger::logger(__FUNCTION__, " ====> NEW MODEM DETECTED <======", "stdout", true);
-	// logger::logger(__FUNCTION__, "INDEX: " + details["index"], "stdout", true);
-	// logger::logger(__FUNCTION__, "IMEI: " + modem.first, "stdout", true);
-	// logger::logger(__FUNCTION__, "TYPE: " + details["type"], "stdout", true);
-	// logger::logger(__FUNCTION__, "ISP: " + details["operator_name"], "stdout", true);
-	// logger::logger(__FUNCTION__, "==================================", "stdout", true);
-	
 	return modem_details;
 }
 
 void Modems::begin_scanning() {
-	// TODO: set exhaust count as default in class declarations
-	// TODO: set sleep time as default in class declaractions
-	// TODO: set modem state PRODUCTION as default in class declarations
-
-	// TODO: If problem with IMEI in modem, change modem to un_plugged
-
 	while( 1 ) { //TODO: Use a variable to control this loop
 		// First it gets all availabe modems
 		logger::logger(__FUNCTION__, "Refreshing modem list..");
