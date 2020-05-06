@@ -28,9 +28,7 @@ class USSD {
 	multimap<string,string> initiate_series( vector<string>, vector<string>);
 
 	bool cancel();
-
-	template<typename TEMPLATED_RETURN_TYPE>
-	TEMPLATED_RETURN_TYPE initiate( string );
+	bool initiate( string command );
 
 	void set_ussd_configs( map<string, string> );
 };

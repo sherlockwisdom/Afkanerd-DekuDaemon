@@ -28,6 +28,7 @@ bool USSD::initiate( string command ) {
 	return state;
 }
 
+/*
 multimap<string,string> USSD::initiate_series( string command ) {
 	// TODO: Finish working on this, would aid a lot
 	vector<string> in_commands = helpers::string_split( command, '|', true);
@@ -69,7 +70,9 @@ multimap<string,string> USSD::initiate_series( string command ) {
 
 	return return_responses;
 }
+*/
 
+/*
 multimap<string,string> USSD::initiate_series( vector<string> commands ) {
 	multimap<string, string> responses;
 
@@ -87,7 +90,9 @@ multimap<string,string> USSD::initiate_series( vector<string> commands ) {
 
 	return responses;
 }
+*/
 
+/*
 multimap<string,string> USSD::initiate_series( vector<string> args, vector<string> commands ) {
 	multimap<string, string> responses;
 
@@ -114,6 +119,7 @@ multimap<string,string> USSD::initiate_series( vector<string> args, vector<strin
 
 	return responses;
 }
+*/
 
 string USSD::respond( string command ) {
 	string terminal_request = this->configs["DIR_SCRIPTS"] + "/modem_information_extraction.sh ussd_respond " + this->modem_index + " " + command;
