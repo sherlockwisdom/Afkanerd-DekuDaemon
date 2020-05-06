@@ -55,6 +55,12 @@ void Modems::db_insert_modems_workload( map<string, string> modem ) {
 	}
 }
 
+void Modems::multi_ussd( vector<Modem> modems, string command ) {
+	for(auto modem : modems ) {
+		modem.
+	}
+}
+
 void Modems::db_insert_modems( map<string,string> modem ) {
 	string insert_modem_query = "INSERT INTO __DEKU__.MODEMS (IMEI, TYPE, STATE, POWER) VALUES(\'"
 	+ modem["imei"]
@@ -88,6 +94,7 @@ map<string, string> Modems::get_modem_details( map<string, string> modem ) {
 	string index = modem["index"];
 	
 	// TODO: Abstract this to a better solution
+	// TODO: This is very important to work on
 	if(isp.find("COVID") != string::npos or isp.find("62401") != string::npos) 
 		isp = "MTN";
 	else if(isp.find("62402") != string::npos)

@@ -15,8 +15,8 @@ class USSD {
 	map<string,string> configs;
 	public:
 
-	USSD( map<string,string> );
-	USSD( string, map<string,string> );
+	USSD( map<string,string> configs );
+	USSD( string modem_index, map<string,string> configs );
 	USSD() {}
 	
 	string respond( string );
