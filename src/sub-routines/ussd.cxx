@@ -20,7 +20,17 @@ string USSD::get_response() const {
 	return this->response;
 }
 
+multimap<string,string> USSD::get_responses() const {
+	return this->responses;
+}
+
+void USSD::reset_state() {
+	this->response = "";
+	this->responses.clear();
+}
+
 bool USSD::initiate( string command ) {
+	this->reset_state(); // Else if it fails, it will provide the last successful reply
 	bool state = false;
 
 	string terminal_request = this->configs["DIR_SCRIPTS"] + "/modem_information_extraction.sh ussd_initiate " + this->modem_index + " " + command;
@@ -39,98 +49,26 @@ bool USSD::initiate( string command ) {
 	return state;
 }
 
-/*
-multimap<string,string> USSD::initiate_series( string command ) {
-	// TODO: Finish working on this, would aid a lot
-	vector<string> in_commands = helpers::string_split( command, '|', true);
-	multimap<string,string> return_responses;
-	for(size_t i = 0; i < in_commands.size(); ++i) {
-		string in_command = in_commands[i];
-		string con_command = "";
-		string condition;
-		if( in_command.find("{") != string::npos and in_command.find("}") != string::npos)  {
-			logger::logger(__FUNCTION__, "Initiating conditional USSD");
-			vector<string> conditions = helpers::string_split( in_command, '{', true );
-			// This assumes not space at the end, but since I don't read comments, I'd most probably forget
-			condition = helpers::string_split( conditions[1], '}')[0];
-			con_command = conditions[0];
+bool USSD::initiate_series( vector<string> commands ) {
+	this->reset_state();
+	bool state = false;
 
-			logger::logger(__FUNCTION__, "Condition = " + condition + ", for Command: " + con_command );
-		}
-		else 
-			con_command = in_command;
-		
-		string response = "";
-		if( i == 0) {
-			response = this->initiate<string>( con_command );
-		}
-		else {
-			response = this->respond( con_command );
-		}
+	bool command_state = this->initiate( commands[0] );
+	string terminal_response = this->get_response();
+	if( terminal_response.empty()) return state;
+	this->response = terminal_response;
 
-		return_responses.insert(make_pair( con_command, response ));
-		if( !condition.empty()) {
-			if( response.find( condition ) == string::npos ) {
-				logger::logger(__FUNCTION__, "Responds from USSD does not match required, EXITING", "stderr");
-				this->cancel();
-				return return_responses;
-			}
-		}
-
-	}
-
-	return return_responses;
-}
-*/
-
-/*
-multimap<string,string> USSD::initiate_series( vector<string> commands ) {
-	multimap<string, string> responses;
-
-	if( commands.empty() ) return responses;
-	
-	string terminal_response = this->initiate<string>( commands[0] );
-	if( terminal_response.empty()) return responses;
-
-	responses.insert(make_pair(commands[0], terminal_response));
+	this->responses.insert(make_pair(commands[0], terminal_response));
 	for(auto command = commands.begin() + 1; command != commands.end(); ++command) {
+		state = false;
 		terminal_response = this->respond( *command );
 		if( terminal_response.empty()) break;
-		responses.insert(make_pair(*command, terminal_response));
+		this->responses.insert(make_pair(*command, terminal_response));
+		state = true;
 	}
 
-	return responses;
+	return state;
 }
-*/
-
-/*
-multimap<string,string> USSD::initiate_series( vector<string> args, vector<string> commands ) {
-	multimap<string, string> responses;
-
-	if( args.empty()) return responses;
-	if( commands.empty() ) return responses;
-
-	size_t args_counter = 0;
-	for( auto& command : commands ) {
-		if( command == "%%" ) {
-			command = args[args_counter];
-			++args_counter;
-		}
-	}
-	
-	string terminal_response = this->initiate<string>( commands[0] );
-	if( terminal_response.empty()) return responses;
-
-	responses.insert(make_pair(commands[0], terminal_response));
-	for(auto command = commands.begin() + 1; command != commands.end(); ++command) {
-		terminal_response = this->respond( *command );
-		if( terminal_response.empty()) break;
-		responses.insert(make_pair(*command, terminal_response));
-	}
-
-	return responses;
-}
-*/
 
 string USSD::respond( string command ) {
 	string terminal_request = this->configs["DIR_SCRIPTS"] + "/modem_information_extraction.sh ussd_respond " + this->modem_index + " " + command;
