@@ -43,6 +43,19 @@ TEST( USSD, initiate ) {
 	CHECK( command_state == true);
 }
 
+TEST( USSD, initiate_series ) {
+	std::vector<std::string> command {"*135*8#", "1"};
+	std::string modem_index = "0";
+
+	USSD ussd( modem_index, configs );
+	bool command_state = ussd.initiate_series( command );
+	CHECK( command_state == false);
+
+	command.pop_back();
+	command_state = ussd.initiate_series( command );
+	CHECK( command_state == true);
+}
+
 int main( int argc, char** argv ) {
 	// Testing to see how the recording works in this aspect
 	return CommandLineTestRunner::RunAllTests(argc, argv);
