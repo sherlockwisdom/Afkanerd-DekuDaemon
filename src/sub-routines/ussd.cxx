@@ -20,11 +20,15 @@ bool USSD::initiate( string command ) {
 	bool state = false;
 
 	string terminal_request = this->configs["DIR_SCRIPTS"] + "/modem_information_extraction.sh ussd_initiate " + this->modem_index + " " + command;
-	//logger::logger(__FUNCTION__, terminal_request );
+
+	logger::logger(__FUNCTION__, terminal_request );
 	string response = sys_calls::terminal_stdout( terminal_request );
 
 	// Doing this using strict methods of extracting the exact match of what the response should be
-	state = response.find( this->std_response_header ) != string::npos ? true : false;
+	string std_header_loc = response.substr(0, std_response_header.size());
+	logger::logger(__FUNCTION__, std_header_loc);
+	// state = response.find( this->std_response_header ) != string::npos ? true : false;
+	state = std_header_loc == std_response_header;
 	return state;
 }
 
