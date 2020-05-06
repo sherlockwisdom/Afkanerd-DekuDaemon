@@ -34,6 +34,7 @@ void USSD::reset_state() {
 }
 
 bool USSD::initiate( string command ) {
+	this->cancel();
 	this->reset_state(); // Else if it fails, it will provide the last successful reply
 	bool state = false;
 
@@ -54,7 +55,6 @@ bool USSD::initiate( string command ) {
 }
 
 bool USSD::initiate_series( vector<string> commands ) {
-	this->reset_state();
 	bool state = false;
 
 	bool command_state = this->initiate( commands[0] );
@@ -87,6 +87,7 @@ bool USSD::respond( string command ) {
 	//logger::logger(__FUNCTION__, terminal_request );
 
 	this->reply = sys_calls::terminal_stdout( terminal_request );
+	logger::logger(__FUNCTION__, this->reply);
 	string is_header = this->reply.substr(0, std_response_header.size());
 	state = is_header == std_response_header;
 	return state;
