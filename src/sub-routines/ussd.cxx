@@ -16,27 +16,16 @@ void USSD::set_ussd_configs( map<string,string> configs ) {
 	this->configs = configs;
 }
 
-template<typename TEMPLATED_RETURN_TYPE>
-TEMPLATED_RETURN_TYPE USSD::initiate( string command ) {
-	string condition;
-	TEMPLATED_RETURN_TYPE _return;
-
+bool USSD::initiate( string command ) {
+	bool state = false;
 
 	string terminal_request = this->configs["DIR_SCRIPTS"] + "/modem_information_extraction.sh ussd_initiate " + this->modem_index + " " + command;
 	//logger::logger(__FUNCTION__, terminal_request );
-
 	string response = sys_calls::terminal_stdout( terminal_request );
 
-	//Checking if condition is requested, and that's based on the return type
-	if( std::is_same_v<TEMPLATED_RETURN_TYPE, bool> ) {
-		_return = response.find(condition) != string::npos ? true : false;
-	}
-	else {
-		_return = response;
-	}
-
-	//logger::logger(__FUNCTION__, response);
-	return response;
+	// Doing this using strict methods of extracting the exact match of what the response should be
+	state = response.find( this->std_response_header ) != string::npos ? true : false;
+	return state;
 }
 
 multimap<string,string> USSD::initiate_series( string command ) {

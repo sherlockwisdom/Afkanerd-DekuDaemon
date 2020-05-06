@@ -11,6 +11,7 @@ using namespace std;
 class USSD {
 	protected:
 	string modem_index;
+	string std_response_header = "USSD session initiated; new reply from network:";
 	
 	map<string,string> configs;
 	public:
