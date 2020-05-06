@@ -36,8 +36,11 @@ TEST( USSD, initiate ) {
 
 	USSD ussd( modem_index, configs );
 	bool command_state = ussd.initiate( command );
+	CHECK( command_state == false);
 
-	CHECK( command_state );
+	command = "*135*8#";
+	command_state = ussd.initiate( command );
+	CHECK( command_state == true);
 }
 
 int main( int argc, char** argv ) {
