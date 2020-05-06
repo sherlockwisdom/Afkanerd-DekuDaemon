@@ -82,16 +82,17 @@ bool USSD::initiate_series( vector<string> commands ) {
 
 bool USSD::respond( string command ) {
 	// this->reset_state();
+	this->reply = "";
 	bool state = false;
 	string terminal_request = this->configs["DIR_SCRIPTS"] + "/modem_information_extraction.sh ussd_respond " + this->modem_index + " " + command;
 	//logger::logger(__FUNCTION__, terminal_request );
 
 	string reply = sys_calls::terminal_stdout( terminal_request );
-	// logger::logger(__FUNCTION__, this->reply);
-	string is_header = reply.substr(0, std_response_header.size());
+	// logger::logger(__FUNCTION__, reply);
+	string is_header = reply.substr(0, std_reply_header.size());
 
-	this->reply = reply.substr(std_response_header.size() +1, reply.size());
-	state = is_header == std_response_header;
+	this->reply = reply.substr(std_reply_header.size() +1, reply.size());
+	state = is_header == std_reply_header;
 	return state;
 }
 

@@ -14,6 +14,7 @@ class USSD {
 	string response;
 	string reply;
 	string std_response_header = "USSD session initiated; new reply from network:";
+	string std_reply_header = "response successfully sent in USSD session; new reply from network:";
 	
 	map<string,string> configs;
 	multimap<string,string> responses;
