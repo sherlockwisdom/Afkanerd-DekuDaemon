@@ -35,7 +35,7 @@ class Modems {
 		vector<string> getAllISP();
 		vector<string> getAllIMEI();
 
-		vector<Modem*> find_modem_type( string modem_type );
+		vector<Modem*> find_modem_type( string modem_isp );
 
 		vector<Modem*> getAllModems();
 

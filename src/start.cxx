@@ -60,7 +60,7 @@ void request_cleanse( map<string,string> configs ) {
 
 map<string,string> parse_ussd_request_script( string request_script ) {
 	//sample looks like 
-	//type=MTN,retry_count=3,command=*155#
+	//isp=MTN,retry_count=3,command=*155#
 	
 	map<string,string> parsed_commands;
 	
@@ -69,8 +69,8 @@ map<string,string> parse_ussd_request_script( string request_script ) {
 		vector<string> split_token = helpers::string_split( token, '=' );
 		if( split_token.size() < 1 ) return map<string,string>{};
 
-		if( split_token[0] == "type") {
-			parsed_commands.insert(make_pair("type", split_token[1]));
+		if( split_token[0] == "isp") {
+			parsed_commands.insert(make_pair("isp", split_token[1]));
 		}
 		else if( split_token[0] == "retry_count") {
 			parsed_commands.insert(make_pair("retry_count", split_token[1]));
@@ -283,10 +283,11 @@ int main(int argc, char** argv) {
 			logger::logger(__FUNCTION__, "Setting retry count to 0", "stdout", true);
 			ussd_only_script.insert(make_pair("retry_count", "0"));
 		}
-		vector<Modem*> available_modems = modems.find_modem_type(ussd_only_script["type"]);
+		vector<Modem*> available_modems = modems.find_modem_type(ussd_only_script["isp"]);
+		logger::logger(__FUNCTION__, "Available Modems: " + to_string( available_modems.size()), "stdout", true);
 
 		int retry_count = 0;
-		for( size_t it_modems = 0; it_modems != available_modems.size(); ++it_modems) {
+		for( size_t it_modems = 0; it_modems < available_modems.size(); ++it_modems) {
 			vector<string> commands = helpers::string_split( ussd_only_script["command"], '|' );
 			bool ussd_state = available_modems[it_modems]->initiate_series( commands );
 			if( !ussd_state and retry_count <= atoi(((string)(ussd_only_script["retry_count"])).c_str()) ) {
@@ -294,10 +295,10 @@ int main(int argc, char** argv) {
 				++retry_count;
 				continue;
 			}
-			else {
-				++it_modems;
-				retry_count = 0;
-			}
+
+			logger::logger(__FUNCTION__, available_modems[it_modems]->get_response());
+			++it_modems;
+			retry_count = 0;
 		}
 
 		return 0;

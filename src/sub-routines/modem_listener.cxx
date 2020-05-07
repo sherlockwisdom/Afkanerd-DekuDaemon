@@ -32,13 +32,13 @@ Modems::Modems( map<string,string> configs, STATE state ) {
 	logger::logger(__FUNCTION__, " - MYSQL Connection Established!", "stdout", true);
 }
 
-vector<Modem*> Modems::find_modem_type( string modem_type ) {
+vector<Modem*> Modems::find_modem_type( string modem_isp ) {
 	auto modems = this->get_available_modems();
 	vector<Modem*> available_modems;
 
 	for(auto _modem : modems ) {
 		map<string,string> details = _modem.second;
-		if( details["type"] != modem_type ) continue;
+		if( details["ISP"] != modem_isp ) continue;
 		available_modems.push_back( new Modem( details["imei"], details["isp"], details["type"], details["index"], this->configs));
 	}
 
