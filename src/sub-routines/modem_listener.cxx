@@ -32,6 +32,20 @@ Modems::Modems( map<string,string> configs, STATE state ) {
 	logger::logger(__FUNCTION__, " - MYSQL Connection Established!", "stdout", true);
 }
 
+vector<Modem> Modems::find_modem_type( string modem_type ) {
+	auto modems = this->get_available_modems();
+	vector<Modem> available_modems;
+
+	for(auto _modem : modems ) {
+		map<string,string> details = _modem.second;
+		if( details["type"] != modem_type ) continue;
+		Modem modem( details["imei"], details["isp"], details["type"], details["index"], this->configs);
+		available_modems.push_back(modem);
+	}
+
+	return available_modems;
+}
+
 void Modems::set_modem_sleep_time( int sleep_time ) {
 	this->modem_sleep_time = sleep_time;
 }
@@ -52,12 +66,6 @@ void Modems::db_insert_modems_workload( map<string, string> modem ) {
 		this->mysqlConnection.query( replace_workload_query );
 
 		return;
-	}
-}
-
-void Modems::multi_ussd( vector<Modem> modems, string command ) {
-	for(auto modem : modems ) {
-		modem.
 	}
 }
 

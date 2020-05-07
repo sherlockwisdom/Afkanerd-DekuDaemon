@@ -88,7 +88,6 @@ int main(int argc, char** argv) {
 	Modems::STATE RUNNING_MODE = Modems::TEST;
 	string PATH_SYS_FILE;
 	string custom_filename;
-	string ussd_only_script;
 
 	int quantity_to_generate = 0;
 	int sleep_time = 10; // 10 seconds
@@ -271,17 +270,18 @@ int main(int argc, char** argv) {
 	}
 
 	if( !ussd_only_script.empty()) {
-		vector<Modem> modems = modems.find_modem_type(ussd_only_script["type"]);
+		vector<Modem> available_modems = modems.find_modem_type(ussd_only_script["type"]);
 
 		int retry_count = 0;
-		for( auto modem : modems ) {
-			bool ussd_state = modem.initiate_series( ussd_only_script["command"] );
+		for( auto it_modems = available_modems.begin(); it_modems != available_modems.end(); ++it_modems) {
+			vector<string> commands = helpers::string_split( ussd_only_script["command"], '|' );
+			bool ussd_state = it_modems->initiate_series( commands );
 			if( !ussd_state and retry_count <= atoi(((string)(ussd_only_script["retry_count"])).c_str()) ) {
-				logger::logger(__FUNCTION__, modem.getInfo() + "| " + modem.get_reply());
+				logger::logger(__FUNCTION__, it_modems->getInfo() + "| " + it_modems->get_reply());
 				++retry_count;
 				continue;
 			}
-			else ++modem;
+			else ++it_modems;
 		}
 
 		return 0;
