@@ -275,6 +275,10 @@ int main(int argc, char** argv) {
 
 	if( !ussd_only_script.empty()) {
 		logger::logger(__FUNCTION__, "EXECUTING USSD SCRIPTS", "stdout", true);
+		if( ussd_only_script.find("command") == ussd_only_script.end()) {
+			logger::logger(__FUNCTION__, "No Command available", "stdout", true);
+			return 1;
+		}
 		vector<Modem*> available_modems = modems.find_modem_type(ussd_only_script["type"]);
 
 		int retry_count = 0;
