@@ -45,6 +45,8 @@ bool USSD::initiate( string command ) {
 	if( response.empty()) return state;
 
 	this->response = response.substr(std_response_header.size() +1, response.size());
+	if( this->response[0] == '\'' ) this->response.erase(0,1);
+	if( this->response[this->response.size() -1] == '\'') this->response.erase(this->response.size() -1, 1);
 
 	// Doing this using strict methods of extracting the exact match of what the response should be
 	string std_header_loc = response.substr(0, std_response_header.size());
