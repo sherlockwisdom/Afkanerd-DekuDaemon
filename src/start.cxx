@@ -169,6 +169,25 @@ int main(int argc, char** argv) {
 			else if((string)argv[i] == "--stat-only") {
 				stat_only = true;
 			}
+
+			else if((string)argv[i] == "--ussd-only") {
+				if(i+1 < argc) {
+					++i;
+
+					string check_script = ((string)argv[i]).substr(0, ((string)("--script=")).size());
+					if(check_script != "--script="){
+						logger::logger(__FUNCTION__, "--script= Not found in args", "stderr", true);
+						return 1;
+					}
+					//Parse script
+					//Execute for all modems which fit type
+				}
+				else {
+					logger::logger(__FUNCTION__, "Incomplete args\nUsage: --ussd-only --script", "stderr", true);
+					return 1;
+				}
+
+			}
 		}
 	}
 
