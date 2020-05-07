@@ -58,6 +58,27 @@ void request_cleanse( map<string,string> configs ) {
 	}
 }
 
+map<string,string> parse_ussd_request_script( string request_script ) {
+	//sample looks like 
+	//type=MTN,retry_count=3,command=*155#
+	
+	vector<string> tokens = helpers::string_split( request_script );
+	for( auto token : tokens ) {
+		vector<string> split_token = helpers::string_split( token );
+		if( split_token.size() < 1 ) return map<string,string>{};
+
+		if( split_token[0] == "type") {
+			parsed_commands.insert(make_pair("type", split_token[1]));
+		}
+		else if( split_token[0] == "retry_count") {
+			parsed_commands.insert(make_pair("retry_count", split_token[1]));
+		}
+		else if( split_token[0] == "command") {
+			parsed_commands.insert(make_pair("command", split_token[1]));
+		}
+	}
+}
+
 int main(int argc, char** argv) {
 	// Default values
 	Modems::STATE RUNNING_MODE = Modems::TEST;
@@ -70,6 +91,8 @@ int main(int argc, char** argv) {
 	int exhaust_count = 3; // 10 seconds
 
 	bool cleanse = false, cleanse_only = false, stat_only = false;
+
+	map<string,string> ussd_only_script;
 
 	if(argc < 2 ) {
 		logger::logger(__FUNCTION__, "Usage: -c <path_to_config_file>", "stderr", true);
@@ -181,7 +204,8 @@ int main(int argc, char** argv) {
 						return 1;
 					}
 					//Parse script
-					ussd_only_script = ((string)argv[i]).substr(((string)("--script=")).size(), ((string)(argv[i])).size());
+					string script_request = ((string)argv[i]).substr(((string)("--script=")).size(), ((string)(argv[i])).size());
+					ussd_only_script = parse_ussd_request_script( script_request );
 				}
 				else {
 					logger::logger(__FUNCTION__, "Incomplete args\nUsage: --ussd-only --script", "stderr", true);
@@ -250,10 +274,13 @@ int main(int argc, char** argv) {
 			bool ussd_state = modem.initiate_series( ussd_only_script["command"] );
 			if( !ussd_state and retry_count <= atoi(((string)(ussd_only_script["retry_count"])).c_str()) ) {
 				logger::logger(__FUNCTION__, modem.getInfo() + "| " + modem.get_reply());
+				++retry_count;
 				continue;
 			}
 			else ++modem;
 		}
+
+		return 0;
 	}
 
 	
