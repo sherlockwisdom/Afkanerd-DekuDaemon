@@ -63,6 +63,7 @@ int main(int argc, char** argv) {
 	Modems::STATE RUNNING_MODE = Modems::TEST;
 	string PATH_SYS_FILE;
 	string custom_filename;
+	string ussd_only_script;
 
 	int quantity_to_generate = 0;
 	int sleep_time = 10; // 10 seconds
@@ -180,7 +181,7 @@ int main(int argc, char** argv) {
 						return 1;
 					}
 					//Parse script
-					//Execute for all modems which fit type
+					ussd_only_script = ((string)argv[i]).substr(((string)("--script=")).size(), ((string)(argv[i])).size());
 				}
 				else {
 					logger::logger(__FUNCTION__, "Incomplete args\nUsage: --ussd-only --script", "stderr", true);
@@ -239,6 +240,20 @@ int main(int argc, char** argv) {
 			logger::logger("> STAT: ", modem.getInfo(), "stdout", true);
 		}
 		return 0;
+	}
+
+	if( !ussd_only_script.empty()) {
+		vector<Modem> modems = modems.find_modem_type(ussd_only_script["type"]);
+
+		int retry_count = 0;
+		for( auto modem : modems ) {
+			bool ussd_state = modem.initiate_series( ussd_only_script["command"] );
+			if( !ussd_state and retry_count <= atoi(((string)(ussd_only_script["retry_count"])).c_str()) ) {
+				logger::logger(__FUNCTION__, modem.getInfo() + "| " + modem.get_reply());
+				continue;
+			}
+			else ++modem;
+		}
 	}
 
 	
