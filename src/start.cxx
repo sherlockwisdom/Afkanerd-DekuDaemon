@@ -270,18 +270,22 @@ int main(int argc, char** argv) {
 	}
 
 	if( !ussd_only_script.empty()) {
-		vector<Modem> available_modems = modems.find_modem_type(ussd_only_script["type"]);
+		vector<Modem*> available_modems = modems.find_modem_type(ussd_only_script["type"]);
 
 		int retry_count = 0;
 		for( auto it_modems = available_modems.begin(); it_modems != available_modems.end(); ++it_modems) {
 			vector<string> commands = helpers::string_split( ussd_only_script["command"], '|' );
-			bool ussd_state = it_modems->initiate_series( commands );
+			Modem modem( it_modems );
+			bool ussd_state = *it_modems.initiate_series( commands );
 			if( !ussd_state and retry_count <= atoi(((string)(ussd_only_script["retry_count"])).c_str()) ) {
-				logger::logger(__FUNCTION__, it_modems->getInfo() + "| " + it_modems->get_reply());
+				logger::logger(__FUNCTION__, it_modems.getInfo() + "| " + it_modems.get_reply());
 				++retry_count;
 				continue;
 			}
-			else ++it_modems;
+			else {
+				++it_modems;
+				retry_count = 0;
+			}
 		}
 
 		return 0;
