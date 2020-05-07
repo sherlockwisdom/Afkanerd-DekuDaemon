@@ -279,6 +279,10 @@ int main(int argc, char** argv) {
 			logger::logger(__FUNCTION__, "No Command available", "stdout", true);
 			return 1;
 		}
+		if( ussd_only_script.find("retry_count") == ussd_only_script.end()) {
+			logger::logger(__FUNCTION__, "Setting retry count to 0", "stdout", true);
+			ussd_only_script.insert(make_pair("retry_count", "0"));
+		}
 		vector<Modem*> available_modems = modems.find_modem_type(ussd_only_script["type"]);
 
 		int retry_count = 0;
