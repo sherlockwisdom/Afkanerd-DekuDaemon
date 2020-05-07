@@ -64,7 +64,7 @@ map<string,string> parse_ussd_request_script( string request_script ) {
 	
 	map<string,string> parsed_commands;
 	
-	vector<string> tokens = helpers::string_split( request_script );
+	vector<string> tokens = helpers::string_split( request_script, ',');
 	for( auto token : tokens ) {
 		vector<string> split_token = helpers::string_split( token, '=' );
 		if( split_token.size() < 1 ) return map<string,string>{};
