@@ -209,6 +209,10 @@ int main(int argc, char** argv) {
 					//Parse script
 					string script_request = ((string)argv[i]).substr(((string)("--script=")).size(), ((string)(argv[i])).size());
 					ussd_only_script = parse_ussd_request_script( script_request );
+					if( ussd_only_script.empty() ) {
+						logger::logger(__FUNCTION__, "Script cannot be empty", "stderr", true);
+						return 1;
+					}
 				}
 				else {
 					logger::logger(__FUNCTION__, "Incomplete args\nUsage: --ussd-only --script", "stderr", true);
@@ -270,6 +274,7 @@ int main(int argc, char** argv) {
 	}
 
 	if( !ussd_only_script.empty()) {
+		logger::logger(__FUNCTION__, "EXECUTING USSD SCRIPTS", "stdout", true);
 		vector<Modem*> available_modems = modems.find_modem_type(ussd_only_script["type"]);
 
 		int retry_count = 0;
@@ -277,7 +282,7 @@ int main(int argc, char** argv) {
 			vector<string> commands = helpers::string_split( ussd_only_script["command"], '|' );
 			bool ussd_state = available_modems[it_modems]->initiate_series( commands );
 			if( !ussd_state and retry_count <= atoi(((string)(ussd_only_script["retry_count"])).c_str()) ) {
-				logger::logger(__FUNCTION__, available_modems[it_modems]->getInfo() + "| " + available_modems[it_modems]->get_reply());
+				logger::logger(__FUNCTION__, available_modems[it_modems]->getInfo() + "| " + available_modems[it_modems]->get_reply(), "stderr", true);
 				++retry_count;
 				continue;
 			}
