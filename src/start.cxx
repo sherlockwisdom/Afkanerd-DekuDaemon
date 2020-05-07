@@ -62,9 +62,11 @@ map<string,string> parse_ussd_request_script( string request_script ) {
 	//sample looks like 
 	//type=MTN,retry_count=3,command=*155#
 	
+	map<string,string> parsed_commands;
+	
 	vector<string> tokens = helpers::string_split( request_script );
 	for( auto token : tokens ) {
-		vector<string> split_token = helpers::string_split( token );
+		vector<string> split_token = helpers::string_split( token, '=' );
 		if( split_token.size() < 1 ) return map<string,string>{};
 
 		if( split_token[0] == "type") {
@@ -77,6 +79,8 @@ map<string,string> parse_ussd_request_script( string request_script ) {
 			parsed_commands.insert(make_pair("command", split_token[1]));
 		}
 	}
+
+	return parsed_commands;
 }
 
 int main(int argc, char** argv) {
