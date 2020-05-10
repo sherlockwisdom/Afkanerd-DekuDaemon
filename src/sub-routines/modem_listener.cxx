@@ -147,8 +147,16 @@ void Modems::begin_scanning( bool sms_listening = false) {
 
 				// Forth Starts the modems and let is be free
 				logger::logger(__FUNCTION__, this->available_modems[modem.first]->getInfo() + " Starting...");
-				std::thread tr_modem = std::thread(&Modem::start, std::ref(this->available_modems[modem.first]));
+				auto active_modem = this->available_modems[modem.first];
+				std::thread tr_modem = std::thread(&Modem::start, std::ref(active_modem));
 				tr_modem.detach();
+
+				// Check if sms is required here
+				if( sms_listening ) {
+					logger::logger(__FUNCTION__, "SMS LISTENER SET TO START");
+					std::thread tr_modem_sms_listener = std::thread(&Modem::modem_sms_listener, std::ref(active_modem));
+					tr_modem_sms_listener.detach();
+				}
 
 				// Optional Fith, tries storing the modems in a sql database
 				try {
