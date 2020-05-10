@@ -94,17 +94,19 @@ TEST(Mysql_integration, has_table ) {
 	MySQL mysql(mysqlServer, mysqlUser, mysqlPassword);
 	CHECK( mysql.connect() );
 
-	if( mysql.has_database( mysqlDatabase ) )
-		mysql.delete_database( mysqlDatabase );
-	bool create_database_state = mysql.create_database( mysqlDatabase );
-	bool has_database = mysql.has_database( mysqlDatabase );
-	CHECK( create_database_state == true and has_database == true );
+	if( !mysql.has_database( mysqlDatabase ) ) {
+		mysql.create_database( mysqlDatabase );
+		bool create_database_state = mysql.create_database( mysqlDatabase );
+		bool has_database = mysql.has_database( mysqlDatabase );
+		CHECK( create_database_state == true and has_database == true );
+	}
 
+	bool create_table = mysql.create_table( mysqlTable, mysqlTable_columnTypes );
 	bool has_table = mysql.has_table( mysqlTable );
-	CHECK( has_table == true );
+	CHECK( create_table == true and has_table == true );
 
 	bool delete_database_state = mysql.delete_database( mysqlDatabase );
-	has_database = mysql.has_database( mysqlDatabase );
+	bool has_database = mysql.has_database( mysqlDatabase );
 	CHECK( delete_database_state == true and has_database == false );
 }
 
@@ -124,7 +126,7 @@ TEST(Mysql_integration, create_table) {
 
 	bool create_table = mysql.create_table( mysqlTable, mysqlTable_columnTypes );
 	has_table = mysql.has_table( mysqlTable );
-	CHECK( create_table == true and has_table == false );
+	CHECK( create_table == true and has_table == true );
 
 	bool delete_table_state = mysql.delete_table( mysqlTable );
 	has_table = mysql.has_table( mysqlTable );
