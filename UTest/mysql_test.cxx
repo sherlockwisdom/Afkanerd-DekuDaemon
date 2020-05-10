@@ -92,7 +92,7 @@ TEST(Mysql_integration, create_database) {
 }
 
 TEST(Mysql_integration, has_table ) {
-	MySQL mysql(mysqlServer, mysqlUser, mysqlPassword);
+	MySQL mysql(mysqlServer, mysqlUser, mysqlPassword, mysqlDatabase);
 	CHECK( mysql.connect() );
 
 	if( !mysql.has_database( mysqlDatabase ) ) {
@@ -111,7 +111,7 @@ TEST(Mysql_integration, has_table ) {
 }
 
 TEST(Mysql_integration, create_table) {
-	MySQL mysql(mysqlServer, mysqlUser, mysqlPassword);
+	MySQL mysql(mysqlServer, mysqlUser, mysqlPassword, mysqlDatabase);
 	CHECK( mysql.connect() );
 
 	if( !mysql.has_database( mysqlDatabase ) ) {
@@ -134,7 +134,7 @@ TEST(Mysql_integration, create_table) {
 }
 
 TEST(Mysql_integration, delete_table) {
-	MySQL mysql(mysqlServer, mysqlUser, mysqlPassword);
+	MySQL mysql(mysqlServer, mysqlUser, mysqlPassword, mysqlDatabase);
 	CHECK( mysql.connect() );
 
 	if( !mysql.has_database( mysqlDatabase ) ) {
