@@ -89,7 +89,7 @@ bool MySQL::create_table( string column_name, string column_types ) {
 
 	if( !create_state ) {
 		// logger::logger_errno( errno );
-		logger::logger(__FUNCTION__, this->get_error_message());
+		logger::logger(__FUNCTION__, this->get_error_message(), "stderr");
 	}
 
 	return create_state;
