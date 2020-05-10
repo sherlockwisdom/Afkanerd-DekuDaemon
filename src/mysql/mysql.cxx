@@ -55,7 +55,10 @@ bool MySQL::create_database( string database ) {
 bool MySQL::has_table( string table ) const {
 	auto list_of_tables = mysql_list_tables(this->mysqlConnection, table.c_str());
 
-	if( list_of_tables == NULL ) return false;
+	if( list_of_tables == NULL ) {
+		logger::logger_errno( errno );
+		return false;
+	}
 
 	bool table_found = false;
 	int field_iterator = 0;
@@ -80,8 +83,14 @@ bool MySQL::delete_table( string table ) {
 
 bool MySQL::create_table( string column_name, string column_types ) {
 	string create_query = "CREATE TABLE " + column_name + " (" + column_types + ")";
+	logger::logger(__FUNCTION__, "Creating table: " + create_query );
 
 	bool create_state = this->query( create_query );
+
+	if( !create_state ) {
+		// logger::logger_errno( errno );
+		logger::logger(__FUNCTION__, this->get_error_message());
+	}
 
 	return create_state;
 }
