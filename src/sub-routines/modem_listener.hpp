@@ -23,7 +23,7 @@ class Modems {
 		Modems( map<string,string> configs, STATE state);
 		Modems();
 
-		void begin_scanning();
+		void begin_scanning( bool sms_listening);
 		void startAllModems();
 		void set_modem_sleep_time( int );
 		void set_exhaust_count( int );
