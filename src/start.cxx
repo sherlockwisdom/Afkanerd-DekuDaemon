@@ -320,7 +320,7 @@ int main(int argc, char** argv) {
 
 
 	// TODO: Pass all configs using refreences, so changes get loaded in real time
-	std::thread tr_modems_scanner = std::thread(&Modems::begin_scanning, request_listening, sms_only, std::ref(modems));
+	std::thread tr_modems_scanner = std::thread(&Modems::begin_scanning, std::ref(modems), request_listening, sms_only);
 	
 	std::thread tr_request_listeners = std::thread(request_distribution_listener::request_distribution_listener, configs);
 	// tr_modem_listeners.join();
