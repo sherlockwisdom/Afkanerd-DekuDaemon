@@ -93,7 +93,10 @@ int main(int argc, char** argv) {
 	int sleep_time = 10; // 10 seconds
 	int exhaust_count = 3; // 10 seconds
 
-	bool cleanse = false, cleanse_only = false, stat_only = false;
+	bool cleanse = false, 
+	     cleanse_only = false, 
+	     stat_only = false,
+	     sms_only = false;
 
 	map<string,string> ussd_only_script;
 
@@ -219,6 +222,10 @@ int main(int argc, char** argv) {
 					return 1;
 				}
 
+			}
+
+			else if((string)argv[i] == "--sms-only") {
+				sms_only = true;
 			}
 		}
 	}
