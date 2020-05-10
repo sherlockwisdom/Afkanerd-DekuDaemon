@@ -52,7 +52,7 @@ class MySQL {
 	bool create_database( string database );
 	bool has_table( string table ) const;
 	bool delete_table( string table );
-	bool create_table( string table );
+	bool create_table( string column_name, string column_types );
 };
 
 #endif

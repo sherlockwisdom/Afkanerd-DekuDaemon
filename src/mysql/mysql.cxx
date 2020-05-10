@@ -78,8 +78,8 @@ bool MySQL::delete_table( string table ) {
 	return delete_state;
 }
 
-bool MySQL::create_table( string table ) {
-	string create_query = "CREATE TABLE " + table " (" + values + ")";
+bool MySQL::create_table( string column_name, string column_types ) {
+	string create_query = "CREATE TABLE " + column_name + " (" + column_types + ")";
 
 	bool create_state = this->query( create_query );
 
