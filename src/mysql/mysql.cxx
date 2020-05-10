@@ -79,6 +79,11 @@ bool MySQL::delete_table( string table ) {
 }
 
 bool MySQL::create_table( string table ) {
+	string create_query = "CREATE TABLE " + table " (" + values + ")";
+
+	bool create_state = this->query( create_query );
+
+	return create_state;
 }
 
 bool MySQL::has_database( string database ) const {
