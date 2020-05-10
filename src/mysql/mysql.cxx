@@ -70,6 +70,14 @@ bool MySQL::has_table( string table ) const {
 	return table_found;
 }
 
+bool MySQL::delete_table( string table ) {
+	string del_query = "DROP TABLE " + table;	
+
+	bool delete_state = this->query( del_query );
+
+	return delete_state;
+}
+
 bool MySQL::has_database( string database ) const {
 	auto list_of_databases = mysql_list_dbs(this->mysqlConnection, database.c_str() );
 

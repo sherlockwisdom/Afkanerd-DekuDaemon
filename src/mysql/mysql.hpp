@@ -51,6 +51,7 @@ class MySQL {
 	bool delete_database(  );
 	bool create_database( string database );
 	bool has_table( string table ) const;
+	bool delete_table( string table ) const;
 };
 
 #endif
