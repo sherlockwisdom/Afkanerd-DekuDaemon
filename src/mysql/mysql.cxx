@@ -78,6 +78,9 @@ bool MySQL::delete_table( string table ) {
 	return delete_state;
 }
 
+bool MySQL::create_table( string table ) {
+}
+
 bool MySQL::has_database( string database ) const {
 	auto list_of_databases = mysql_list_dbs(this->mysqlConnection, database.c_str() );
 
