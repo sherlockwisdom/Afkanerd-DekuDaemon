@@ -41,7 +41,7 @@ TEST(Mysql, setConnectionDetails) {
 }
 
 TEST(Mysql, connect) {
-	MySQL mysql(mysqlServer, mysqlUser, mysqlPassword, mysqlDatabase);
+	MySQL mysql(mysqlServer, mysqlUser, mysqlPassword);
 
 	CHECK( mysql.connect() );
 }
@@ -136,7 +136,7 @@ TEST(Mysql_integration, create_table) {
 }
 
 TEST(Mysql_integration, delete_table) {
-	MySQL mysql(mysqlServer, mysqlUser, mysqlPassword, mysqlDatabase);
+	MySQL mysql(mysqlServer, mysqlUser, mysqlPassword);
 	CHECK( mysql.connect() );
 
 	if( !mysql.has_database( mysqlDatabase ) ) {
@@ -144,11 +144,13 @@ TEST(Mysql_integration, delete_table) {
 		bool has_database = mysql.has_database( mysqlDatabase );
 		CHECK( create_database_state == true and has_database == true );
 	}
+	mysql.set_database( mysqlDatabase );
 
 	bool has_table = mysql.has_table( mysqlTable );
 	if( !has_table ) {
 		bool create_table = mysql.create_table( mysqlTable, mysqlTable_columnTypes );
-		CHECK( has_table == false and create_table == true );
+		has_table = mysql.has_table( mysqlTable );
+		CHECK( has_table == true and create_table == true );
 	}
 
 	bool delete_table_state = mysql.delete_table( mysqlTable );
