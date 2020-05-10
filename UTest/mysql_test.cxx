@@ -112,7 +112,7 @@ TEST(Mysql_integration, has_table ) {
 }
 
 TEST(Mysql_integration, create_table) {
-	MySQL mysql(mysqlServer, mysqlUser, mysqlPassword, mysqlDatabase);
+	MySQL mysql(mysqlServer, mysqlUser, mysqlPassword);
 	CHECK( mysql.connect() );
 
 	if( !mysql.has_database( mysqlDatabase ) ) {
@@ -120,6 +120,7 @@ TEST(Mysql_integration, create_table) {
 		bool has_database = mysql.has_database( mysqlDatabase );
 		CHECK( create_database_state == true and has_database == true );
 	}
+	mysql.set_database( mysqlDatabase );
 
 	bool has_table = mysql.has_table( mysqlTable );
 	if( has_table ) 
