@@ -121,7 +121,7 @@ map<string, string> Modems::get_modem_details( map<string, string> modem ) {
 	return modem_details;
 }
 
-void Modems::begin_scanning() {
+void Modems::begin_scanning( bool sms_listening = false) {
 	while( 1 ) { //TODO: Use a variable to control this loop
 		// First it gets all availabe modems
 		logger::logger(__FUNCTION__, "Refreshing modem list..");
