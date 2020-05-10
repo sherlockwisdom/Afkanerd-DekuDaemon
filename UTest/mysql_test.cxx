@@ -106,9 +106,42 @@ TEST(Mysql_integration, has_table ) {
 }
 
 TEST(Mysql_integration, create_table) {
+	MySQL mysql(mysqlServer, mysqlUser, mysqlPassword);
+	CHECK( mysql.connect() );
+
+	if( mysql.has_database( mysqlDatabase ) )
+		mysql.delete_database( mysqlDatabase );
+	bool create_database_state = mysql.create_database( mysqlDatabase );
+	bool has_database = mysql.has_database( mysqlDatabase );
+	CHECK( create_database_state == true and has_database == true );
+
+	bool has_table = mysql.has_table( mysqlTable );
+	CHECK( has_table == true );
+
+	bool delete_database_state = mysql.delete_database( mysqlDatabase );
+	has_database = mysql.has_database( mysqlDatabase );
+	CHECK( delete_database_state == true and has_database == false );
 }
 
 TEST(Mysql_integration, delete_table) {
+	MySQL mysql(mysqlServer, mysqlUser, mysqlPassword);
+	CHECK( mysql.connect() );
+
+	if( !mysql.has_database( mysqlDatabase ) ) {
+		bool create_database_state = mysql.create_database( mysqlDatabase );
+		bool has_database = mysql.has_database( mysqlDatabase );
+		CHECK( create_database_state == true and has_database == true );
+	}
+
+	bool has_table = mysql.has_table( mysqlTable );
+	if( !has_table ) {
+		bool create_table = mysql.create_table( mysqlTable );
+		CHECK( has_table == false and create_table == true );
+	}
+
+	bool delete_table_state = mysql.delete_table( mysqlTable );
+	has_table = mysql.has_table( mysqlTable );
+	CHECK( delete_table_state == true and has_table == false );
 }
 
 int main( int argc, char** argv ) {
