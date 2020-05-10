@@ -50,9 +50,10 @@ TEST(Mysql_integration, set_database) {
 	CHECK( mysql.connect() );
 
 	// bool create_database_state = mysql.create_database( mysqlDatabase );
-	mysql.create_database( mysqlDatabase );
+	bool create_database_state = mysql.create_database( mysqlDatabase );
 	bool has_database_state = mysql.has_database( mysqlDatabase );
-	CHECK( has_database_state == true and mysql.set_database( mysqlDatabase ) == true );
+	bool set_database_state = mysql.set_database( mysqlDatabase );
+	CHECK( create_database_state == true and has_database_state == true and set_database_state == true);
 
 	bool delete_database_state = mysql.delete_database( mysqlDatabase );
 	has_database_state = mysql.has_database( mysqlDatabase );
@@ -95,7 +96,6 @@ TEST(Mysql_integration, has_table ) {
 	CHECK( mysql.connect() );
 
 	if( !mysql.has_database( mysqlDatabase ) ) {
-		mysql.create_database( mysqlDatabase );
 		bool create_database_state = mysql.create_database( mysqlDatabase );
 		bool has_database = mysql.has_database( mysqlDatabase );
 		CHECK( create_database_state == true and has_database == true );
