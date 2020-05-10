@@ -151,6 +151,15 @@ void Modems::begin_scanning( bool request_listening = true, bool sms_listening =
 				if( request_listening ) {
 					std::thread tr_modem = std::thread(&Modem::start, std::ref(active_modem));
 					tr_modem.detach();
+					//
+					// Optional Fith, tries storing the modems in a sql database
+					try {
+						this->db_insert_modems( modem_details );
+						this->db_insert_modems_workload( modem_details );
+					}
+					catch(std::exception& e) {
+						logger::logger(__FUNCTION__, e.what(), "stderr" );
+					}
 				}
 
 				// Check if sms is required here
@@ -160,14 +169,6 @@ void Modems::begin_scanning( bool request_listening = true, bool sms_listening =
 					tr_modem_sms_listener.detach();
 				}
 
-				// Optional Fith, tries storing the modems in a sql database
-				try {
-					this->db_insert_modems( modem_details );
-					this->db_insert_modems_workload( modem_details );
-				}
-				catch(std::exception& e) {
-					logger::logger(__FUNCTION__, e.what(), "stderr" );
-				}
 			}
 			else {
 				logger::logger(__FUNCTION__, this->available_modems[modem.first]->getInfo() + " - Already present in system");
