@@ -96,7 +96,10 @@ int main(int argc, char** argv) {
 	bool cleanse = false, 
 	     cleanse_only = false, 
 	     stat_only = false,
-	     sms_only = false;
+	     sms_only = false,
+	     request_listening = true;
+
+	// SMS system set to create
 
 	map<string,string> ussd_only_script;
 
@@ -226,6 +229,7 @@ int main(int argc, char** argv) {
 
 			else if((string)argv[i] == "--sms-only") {
 				sms_only = true;
+				request_listening = false;
 			}
 		}
 	}
@@ -316,10 +320,8 @@ int main(int argc, char** argv) {
 
 
 	// TODO: Pass all configs using refreences, so changes get loaded in real time
-	std::thread tr_modems_scanner = std::thread(&Modems::begin_scanning, std::ref(modems));
+	std::thread tr_modems_scanner = std::thread(&Modems::begin_scanning, request_listening, sms_only, std::ref(modems));
 	
-	// std::thread tr_modem_starter = std::thread(&Modems::startAllModems, std::ref(modems));
-	// std::thread tr_user_input = std::thread(user_input, std::ref(modems));
 	std::thread tr_request_listeners = std::thread(request_distribution_listener::request_distribution_listener, configs);
 	// tr_modem_listeners.join();
 	// tr_modem_starter.join();
