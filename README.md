@@ -60,6 +60,7 @@ make -C src/start
 ##### `--cleanse`
 ##### `--cleanse-only`
 ##### `--stat-only`
+##### `--sms-only`
 
 ---
 ##### TODO - The following needs to be built... please help
