@@ -52,6 +52,24 @@ bool MySQL::create_database( string database ) {
 	return create_db_state;
 }
 
+bool MySQL::has_table( string table ) const {
+	auto list_of_tables = mysql_list_tables(this->mysqlConnection, table.c_str());
+
+	if( list_of_tables == NULL ) return false;
+
+	bool table_found = false;
+	int field_iterator = 0;
+	for(MYSQL_ROW mysqlRow = mysql_fetch_row( list_of_tables ); mysqlRow != NULL ; mysqlRow = mysql_fetch_row( list_of_tables ), ++field_iterator ) {
+		// logger::logger(__FUNCTION__, mysqlRow[0]);
+		if( table == mysqlRow[field_iterator] ) {
+			table_found = true;
+			break;
+		}
+	}
+
+	return table_found;
+}
+
 bool MySQL::has_database( string database ) const {
 	auto list_of_databases = mysql_list_dbs(this->mysqlConnection, database.c_str() );
 
