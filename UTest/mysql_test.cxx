@@ -13,9 +13,9 @@ std::string mysqlUser = "root";
 std::string mysqlPassword = "asshole";
 std::string mysqlDatabase = "CPPUTEST_MYSQL_TEST_DATABASE";
 std::string mysqlTable = "CPPUTEST_MYSQL_TEST_TABLE";
-std::string mysqlTable_columnTypes = "CPPUTEST_MYSQL_TEST_FIELD VARCHAR(255) NOT NULL,\
-				      CPPUTEST_MYSQL_TEST_FIELD1 INT NOT NULL AUTO_INCREMENT,\
-				      CPPUTEST_MYSQL_TEST_FIELD2 DATE";
+std::string mysqlTable_columnTypes = "CPPUTEST_MYSQL_TEST_FIELD VARCHAR(255) NOT NULL,"
+				      "CPPUTEST_MYSQL_TEST_FIELD1 INT NOT NULL AUTO_INCREMENT,"
+				      "CPPUTEST_MYSQL_TEST_FIELD2 DATE";
 
 TEST_GROUP(Mysql) {};
 TEST_GROUP(Mysql_integration) {};
