@@ -33,7 +33,7 @@ bool system_check( string path_to_sys_file) {
 	for(auto config_line: sys_file_contents) {
 		logger::logger(__FUNCTION__, config_line);
 		vector<string> configs = helpers::string_split(config_line, '=');
-		for(auto config : configs ) logger::logger(__FUNCTION__, config);
+		// for(auto config : configs ) logger::logger(__FUNCTION__, config);
 		if(configs[0] == "DIR_REQUEST_FILE") {
 			string dir_request_file = configs[1];
 			if(!helpers::file_exist( dir_request_file ) ) {
@@ -120,6 +120,13 @@ bool system_check( string path_to_sys_file) {
 			logger::logger_errno( errno );
 			return false;
 		}
+	}
+
+	if( !mysql.connect()) {
+		logger::logger(__FUNCTION__, "FAILED TO CONNECT TO DATABASE", "stderr", true);
+		logger::logger(__FUNCTION__, mysql.get_error_message(), "stderr", true);
+		logger::logger_errno( errno );
+		return false;
 	}
 
 	string DEKU_TABLE_MODEM_MONITOR = "MODEMS",
