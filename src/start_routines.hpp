@@ -161,7 +161,7 @@ bool system_check( string path_to_sys_file) {
 			return false;
 		}
 
-		if( mysql.create_table( DEKU_MODEM_SMS_RECEIVED_VALUES, DEKU_MODEM_SMS_RECEIVED_VALUES ))
+		if( mysql.create_table( DEKU_TABLE_SMS_RECEIVED, DEKU_MODEM_SMS_RECEIVED_VALUES ))
 			logger::logger(__FUNCTION__, "MODEM SMS RECEIVED TABLE CREATED", "stdout", true);
 		else {
 			logger::logger(__FUNCTION__, "FAILED CREATING SMS RECEIVED TABLE", "stderr", true);
