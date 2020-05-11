@@ -122,7 +122,8 @@ bool system_check( string path_to_sys_file) {
 	mysql.set_database( MYSQL_DATABASE );
 
 	string DEKU_TABLE_MODEM_MONITOR = "MODEMS",
-	       DEKU_TABLE_MODEM_SMS_STATUS = "MODEM_WORK_LOAD";
+	       DEKU_TABLE_MODEM_SMS_STATUS = "MODEM_WORK_LOAD",
+	       DEKU_TABLE_SMS_RECEIVED = "MODEM_SMS_RECEIVED";
 
 	string DEKU_MODEM_MONITOR_VALUES = "IMEI bigint(20) NOT NULL PRIMARY KEY,"
 		"PHONENUMBER int(20) NULL,"
@@ -136,6 +137,11 @@ bool system_check( string path_to_sys_file) {
 		       "DATE DATE,"
 		       "MDATE timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP";	
 
+	       DEKU_MODEM_SMS_RECEIVED_VALUES = "IMEI bigint(20) NOT NULL,"
+		       "PHONENUMBER INT(11) NOT NULL,"
+		       "MESSAGE TEXT NOT NULL,"
+		       "DATE timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP";	
+
 	if( !mysql.has_table( DEKU_TABLE_MODEM_MONITOR ) ) {
 		if( mysql.create_table( DEKU_TABLE_MODEM_MONITOR, DEKU_MODEM_MONITOR_VALUES ))
 			logger::logger(__FUNCTION__, "MODEM MONITOR DATABASE CREATED", "stdout", true);
@@ -147,9 +153,18 @@ bool system_check( string path_to_sys_file) {
 		}
 
 		if( mysql.create_table( DEKU_TABLE_MODEM_SMS_STATUS, DEKU_MODEM_SMS_STATUS_VALUES ))
-			logger::logger(__FUNCTION__, "MODEM SMS STATUS DATABASE CREATED", "stdout", true);
+			logger::logger(__FUNCTION__, "MODEM SMS STATUS TABLE CREATED", "stdout", true);
 		else {
-			logger::logger(__FUNCTION__, "FAILED CREATING SMS STATUS DATABASE TABLE", "stderr", true);
+			logger::logger(__FUNCTION__, "FAILED CREATING SMS STATUS TABLE", "stderr", true);
+			logger::logger(__FUNCTION__, mysql.get_error_message(), "stderr", true);
+			logger::logger_errno( errno );
+			return false;
+		}
+
+		if( mysql.create_table( DEKU_MODEM_SMS_RECEIVED_VALUES, DEKU_MODEM_SMS_RECEIVED_VALUES ))
+			logger::logger(__FUNCTION__, "MODEM SMS RECEIVED TABLE CREATED", "stdout", true);
+		else {
+			logger::logger(__FUNCTION__, "FAILED CREATING SMS RECEIVED TABLE", "stderr", true);
 			logger::logger(__FUNCTION__, mysql.get_error_message(), "stderr", true);
 			logger::logger_errno( errno );
 			return false;
