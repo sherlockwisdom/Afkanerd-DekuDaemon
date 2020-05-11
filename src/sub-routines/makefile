@@ -3,6 +3,9 @@ CFLAGS = -g -Wall -pthread -std=c++1z
 MYSQL_CONFIGS := $(shell mysql_config --cflags)
 MYSQL_LIBS := $(shell mysql_config --libs)
 
+modem: modem.cxx
+	$(CC) $(CFLAGS) -c -o $@.o $@.cxx $(MYSQL_CONFIGS) $(MYSQL_LIBS)
+
 ussd: ussd.cxx
 	$(CC) $(CFLAGS) -c -o $@.o $@.cxx $(MYSQL_CONFIGS) $(MYSQL_LIBS)
 
