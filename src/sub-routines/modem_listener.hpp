@@ -8,7 +8,7 @@ using namespace std;
 
 class Modems {
 	vector<Modem*> modemCollection;
-	map<string, Modem*> available_modems;
+	static map<string, Modem*> available_modems;
 
 	map<Modem*, std::thread> threaded_modems;
 	int modem_sleep_time = 10;
@@ -16,6 +16,8 @@ class Modems {
 	
 	MySQL mysqlConnection;
 	map<string,string> configs;
+
+	static void handle_sigint( int );
 
 	public:
 		enum STATE{TEST, PRODUCTION};

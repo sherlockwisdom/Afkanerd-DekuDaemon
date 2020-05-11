@@ -6,12 +6,18 @@
 
 using namespace std;
 
-void handle_sigint( int signal ) {
+void Modems::handle_sigint( int signal ) {
 	logger::logger(__FUNCTION__, "ENDING, CLEANING UP", "stdout", true);
 
+	/*
+	for( auto modem : Modems::available_modems ) {
+		delete modem.second;
+	}
+	*/
 	// code suicide begins from here
 	exit(1);
 }
+
 //class Modems
 Modems::Modems( map<string,string> configs, STATE state ) {
 	signal(SIGINT, handle_sigint);
@@ -138,8 +144,8 @@ void Modems::begin_scanning( bool request_listening = true, bool sms_listening =
 		// Second it filters the modems and stores them in database
 		for(auto modem : available_modems) {
 			bool has_modems_imei = false;
-			if(!this->available_modems.empty()) 
-				has_modems_imei = this->available_modems.find( modem.first ) != this->available_modems.end() ? true : false;
+			if(!Modems::available_modems.empty()) 
+				has_modems_imei = Modems::available_modems.find( modem.first ) != Modems::available_modems.end() ? true : false;
 			if( !has_modems_imei ) {
 				map<string,string> modem_details = this->get_modem_details( modem.second );
 				if( modem_details.empty() ) continue;
@@ -151,11 +157,11 @@ void Modems::begin_scanning( bool request_listening = true, bool sms_listening =
 
 				// Thid stores modem in list of modems
 
-				this->available_modems.insert(make_pair( modem.first, new Modem(imei, isp, type, index, this->configs, this->mysqlConnection)));
+				Modems::available_modems.insert(make_pair( modem.first, new Modem(imei, isp, type, index, this->configs, this->mysqlConnection)));
 
 				// Forth Starts the modems and let is be free
-				logger::logger(__FUNCTION__, this->available_modems[modem.first]->getInfo() + " Starting...");
-				auto active_modem = this->available_modems[modem.first];
+				logger::logger(__FUNCTION__, Modems::available_modems[modem.first]->getInfo() + " Starting...");
+				auto active_modem = Modems::available_modems[modem.first];
 				if( request_listening ) {
 					std::thread tr_modem = std::thread(&Modem::start, std::ref(active_modem));
 					tr_modem.detach();
@@ -179,21 +185,21 @@ void Modems::begin_scanning( bool request_listening = true, bool sms_listening =
 
 			}
 			else {
-				logger::logger(__FUNCTION__, this->available_modems[modem.first]->getInfo() + " - Already present in system");
+				logger::logger(__FUNCTION__, Modems::available_modems[modem.first]->getInfo() + " - Already present in system");
 				this->db_switch_power_modems( modem.second, "plugged" );
 			}
 		}
 
-		for(auto it_modem = this->available_modems.begin(); it_modem != this->available_modems.end(); ++it_modem ) {
+		for(auto it_modem = Modems::available_modems.begin(); it_modem != Modems::available_modems.end(); ++it_modem ) {
 			auto modem = *it_modem;
 			logger::logger(__FUNCTION__, modem.second->getInfo() + " Checking availability");
 			if( !modem.second->is_available() ) {
 				logger::logger(__FUNCTION__, modem.second->getInfo() + " | Delisting Modem...");
 
 				delete modem.second;
-				this->available_modems.erase(modem.first );
+				Modems::available_modems.erase(modem.first );
 				this->db_switch_power_modems( map<string,string>{{"imei", modem.second->getIMEI()}}, "not_plugged" );
-				if(this->available_modems.empty()) break;
+				if(Modems::available_modems.empty()) break;
 			}
 		}
 		logger::logger(__FUNCTION__, "Number of Available modems (After Delisting): " + to_string( available_modems.size() ));
