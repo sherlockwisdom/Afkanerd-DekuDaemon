@@ -127,8 +127,15 @@ bool system_check( string path_to_sys_file) {
 	string DEKU_TABLE_MODEM_MONITOR = "MODEMS",
 	       DEKU_TABLE_MODEM_SMS_STATUS = "MODEM_WORK_LOAD";
 
+	string DEKU_MODEM_MONITOR_VALUES = "IMEI bigint(20) NOT NULL PRIMARY KEY",
+	       "PHONENUMBER int(20) NULL",
+	       "TYPE enum('ssh','mmcli') NOT NULL",
+	       "STATE enum('active','exhausted') NOT NULL",
+	       "POWER enum('plugged','not_plugged') NOT NULL",
+	       "DATE timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP";
+
 	if( !mysql.has_table( DEKU_DEFAULT_TALE ) ) {
-		if( mysql.create_table( DEKU_TABLE_MODEM_MONITOR, DEKU_DEFAULT_TABLE_VALUES ))
+		if( mysql.create_table( DEKU_TABLE_MODEM_MONITOR, DEKU_MODEM_MONITOR_VALUES ))
 			logger::logger(__FUNCTION__, "MODEM MONITOR DATABASE CREATED", "stdout", true);
 		else {
 			logger::logger(__FUNCTION__, "FAILED CREATING MODEM MONITOR DATABASE TABLE", "stderr", true);
@@ -137,7 +144,7 @@ bool system_check( string path_to_sys_file) {
 			return false;
 		}
 
-		if( mysql.create_table( DEKU_TABLE_MODEM_SMS_STATUS, DEKU_DEFAULT_TABLE_VALUES ))
+		if( mysql.create_table( DEKU_TABLE_MODEM_SMS_STATUS, DEKU_SMS_STATUS_VALUES ))
 			logger::logger(__FUNCTION__, "MODEM SMS STATUS DATABASE CREATED", "stdout", true);
 		else {
 			logger::logger(__FUNCTION__, "FAILED CREATING SMS STATUS DATABASE TABLE", "stderr", true);
