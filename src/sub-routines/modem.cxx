@@ -133,6 +133,7 @@ bool Modem::operator ==(Modem modem) const {
 vector<map<string,string>> Modem::get_sms_messages() const {
 	vector<map<string,string>> sms_messages;
 	string terminal_respond = sys_calls::terminal_stdout( this->getConfigs()["DIR_SCRIPTS"] + "/modem_information_extraction.sh sms received " + this->getIndex() );	
+	if( terminal_respond.empty()) return vector<map<string,string>>{};
 	vector<string> sms_indexes = helpers::string_split( terminal_respond, '\n' );
 	logger::logger(__FUNCTION__, "Number of SMS Indexes: " + to_string( sms_indexes.size() ));
 
