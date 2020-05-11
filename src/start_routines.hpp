@@ -116,6 +116,18 @@ bool system_check( string path_to_sys_file) {
 			logger::logger(__FUNCTION__, "FAILED CREATING MYSQL DATABASE", "stderr", true);
 			logger::logger(__FUNCTION__, mysql.get_error_message(), "stderr", true);
 			logger::logger_errno( errno );
+			return false;
+		}
+	}
+
+	if( !mysql.has_table( DEKU_DEFAULT_TALE ) ) {
+		if( mysql.create_table( DEKU_DEFAULT_TABLE ))
+			logger::logger(__FUNCTION__, "DATABASE TABLE CREATED", "stdout", true);
+		else {
+			logger::logger(__FUNCTION__, "FAILED CREATING DATABASE TABLE", "stderr", true);
+			logger::logger(__FUNCTION__, mysql.get_error_message(), "stderr", true);
+			logger::logger_errno( errno );
+			return false;
 		}
 	}
 	return true;
