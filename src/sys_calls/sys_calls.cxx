@@ -1,5 +1,6 @@
 #ifndef SYS_CALLS_H_INCLUDED_
 #define SYS_CALLS_H_INCLUDED_
+#include "sys_calls.hpp"
 using namespace std;
 
 namespace sys_calls {
