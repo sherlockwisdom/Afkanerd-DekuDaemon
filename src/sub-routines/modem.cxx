@@ -156,7 +156,8 @@ void Modem::modem_sms_listener ( ) {
 
 		if( !sms_messages.empty()) {
 			for( auto sms_message_body : sms_messages ) {
-				logger::logger(__FUNCTION__, "=============================");
+				logger::logger(__FUNCTION__, "\n=============================");
+				string index = sms_message_body["index"];
 				string message = sms_message_body["message"];
 				string number = sms_message_body["number"];
 				string timestamp = sms_message_body["timestamp"];
@@ -164,7 +165,8 @@ void Modem::modem_sms_listener ( ) {
 				logger::logger(__FUNCTION__, "SMS Message: " + message);
 				logger::logger(__FUNCTION__, "SMS Number: " + number);
 				logger::logger(__FUNCTION__, "SMS Timestamp: " + timestamp );
-				logger::logger(__FUNCTION__, "=============================\n");
+				logger::logger(__FUNCTION__, "SMS Index: " + index );
+				logger::logger(__FUNCTION__, "=============================");
 
 				//TODO: put a helper function
 				// saitama::configs = this->getConfigs();
@@ -186,6 +188,7 @@ void Modem::modem_sms_listener ( ) {
 				
 				logger::logger(__FUNCTION__, "STORED SMS", "stdout", true);
 				//TODO: should delete the message once it has been executed - THIS IS VERY URGENT, CUS MODEM INFINITE LOOP
+				
 			}
 		}
 		else {
