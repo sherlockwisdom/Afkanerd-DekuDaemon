@@ -3,6 +3,7 @@
 #include <vector>
 #include "formatters/helpers.hpp"
 #include "sys_calls/sys_calls.hpp"
+#include "../mysql/mysql.hpp"
 #ifndef START_ROUTINES_H_INCLUDED_
 #define START_ROUTINES_H_INCLUDED_
 using namespace std;
@@ -103,6 +104,20 @@ bool system_check( string path_to_sys_file) {
 		return false;
 	}
 
+	//check if database exist
+	MySQL mysql(MYSQL_SERVER, MYSQL_USER, MYSQL_PASSWORD);
+	if( !MYSQL_DATABASE.empty()) 
+		mysql.set_database( MYSQL_DATABASE );
+
+	if( !mysql.has_database( MYSQL_DATABASE ) ) {
+		if( mysql.create_database( MYSQL_DATABASE ) ) 
+			logger::logger(__FUNCTION__, "MYSQL DATABASE CREATED", "stdout", true);
+		else {
+			logger::logger(__FUNCTION__, "FAILED CREATING MYSQL DATABASE", "stderr", true);
+			logger::logger(__FUNCTION__, mysql.get_error_message(), "stderr", true);
+			logger::logger_errno( errno );
+		}
+	}
 	return true;
 }
 
