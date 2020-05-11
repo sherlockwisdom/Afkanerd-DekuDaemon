@@ -164,7 +164,7 @@ void Modem::modem_sms_listener ( ) {
 				logger::logger(__FUNCTION__, "SMS Message: " + message);
 				logger::logger(__FUNCTION__, "SMS Number: " + number);
 				logger::logger(__FUNCTION__, "SMS Timestamp: " + timestamp );
-				logger::logger(__FUNCTION__, "=============================");
+				logger::logger(__FUNCTION__, "=============================\n");
 
 				//TODO: put a helper function
 				// saitama::configs = this->getConfigs();
@@ -175,7 +175,7 @@ void Modem::modem_sms_listener ( ) {
 				// Deleting each message is very crucial
 
 				//TODO: Get Table name from gloabl configuration scope, so with all the other tables
-				string store_db = "INSERT INTO MODEM_SMS_RECEIVED (IMEI, MESSAGE, PHONENUMBER) VALUES ('" + this->getIMEI() + "','"+message+"','" + number + "')";
+				string store_db = "INSERT INTO MODEM_SMS_RECEIVED (IMEI, ISP, MESSAGE, PHONENUMBER) VALUES ('" + this->getIMEI() + "','" + this->getISP() + "','"+message+"','" + number + "')";
 				bool message_stored = this->mysqlConnection.query( store_db );
 
 				if( !message_stored ) {
