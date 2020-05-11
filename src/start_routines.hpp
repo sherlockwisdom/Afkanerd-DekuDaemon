@@ -63,6 +63,19 @@ bool system_check( string path_to_sys_file) {
 			}
 			else logger::logger(__FUNCTION__, "DIR_SUCCESS already exist");
 		}
+
+		else if(configs[0] == "MYSQL_SERVER") {
+			MYSQL_SERVER = configs[1];
+		}
+		else if(configs[0] == "MYSQL_USER") {
+			MYSQL_USER = configs[1];
+		}
+		else if(configs[0] == "MYSQL_PASSWORD"){
+			MYSQL_PASSWORD = configs[1];
+		}
+		else if(configs[0] == "MYSQL_DATABASE") {
+			MYSQL_DATABASE = configs[1];
+		}
 	}
 
 	return true;

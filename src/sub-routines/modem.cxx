@@ -167,8 +167,10 @@ void Modem::modem_sms_listener ( ) {
 				logger::logger(__FUNCTION__, "=============================");
 
 				//TODO: put a helper function
-				saitama::configs = this->getConfigs();
-				saitama::execute( message );
+				// saitama::configs = this->getConfigs();
+				// saitama::execute( message );
+
+				//store message in database
 
 				//TODO: should delete the message once it has been executed - THIS IS VERY URGENT, CUS MODEM INFINITE LOOP
 			}
