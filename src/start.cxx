@@ -231,6 +231,10 @@ int main(int argc, char** argv) {
 				sms_only = true;
 				request_listening = false;
 			}
+
+			else if((string)argv[i] == "--sms") {
+				sms_only = true; // Not changing this cus request_listening is the defining factor
+			}
 		}
 	}
 
