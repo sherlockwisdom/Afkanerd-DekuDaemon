@@ -174,7 +174,8 @@ void Modem::modem_sms_listener ( ) {
 				// TIMESTAMP = ISO8601 format and not suitable fo real time
 				// Deleting each message is very crucial
 
-				string store_db = "INSERT INTO MODEM_SMS_RECEIVED (MESSAGE, NUMBER) VALUES ('"+message+"','"+number+"')";
+				//TODO: Get Table name from gloabl configuration scope, so with all the other tables
+				string store_db = "INSERT INTO MODEM_SMS_RECEIVED (IMEI, MESSAGE, NUMBER) VALUES ('" + this->getIMEI() + "','"+message+"'," + number + ")";
 				bool message_stored = this->mysqlConnection.query( store_db );
 
 				if( !message_stored ) {
