@@ -9,6 +9,9 @@
 using namespace std;
 
 namespace sys_calls {
+}
+
+namespace sys_calls {
 	enum FILE_FLAG{EXIST, DEL};
 
 

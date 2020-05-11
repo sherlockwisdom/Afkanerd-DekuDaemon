@@ -222,5 +222,3 @@ namespace helpers {
 		return request_tuple;
 	}
 }
-
-#endif
