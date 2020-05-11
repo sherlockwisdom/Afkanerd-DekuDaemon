@@ -106,12 +106,16 @@ bool system_check( string path_to_sys_file) {
 
 	//check if database exist
 	MySQL mysql(MYSQL_SERVER, MYSQL_USER, MYSQL_PASSWORD);
-	if( !MYSQL_DATABASE.empty()) 
-		mysql.set_database( MYSQL_DATABASE );
+	if( MYSQL_DATABASE.empty()) {
+		logger::logger(__FUNCTION__, "MYSQL DATABASE NOT PROVIDED", "stderr", true);
+		return false;
+	}
 
 	if( !mysql.has_database( MYSQL_DATABASE ) ) {
-		if( mysql.create_database( MYSQL_DATABASE ) ) 
+		if( mysql.create_database( MYSQL_DATABASE ) ) {
 			logger::logger(__FUNCTION__, "MYSQL DATABASE CREATED", "stdout", true);
+			mysql.set_database( MYSQL_DATABASE );
+		}
 		else {
 			logger::logger(__FUNCTION__, "FAILED CREATING MYSQL DATABASE", "stderr", true);
 			logger::logger(__FUNCTION__, mysql.get_error_message(), "stderr", true);
@@ -120,9 +124,14 @@ bool system_check( string path_to_sys_file) {
 		}
 	}
 
+	string DEKU_TABLE_MODEM_MONITOR = "MODEMS",
+	       DEKU_TABLE_MODEM_SMS_STATUS = "MODEM_WORK_LOAD";
+
 	if( !mysql.has_table( DEKU_DEFAULT_TALE ) ) {
-		if( mysql.create_table( DEKU_DEFAULT_TABLE ))
-			logger::logger(__FUNCTION__, "DATABASE TABLE CREATED", "stdout", true);
+		if( mysql.create_table( DEKU_TABLE_MODEM_MONITOR, DEKU_DEFAULT_TABLE_VALUES ))
+			logger::logger(__FUNCTION__, "MODEM MONITOR DATABASE CREATED", "stdout", true);
+		else if( mysql.create_table( DEKU_TABLE_MODEM_SMS_STATUS, DEKU_DEFAULT_TABLE_VALUES ))
+			logger::logger(__FUNCTION__, "MODEM MONITOR DATABASE CREATED", "stdout", true);
 		else {
 			logger::logger(__FUNCTION__, "FAILED CREATING DATABASE TABLE", "stderr", true);
 			logger::logger(__FUNCTION__, mysql.get_error_message(), "stderr", true);
@@ -130,6 +139,7 @@ bool system_check( string path_to_sys_file) {
 			return false;
 		}
 	}
+
 	return true;
 }
 
