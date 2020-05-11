@@ -171,7 +171,18 @@ void Modem::modem_sms_listener ( ) {
 				// saitama::execute( message );
 
 				//store message in database
+				// TIMESTAMP = ISO8601 format and not suitable fo real time
+				// Deleting each message is very crucial
 
+				string store_db = "INSERT INTO MODEM_SMS_RECEIVED (MESSAGE, NUMBER) VALUES ('"+message+"','"+number+"')";
+				bool message_stored = this->mysql.query( store_db );
+
+				if( !message_stored ) {
+					logger::logger(__FUNCTION__, "FAILED STORING SMS", "stderr", true);
+					continue;
+				}
+				
+				logger::logger(__FUNCTION__, "STORED SMS", "stdout", true);
 				//TODO: should delete the message once it has been executed - THIS IS VERY URGENT, CUS MODEM INFINITE LOOP
 			}
 		}
