@@ -188,6 +188,11 @@ void Modem::modem_sms_listener ( ) {
 				
 				logger::logger(__FUNCTION__, "STORED SMS", "stdout", true);
 				//TODO: should delete the message once it has been executed - THIS IS VERY URGENT, CUS MODEM INFINITE LOOP
+				if ( !this->delete_sms( index ) ) {
+					logger::logger(__FUNCTION__, "FAILED DELETE SMS", "stderr", true);
+					continue;
+				}
+				logger::logger(__FUNCTION__, "SMS PROCESSED!", "stdout", true);
 				
 			}
 		}
