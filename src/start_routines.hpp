@@ -158,6 +158,8 @@ bool system_check( string path_to_sys_file) {
 			return false;
 		}
 	}
+	
+	logger::logger(__FUNCTION__, "CREATED ALL DATABASE TABLES", "stdout", true);
 
 	return true;
 }
