@@ -151,7 +151,9 @@ bool system_check( string path_to_sys_file) {
 			logger::logger_errno( errno );
 			return false;
 		}
+	}
 
+	if( !mysql.has_table( DEKU_TABLE_MODEM_SMS_STATUS )) { 
 		if( mysql.create_table( DEKU_TABLE_MODEM_SMS_STATUS, DEKU_MODEM_SMS_STATUS_VALUES ))
 			logger::logger(__FUNCTION__, "MODEM SMS STATUS TABLE CREATED", "stdout", true);
 		else {
@@ -160,7 +162,9 @@ bool system_check( string path_to_sys_file) {
 			logger::logger_errno( errno );
 			return false;
 		}
+	}
 
+	if( !mysql.has_table( DEKU_TABLE_SMS_RECEIVED )) {
 		if( mysql.create_table( DEKU_TABLE_SMS_RECEIVED, DEKU_MODEM_SMS_RECEIVED_VALUES ))
 			logger::logger(__FUNCTION__, "MODEM SMS RECEIVED TABLE CREATED", "stdout", true);
 		else {
