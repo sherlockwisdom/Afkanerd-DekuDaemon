@@ -1,11 +1,17 @@
-#include <map>
-#include <vector>
-#include <thread>
-
 #ifndef MODEM_H_INCLUDED_
 #define MODEM_H_INCLUDED_
 #include "../mysql/mysql.hpp"
-#include "ussd.cxx"
+#include "ussd.hpp"
+#include "request_distribution_listener.cxx"
+#include "saitama.hpp"
+#include <iostream>
+#include <thread>
+#include <mutex>
+#include "../mysql/mysql.hpp"
+#include "../sys_calls/sys_calls.hpp"
+#include <map>
+#include <vector>
+#include <thread>
 using namespace std;
 
 class Modem : public USSD {

@@ -1,8 +1,4 @@
 #include "modem_listener.hpp"
-#include "../formatters/helpers.hpp"
-#include "../sys_calls/sys_calls.hpp"
-#include <mutex>
-#include <signal.h>
 
 using namespace std;
 
@@ -236,3 +232,4 @@ vector<string> Modems::getAllIMEI() {
 vector<Modem*> Modems::getAllModems() {
 	return this->modemCollection;
 }
+

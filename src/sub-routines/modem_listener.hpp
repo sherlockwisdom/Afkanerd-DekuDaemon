@@ -1,8 +1,12 @@
-#include <map>
-#include <vector>
-#include "modem.cxx"
 #ifndef MODEM_LISTENER_H_INCLUDED_
 #define MODEM_LISTENER_H_INCLUDED_
+#include <map>
+#include <vector>
+#include "modem.hpp"
+#include "../formatters/helpers.hpp"
+#include "../sys_calls/sys_calls.hpp"
+#include <mutex>
+#include <signal.h>
 using namespace std;
 
 

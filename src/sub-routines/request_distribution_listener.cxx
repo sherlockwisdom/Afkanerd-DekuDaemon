@@ -1,3 +1,5 @@
+#ifndef REQUEST_DISTRIBUTION_LISTENER_H_INCLUDED_
+#define REQUEST_DISTRIBUTION_LISTENER_H_INCLUDED_
 #include <map>
 #include <algorithm>
 #include "../formatters/helpers.hpp"
@@ -91,3 +93,5 @@ namespace request_distribution_listener {
 	}
 
 }
+
+#endif
