@@ -26,6 +26,11 @@ bool system_check( string path_to_sys_file) {
 		return false;
 	}
 
+	string MYSQL_SERVER,
+	       MYSQL_USER,
+	       MYSQL_PASSWORD,
+	       MYSQL_DATABASE;
+
 	for(auto config_line: sys_file_contents) {
 		logger::logger(__FUNCTION__, config_line);
 		vector<string> configs = helpers::string_split(config_line, '=');
@@ -76,6 +81,26 @@ bool system_check( string path_to_sys_file) {
 		else if(configs[0] == "MYSQL_DATABASE") {
 			MYSQL_DATABASE = configs[1];
 		}
+	}
+
+	if( MYSQL_SERVER.empty()) {
+		logger::logger(__FUNCTION__, "MYSQL SERVER NOT SET", "stderr", true);
+		return false;
+	}
+	
+	if( MYSQL_USER.empty()) {
+		logger::logger(__FUNCTION__, "MYSQL USER NOT SET", "stderr", true);
+		return false;
+	}
+
+	if( MYSQL_PASSWORD.empty()) {
+		logger::logger(__FUNCTION__, "MYSQL PASSWORD NOT SET", "stderr", true);
+		return false;
+	}
+
+	if( MYSQL_DATABASE.empty()) {
+		logger::logger(__FUNCTION__, "MYSQL DATABASE NOT SET", "stderr", true);
+		return false;
 	}
 
 	return true;
