@@ -175,11 +175,12 @@ void Modem::modem_sms_listener ( ) {
 				// Deleting each message is very crucial
 
 				//TODO: Get Table name from gloabl configuration scope, so with all the other tables
-				string store_db = "INSERT INTO MODEM_SMS_RECEIVED (IMEI, MESSAGE, NUMBER) VALUES ('" + this->getIMEI() + "','"+message+"'," + number + ")";
+				string store_db = "INSERT INTO MODEM_SMS_RECEIVED (IMEI, MESSAGE, PHONENUMBER) VALUES ('" + this->getIMEI() + "','"+message+"'," + number + ")";
 				bool message_stored = this->mysqlConnection.query( store_db );
 
 				if( !message_stored ) {
 					logger::logger(__FUNCTION__, "FAILED STORING SMS", "stderr", true);
+					logger::logger(__FUNCTION__, this->mysqlConnection.get_error_message());
 					continue;
 				}
 				
