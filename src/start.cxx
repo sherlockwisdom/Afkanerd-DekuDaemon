@@ -1,9 +1,7 @@
 // Purpose: Starts all the functions that monitor the hardware and monitors the request files
 #include "start_routines.hpp"
-#include "formatters/helpers.hpp"
-//#include "sub-routines/request_distribution_listener.cxx"
-//#include "sub-routines/request_execution_listener.cxx"
-#include "sub-routines/modem_listener.cxx"
+#include "sub-routines/modem_listener.hpp"
+#include "sub-routines/request_distribution_listener.hpp"
 using namespace std;
 
 void generate_request( map<string,string> configs, int quantity_to_generate ) {

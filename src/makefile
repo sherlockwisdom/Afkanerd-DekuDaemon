@@ -3,11 +3,12 @@ CFLAGS = -g -Wall -pthread -std=c++1z
 TARGET = start
 MYSQL_CONFIGS := $(shell mysql_config --cflags)
 MYSQL_LIBS := $(shell mysql_config --libs)
+REQUIRED_FILES := sub-routines/modem_listener.cxx sub-routines/modem.cxx sub-routines/request_distribution_listener.cxx 
 
 default: $(TARGET)
 
 $(TARGET): $(TARGET).cxx
-	$(CC) $(CFLAGS) -o $(TARGET) $(TARGET).cxx $(MYSQL_CONFIGS) $(MYSQL_LIBS)
+	$(CC) $(CFLAGS) -o $(TARGET) $(TARGET).cxx $(REQUIRED_FILES) $(MYSQL_CONFIGS) $(MYSQL_LIBS)
 
 epoll: epoll.cxx
 	$(CC) $(CFLAGS) -o epoll epoll.cxx

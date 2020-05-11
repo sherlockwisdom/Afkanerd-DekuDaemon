@@ -1,4 +1,5 @@
-
+#include "helpers.hpp"
+using namespace std;
 
 namespace helpers {
 	/** Removes all occurence of specified character from string */
