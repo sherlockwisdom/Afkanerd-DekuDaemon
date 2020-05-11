@@ -175,7 +175,7 @@ void Modem::modem_sms_listener ( ) {
 				// Deleting each message is very crucial
 
 				string store_db = "INSERT INTO MODEM_SMS_RECEIVED (MESSAGE, NUMBER) VALUES ('"+message+"','"+number+"')";
-				bool message_stored = this->mysql.query( store_db );
+				bool message_stored = this->mysqlConnection.query( store_db );
 
 				if( !message_stored ) {
 					logger::logger(__FUNCTION__, "FAILED STORING SMS", "stderr", true);

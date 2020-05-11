@@ -135,7 +135,7 @@ bool system_check( string path_to_sys_file) {
 	       DEKU_MODEM_SMS_STATUS_VALUES = "IMEI bigint(20) NOT NULL,"
 		       "WORK_LOAD INT(11) NOT NULL,"
 		       "DATE DATE,"
-		       "MDATE timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP";	
+		       "MDATE timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP",
 
 	       DEKU_MODEM_SMS_RECEIVED_VALUES = "IMEI bigint(20) NOT NULL,"
 		       "PHONENUMBER INT(11) NOT NULL,"
