@@ -3,9 +3,7 @@
 #include <vector>
 #include "formatters/helpers.hpp"
 #include "sys_calls/sys_calls.hpp"
-#include "../mysql/mysql.hpp"
-#ifndef START_ROUTINES_H_INCLUDED_
-#define START_ROUTINES_H_INCLUDED_
+#include "mysql/mysql.cxx"
 using namespace std;
 
 
@@ -139,7 +137,7 @@ bool system_check( string path_to_sys_file) {
 		       "DATE DATE,"
 		       "MDATE timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP";	
 
-	if( !mysql.has_table( DEKU_DEFAULT_TALE ) ) {
+	if( !mysql.has_table( DEKU_TABLE_MODEM_MONITOR ) ) {
 		if( mysql.create_table( DEKU_TABLE_MODEM_MONITOR, DEKU_MODEM_MONITOR_VALUES ))
 			logger::logger(__FUNCTION__, "MODEM MONITOR DATABASE CREATED", "stdout", true);
 		else {
@@ -160,6 +158,7 @@ bool system_check( string path_to_sys_file) {
 	}
 	
 	logger::logger(__FUNCTION__, "CREATED ALL DATABASE TABLES", "stdout", true);
+	mysql.close();
 
 	return true;
 }
@@ -180,4 +179,3 @@ map<string,string> get_system_configs( vector<string> sys_config_lines ) {
 	}
 	return configs;
 }
-#endif

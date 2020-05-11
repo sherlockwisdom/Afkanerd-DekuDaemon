@@ -1,11 +1,11 @@
 #include <map>
 #include <vector>
 #include <thread>
-#include "../mysql/mysql.hpp"
-#include "ussd.cxx"
 
 #ifndef MODEM_H_INCLUDED_
 #define MODEM_H_INCLUDED_
+#include "../mysql/mysql.hpp"
+#include "ussd.cxx"
 using namespace std;
 
 class Modem : public USSD {

@@ -1,10 +1,9 @@
+#ifndef mysql_H_INCLUDED_
+#define mysql_H_INCLUDED_
 #include <mysql.h>
 #include <iostream>
 #include <map>
 #include <vector>
-
-#ifndef mysql_H_INCLUDED_
-#define mysql_H_INCLUDED_
 
 using namespace std;
 
