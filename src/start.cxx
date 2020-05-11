@@ -4,28 +4,12 @@
 //#include "sub-routines/request_distribution_listener.cxx"
 //#include "sub-routines/request_execution_listener.cxx"
 #include "sub-routines/modem_listener.cxx"
+#include <signal.h>
 using namespace std;
 
 
-void user_input( Modems& modems ) {
-	/* TODO: commands to introduce...
-
-	isp stats = provide information about all isp
-	"isp" stats = provide information about "isp"
-
-	isp stats pending/locked = provide information about pending/locked jobs for all isp
-	"isp" stats pending/locked = provide information about pending/locked jobs for "isp"
-	*/
-
-	while( 1 ) {
-		cout << __FUNCTION__ << ": ";
-		string input;
-		getline(cin, input);
-
-		cout << __FUNCTION__<< " = " << input << endl;
-	}
+void handle_sigint( int signal ) {
 }
-
 
 void generate_request( map<string,string> configs, int quantity_to_generate ) {
 	// TODO: Put more work in here, cus fuck it... it's still got a private number lol
@@ -84,6 +68,7 @@ map<string,string> parse_ussd_request_script( string request_script ) {
 }
 
 int main(int argc, char** argv) {
+	signal(SIGINT, handle_sigint);
 	// Default values
 	Modems::STATE RUNNING_MODE = Modems::TEST;
 	string PATH_SYS_FILE;
@@ -327,9 +312,7 @@ int main(int argc, char** argv) {
 	std::thread tr_modems_scanner = std::thread(&Modems::begin_scanning, std::ref(modems), request_listening, sms_only);
 	
 	std::thread tr_request_listeners = std::thread(request_distribution_listener::request_distribution_listener, configs);
-	// tr_modem_listeners.join();
-	// tr_modem_starter.join();
-	// tr_user_input.join();
+
 	tr_modems_scanner.join();
 	tr_request_listeners.join();
 	
