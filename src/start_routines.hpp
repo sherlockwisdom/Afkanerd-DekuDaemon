@@ -112,14 +112,14 @@ bool system_check( string path_to_sys_file) {
 	mysql.connect();
 	if( mysql.create_database( MYSQL_DATABASE ) ) {
 		logger::logger(__FUNCTION__, "MYSQL DATABASE CREATED", "stdout", true);
-		mysql.set_database( MYSQL_DATABASE );
 	}
-	else {
+	else if( errno != 0) {
 		logger::logger(__FUNCTION__, "FAILED CREATING MYSQL DATABASE", "stderr", true);
 		logger::logger(__FUNCTION__, mysql.get_error_message(), "stderr", true);
 		logger::logger_errno( errno );
 		return false;
 	}
+	mysql.set_database( MYSQL_DATABASE );
 
 	string DEKU_TABLE_MODEM_MONITOR = "MODEMS",
 	       DEKU_TABLE_MODEM_SMS_STATUS = "MODEM_WORK_LOAD";
