@@ -2,11 +2,19 @@
 #include "../formatters/helpers.hpp"
 #include "../sys_calls/sys_calls.hpp"
 #include <mutex>
+#include <signal.h>
 
 using namespace std;
 
+void handle_sigint( int signal ) {
+	logger::logger(__FUNCTION__, "ENDING, CLEANING UP", "stdout", true);
+
+	// code suicide begins from here
+	exit(1);
+}
 //class Modems
 Modems::Modems( map<string,string> configs, STATE state ) {
+	signal(SIGINT, handle_sigint);
 	this->state = state;
 	switch( state ) {
 		case TEST:

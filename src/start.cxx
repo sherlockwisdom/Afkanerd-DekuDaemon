@@ -4,13 +4,7 @@
 //#include "sub-routines/request_distribution_listener.cxx"
 //#include "sub-routines/request_execution_listener.cxx"
 #include "sub-routines/modem_listener.cxx"
-#include <signal.h>
 using namespace std;
-
-
-void handle_sigint( int signal ) {
-	logger::logger(__FUNCTION__, "ENDING, CLEANING UP", "stdout", true);
-}
 
 void generate_request( map<string,string> configs, int quantity_to_generate ) {
 	// TODO: Put more work in here, cus fuck it... it's still got a private number lol
@@ -69,7 +63,6 @@ map<string,string> parse_ussd_request_script( string request_script ) {
 }
 
 int main(int argc, char** argv) {
-	signal(SIGINT, handle_sigint);
 	// Default values
 	Modems::STATE RUNNING_MODE = Modems::TEST;
 	string PATH_SYS_FILE;

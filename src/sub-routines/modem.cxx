@@ -573,6 +573,7 @@ string Modem::send_sms(string message, string number ) {
 }
 
 Modem::~Modem() {
+	logger::logger(__FUNCTION__, "MODEM CLEANING UP FOR EXIT");
 	if( this->mysqlConnection.is_init() )  {
 		string unplugged_query = "UPDATE __DEKU__.MODEMS SET POWER = 'not_plugged' WHERE IMEI = '" + this->imei + "'";
 		try {
