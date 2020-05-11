@@ -130,10 +130,17 @@ bool system_check( string path_to_sys_file) {
 	if( !mysql.has_table( DEKU_DEFAULT_TALE ) ) {
 		if( mysql.create_table( DEKU_TABLE_MODEM_MONITOR, DEKU_DEFAULT_TABLE_VALUES ))
 			logger::logger(__FUNCTION__, "MODEM MONITOR DATABASE CREATED", "stdout", true);
-		else if( mysql.create_table( DEKU_TABLE_MODEM_SMS_STATUS, DEKU_DEFAULT_TABLE_VALUES ))
-			logger::logger(__FUNCTION__, "MODEM MONITOR DATABASE CREATED", "stdout", true);
 		else {
-			logger::logger(__FUNCTION__, "FAILED CREATING DATABASE TABLE", "stderr", true);
+			logger::logger(__FUNCTION__, "FAILED CREATING MODEM MONITOR DATABASE TABLE", "stderr", true);
+			logger::logger(__FUNCTION__, mysql.get_error_message(), "stderr", true);
+			logger::logger_errno( errno );
+			return false;
+		}
+
+		if( mysql.create_table( DEKU_TABLE_MODEM_SMS_STATUS, DEKU_DEFAULT_TABLE_VALUES ))
+			logger::logger(__FUNCTION__, "MODEM SMS STATUS DATABASE CREATED", "stdout", true);
+		else {
+			logger::logger(__FUNCTION__, "FAILED CREATING SMS STATUS DATABASE TABLE", "stderr", true);
 			logger::logger(__FUNCTION__, mysql.get_error_message(), "stderr", true);
 			logger::logger_errno( errno );
 			return false;
