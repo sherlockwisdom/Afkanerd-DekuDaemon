@@ -15,7 +15,7 @@ namespace helpers {
 	template<class T> T vector_to_whole_string( vector<T>, char);
 	template<class T> T vector_to_whole_numbers( vector<T>, char);
 	string find_and_replace_substr( string, string, string );
-	vector<string> string_split(string, char, size_t );
+	vector<string> string_split(string, char del = ' ', size_t start_pos = 0);
 	void make_dir( string );
 	template<class T> void write_file( string, T, bool, ios_base::openmode );
 	vector<string> read_file( string );

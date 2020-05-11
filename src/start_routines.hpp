@@ -1,11 +1,9 @@
-#ifndef START_ROUTINES_H_INCLUDED_
-#define START_ROUTINES_H_INCLUDED_
 #include <map>
 #include <iostream>
 #include <vector>
 #include "formatters/helpers.hpp"
 #include "sys_calls/sys_calls.hpp"
-#include "mysql/mysql.cxx"
+#include "mysql/mysql.hpp"
 using namespace std;
 
 
@@ -201,4 +199,3 @@ map<string,string> get_system_configs( vector<string> sys_config_lines ) {
 	return configs;
 }
 
-#endif
