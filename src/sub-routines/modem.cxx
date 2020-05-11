@@ -175,7 +175,7 @@ void Modem::modem_sms_listener ( ) {
 				// Deleting each message is very crucial
 
 				//TODO: Get Table name from gloabl configuration scope, so with all the other tables
-				string store_db = "INSERT INTO MODEM_SMS_RECEIVED (IMEI, MESSAGE, PHONENUMBER) VALUES ('" + this->getIMEI() + "','"+message+"'," + number + ")";
+				string store_db = "INSERT INTO MODEM_SMS_RECEIVED (IMEI, MESSAGE, PHONENUMBER) VALUES ('" + this->getIMEI() + "','"+message+"','" + number + "')";
 				bool message_stored = this->mysqlConnection.query( store_db );
 
 				if( !message_stored ) {
