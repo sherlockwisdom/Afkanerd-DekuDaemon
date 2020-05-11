@@ -9,6 +9,7 @@ using namespace std;
 
 
 void handle_sigint( int signal ) {
+	logger::logger(__FUNCTION__, "ENDING, CLEANING UP", "stdout", true);
 }
 
 void generate_request( map<string,string> configs, int quantity_to_generate ) {
