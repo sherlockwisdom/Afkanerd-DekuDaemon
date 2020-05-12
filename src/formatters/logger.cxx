@@ -3,8 +3,7 @@ using namespace std;
 
 namespace logger {
 
-	string show_state = "TESTING";
-	void logger( const char* func_name, string output, string output_stream = "stdout", bool show_production = false) {
+	void logger( const char* func_name, string output, string output_stream, bool show_production) {
 		if( show_state == "PRODUCTION" and !show_production) return;
 		if( output.empty() ) return;
 
@@ -26,7 +25,7 @@ namespace logger {
 		cout << "[logger_errno] - MESSAGE: " << error_message << "=> " << endl;
 	}
 
-	void logger_tester( string func_name, bool output, string output_stream = "stdout" ) {
+	void logger_tester( string func_name, bool output, string output_stream ) {
 		if( output_stream == "stdout" || output_stream == "STDOUT" ) {
 			cout << "[tester.info] - " << func_name << "=> " << std::boolalpha << output << endl;
 		}
