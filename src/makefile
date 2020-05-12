@@ -15,12 +15,13 @@ all:
 	$(CC) $(CFLAGS) -c formatters/logger.cxx -o logger.o 
 	$(CC) $(CFLAGS) -c formatters/helpers.cxx -o helpers.o 
 	$(CC) $(CFLAGS) -c sys_calls/sys_calls.cxx -o sys_calls.o
-	$(CC) $(CFLAGS) -c mysql/mysql.cxx -o mysql.o $(MYSQL_CONFIGS) $(MYSQL_LIBS)
+	$(CC) $(CFLAGS) -c mysql/mysql.cxx -o mysql.o $(MYSQL_LIBS) $(MYSQL_CONFIGS)
 	$(CC) $(CFLAGS) -c sub-routines/modem.cxx -o modem.o $(MYSQL_CONFIGS) $(MYSQL_LIBS)
 	$(CC) $(CFLAGS) -c sub-routines/request_distribution_listener.cxx -o request_distribution_listener.o 
 	$(CC) $(CFLAGS) -c sub-routines/modem_listener.cxx -o modem_listener.o $(MYSQL_CONFIGS) $(MYSQL_LIBS)
 	$(CC) $(CFLAGS) -c start.cxx -o start.o $(MYSQL_CONFIGS) $(MYSQL_LIBS)
-	$(CC) $(CFLAGS) $(LOBJECTS) -o start 
+	$(CC) $(CFLAGS) $(LOBJECTS) -o start $(MYSQL_CONFIGS) $(MYSQL_LIBS)
+
 
 start:
 	$(CC) $(CFLAGS) -c start.cxx -o start.o $(MYSQL_CONFIGS) $(MYSQL_LIBS)

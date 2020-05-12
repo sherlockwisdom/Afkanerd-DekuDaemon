@@ -12,21 +12,21 @@ using namespace std;
 namespace sys_calls {
 	enum FILE_FLAG{EXIST, DEL};
 
-	inline void sys_reboot();
+	extern void sys_reboot();
 
-	inline bool file_handlers(string, FILE_FLAG);
+	extern bool file_handlers(string, FILE_FLAG);
 
-	inline void make_dir(string);
+	extern void make_dir(string);
 
-	inline string terminal_stdout(string);
+	extern string terminal_stdout(string);
 
-	inline void terminal_stdout(map<string,string>,string);
+	extern void terminal_stdout(map<string,string>,string);
 
-	inline bool rename_file(string,string);
+	extern bool rename_file(string,string);
 
-	inline vector<string> get_modem_details(string,string);
+	extern vector<string> get_modem_details(string,string);
 
-	inline map<string,map<string,string>> get_available_modems(string);
+	extern map<string,map<string,string>> get_available_modems(string);
 }
 
 #endif
