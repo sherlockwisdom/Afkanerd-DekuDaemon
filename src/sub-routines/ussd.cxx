@@ -1,5 +1,4 @@
 #include "ussd.hpp"
-#include <type_traits>
 
 using namespace std;
 

@@ -1,10 +1,11 @@
+#ifndef USSD_H_INCLUDED_
+#define USSD_H_INCLUDED_
 #include <iostream>
 #include <map>
+#include <type_traits>
 #include <vector>
 #include "../formatters/helpers.hpp"
 #include "../sys_calls/sys_calls.hpp"
-#ifndef USSD_H_INCLUDED_
-#define USSD_H_INCLUDED_
 
 using namespace std;
 

@@ -1,9 +1,12 @@
 #ifndef mysql_H_INCLUDED_
 #define mysql_H_INCLUDED_
 #include <mysql.h>
+#include "../formatters/helpers.hpp"
 #include <iostream>
 #include <map>
 #include <vector>
+#include <cstring>
+#include <iostream>
 
 using namespace std;
 

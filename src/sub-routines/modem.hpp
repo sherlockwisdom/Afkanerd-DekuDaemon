@@ -6,7 +6,7 @@
 #include <iostream>
 #include <mutex>
 
-#include "../mysql/mysql.cxx"
+#include "../mysql/mysql.hpp"
 #include "ussd.cxx"
 #include "../sys_calls/sys_calls.hpp"
 using namespace std;

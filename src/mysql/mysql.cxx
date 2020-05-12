@@ -1,10 +1,4 @@
-#ifndef MYSQL_CXX_H_INCLUDED_
-#define MYSQL_CXX_H_INCLUDED_
-// TODO: build test scripts to make sure this works as planned
-#include "../formatters/helpers.hpp"
 #include "mysql.hpp"
-#include <cstring>
-#include <iostream>
 
 using namespace std;
 
@@ -211,4 +205,3 @@ void MySQL::close() {
 
 MySQL::~MySQL() {
 }
-#endif
