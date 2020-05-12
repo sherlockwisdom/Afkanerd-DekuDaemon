@@ -140,10 +140,11 @@ void Modems::begin_scanning( bool request_listening = true, bool sms_listening =
 	while( 1 ) { //TODO: Use a variable to control this loop
 		// First it gets all availabe modems
 		logger::logger(__FUNCTION__, "Refreshing modem list..");
-		auto available_modems = this->get_available_modems();
+		auto av_modems = this->get_available_modems();
+		// auto av_modems = Modems::available_modems;
 
 		// Second it filters the modems and stores them in database
-		for(auto modem : available_modems) {
+		for(auto modem : av_modems) {
 			bool has_modems_imei = false;
 			if(!Modems::available_modems.empty()) 
 				has_modems_imei = Modems::available_modems.find( modem.first ) != Modems::available_modems.end() ? true : false;
