@@ -4,7 +4,6 @@
 #include <algorithm>
 
 #include "../formatters/helpers.hpp"
-#include "../parsers/comma_equals_parser.hpp"
 #include "../sub-routines/isp_determiner.hpp"
 #include "../sys_calls/sys_calls.hpp"
 

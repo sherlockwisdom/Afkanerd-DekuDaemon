@@ -24,10 +24,10 @@ namespace request_distribution_listener {
 
 	map<string,string> request_parser(string request) {
 		map<string, string> extracted_request;
-		vector<string> request_extract = parsers::comma_seperate( request, 0, true);
+		vector<string> request_extract = helpers::comma_seperate( request, 0, true);
 		string message, number;
 		for(auto r_entity : request_extract ) {
-			vector<string> component = parsers::equal_seperate( r_entity, 1);
+			vector<string> component = helpers::equal_seperate( r_entity, 1);
 			if(component.size() < 2 ) continue;
 			if( component[0] == "number" ) extracted_request.insert(make_pair("number", component[1]));
 			else if(component[0] == "message" ) {
