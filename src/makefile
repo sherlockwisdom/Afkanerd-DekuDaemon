@@ -3,7 +3,7 @@ CFLAGS = -g -Wall -pthread -std=c++1z
 TARGET = start
 MYSQL_CONFIGS := $(shell mysql_config --cflags)
 MYSQL_LIBS := $(shell mysql_config --libs)
-LOBJECTS := helpers.o logger.o sys_calls.o modem.o request_distribution_listener.o modem_listener.o
+LOBJECTS := start.o helpers.o logger.o sys_calls.o modem.o request_distribution_listener.o modem_listener.o
 
 # Compile only those files that have changed and not the entire thing
 # Keep the object files in a dir, to avoid recompiling all the time
@@ -16,4 +16,5 @@ all:
 	$(CC) $(CFLAGS) -c sub-routines/modem.cxx -o modem.o $(MYSQL_CONFIGS) $(MYSQL_LIBS)
 	$(CC) $(CFLAGS) -c sub-routines/request_distribution_listener.cxx -o request_distribution_listener.o 
 	$(CC) $(CFLAGS) -c sub-routines/modem_listener.cxx -o modem_listener.o $(MYSQL_CONFIGS) $(MYSQL_LIBS)
-	$(CC) $(CFLAGS) start.cxx $(LOBJECTS) -o start $(MYSQL_CONFIGS) $(MYSQL_LIBS)
+	$(CC) $(CFLAGS) -c start.cxx -o start.o $(MYSQL_CONFIGS) $(MYSQL_LIBS)
+	$(CC) $(CFLAGS) $(LOBJECTS) -o start $(MYSQL_CONFIGS) $(MYSQL_LIBS)
