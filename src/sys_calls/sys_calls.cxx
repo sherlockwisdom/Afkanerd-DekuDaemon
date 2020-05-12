@@ -1,4 +1,5 @@
 #include "sys_calls.hpp"
+#include "../formatters/helpers.hpp"
 using namespace std;
 
 namespace sys_calls {
@@ -56,6 +57,7 @@ namespace sys_calls {
 		return data;
 	}
 
+	/*
 	void terminal_stdout(map<string,string>& return_values, string command) {
 		string data;
 		FILE * stream;
@@ -72,6 +74,7 @@ namespace sys_calls {
 		}
 		return_values.insert(make_pair("data", data));
 	}
+	*/
 
 	bool rename_file( string path_filename, string new_path_filename) {
 		if(std::rename( path_filename.c_str(), new_path_filename.c_str()) == -1 ) {

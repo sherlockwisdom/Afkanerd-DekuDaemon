@@ -5,8 +5,9 @@
 #include <typeinfo>
 #include <unistd.h>
 #include <sys/reboot.h>
+#include <map>
+#include <vector>
 
-#include "../formatters/helpers.hpp"
 using namespace std;
 
 namespace sys_calls {
@@ -18,9 +19,24 @@ namespace sys_calls {
 
 	extern void make_dir(string);
 
-	extern string terminal_stdout(string);
+	extern  string terminal_stdout(string);
 
-	extern void terminal_stdout(map<string,string>,string);
+	inline void terminal_stdout(map<string,string>& return_values, string command) {
+		string data;
+		FILE * stream;
+		const int max_buffer = 1024;
+		char buffer[max_buffer];
+		command.append(" 2>&1");
+
+		stream = popen(command.c_str(), "r");
+		if (stream) {
+			while (!feof(stream)) 
+				if (fgets(buffer, max_buffer, stream) != NULL) 
+					data.append(buffer);
+			return_values.insert(make_pair("return", to_string(pclose(stream))));
+		}
+		return_values.insert(make_pair("data", data));
+	}
 
 	extern bool rename_file(string,string);
 

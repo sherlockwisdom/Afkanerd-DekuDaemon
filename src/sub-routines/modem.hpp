@@ -8,7 +8,6 @@
 
 #include "ussd.hpp"
 #include "../mysql/mysql.hpp"
-#include "../sys_calls/sys_calls.hpp"
 using namespace std;
 
 class Modem : public USSD {
