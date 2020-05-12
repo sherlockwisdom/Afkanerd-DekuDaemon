@@ -68,6 +68,11 @@ void Modems::db_insert_modems_workload( map<string, string> modem ) {
 	// logger::logger(__FUNCTION__, "Checking for modem in DB workload");
 
 	bool responds = this->mysqlConnection.query( select_workload_query );
+	if( !responds ) {
+		logger::logger(__FUNCTION__, "INSERT MODEM INTO DB FAILED", "stderr", true);
+		return;
+	}
+
 	map<string, vector<string>> query_respond = this->mysqlConnection.get_results();
 	if(query_respond.empty()) {
 		// logger::logger(__FUNCTION__, "Modem not in workload - Executing Insert queries");
@@ -88,13 +93,13 @@ void Modems::db_insert_modems( map<string,string> modem ) {
 
 	logger::logger(__FUNCTION__, "Inserting modem into DB");
 	// Insert affects rows, but doesn't return anything
-	auto responds = this->mysqlConnection.query( insert_modem_query );
+	this->mysqlConnection.query( insert_modem_query );
 }
 
 void Modems::db_switch_power_modems( map<string,string> modem, string state ) {
 	string switch_modem_power_query = "UPDATE __DEKU__.MODEMS SET POWER = '"+state+"' WHERE IMEI='" + modem["imei"] + "'";
 	logger::logger(__FUNCTION__, modem["imei"] + " - Switch modem power state");
-	auto responds = this->mysqlConnection.query( switch_modem_power_query );
+	this->mysqlConnection.query( switch_modem_power_query );
 }
 
 map<string,map<string,string>> Modems::get_available_modems() {
