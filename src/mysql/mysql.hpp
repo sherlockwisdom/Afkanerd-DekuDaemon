@@ -1,12 +1,13 @@
 #ifndef mysql_H_INCLUDED_
 #define mysql_H_INCLUDED_
 #include <mysql.h>
-#include "../formatters/helpers.hpp"
 #include <iostream>
 #include <map>
 #include <vector>
 #include <cstring>
 #include <iostream>
+
+#include "../formatters/helpers.hpp"
 
 using namespace std;
 
@@ -26,7 +27,7 @@ class MySQL {
 	bool initialized = false;
 	
 	public:
-	MySQL(string server, string user, string password, string database);
+	MySQL(string server, string user, string password, string database = "");
 	MySQL();
 	~MySQL();
 

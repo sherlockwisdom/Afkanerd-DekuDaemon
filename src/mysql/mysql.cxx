@@ -2,7 +2,7 @@
 
 using namespace std;
 
-MySQL::MySQL(string server, string user, string password, string database = "" ) {
+MySQL::MySQL(string server, string user, string password, string database ) {
 	this->server = server;
 	this->user = user;
 	this->password = password;
