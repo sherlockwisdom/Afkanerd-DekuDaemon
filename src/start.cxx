@@ -68,7 +68,7 @@ int main(int argc, char** argv) {
 
 	int quantity_to_generate = 0;
 	int sleep_time = 10; // 10 seconds
-	int exhaust_count = 3; // 10 seconds
+	// int exhaust_count = 3; // 10 seconds
 
 	bool cleanse = false, 
 	     cleanse_only = false, 

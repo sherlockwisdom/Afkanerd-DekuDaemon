@@ -41,6 +41,14 @@ namespace helpers {
 	string to_lowercase(string);
 
 	auto one_line_parser( string );
+
+	vector<string> comma_seperate( string input, size_t limit_to = 0, bool ignore_in_quotes = false );
+
+	vector<string> equal_seperate( string input, size_t limit_to = 0);
+
+	vector<string> general_seperate( string input, char delimeter );
+
+	vector<string> in_delimeter_extract( string input, char delimeter );
 }
 
 #endif
