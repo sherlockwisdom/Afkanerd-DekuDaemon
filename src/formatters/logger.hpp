@@ -10,13 +10,13 @@ using namespace std;
 
 namespace logger {
 
-	inline string show_state = "TESTING";
+	extern string show_state = "TESTING";
 
-	void logger( const char* func_name, string output, string output_stream = "stdout", bool show_production = false);
+	extern void logger( const char* func_name, string output, string output_stream = "stdout", bool show_production = false);
 	
-	void logger_errno( int t_errno );
+	extern void logger_errno( int t_errno );
 
-	void logger_tester( string func_name, bool output, string output_stream = "stdout" );
+	extern void logger_tester( string func_name, bool output, string output_stream = "stdout" );
 }
 
 

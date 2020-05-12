@@ -1,10 +1,10 @@
 CC = g++
-#CFLAGS = -g -Wall -pthread -std=c++1z
-CFLAGS = -g -Wl,--start-group -pthread -std=c++1z
+CFLAGS = -g -Wall -pthread -std=c++1z
+# CFLAGS = -g -Wl,--start-group -pthread -std=c++1z
 TARGET = start
 MYSQL_CONFIGS := $(shell mysql_config --cflags)
 MYSQL_LIBS := $(shell mysql_config --libs)
-LOBJECTS := helpers.o logger.o sys_calls.o ussd.o modem.o mysql.o request_distribution_listener.o modem_listener.o start.o
+LOBJECTS := logger.o helpers.o sys_calls.o ussd.o mysql.o request_distribution_listener.o modem.o  modem_listener.o start.o
 
 # Compile only those files that have changed and not the entire thing
 # Keep the object files in a dir, to avoid recompiling all the time
