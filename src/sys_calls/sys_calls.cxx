@@ -1,12 +1,7 @@
-#ifndef SYS_CALLS_H_INCLUDED_
-#define SYS_CALLS_H_INCLUDED_
 #include "sys_calls.hpp"
 using namespace std;
 
 namespace sys_calls {
-	enum FILE_FLAG{EXIST, DEL};
-
-
 	void sys_reboot() {
 		int cmd =  0x1234567;
 		int reboot_state = reboot( cmd );
@@ -163,6 +158,3 @@ namespace sys_calls {
 		return available_modems;
 	}
 }
-
-
-#endif
