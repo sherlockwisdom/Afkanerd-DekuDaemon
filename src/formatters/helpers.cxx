@@ -106,8 +106,7 @@ namespace helpers {
 	}
 
 	/** Writes to a file at file path, just a wrapper for the iostream methods */
-	template<class T>
-	void write_file( string path_filename, T input, bool b_unescape_string, ios_base::openmode mode ) {
+	extern void write_file( string path_filename, auto input, bool b_unescape_string, ios_base::openmode mode ) {
 		//if( b_unescape_string ) input = unescape_string( input );
 		ofstream writefile( path_filename.c_str(), mode );
 		writefile << input;

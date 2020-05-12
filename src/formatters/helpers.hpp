@@ -24,7 +24,7 @@ namespace helpers {
 
 	extern void make_dir( string );
 
-	template <class T> extern void write_file( string path_filename, T input, bool b_unescape_string = false, ios_base::openmode mode = ios::app );
+	static void write_file( string path_filename, auto input, bool b_unescape_string = false, ios_base::openmode mode = ios::app );
 
 	extern vector<string> read_file( string );
 
