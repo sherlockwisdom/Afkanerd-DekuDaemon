@@ -22,7 +22,7 @@ all:
 	$(CC) $(CFLAGS) -c sub-routines/modem_listener.cxx -o modem_listener.o $(MYSQL_CONFIGS) $(MYSQL_LIBS)
 	$(CC) $(CFLAGS) -c start.cxx -o start.o $(MYSQL_CONFIGS) $(MYSQL_LIBS)
 	$(CC) $(CFLAGS) $(LOBJECTS)  -o start $(MYSQL_CONFIGS) $(MYSQL_LIBS)
+	
+# Cleanup begins from here
+	rm $(LOBJECTS)
 
-
-start:
-	$(CC) $(CFLAGS) $(COBJECTS) -o start.o $(MYSQL_CONFIGS) $(MYSQL_LIBS)
