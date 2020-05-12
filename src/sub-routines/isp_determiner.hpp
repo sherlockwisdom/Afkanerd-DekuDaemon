@@ -5,7 +5,7 @@ using namespace std;
 namespace isp_determiner {
 	//TODO: Create dynamic version of get_isp - should be able to deduce phonenumbers of anytime based surely on regex
 	//TODO: Add parsers for country code values
-	inline string get_isp( string number ) {
+	extern string get_isp( string number ) {
 		size_t start_counter = number.find("+237") != string::npos ? number.find("+237") : 0;
 		if(number[start_counter] == '6') {
 			switch(number[start_counter+1]) {
