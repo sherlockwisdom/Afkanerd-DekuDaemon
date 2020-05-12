@@ -26,7 +26,7 @@ namespace helpers {
 
 	/** Takes a vector<string> and converts to a std::string */
 	template<class T>
-	T vector_to_whole_string( vector<T> in_vector, char del = ' ') { // this should be a template of dynamic input
+	T vector_to_whole_string( vector<T> in_vector, char del) { // this should be a template of dynamic input
 		T _return = "";
 		if(std::is_same<T, std::string>::value) { //std::is_same_v -> C++17
 			for(auto _string : in_vector ) {
@@ -39,7 +39,7 @@ namespace helpers {
 
 	/** Takes a vector<int> and converts to a int */
 	template<class T>
-	T vector_to_whole_numbers( vector<T> in_vector, char del = ' ') {
+	T vector_to_whole_numbers( vector<T> in_vector, char del) {
 		T _return = 0;
 		if( std::is_same<T, int>::value) {
 			string temp_hold = "";
@@ -68,7 +68,7 @@ namespace helpers {
 		return return_string.empty() ? backup_original : return_string;
 	}
 
-	vector<string> string_split(string _string, char del = ' ', size_t start_pos = 0) { // TODO: Add start delimeter, test other sections of models which require this part of code
+	vector<string> string_split(string _string, char del, size_t start_pos) { // TODO: Add start delimeter, test other sections of models which require this part of code
 		// 
 		vector<string> return_vector;
 		size_t is_delimeter = _string.find( del );
@@ -107,7 +107,7 @@ namespace helpers {
 
 	/** Writes to a file at file path, just a wrapper for the iostream methods */
 	template<class T>
-	void write_file( string path_filename, T input, bool b_unescape_string = false, ios_base::openmode mode = ios::app ) {
+	void write_file( string path_filename, T input, bool b_unescape_string, ios_base::openmode mode ) {
 		//if( b_unescape_string ) input = unescape_string( input );
 		ofstream writefile( path_filename.c_str(), mode );
 		writefile << input;
