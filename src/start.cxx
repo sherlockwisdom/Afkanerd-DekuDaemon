@@ -134,16 +134,18 @@ int main(int argc, char** argv) {
 				}
 			}
 
+			/*
 			else if((string)argv[i] == "--exhaust_count") {
 				if(i+1< argc) {
-					exhaust_count = atoi(((string)argv[i+1]).c_str());
+					//exhaust_count = atoi(((string)argv[i+1]).c_str());
 					if( sleep_time < 1 ) {
 						logger::logger(__FUNCTION__, "min exhaust count = 1 tries, setting default to 3", "stderr", true);
-						exhaust_count = 3; //todo: change - default should come from config file
+					//	exhaust_count = 3; //todo: change - default should come from config file
 					}
 				}
 				logger::logger(__FUNCTION__, "Setting Modem Exhausted at: " + (string)argv[i+1] + " tries", "stdout", true);
 			}
+			*/
 
 			else if((string)argv[i] == "--generate_request") {
 				if(i+1< argc) {
