@@ -226,7 +226,7 @@ void Modem::db_iterate_workload() {
 	string query = "UPDATE __DEKU__.MODEM_WORK_LOAD SET WORK_LOAD = WORK_LOAD + 1 WHERE DATE = DATE(NOW()) AND IMEI = '"+this->imei+"'";
 	logger::logger(__FUNCTION__, query);
 
-	bool responds = this->mysqlConnection.query( query );
+	this->mysqlConnection.query( query );
 }
 
 bool Modem::db_set_working_state( WORKING_STATE working_state )  {
@@ -276,7 +276,7 @@ void Modem::db_reset_workload() {
 	string query = "UPDATE __DEKU__.MODEM_WORK_LOAD SET WORK_LOAD = 0 WHERE IMEI='"+this->imei+"' AND DATE = DATE(NOW())";
 	// logger::logger(__FUNCTION__, query);
 
-	bool responds = this->mysqlConnection.query( query );
+	this->mysqlConnection.query( query );
 }
 
 
