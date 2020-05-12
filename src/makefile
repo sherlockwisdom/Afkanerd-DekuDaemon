@@ -1,5 +1,6 @@
 CC = g++
-CFLAGS = -g -Wall -pthread -std=c++1z
+#CFLAGS = -g -Wall -pthread -std=c++1z
+CFLAGS = -g -Wl,--start-group -pthread -std=c++1z
 TARGET = start
 MYSQL_CONFIGS := $(shell mysql_config --cflags)
 MYSQL_LIBS := $(shell mysql_config --libs)
@@ -19,4 +20,7 @@ all:
 	$(CC) $(CFLAGS) -c sub-routines/request_distribution_listener.cxx -o request_distribution_listener.o 
 	$(CC) $(CFLAGS) -c sub-routines/modem_listener.cxx -o modem_listener.o $(MYSQL_CONFIGS) $(MYSQL_LIBS)
 	$(CC) $(CFLAGS) -c start.cxx -o start.o $(MYSQL_CONFIGS) $(MYSQL_LIBS)
-	$(CC) $(CFLAGS) $(LOBJECTS) -o start $(MYSQL_CONFIGS) $(MYSQL_LIBS)
+	$(CC) $(CFLAGS) $(LOBJECTS) -o start 
+
+start:
+	$(CC) $(CFLAGS) -c start.cxx -o start.o $(MYSQL_CONFIGS) $(MYSQL_LIBS)
