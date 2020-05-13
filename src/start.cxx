@@ -29,6 +29,7 @@ void release_pending_request_files( map<string,string> configs, bool list_only =
 		if( !list_only ) {
 			logger::logger(__FUNCTION__, "RELEASING: " + full_dir );
 			for( auto file : locked_files ) {
+				if( file == "." ) continue;
 				string locked_file = full_dir + file;
 				file.erase(0, 1);
 				string unlocked_file = full_dir + file;
