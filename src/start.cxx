@@ -6,6 +6,24 @@ using namespace std;
 
 map<string, Modem*> Modems::available_modems = {};
 
+void release_pending_request_files( map<string,string> configs ) {
+	string dir_isp = configs["DIR_ISP"];
+	
+	vector<string> isp_dirs = helpers::string_split(sys_calls::terminal_stdout("ls -1 " + dir_isp), '\n');
+
+	for(auto dir : isp_dirs ) {
+		if( dir.empty() ) continue;
+		string full_dir = dir_isp + "/" + dir + "/";
+		logger::logger(__FUNCTION__, "RELEASING: " + full_dir );
+		// sys_calls::terminal_stdout("rm -r " + full_dir + "*");
+		
+		// Get hidden files
+		string locked_files_request = configs["DIR_SCRIPTS"] + "/modem_information_extraction.sh list_locked_request_files " + full_dir;
+		string locked_files = sys_calls::terminal_stdout( locked_files_request );
+		logger::logger(__FUNCTION__, locked_files);
+	}
+}
+
 void generate_request( map<string,string> configs, int quantity_to_generate ) {
 	// TODO: Put more work in here, cus fuck it... it's still got a private number lol
 	logger::logger(__FUNCTION__, "Generating " + to_string( quantity_to_generate ) + " request", "stdout", true);
@@ -76,7 +94,8 @@ int main(int argc, char** argv) {
 	     cleanse_only = false, 
 	     stat_only = false,
 	     sms_only = false,
-	     request_listening = true;
+	     request_listening = true,
+	     list_locked_files_only = false;
 
 	// SMS system set to create
 
@@ -216,6 +235,10 @@ int main(int argc, char** argv) {
 			else if((string)argv[i] == "--sms") {
 				sms_only = true; // Not changing this cus request_listening is the defining factor
 			}
+
+			else if((string)argv[i] == "--ls-locked-files-only") {
+				list_locked_files_only = true;
+			}
 		}
 	}
 
@@ -237,6 +260,12 @@ int main(int argc, char** argv) {
 	// Generate test request TODO: Make better so dynamic test messages can be passed into system
 	if( quantity_to_generate > 0 ) {
 		generate_request( configs, quantity_to_generate );
+	}
+
+	if( list_locked_files_only ) {
+		logger::logger(__FUNCTION__, "LISTING LOCKED FILES", "stdout", true);
+		release_pending_request_files( configs );
+		return 0;
 	}
 
 	if( cleanse_only ) {
