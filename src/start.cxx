@@ -45,6 +45,7 @@ void release_pending_request_files( map<string,string> configs, bool list_only =
 		else {
 			logger::logger(__FUNCTION__, "LISTING: " + full_dir);
 			for( auto file: locked_files ) {
+				if( file == "." ) continue;
 				string locked_file = full_dir + file;
 				logger::logger(__FUNCTION__, locked_file, "stdout", true);
 			}
