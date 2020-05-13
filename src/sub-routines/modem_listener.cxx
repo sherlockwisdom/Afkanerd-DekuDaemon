@@ -11,6 +11,11 @@ void Modems::handle_sigint( int signal ) {
 	}
 	*/
 	// code suicide begins from here
+	size_t iterator = 0;
+	for(auto it_av_modem = Modems::available_modems.begin(); it_av_modem != Modems::available_modems.end(); ++it_av_modem) {
+		logger::logger(__FUNCTION__, "CLEANSING: [" + to_string(iterator + 1) + "/" + to_string(Modems::available_modems.size()) + "]| " + it_av_modem->second->getInfo(), "stdout", true);
+		delete it_av_modem->second;
+	}
 	exit(1);
 }
 
