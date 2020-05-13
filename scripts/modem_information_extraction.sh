@@ -48,6 +48,11 @@ elif [ "$1" == "ussd_cancel" ]; then
 	ussd_respond=$( mmcli -K -m $modem_index --3gpp-ussd-cancel )
 	printf "$ussd_respond"
 
+elif [ "$1" == "list_locked_request_files" ]; then
+	locked_dir=$2
+	files=$( ls -a | grep -oe "^\.\w*$" )
+	printf "files"
+
 elif [ "$1" == "sms" ] ; then
 	_type=$2
 	if [ "$_type" == "send" ] ; then
