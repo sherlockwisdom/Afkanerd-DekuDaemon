@@ -12,17 +12,17 @@ COBJECTS := sub-routines/ussd.cxx formatters/logger.cxx formatters/helpers.cxx s
 
 
 all:
-	$(CC) $(CFLAGS) -c sub-routines/ussd.cxx -o ussd.o
-	$(CC) $(CFLAGS) -c formatters/logger.cxx -o logger.o 
-	$(CC) $(CFLAGS) -c formatters/helpers.cxx -o helpers.o 
-	$(CC) $(CFLAGS) -c sys_calls/sys_calls.cxx -o sys_calls.o
-	$(CC) $(CFLAGS) -c mysql/mysql.cxx -o mysql.o $(MYSQL_LIBS) $(MYSQL_CONFIGS)
-	$(CC) $(CFLAGS) -c sub-routines/modem.cxx -o modem.o $(MYSQL_CONFIGS) $(MYSQL_LIBS)
-	$(CC) $(CFLAGS) -c sub-routines/request_distribution_listener.cxx -o request_distribution_listener.o 
-	$(CC) $(CFLAGS) -c sub-routines/modem_listener.cxx -o modem_listener.o $(MYSQL_CONFIGS) $(MYSQL_LIBS)
-	$(CC) $(CFLAGS) -c start.cxx -o start.o $(MYSQL_CONFIGS) $(MYSQL_LIBS)
-	$(CC) $(CFLAGS) $(LOBJECTS)  -o start $(MYSQL_CONFIGS) $(MYSQL_LIBS)
+	$(CC) $(CFLAGS) -c sub-routines/ussd.cxx -o build/ussd.o
+	$(CC) $(CFLAGS) -c formatters/logger.cxx -o build/logger.o 
+	$(CC) $(CFLAGS) -c formatters/helpers.cxx -o build/helpers.o 
+	$(CC) $(CFLAGS) -c sys_calls/sys_calls.cxx -o build/sys_calls.o
+	$(CC) $(CFLAGS) -c mysql/mysql.cxx -o build/mysql.o $(MYSQL_LIBS) $(MYSQL_CONFIGS)
+	$(CC) $(CFLAGS) -c sub-routines/modem.cxx -o build/modem.o $(MYSQL_CONFIGS) $(MYSQL_LIBS)
+	$(CC) $(CFLAGS) -c sub-routines/request_distribution_listener.cxx -o build/request_distribution_listener.o 
+	$(CC) $(CFLAGS) -c sub-routines/modem_listener.cxx -o build/modem_listener.o $(MYSQL_CONFIGS) $(MYSQL_LIBS)
+	$(CC) $(CFLAGS) -c start.cxx -o build/start.o $(MYSQL_CONFIGS) $(MYSQL_LIBS)
+	$(CC) $(CFLAGS) $(LOBJECTS)  -o bin/start $(MYSQL_CONFIGS) $(MYSQL_LIBS)
 	
 # Cleanup begins from here
-	rm $(LOBJECTS)
+	# rm $(LOBJECTS)
 
