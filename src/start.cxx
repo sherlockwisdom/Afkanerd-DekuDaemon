@@ -132,12 +132,12 @@ int main(int argc, char** argv) {
 	map<string,string> ussd_only_script;
 
 	if(argc < 2 ) {
-		logger::logger(__FUNCTION__, "Usage: -c <path_to_config_file>", "stderr", true);
+		logger::logger(__FUNCTION__, "Usage: --c <path_to_config_file>", "stderr", true);
 		return 1;
 	}
 	else {
 		for(int i=1;i<argc;++i) {
-			if((string)argv[i]== "-c") {
+			if((string)argv[i]== "--c") {
 				logger::logger(__FUNCTION__, "config file arguments present", "stdout", false);
 				if(i+1 < argc) {
 					PATH_SYS_FILE = argv[i+1];
