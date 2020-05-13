@@ -11,7 +11,7 @@ COBJECTS := sub-routines/ussd.cxx formatters/logger.cxx formatters/helpers.cxx s
 # Keep the object files in a dir, to avoid recompiling all the time
 
 
-all:
+all: $(COBJECTS)
 	$(CC) $(CFLAGS) -c sub-routines/ussd.cxx -o ../builds/ussd.o
 	$(CC) $(CFLAGS) -c formatters/logger.cxx -o ../builds/logger.o 
 	$(CC) $(CFLAGS) -c formatters/helpers.cxx -o ../builds/helpers.o 
@@ -21,7 +21,7 @@ all:
 	$(CC) $(CFLAGS) -c sub-routines/request_distribution_listener.cxx -o ../builds/request_distribution_listener.o 
 	$(CC) $(CFLAGS) -c sub-routines/modem_listener.cxx -o ../builds/modem_listener.o $(MYSQL_CONFIGS) $(MYSQL_LIBS)
 	$(CC) $(CFLAGS) -c start.cxx -o ../builds/start.o $(MYSQL_CONFIGS) $(MYSQL_LIBS)
-	$(CC) $(CFLAGS) $(LOBJECTS)  -o ../bin/start $(MYSQL_CONFIGS) $(MYSQL_LIBS)
+	$(CC) $(CFLAGS) $(LOBJECTS)  -o ../bins/start $(MYSQL_CONFIGS) $(MYSQL_LIBS)
 	
 # Cleanup begins from here
 	# rm $(LOBJECTS)
