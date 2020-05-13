@@ -13,7 +13,6 @@ using namespace std;
 
 class Modems {
 	vector<Modem*> modemCollection;
-	static map<string, Modem*> available_modems;
 
 	map<Modem*, std::thread> threaded_modems;
 	int modem_sleep_time = 10;
@@ -25,6 +24,7 @@ class Modems {
 	static void handle_sigint( int );
 
 	public:
+		static map<string, Modem*> available_modems;
 		enum STATE{TEST, PRODUCTION};
 		STATE state;
 		Modems( map<string,string> configs, STATE state);

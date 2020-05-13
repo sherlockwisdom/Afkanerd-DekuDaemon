@@ -5,12 +5,13 @@ using namespace std;
 void Modems::handle_sigint( int signal ) {
 	logger::logger(__FUNCTION__, "ENDING, CLEANING UP", "stdout", true);
 
-	/*
-	for( auto modem : Modems::available_modems ) {
-		delete modem.second;
+	size_t iterator = 0;
+	for(auto it_av_modem = Modems::available_modems.begin(); it_av_modem != Modems::available_modems.end(); ++it_av_modem) {
+		logger::logger(__FUNCTION__, "CLEANSING: [" + to_string(iterator + 1) + "/" + to_string(Modems::available_modems.size()) + "]| " + it_av_modem->second->getInfo(), "stdout", true);
+		delete it_av_modem->second;
 	}
-	*/
-	// code suicide begins from here
+	// TODO: Release locked files
+	// Should be save doing that here cus the modems have all been stopped above
 	exit(1);
 }
 
@@ -140,10 +141,11 @@ void Modems::begin_scanning( bool request_listening = true, bool sms_listening =
 	while( 1 ) { //TODO: Use a variable to control this loop
 		// First it gets all availabe modems
 		logger::logger(__FUNCTION__, "Refreshing modem list..");
-		auto available_modems = this->get_available_modems();
+		auto av_modems = this->get_available_modems();
+		// auto av_modems = Modems::available_modems;
 
 		// Second it filters the modems and stores them in database
-		for(auto modem : available_modems) {
+		for(auto modem : av_modems) {
 			bool has_modems_imei = false;
 			if(!Modems::available_modems.empty()) 
 				has_modems_imei = Modems::available_modems.find( modem.first ) != Modems::available_modems.end() ? true : false;

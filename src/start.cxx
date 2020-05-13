@@ -4,6 +4,8 @@
 #include "sub-routines/request_distribution_listener.hpp"
 using namespace std;
 
+map<string, Modem*> Modems::available_modems = {};
+
 void generate_request( map<string,string> configs, int quantity_to_generate ) {
 	// TODO: Put more work in here, cus fuck it... it's still got a private number lol
 	logger::logger(__FUNCTION__, "Generating " + to_string( quantity_to_generate ) + " request", "stdout", true);
