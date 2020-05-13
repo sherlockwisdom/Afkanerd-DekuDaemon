@@ -6,7 +6,7 @@ using namespace std;
 
 map<string, Modem*> Modems::available_modems = {};
 
-void release_pending_request_files( map<string,string> configs ) {
+void release_pending_request_files( map<string,string> configs, bool list_only = false) {
 	string dir_isp = configs["DIR_ISP"];
 	
 	vector<string> isp_dirs = helpers::string_split(sys_calls::terminal_stdout("ls -1 " + dir_isp), '\n');
@@ -14,13 +14,40 @@ void release_pending_request_files( map<string,string> configs ) {
 	for(auto dir : isp_dirs ) {
 		if( dir.empty() ) continue;
 		string full_dir = dir_isp + "/" + dir + "/";
-		logger::logger(__FUNCTION__, "RELEASING: " + full_dir );
 		// sys_calls::terminal_stdout("rm -r " + full_dir + "*");
 		
 		// Get hidden files
 		string locked_files_request = configs["DIR_SCRIPTS"] + "/modem_information_extraction.sh list_locked_request_files " + full_dir;
-		string locked_files = sys_calls::terminal_stdout( locked_files_request );
-		logger::logger(__FUNCTION__, locked_files);
+		string list_terminal_files = sys_calls::terminal_stdout( locked_files_request );
+		// logger::logger(__FUNCTION__, list_terminal_files);
+		vector<string> locked_files = helpers::string_split( list_terminal_files, '\n');
+
+		if( locked_files.empty()) {
+			logger::logger(__FUNCTION__, "NO LOCKED FILES!!", "stdout", true);
+			continue;
+		}
+		if( !list_only ) {
+			logger::logger(__FUNCTION__, "RELEASING: " + full_dir );
+			for( auto file : locked_files ) {
+				string locked_file = full_dir + file;
+				file.erase(0, 1);
+				string unlocked_file = full_dir + file;
+				if( !sys_calls::rename_file( locked_file, unlocked_file ) ) {
+					logger::logger(__FUNCTION__, "FAILED UNLOCKING FILE: " + locked_file + " -> " + unlocked_file, "stderr", true);
+					logger::logger_errno( errno );
+					continue;
+				}
+
+				logger::logger(__FUNCTION__, "UNLOCKED FILE: " + unlocked_file, "stdout", true);
+			}
+		}
+		else {
+			logger::logger(__FUNCTION__, "LISTING: " + full_dir);
+			for( auto file: locked_files ) {
+				string locked_file = full_dir + file;
+				logger::logger(__FUNCTION__, locked_file, "stdout", true);
+			}
+		}
 	}
 }
 
@@ -95,7 +122,8 @@ int main(int argc, char** argv) {
 	     stat_only = false,
 	     sms_only = false,
 	     request_listening = true,
-	     list_locked_files_only = false;
+	     list_locked_files_only = false,
+	     release_locked_files_only = false;
 
 	// SMS system set to create
 
@@ -239,6 +267,10 @@ int main(int argc, char** argv) {
 			else if((string)argv[i] == "--ls-locked-files-only") {
 				list_locked_files_only = true;
 			}
+
+			else if((string)argv[i] == "--release-locked-files-only") {
+				release_locked_files_only = true;
+			}
 		}
 	}
 
@@ -264,6 +296,18 @@ int main(int argc, char** argv) {
 
 	if( list_locked_files_only ) {
 		logger::logger(__FUNCTION__, "LISTING LOCKED FILES", "stdout", true);
+		release_pending_request_files( configs, true);
+		return 0;
+	}
+
+	if( release_locked_files_only ) {
+		logger::logger(__FUNCTION__, "RELEASING LOCKED FILES", "stdout", true);
+		release_pending_request_files( configs );
+		return 0;
+	}
+
+	if( release_locked_files_only ) {
+		logger::logger(__FUNCTION__, "RELEASING LOCKED FILES", "stdout", true);
 		release_pending_request_files( configs );
 		return 0;
 	}
