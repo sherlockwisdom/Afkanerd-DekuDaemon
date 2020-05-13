@@ -375,6 +375,9 @@ int main(int argc, char** argv) {
 		return 0;
 	}
 
+	// Releasing all pending file by default
+	release_pending_request_files( configs );
+
 	
 	// TODO: Check if other developers variables are passed as args and set before beginning
 
