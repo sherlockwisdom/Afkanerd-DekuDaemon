@@ -62,6 +62,8 @@ make -C src/
 ##### `--stat-only`
 ##### `--sms-only`
 ##### `--sms`
+##### `--ls-locked-files-only`
+##### `--release-locked-files-only`
 
 ---
 ##### TODO - The following needs to be built... please help
