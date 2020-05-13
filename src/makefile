@@ -4,7 +4,7 @@ CFLAGS = -g -Wall -pthread -std=c++1z
 TARGET = start
 MYSQL_CONFIGS := $(shell mysql_config --cflags)
 MYSQL_LIBS := $(shell mysql_config --libs)
-LOBJECTS := logger.o helpers.o sys_calls.o ussd.o mysql.o request_distribution_listener.o  modem_listener.o start.o modem.o
+LOBJECTS := build/logger.o build/helpers.o build/sys_calls.o build/ussd.o build/mysql.o build/request_distribution_listener.o  build/modem_listener.o build/start.o build/modem.o
 COBJECTS := sub-routines/ussd.cxx formatters/logger.cxx formatters/helpers.cxx sys_calls/sys_calls.cxx mysql/mysql.cxx sub-routines/modem.cxx sub-routines/request_distribution_listener.cxx sub-routines/modem_listener.cxx start.cxx
 
 # Compile only those files that have changed and not the entire thing
