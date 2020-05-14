@@ -7,4 +7,4 @@ MYSQL_LIBS := $(shell mysql_config --libs)
 default: $(TARGET)
 
 $(TARGET): $(TARGET).cxx
-	$(CC) -o $(TARGET).o $(TARGET).cxx ../formatters/loggers.cxx -o main $(CFLAGS)
+	$(CC) -o $(TARGET).o $(TARGET).cxx ../formatters/logger.cxx $(CFLAGS)
