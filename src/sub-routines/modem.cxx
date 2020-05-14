@@ -517,7 +517,13 @@ map<string,string> Modem::request_job( string path_dir_request) {
 		return request;
 	}
 
-	string request_content = helpers::read_file(path_dir_request + "/." + filename)[0];
+	vector<string> file_contents = helpers::read_file(path_dir_request + "/." + filename);
+	if( file_contents.empty()) {
+		logger::logger(__FUNCTION__, this->getInfo() + " - Request file is empty... this shouldn't happen...", "stderr", true);
+		return request;
+	}
+
+	string request_content = file_contents[0];
 	if(request_content.empty()) {
 		logger::logger(__FUNCTION__, this->getInfo() + " - Request file is empty... this shouldn't happen...", "stderr", true);
 		return request;
