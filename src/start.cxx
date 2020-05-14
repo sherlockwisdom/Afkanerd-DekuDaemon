@@ -23,7 +23,7 @@ void release_pending_request_files( map<string,string> configs, bool list_only =
 		// logger::logger(__FUNCTION__, list_terminal_files);
 		vector<string> locked_files = helpers::string_split( list_terminal_files, '\n');
 
-		if( locked_files.empty() or locked_files[0] == ".") {
+		if( locked_files.empty() or (locked_files.size() == 1 and locked_files[0] == ".")) {
 			logger::logger(__FUNCTION__, "NO LOCKED FILES!!", "stdout", true);
 			continue;
 		}
