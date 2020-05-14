@@ -30,6 +30,11 @@ Modem::Modem(string imei, string isp, string type, string index, map<string,stri
 	this->modem_index = this->index; // Controls the USSD part of the code
 }
 
+void Modem::set_logger_show_state( string logger_show_state ) {
+	if( logger_show_state == "TESTING" or logger_show_state == "PRODUCTION") 
+		logger::show_state = logger_show_state;
+}
+
 int Modem::get_failed_counter() const {
 	return this->failed_counter;
 }

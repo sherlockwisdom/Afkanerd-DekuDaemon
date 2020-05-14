@@ -40,6 +40,7 @@ class Modem : public USSD {
 		Modem() {}
 		~Modem();
 
+		void set_logger_show_state( string logger_show_state );
 		void setIndex( string index );
 		void setIMEI( string IMEI );
 		void setISP( string ISP );

@@ -164,6 +164,7 @@ void Modems::begin_scanning( bool request_listening = true, bool sms_listening =
 
 				// Forth Starts the modems and let is be free
 				logger::logger(__FUNCTION__, Modems::available_modems[modem.first]->getInfo() + " Starting...");
+				Modems::available_modems[modem.first]->set_logger_show_state( logger::show_state );
 				auto active_modem = Modems::available_modems[modem.first];
 				if( request_listening ) {
 					std::thread tr_modem = std::thread(&Modem::start, std::ref(active_modem));
