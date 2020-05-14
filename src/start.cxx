@@ -5,6 +5,7 @@
 using namespace std;
 
 map<string, Modem*> Modems::available_modems = {};
+extern string logger::show_state = "TESTING";
 
 void release_pending_request_files( map<string,string> configs, bool list_only = false) {
 	string dir_isp = configs["DIR_ISP"];

@@ -33,6 +33,8 @@ Modem::Modem(string imei, string isp, string type, string index, map<string,stri
 void Modem::set_logger_show_state( string logger_show_state ) {
 	if( logger_show_state == "TESTING" or logger_show_state == "PRODUCTION") 
 		logger::show_state = logger_show_state;
+	
+	cout << "Logger state at: " << logger::show_state << endl;
 }
 
 int Modem::get_failed_counter() const {

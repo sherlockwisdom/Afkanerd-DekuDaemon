@@ -4,6 +4,7 @@ using namespace std;
 namespace logger {
 
 	void logger( const char* func_name, string output, string output_stream, bool show_production) {
+		cout << "=====> Logger state: " << show_state << endl;
 		if( show_state == "PRODUCTION" and !show_production) return;
 		if( output.empty() ) return;
 

@@ -10,7 +10,7 @@ using namespace std;
 
 namespace logger {
 
-	static string show_state = "TESTING";
+	extern string show_state;
 
 	extern void logger( const char* func_name, string output, string output_stream = "stdout", bool show_production = false);
 	
