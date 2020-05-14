@@ -4,6 +4,8 @@
 
 using namespace std;
 
+extern string logger::show_state = "TESTING";
+
 int main(int argc, char** argv) {
 	libusb_device** devices;
 	libusb_context* context = NULL;
