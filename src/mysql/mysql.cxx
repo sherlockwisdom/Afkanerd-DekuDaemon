@@ -20,6 +20,11 @@ void MySQL::setConnectionDetails( string server, string user, string password, s
 
 
 string MySQL::escape_string( string query_string ) {
+	string to,
+	       from;
+
+	int length = mysql_real_escape_string_quote(this->mysqlConnection, to.c_str(), query_string.c_str(), query_string.size(), '\'');
+
 }
 
 bool MySQL::connect() {
