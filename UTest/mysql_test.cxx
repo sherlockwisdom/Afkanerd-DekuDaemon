@@ -5,7 +5,7 @@
 #include "CppUTest/CommandLineTestRunner.h"
 
 
-string loggers::show_state = "TESTING";
+string logger::show_state = "TESTING";
 /// Important notice:
 // - The variables are customized to my dev machine, a dynamic form of testing would be appreciated
 // customise this before beginning the test
