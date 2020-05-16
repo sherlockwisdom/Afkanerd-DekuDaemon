@@ -1,10 +1,11 @@
 // Custom header files
-#include "../src/mysql/mysql.cxx"
+#include "../src/mysql/mysql.hpp"
 
 #include "CppUTest/TestHarness_c.h"
 #include "CppUTest/CommandLineTestRunner.h"
 
 
+string loggers::show_state = "TESTING";
 /// Important notice:
 // - The variables are customized to my dev machine, a dynamic form of testing would be appreciated
 // customise this before beginning the test
