@@ -42,13 +42,15 @@ TEST(Mysql, setConnectionDetails) {
 }
 
 TEST(Mysql, escape_string) {
-	MySQL mysql;
-	mysql.setConnectionDetails( mysqlServer, mysqlUser, mysqlPassword, mysqlDatabase );
+	MySQL mysql(mysqlServer, mysqlUser, mysqlPassword);
+
 	CHECK( mysql.connect() );
 
 	std::string input_string = "Hello'world";
 	std::string expected_string = "Hello\\\'world";
 	std::string output_string = mysql.escape_string( input_string );
+
+	logger::logger( __FUNCTION__, output_string );
 
 	STRCMP_EQUAL( output_string.c_str(), expected_string.c_str() );
 }	
