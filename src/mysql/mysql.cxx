@@ -25,7 +25,7 @@ string MySQL::escape_string( string query_string ) {
 
 	int length = mysql_real_escape_string_quote(this->mysqlConnection, to, query_string.c_str(), query_string.size(), '\'');
 
-	return query_string;
+	return to_string( *to );
 
 }
 
