@@ -48,7 +48,7 @@ TEST(Mysql, escape_string) {
 
 	std::string input_string = "Hello'world";
 	std::string expected_string = "Hello\\\'world";
-	std::string output_string = mysql.escape_string( input_string );
+	std::string output_string = mysql.escape_string( input_string.c_str() );
 
 	logger::logger( __FUNCTION__, output_string );
 
