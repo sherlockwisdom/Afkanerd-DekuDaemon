@@ -41,6 +41,18 @@ TEST(Mysql, setConnectionDetails) {
 	STRCMP_EQUAL( mysqlDatabase.c_str(), mysql.get_database().c_str());
 }
 
+TEST(Mysql, escape_string) {
+	MySQL mysql;
+	mysql.setConnectionDetails( mysqlServer, mysqlUser, mysqlPassword, mysqlDatabase );
+	CHECK( mysql.connect() );
+
+	std::string input_string = "Hello'world";
+	std::string expected_string = "Hello\\\'world";
+	std::string output_string = mysql.escape_string( input_string );
+
+	STRCMP_EQUAL( output_string.c_str(), expected_string.c_str() );
+}	
+
 TEST(Mysql, connect) {
 	MySQL mysql(mysqlServer, mysqlUser, mysqlPassword);
 
