@@ -50,9 +50,7 @@ TEST(Mysql, escape_string) {
 	std::string expected_string = "Hello\\\'world";
 	std::string output_string = mysql.escape_string( input_string.c_str() );
 
-	logger::logger( __FUNCTION__, output_string );
-
-	STRCMP_EQUAL( output_string.c_str(), expected_string.c_str() );
+	STRCMP_EQUAL( expected_string.c_str(), output_string.c_str() );
 }	
 
 TEST(Mysql, connect) {

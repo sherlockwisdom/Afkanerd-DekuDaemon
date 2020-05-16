@@ -22,7 +22,6 @@ void MySQL::setConnectionDetails( string server, string user, string password, s
 string MySQL::escape_string( const char* query_string ) {
 	char to[strlen(query_string)*2 + 1];
 
-	//int length = mysql_real_escape_string(this->mysqlConnection, to, query_string, strlen(query_string));
 	int length = mysql_real_escape_string(this->mysqlConnection, to, query_string, strlen(query_string));
 	if( length == -1 ) {
 		logger::logger(__FUNCTION__, "ESCAPING STRING ERROR", "stdout", true);
@@ -30,7 +29,8 @@ string MySQL::escape_string( const char* query_string ) {
 		return "";
 	}
 
-	logger::logger(__FUNCTION__, to_string( length ) );
+	// logger::logger(__FUNCTION__, to_string( length ) );
+	// logger::logger(__FUNCTION__, to);
 
 	return to_string( *to );
 
