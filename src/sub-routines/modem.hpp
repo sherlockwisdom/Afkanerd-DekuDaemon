@@ -66,6 +66,9 @@ class Modem : public USSD {
 		string getErrorLogs();
 		string getInfo() const;
 		string getType() const;
+		string send_sms(string message, string number);
+		string mmcli_send_sms(string message, string number);
+		string ssh_send_sms(string message, string number);
 
 		WORKING_STATE db_get_working_state() const;
 
@@ -75,10 +78,9 @@ class Modem : public USSD {
 		bool operator>(Modem modem) const;
 		bool operator<(Modem modem) const;
 
-		string send_sms(string message, string number);
-		string mmcli_send_sms(string message, string number);
-		string ssh_send_sms(string message, string number);
+
 		bool db_set_working_state( WORKING_STATE );
+		bool db_store_sms(string,string);
 		bool getKeepAlive() const;
 		bool getThreadSafety() const;
 		bool delete_sms( string message_index );

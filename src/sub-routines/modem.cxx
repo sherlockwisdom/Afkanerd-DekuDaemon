@@ -151,6 +151,27 @@ vector<map<string,string>> Modem::get_sms_messages() const {
 }
 
 
+bool Modem::db_store_sms( string message, string number ) {
+	string store_db = "INSERT INTO MODEM_SMS_RECEIVED (IMEI, ISP, MESSAGE, PHONENUMBER) VALUES ('" + this->getIMEI() + "','" + this->getISP() + "','"+ this->mysqlConnection.escape_string(message) +"','" + number + "')";
+	bool message_stored = this->mysqlConnection.query( store_db );
+
+	if( !message_stored ) {
+		logger::logger(__FUNCTION__, "FAILED STORING SMS", "stderr", true);
+		logger::logger(__FUNCTION__, this->mysqlConnection.get_error_message());
+		return false;;
+	}
+	
+	logger::logger(__FUNCTION__, "STORED SMS", "stdout", true);
+	//TODO: should delete the message once it has been executed - THIS IS VERY URGENT, CUS MODEM INFINITE LOOP
+	if ( !this->delete_sms( index ) ) {
+		logger::logger(__FUNCTION__, "FAILED DELETE SMS", "stderr", true);
+		return false;
+	}
+	logger::logger(__FUNCTION__, "SMS PROCESSED!", "stdout", true);
+
+	return true;
+}
+
 //XXX: WORKING HERE ===================>
 void Modem::modem_sms_listener ( ) {
 	logger::logger(__FUNCTION__, "==========> MODEM SMS LISTENER | " + this->getInfo() + " <============");
@@ -181,23 +202,10 @@ void Modem::modem_sms_listener ( ) {
 				// Deleting each message is very crucial
 
 				//TODO: Get Table name from gloabl configuration scope, so with all the other tables
-				string store_db = "INSERT INTO MODEM_SMS_RECEIVED (IMEI, ISP, MESSAGE, PHONENUMBER) VALUES ('" + this->getIMEI() + "','" + this->getISP() + "','"+message+"','" + number + "')";
-				bool message_stored = this->mysqlConnection.query( store_db );
-
-				if( !message_stored ) {
-					logger::logger(__FUNCTION__, "FAILED STORING SMS", "stderr", true);
-					logger::logger(__FUNCTION__, this->mysqlConnection.get_error_message());
-					continue;
+				bool sms_stored = this->db_store_sms( message, number );
+				if( !sms_stored ) {
+					// logger::logger(__FUNCTION__, "STORING SMS FAILED", "stderr", true);
 				}
-				
-				logger::logger(__FUNCTION__, "STORED SMS", "stdout", true);
-				//TODO: should delete the message once it has been executed - THIS IS VERY URGENT, CUS MODEM INFINITE LOOP
-				if ( !this->delete_sms( index ) ) {
-					logger::logger(__FUNCTION__, "FAILED DELETE SMS", "stderr", true);
-					continue;
-				}
-				logger::logger(__FUNCTION__, "SMS PROCESSED!", "stdout", true);
-				
 			}
 		}
 		else {
