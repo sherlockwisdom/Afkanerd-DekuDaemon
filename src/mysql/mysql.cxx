@@ -32,7 +32,7 @@ string MySQL::escape_string( const char* query_string ) {
 	// logger::logger(__FUNCTION__, to_string( length ) );
 	// logger::logger(__FUNCTION__, to);
 
-	return to_string( *to );
+	return to;
 
 }
 
