@@ -23,7 +23,12 @@ string MySQL::escape_string( const char* query_string ) {
 	char* to,
 	       from;
 
-	int length = mysql_real_escape_string_quote(this->mysqlConnection, to, query_string, strlen(query_string), '\'');
+	int length = mysql_real_escape_string(this->mysqlConnection, to, query_string, strlen(query_string));
+	if( length == -1 ) {
+		logger::logger(__FUNCTION__, "ESCAPING STRING ERROR", "stdout", true);
+		logger::logger(__FUNCTION__, string( mysql_error_msg, strlen(mysql_error_msg)), "stderr");
+		return "";
+	}
 
 	logger::logger(__FUNCTION__, to_string( length ) );
 
