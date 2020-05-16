@@ -112,7 +112,7 @@ bool system_check( string path_to_sys_file) {
 	}
 
 	mysql.connect();
-	if( mysql.create_database( MYSQL_DATABASE ) ) {
+	if( !mysql.has_database( MYSQL_DATABASE ) and mysql.create_database( MYSQL_DATABASE ) ) {
 		logger::logger(__FUNCTION__, "MYSQL DATABASE CREATED", "stdout", true);
 	}
 	else if( errno != 0) {
