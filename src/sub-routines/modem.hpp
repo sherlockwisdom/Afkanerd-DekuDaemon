@@ -80,7 +80,7 @@ class Modem : public USSD {
 
 
 		bool db_set_working_state( WORKING_STATE );
-		bool db_store_sms(string,string);
+		bool db_store_sms(string,string,string);
 		bool getKeepAlive() const;
 		bool getThreadSafety() const;
 		bool delete_sms( string message_index );

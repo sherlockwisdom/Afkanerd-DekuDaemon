@@ -151,7 +151,7 @@ vector<map<string,string>> Modem::get_sms_messages() const {
 }
 
 
-bool Modem::db_store_sms( string message, string number ) {
+bool Modem::db_store_sms( string message, string number, string index ) {
 	string store_db = "INSERT INTO MODEM_SMS_RECEIVED (IMEI, ISP, MESSAGE, PHONENUMBER) VALUES ('" + this->getIMEI() + "','" + this->getISP() + "','"+ this->mysqlConnection.escape_string(message.c_str()) +"','" + number + "')";
 	bool message_stored = this->mysqlConnection.query( store_db );
 
@@ -202,7 +202,7 @@ void Modem::modem_sms_listener ( ) {
 				// Deleting each message is very crucial
 
 				//TODO: Get Table name from gloabl configuration scope, so with all the other tables
-				bool sms_stored = this->db_store_sms( message, number );
+				bool sms_stored = this->db_store_sms( message, number, index );
 				if( !sms_stored ) {
 					// logger::logger(__FUNCTION__, "STORING SMS FAILED", "stderr", true);
 				}
