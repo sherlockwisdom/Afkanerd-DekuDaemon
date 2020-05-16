@@ -152,7 +152,7 @@ vector<map<string,string>> Modem::get_sms_messages() const {
 
 
 bool Modem::db_store_sms( string message, string number ) {
-	string store_db = "INSERT INTO MODEM_SMS_RECEIVED (IMEI, ISP, MESSAGE, PHONENUMBER) VALUES ('" + this->getIMEI() + "','" + this->getISP() + "','"+ this->mysqlConnection.escape_string(message) +"','" + number + "')";
+	string store_db = "INSERT INTO MODEM_SMS_RECEIVED (IMEI, ISP, MESSAGE, PHONENUMBER) VALUES ('" + this->getIMEI() + "','" + this->getISP() + "','"+ this->mysqlConnection.escape_string(message.c_str()) +"','" + number + "')";
 	bool message_stored = this->mysqlConnection.query( store_db );
 
 	if( !message_stored ) {
