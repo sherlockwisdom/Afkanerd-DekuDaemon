@@ -47,7 +47,7 @@ class MySQL {
 	string get_password() const;
 	string get_database() const;
 	string get_error_message() const;
-	string escape_string( string );
+	string escape_string( const char* query_string );
 
 	bool set_database( string database );
 	bool has_database( string database ) const;
