@@ -61,7 +61,7 @@ make -C src/
 ##### `--cleanse-only`
 ##### `--stat-only`
 ##### `--sms-only`
-##### `--ussd-only --script=key=value e.g --script=modem=0,command=#99#,retry_count=3
+##### `--ussd-only --script=key=value e.g --script=modem=0,command=#99#,retry_count=3`
 ##### `--sms`
 ##### `--ls-locked-files-only`
 ##### `--release-locked-files-only`
