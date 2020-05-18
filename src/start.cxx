@@ -105,6 +105,9 @@ map<string,string> parse_ussd_request_script( string request_script ) {
 		else if( split_token[0] == "command") {
 			parsed_commands.insert(make_pair("command", split_token[1]));
 		}
+		else if( split_token[0] == "modem" ) {
+			parsed_commands.insert(make_pair("modem", split_token[1]));
+		}
 	}
 
 	return parsed_commands;
@@ -224,6 +227,7 @@ int main(int argc, char** argv) {
 
 			else if((string)argv[i] == "--cleanse-only") {
 				cleanse_only = true;
+				// should check here if input is a script
 			}
 
 			else if((string)argv[i] == "--reboot") {
@@ -355,7 +359,8 @@ int main(int argc, char** argv) {
 			logger::logger(__FUNCTION__, "Setting retry count to 0", "stdout", true);
 			ussd_only_script.insert(make_pair("retry_count", "0"));
 		}
-		vector<Modem*> available_modems = modems.find_modem_type(ussd_only_script["isp"]);
+
+		vector<Modem*> available_modems = ussd_only_script.find("modem") != ussd_only_script.end() ? modems.find_modem( ussd_only_script["modem"] ) : modems.find_modem_type(ussd_only_script["isp"]);
 		logger::logger(__FUNCTION__, "Available Modems: " + to_string( available_modems.size()), "stdout", true);
 
 		int retry_count = 0;
