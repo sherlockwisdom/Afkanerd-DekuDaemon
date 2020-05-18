@@ -49,7 +49,7 @@ vector<Modem*> Modems::find_modem( string modem_index ) {
 
 	for(auto _modem : modems ) {
 		map<string,string> details = _modem.second;
-		if( details["index"] == modem_isp ) {
+		if( details["index"] == modem_index ) {
 			available_modems.push_back( new Modem( details["imei"], details["isp"], details["type"], details["index"], this->configs));
 			break;
 		}
