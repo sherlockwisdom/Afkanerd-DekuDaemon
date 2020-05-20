@@ -363,6 +363,40 @@ bool Modem::release_request_file( string locked_filename ) {
 	return sys_calls::rename_file( old_filename, locked_filename);
 }
 
+void Modem::delete_pending_messages() {
+	//File format
+	//.[pending_[imei]_filename	
+	string pending_filename = ".pending_" + this->getIMEI() + "_*";
+	string path = this->getConfigs()["DIR_ISP"] + "/" + this->getISP() + "/" + pending_filename;
+	
+	//The output from here is not certain but should be tested
+	sys_calls::terminal_stdout( "rm " + path );
+}
+
+void Modem::release_pending_messages() {
+	//File format
+	//.[pending_[imei]_filename	
+	string pending_filename = ".pending_" + this->getIMEI() + "_*";
+	string path = this->getConfigs()["DIR_ISP"] + "/" + this->getISP() + "/" + pending_filename;
+
+	string ls_pending_files = sys_calls::terminal_stdout("ls -1 " + path );
+	
+	vector<string> pending_files = helpers::string_split( ls_pending_files, '\n' );
+	if( pending_files.empty()) {
+		return;
+	}
+
+	for( auto file : pending_files ) {
+		logger::logger(__FUNCTION__, "RELEASING FILE: " + file );
+		string current_path = this->getConfigs()["DIR_ISP"] + "/" + this->getISP() + "/" + file;
+		file.erase(0, ((string)(".pending_" + this->getIMEI() + "_")).size());
+		string new_path = this->getConfigs()["DIR_ISP"] + "/" + this->getISP() + "/" + file;
+
+		if( sys_calls::rename_file( current_path, new_path )) {
+		}
+	}
+}
+
 
 // TODO: Remove sms index after messages have been sent
 void Modem::request_listener() {
@@ -456,7 +490,7 @@ void Modem::request_listener() {
 
 			if( this->get_failed_counter() >= this->get_exhaust_count() ) {
 				/// release pending files
-				this->release_pending_files();
+				this->release_pending_messages();
 
 				/// declare modem exhausted
 				// this->set_modem_state(EXHAUSTED);

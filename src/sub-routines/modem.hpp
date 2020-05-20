@@ -60,7 +60,7 @@ class Modem : public USSD {
 		void db_reset_workload();
 		void declare_pending( string filename );
 		void delete_pending_messages();
-		void release_pending_files();
+		void release_pending_messages();
 
 		string getIndex() const;
 		string getISP() const;
