@@ -477,9 +477,11 @@ void Modem::request_listener() {
 				this->create_pending_message( open_request_filename );
 			}
 
+			/*
 			if( !this->release_request_file( locked_request_filename ) ) {
 				logger::logger(__FUNCTION__, this->getInfo() + " - 400 UNLOCKING FILE", "stderr", true);
 			}
+			*/
 		}
 
 		helpers::sleep_thread( this->get_sleep_time() );
