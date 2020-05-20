@@ -58,7 +58,7 @@ class Modem : public USSD {
 		void set_configs( map<string,string> configs );
 		void set_mysql_connection( MySQL );
 		void db_reset_workload();
-		void declare_pending( string filename );
+		void create_pending_message( string filename );
 		void delete_pending_messages();
 		void release_pending_messages();
 

@@ -300,14 +300,16 @@ bool Modem::is_available() const {
 	return !respond.empty();
 }
 
-void Modem::declare_pending( string filename ) {
-	string new_filename = ".PENDING_" + this->getIMEI() + "_" + filename;
+void Modem::create_pending_message( string filename ) {
+	//File format
+	//.[pending_[imei]_filename	
 	string full_path = this->getConfigs()["DIR_ISP"] + "/" + this->getISP() + "/";
 
-	filename = full_path + filename;
-	new_filename = full_path + new_filename;
+	string locked_filename = this->getConfigs()["DIR_ISP"] + "/" + this->getISP() + "/." + filename;
+	string new_filename = ".pending_" + this->getIMEI() + "_" + filename;
+	string new_filename_path = this->getConfigs()["DIR_ISP"] + "/" + this->getISP() + "/" + new_filename;
 
-	if( !sys_calls::rename_file( filename, new_filename) ) {
+	if( !sys_calls::rename_file( locked_filename, new_filename_path) ) {
 		logger::logger(__FUNCTION__, " - FAILED TO DECLARE PENDING: " + filename, "stderr");
 	}
 
@@ -447,9 +449,6 @@ void Modem::request_listener() {
 			this->iterate_failed_counter();
 			logger::logger(__FUNCTION__, this->getInfo() + "- SMS 400| " + to_string(this->get_failed_counter()) + "/" + to_string(this->get_exhaust_count()), "stderr");
 
-			if( !this->release_request_file( locked_request_filename ) ) {
-				logger::logger(__FUNCTION__, this->getInfo() + " - 400 UNLOCKING FILE", "stderr", true);
-			}
 
 			if( this->get_failed_counter() >= this->get_exhaust_count() ) {
 				/// release pending files
@@ -461,7 +460,11 @@ void Modem::request_listener() {
 			
 			else {
 				/// create pending file
-				// this->declare_pending( locked_request_filename );
+				this->create_pending_message( locked_request_filename );
+			}
+
+			if( !this->release_request_file( locked_request_filename ) ) {
+				logger::logger(__FUNCTION__, this->getInfo() + " - 400 UNLOCKING FILE", "stderr", true);
 			}
 		}
 
