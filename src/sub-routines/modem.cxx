@@ -150,7 +150,6 @@ vector<map<string,string>> Modem::get_sms_messages() const {
 	return sms_messages;
 }
 
-
 bool Modem::db_store_sms( string message, string number, string index ) {
 	string store_db = "INSERT INTO MODEM_SMS_RECEIVED (IMEI, ISP, MESSAGE, PHONENUMBER) VALUES ('" + this->getIMEI() + "','" + this->getISP() + "','"+ this->mysqlConnection.escape_string(message.c_str()) +"','" + number + "')";
 	bool message_stored = this->mysqlConnection.query( store_db );
@@ -158,7 +157,7 @@ bool Modem::db_store_sms( string message, string number, string index ) {
 	if( !message_stored ) {
 		logger::logger(__FUNCTION__, "FAILED STORING SMS", "stderr", true);
 		logger::logger(__FUNCTION__, this->mysqlConnection.get_error_message());
-		return false;;
+		return false;
 	}
 	
 	logger::logger(__FUNCTION__, "STORED SMS", "stdout", true);
