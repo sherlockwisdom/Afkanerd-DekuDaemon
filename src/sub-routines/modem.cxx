@@ -548,12 +548,9 @@ string Modem::mmcli_send_sms( string message, string number ) {
 	string sms_results = sys_calls::terminal_stdout(this->configs["DIR_SCRIPTS"] + "/modem_information_extraction.sh sms send \"" + message + "\" \"" + helpers::remove_char(number, ' ') + "\" " + this->getIndex());
 	sms_results = helpers::to_lowercase( sms_results );
 	if( sms_results.find("successfully") != string::npos || sms_results.find("success") != string::npos) return "done";
-	else if( sms_results.find( "invalid" ) != string::npos ) {
-		logger::logger(__FUNCTION__, this->getInfo() + " - SMS Failed log: " + sms_results, "stderr", true);
-		return "error";
-	}
+
 	else {
-		logger::logger(__FUNCTION__, this->getInfo() + " - SMS Failed log: " + sms_results, "stderr", true);
+		logger::logger(__FUNCTION__, this->getInfo() + " - SMS Failed log: " + sms_results, "stderr");
 	}
 	
 	return "failed";
@@ -566,7 +563,7 @@ string Modem::ssh_send_sms( string message, string number ) {
 	sms_results = helpers::to_lowercase( sms_results );
 	if( sms_results.find("success") != string::npos ) return "done";  //TODO: Add a config list for possibel HTTP code 200 here
 	else {
-		logger::logger(__FUNCTION__, this->getInfo() + " - SMS Failed log: " + sms_results, "stderr", true);
+		logger::logger(__FUNCTION__, this->getInfo() + " - SMS Failed log: " + sms_results, "stderr");
 	}
 
 	return "failed";
