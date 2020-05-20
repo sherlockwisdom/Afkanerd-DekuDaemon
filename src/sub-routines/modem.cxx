@@ -300,7 +300,7 @@ bool Modem::is_available() const {
 	return !respond.empty();
 }
 
-void Modem::create_pending_message( string filename ) {
+string Modem::create_pending_message( string filename ) {
 	//File format
 	//.[pending_[imei]_filename	
 	string full_path = this->getConfigs()["DIR_ISP"] + "/" + this->getISP() + "/";
@@ -316,6 +316,8 @@ void Modem::create_pending_message( string filename ) {
 	else {
 		logger::logger(__FUNCTION__, " - 200 CREATING PENDING: " + new_filename_path, "stdout");
 	}
+
+	return new_filename_path;
 }
 
 
@@ -345,6 +347,7 @@ void Modem::release_pending_messages() {
 	string path = this->getConfigs()["DIR_ISP"] + "/" + this->getISP() + "/" + pending_filename;
 
 	string ls_pending_files = sys_calls::terminal_stdout("ls -1 " + path );
+	logger::logger(__FUNCTION__, ls_pending_files );
 	
 	vector<string> pending_files = helpers::string_split( ls_pending_files, '\n' );
 	if( pending_files.empty()) {
@@ -353,11 +356,21 @@ void Modem::release_pending_messages() {
 
 	for( auto file : pending_files ) {
 		logger::logger(__FUNCTION__, "RELEASING FILE: " + file );
-		string current_path = this->getConfigs()["DIR_ISP"] + "/" + this->getISP() + "/" + file;
-		file.erase(0, ((string)(".pending_" + this->getIMEI() + "_")).size());
-		string new_path = this->getConfigs()["DIR_ISP"] + "/" + this->getISP() + "/" + file;
+		// string current_path = this->getConfigs()["DIR_ISP"] + "/" + this->getISP() + "/" + file;
+		string current_path = file;
+		size_t pending_pos = file.find(".pending_" + this->getIMEI() + "_");
+		if( file[pending_pos] == '.' ) {
+			file.erase(pending_pos, 1);
+			// string new_path = this->getConfigs()["DIR_ISP"] + "/" + this->getISP() + "/" + file;
+			string new_path = file;
 
-		if( sys_calls::rename_file( current_path, new_path )) {
+			if( !sys_calls::rename_file( current_path, new_path )) {
+				logger::logger(__FUNCTION__, "FAILED RELEASING FILE", "stderr");
+				logger::logger_errno( errno );
+			}
+		}
+		else {
+			logger::logger(__FUNCTION__, "INVALID PENDING FILE", "stderr");
 		}
 	}
 }

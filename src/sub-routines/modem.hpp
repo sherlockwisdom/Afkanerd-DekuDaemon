@@ -58,7 +58,6 @@ class Modem : public USSD {
 		void set_configs( map<string,string> configs );
 		void set_mysql_connection( MySQL );
 		void db_reset_workload();
-		void create_pending_message( string filename );
 		void delete_pending_messages();
 		void release_pending_messages();
 
@@ -71,6 +70,7 @@ class Modem : public USSD {
 		string send_sms(string message, string number);
 		string mmcli_send_sms(string message, string number);
 		string ssh_send_sms(string message, string number);
+		string create_pending_message( string filename );
 
 		WORKING_STATE db_get_working_state() const;
 
