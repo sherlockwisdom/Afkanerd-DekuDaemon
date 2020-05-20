@@ -300,43 +300,6 @@ bool Modem::is_available() const {
 	return !respond.empty();
 }
 
-
-vector<string> Modem::release_pending_files() {
-	string path_dir_request = this->getConfigs()["DIR_ISP"];
-	
-	/// Releasing locked file for another modem - ONLY AFTER BEING SURE WASN'T SENT
-	if( path_dir_request[path_dir_request.size() - 1] == '/') path_dir_request.erase(path_dir_request.size() -1, 1); // just some cleansing cus don't trust rules are always followed
-
-	map<string,string> ls_returned_values;
-	string pending_string_handle = ".PENDING_" + this->getIMEI() + "_";
-	sys_calls::terminal_stdout(ls_returned_values, "ls -1 " + path_dir_request + "/" + pending_string_handle + "*" );
-
-	if( atoi(ls_returned_values["return"].c_str()) != 0 ) {
-		logger::logger(__FUNCTION__, this->getInfo() + " - NOTHING PENDING FOR RELEASE");
-		return vector<string>{};
-	}
-
-	vector<string> filenames = helpers::string_split(ls_returned_values["data"], '\n');
-
-	for( auto file : filenames ) {
-		string source_file = path_dir_request + "/" + this->getISP() + "/" + file;
-
-		file.erase(0, 1); // Remove the . in front of the filename
-
-		string new_file = path_dir_request + "/" + this->getISP() + "/" + file;
-
-		if( !sys_calls::rename_file( source_file, new_file )) {
-			logger::logger(__FUNCTION__, " - FAILED RELEASING PENDING FILES: " + source_file, "stderr");
-			logger::logger_errno(errno);
-		}
-		else {
-			logger::logger(__FUNCTION__, " - 200 RELEASED PENDING FILE: " + file, "stdout");
-		}
-	}
-	return filenames;
-}
-
-
 void Modem::declare_pending( string filename ) {
 	string new_filename = ".PENDING_" + this->getIMEI() + "_" + filename;
 	string full_path = this->getConfigs()["DIR_ISP"] + "/" + this->getISP() + "/";
