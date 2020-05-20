@@ -65,6 +65,10 @@ TEST(Modem_integration, create_pending_message) {
 	Modem modem(imei, isp, type, _index, configs);
 
 	std::string sample_message_file = "utest_message_testing";
+	std::string path = configs["DIR_ISP"] + "/" + helpers::to_uppercase(isp) + "/." + sample_message_file;
+	std::string create_command = "touch " + path;
+	logger::logger(__FUNCTION__, create_command);
+	system(create_command.c_str());
 	modem.create_pending_message( sample_message_file );
 }
 
