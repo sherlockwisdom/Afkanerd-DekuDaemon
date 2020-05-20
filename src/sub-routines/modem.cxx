@@ -423,7 +423,10 @@ void Modem::request_listener() {
 		/// SMS sent successfully
 		if(  send_sms_status == "done" ) {
 
-			//this->revoke_pending_messages();
+			if( this->get_failed_counter() > 0) {
+				logger::logger(__FUNCTION__, "RELEASING ALL PENDING");
+				this->delete_pending_messages();
+			}
 			this->reset_failed_counter();
 
 			// this->db_iterate_workload(); // TODO: Allow after running test
@@ -453,7 +456,7 @@ void Modem::request_listener() {
 
 			if( this->get_failed_counter() >= this->get_exhaust_count() ) {
 				/// release pending files
-				// this->release_pending_files();
+				this->release_pending_files();
 
 				/// declare modem exhausted
 				// this->set_modem_state(EXHAUSTED);
