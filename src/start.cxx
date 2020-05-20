@@ -129,6 +129,7 @@ int main(int argc, char** argv) {
 	     sms_only = false,
 	     request_listening = true,
 	     list_locked_files_only = false,
+	     release_locked_files = true,
 	     release_locked_files_only = false;
 
 	// SMS system set to create
@@ -278,6 +279,20 @@ int main(int argc, char** argv) {
 			else if((string)argv[i] == "--release-locked-files-only") {
 				release_locked_files_only = true;
 			}
+
+			else if((string)argv[i] == "--release-locked-files") {
+				if(i+1 < argc) {
+					if( argv[i] == "off") 
+						release_locked_files = false;
+					else {
+						logger::logger(__FUNCTION__, "Release lock should be either ON or OFF", "stdout", true);
+					}
+				}
+				else {
+					logger::logger(__FUNCTION__, "Release lock should be either ON or OFF", "stdout", true);
+					return 1;
+				}
+			}
 		}
 	}
 
@@ -382,7 +397,8 @@ int main(int argc, char** argv) {
 	}
 
 	// Releasing all pending file by default
-	release_pending_request_files( configs );
+	if( release_locked_files ) 
+		release_pending_request_files( configs );
 
 	
 	// TODO: Check if other developers variables are passed as args and set before beginning
