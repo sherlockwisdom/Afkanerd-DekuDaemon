@@ -355,11 +355,12 @@ void Modem::release_pending_messages() {
 	}
 
 	for( auto file : pending_files ) {
+		if(file.empty()) continue;
 		logger::logger(__FUNCTION__, "RELEASING FILE: " + file );
 		// string current_path = this->getConfigs()["DIR_ISP"] + "/" + this->getISP() + "/" + file;
 		string current_path = file;
 		size_t pending_pos = file.find(".pending_" + this->getIMEI() + "_");
-		if( file[pending_pos] == '.' ) {
+		if( pending_pos != string::npos and file[pending_pos] == '.' ) {
 			file.erase(pending_pos, 1);
 			// string new_path = this->getConfigs()["DIR_ISP"] + "/" + this->getISP() + "/" + file;
 			string new_path = file;
