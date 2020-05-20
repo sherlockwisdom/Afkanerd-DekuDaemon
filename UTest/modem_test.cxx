@@ -61,6 +61,13 @@ TEST(Modem, set_imei ) {
 TEST(Modem, set_configs ) {
 }
 
+TEST(Modem_integration, release_pending_messages) {
+	Modem modem(imei, isp, type, _index, configs);
+
+	modem.release_pending_messages();
+	//TODO: Put the check here
+}
+
 TEST(Modem_integration, create_pending_message) {
 	Modem modem(imei, isp, type, _index, configs);
 
@@ -69,7 +76,9 @@ TEST(Modem_integration, create_pending_message) {
 	std::string create_command = "touch " + path;
 	logger::logger(__FUNCTION__, create_command);
 	system(create_command.c_str());
-	modem.create_pending_message( sample_message_file );
+	
+	std::string new_filename = modem.create_pending_message( sample_message_file );
+	//TODO: Put the check here
 }
 
 int main( int argc, char** argv ) {
