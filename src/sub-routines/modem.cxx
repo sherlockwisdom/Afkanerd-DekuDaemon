@@ -310,11 +310,11 @@ void Modem::create_pending_message( string filename ) {
 	string new_filename_path = this->getConfigs()["DIR_ISP"] + "/" + this->getISP() + "/" + new_filename;
 
 	if( !sys_calls::rename_file( locked_filename, new_filename_path) ) {
-		logger::logger(__FUNCTION__, " - FAILED TO DECLARE PENDING: " + filename, "stderr");
+		logger::logger(__FUNCTION__, " - FAILED TO CREATING PENDING: " + new_filename_path, "stderr");
 	}
 
 	else {
-		logger::logger(__FUNCTION__, " - 200 DECLARED PENDING: " + filename, "stdout");
+		logger::logger(__FUNCTION__, " - 200 CREATING PENDING: " + new_filename_path, "stdout");
 	}
 }
 
@@ -460,7 +460,7 @@ void Modem::request_listener() {
 			
 			else {
 				/// create pending file
-				this->create_pending_message( locked_request_filename );
+				this->create_pending_message( open_request_filename );
 			}
 
 			if( !this->release_request_file( locked_request_filename ) ) {
