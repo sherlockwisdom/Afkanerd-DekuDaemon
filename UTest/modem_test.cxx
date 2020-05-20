@@ -1,24 +1,27 @@
 // Custom header files
-#include "../src/sub-routines/modem.cxx"
+#include "../src/sub-routines/modem.hpp"
 
 #include "CppUTest/TestHarness_c.h"
 #include "CppUTest/CommandLineTestRunner.h"
 
 TEST_GROUP( Modem ) {};
+TEST_GROUP( Modem_integration ) {};
 
 MySQL mysqlConnection;
+
+string logger::show_state = "TESTING";
 
 std::string imei = "test_imei";
 std::string isp = "test_isp";
 std::string type = "test_type";
 std::string _index = "test_index";
 
-std::string DIR_ISP = "";
-std::string DIR_REQUEST_FILE = "";
-std::string DIR_SUCCESS = "";
-std::string DIR_ERROR = "";
-std::string DIR_SCRIPTS = "";
-std::string STD_NAME_REQUEST_FILE = "";
+std::string DIR_ISP = "/home/sherlock/Deku/Utest/isp";
+std::string DIR_REQUEST_FILE = "/home/sherlock/Deku/Utest";
+std::string DIR_SUCCESS = "/home/sherlock/Deku/200";
+std::string DIR_ERROR = "/home/sherlock/Deku/404";
+std::string DIR_SCRIPTS = "../scripts";
+std::string STD_NAME_REQUEST_FILE = "request_file.txt";
 std::string MYSQL_SERVER = "";
 std::string MYSQL_USER = "";
 std::string MYSQL_PASSWORD = "";
@@ -56,6 +59,13 @@ TEST(Modem, set_imei ) {
 }
 
 TEST(Modem, set_configs ) {
+}
+
+TEST(Modem_integration, create_pending_message) {
+	Modem modem(imei, isp, type, _index, configs);
+
+	std::string sample_message_file = "utest_message_testing";
+	modem.create_pending_message( sample_message_file );
 }
 
 int main( int argc, char** argv ) {
