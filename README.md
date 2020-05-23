@@ -43,7 +43,7 @@
 ##### How to build and run
 ```bash
 make -C src/
-./start --c <path to personal configuration file> --mode TEST(default)|PRODUCTION
+./bins/start --c <path to personal configuration file> --mode TEST(default)|PRODUCTION
 ```
 ---
 #### Start arguments
