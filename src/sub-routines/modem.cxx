@@ -208,7 +208,14 @@ void Modem::modem_sms_listener ( bool remote_control = false ) {
 					logger::logger(__FUNCTION__, "FAILED DELETE SMS", "stderr", true);
 					// return false;
 				}
-				logger::logger(__FUNCTION__, "SMS PROCESSED!", "stdout", true);
+				else {
+					logger::logger(__FUNCTION__, "SMS PROCESSED!", "stdout", true);
+					// Checking if remote control
+					if( remote_control and is_remote_control( message )) {
+						//TODO, execute function required by remote control
+					}
+				}
+
 			}
 		}
 		else {

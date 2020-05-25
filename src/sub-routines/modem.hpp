@@ -87,6 +87,7 @@ class Modem : public USSD {
 		bool getThreadSafety() const;
 		bool delete_sms( string message_index );
 		bool is_available() const;
+		bool is_remote_control( string ) const;
 		bool release_request_file( string locked_filename );
 
 		map<string,string> request_job( string path_dir_request );
