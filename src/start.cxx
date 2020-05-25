@@ -130,7 +130,8 @@ int main(int argc, char** argv) {
 	     request_listening = true,
 	     list_locked_files_only = false,
 	     release_locked_files = true,
-	     release_locked_files_only = false;
+	     release_locked_files_only = false,
+	     remote_control = false;
 
 	// SMS system set to create
 
@@ -295,6 +296,10 @@ int main(int argc, char** argv) {
 					return 1;
 				}
 			}
+			
+			else if((string)argv[i] == "--remote-control") {
+				remote_control = true;
+			}
 		}
 	}
 
@@ -407,7 +412,7 @@ int main(int argc, char** argv) {
 
 
 	// TODO: Pass all configs using refreences, so changes get loaded in real time
-	std::thread tr_modems_scanner = std::thread(&Modems::begin_scanning, std::ref(modems), request_listening, sms_only);
+	std::thread tr_modems_scanner = std::thread(&Modems::begin_scanning, std::ref(modems), request_listening, sms_only, remote_control);
 	
 	std::thread tr_request_listeners = std::thread(request_distribution_listener::request_distribution_listener, configs);
 
