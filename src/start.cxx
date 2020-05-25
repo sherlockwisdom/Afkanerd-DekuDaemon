@@ -284,6 +284,8 @@ int main(int argc, char** argv) {
 				if(i+1 < argc) {
 					if( (string)argv[i] == "off") 
 						release_locked_files = false;
+					else if( (string)argv[i] == "on") 
+						release_locked_files = true;
 					else {
 						logger::logger(__FUNCTION__, "Release lock should be either ON or OFF", "stdout", true);
 					}
