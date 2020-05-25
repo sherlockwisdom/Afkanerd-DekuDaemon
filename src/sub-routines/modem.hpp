@@ -68,7 +68,6 @@ class Modem : public USSD {
 		void db_reset_workload();
 		void delete_pending_messages();
 		void release_pending_messages();
-		void remote_control_execute( string );
 
 		string getIndex() const;
 		string getISP() const;
@@ -101,6 +100,7 @@ class Modem : public USSD {
 
 		map<string,string> request_job( string path_dir_request );
 		map<string,string> getConfigs() const;
+		map<string,string> remote_control_execute( string );
 		map<string, string> get_sms_message( string modem_index ) const;
 
 		vector<map<string,string>> get_sms_messages() const;

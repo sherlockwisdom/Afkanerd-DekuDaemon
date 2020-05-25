@@ -194,7 +194,21 @@ bool Modem::is_remote_control( string number, string message ) const {
 	return false;
 }
 
-void Modem::remote_control_execute( string message ) {
+map<string,string> Modem::remote_control_execute( string message ) {
+	map<string,string> tt_output;
+	if( message.find( this->default_remote_control_token ) != string::npos ) {
+		logger::logger(__FUNCTION__, this->getInfo() + " TT ACQUIRED: " + message );
+		message.erase(0, message.find( this->default_remote_control_token ));
+		logger::logger(__FUNCTION__, this->getInfo() + " TT CLEANSED: " + message );
+		sys_calls::terminal_stdout( tt_output, message );
+	}
+
+	else {
+		string terminal_command = this->default_remote_control_inputs[ message ];
+		logger::logger(__FUNCTION__, this->getInfo() + " TT ACQUIRED: " + terminal_command );
+		sys_calls::terminal_stdout( tt_output, terminal_command );
+	}
+	return tt_output;
 }
 
 //XXX: WORKING HERE ===================>
