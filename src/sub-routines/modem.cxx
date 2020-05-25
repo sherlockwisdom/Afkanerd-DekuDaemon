@@ -565,7 +565,7 @@ map<string,string> Modem::request_job( string path_dir_request) {
 
 // TODO: Check error message when wrong ISP
 string Modem::mmcli_send_sms( string message, string number ) {
-	logger::logger(__FUNCTION__, "SENDING - [" + message + "] - [" + number + "]");
+	logger::logger(__FUNCTION__, this->getInfo() + ": SENDING - [" + message + "] - [" + number + "]");
 	string sms_results = sys_calls::terminal_stdout(this->configs["DIR_SCRIPTS"] + "/modem_information_extraction.sh sms send \"" + message + "\" \"" + helpers::remove_char(number, ' ') + "\" " + this->getIndex());
 	sms_results = helpers::to_lowercase( sms_results );
 	if( sms_results.find("successfully") != string::npos || sms_results.find("success") != string::npos) return "done";
@@ -578,7 +578,7 @@ string Modem::mmcli_send_sms( string message, string number ) {
 }
 
 string Modem::ssh_send_sms( string message, string number ) {
-	logger::logger(__FUNCTION__, "SENDING - [" + message + "] - [" + number + "]");
+	logger::logger(__FUNCTION__, this->getInfo() + ": SENDING - [" + message + "] - [" + number + "]");
 	string sms_results = sys_calls::terminal_stdout("ssh root@" + this->getIndex() + " -oPasswordAuthentication=no \"sendsms " + number + " '" + message + "'\"" );
 	//logger::logger(__FUNCTION__, sms_results);
 	sms_results = helpers::to_lowercase( sms_results );
