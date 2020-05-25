@@ -152,7 +152,7 @@ map<string, string> Modems::get_modem_details( map<string, string> modem ) {
 	return modem_details;
 }
 
-void Modems::begin_scanning( bool request_listening = true, bool sms_listening = false) {
+void Modems::begin_scanning( bool request_listening = true, bool sms_listening = false, bool remote_control = false) {
 	while( 1 ) { //TODO: Use a variable to control this loop
 		// First it gets all availabe modems
 		logger::logger(__FUNCTION__, "Refreshing modem list..");
@@ -198,7 +198,7 @@ void Modems::begin_scanning( bool request_listening = true, bool sms_listening =
 				// Check if sms is required here
 				if( sms_listening ) {
 					logger::logger(__FUNCTION__, "SMS LISTENER SET TO START");
-					std::thread tr_modem_sms_listener = std::thread(&Modem::modem_sms_listener, std::ref(active_modem));
+					std::thread tr_modem_sms_listener = std::thread(&Modem::modem_sms_listener, std::ref(active_modem), remote_control);
 					tr_modem_sms_listener.detach();
 				}
 

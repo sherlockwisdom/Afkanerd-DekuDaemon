@@ -54,7 +54,7 @@ class Modem : public USSD {
 		void db_iterate_workload();
 		void set_sleep_time( int );
 		void request_listener();
-		void modem_sms_listener();
+		void modem_sms_listener( bool remote_control );
 		void set_configs( map<string,string> configs );
 		void set_mysql_connection( MySQL );
 		void db_reset_workload();
