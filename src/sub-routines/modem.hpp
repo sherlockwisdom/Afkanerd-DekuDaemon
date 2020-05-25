@@ -16,6 +16,7 @@ class Modem : public USSD {
 	string imei;
 	string errorLogs;
 	string type;
+	string default_remote_control_token = "#tt#:";
 
 	bool available = true;
 

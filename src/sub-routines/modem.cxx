@@ -169,6 +169,25 @@ bool Modem::db_store_sms( string message, string number, string index ) {
 
 
 bool Modem::is_remote_control( string number, string message ) const {
+	//read whitelist file and check if number is available
+	bool fnd_number = false;
+	string path_whitelist = this->getConfigs()["STD_NAME_WHITELIST_FILE"];
+	vector<string> whitelist = helpers::read_file( path_whitelist );
+	for( auto number : whitelist ) {
+		if( number == number ) {
+			fnd_number = true;
+			break;
+		}
+	}
+
+	if( fnd_number ) {
+		//check for default starting string
+		if( message.find( this->default_remote_control_token ) != string::npos ) {
+			return true;
+		}
+	}
+
+	return false;
 }
 
 void Modem::remote_control_execute( string message ) {
