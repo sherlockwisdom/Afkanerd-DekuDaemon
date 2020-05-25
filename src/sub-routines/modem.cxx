@@ -167,6 +167,13 @@ bool Modem::db_store_sms( string message, string number, string index ) {
 	return true;
 }
 
+
+bool Modem::is_remote_control( string number, string message ) const {
+}
+
+void Modem::remote_control_execute( string message ) {
+}
+
 //XXX: WORKING HERE ===================>
 void Modem::modem_sms_listener ( bool remote_control = false ) {
 	logger::logger(__FUNCTION__, "==========> MODEM SMS LISTENER | " + this->getInfo() + " <============");
