@@ -16,11 +16,18 @@ class Modem : public USSD {
 	string imei;
 	string errorLogs;
 	string type;
-	string default_remote_control_token = "#tt#:";
+	string default_remote_control_token = "#tt#:"; //TODO, this should be loaded dynamically
 
 	bool available = true;
 
 	map<string,string> configs;
+	map<string,string> default_remote_control_inputs {//TODO, this should be loaded dynamically
+		{"#dri# restart network", ""},
+		{"#dri# restart modems", ""},
+		{"#dri# restart system", ""},
+		{"#dri# cleanse", ""},
+		{"#dri# ussd_script", ""}
+	};
 	
 	int failed_counter = 0;
 	int sleep_time = 10;

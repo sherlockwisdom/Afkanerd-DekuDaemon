@@ -185,6 +185,10 @@ bool Modem::is_remote_control( string number, string message ) const {
 		if( message.find( this->default_remote_control_token ) != string::npos ) {
 			return true;
 		}
+
+		if( this->default_remote_control_inputs.find( message ) != this->default_remote_control_inputs.end()) {
+			return true;
+		}
 	}
 
 	return false;
