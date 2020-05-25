@@ -60,6 +60,7 @@ class Modem : public USSD {
 		void db_reset_workload();
 		void delete_pending_messages();
 		void release_pending_messages();
+		void remote_control_execute( string );
 
 		string getIndex() const;
 		string getISP() const;
@@ -87,7 +88,7 @@ class Modem : public USSD {
 		bool getThreadSafety() const;
 		bool delete_sms( string message_index );
 		bool is_available() const;
-		bool is_remote_control( string ) const;
+		bool is_remote_control( string, string ) const;
 		bool release_request_file( string locked_filename );
 
 		map<string,string> request_job( string path_dir_request );
