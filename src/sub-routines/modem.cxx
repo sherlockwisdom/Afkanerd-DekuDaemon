@@ -105,11 +105,6 @@ map<string,string> Modem::get_sms_message( string message_index ) const {
 	}
 	*/
 
-	if ( !this->delete_sms( message_index ) ) {
-		logger::logger(__FUNCTION__, "FAILED DELETE SMS", "stderr", true);
-		return false;
-	}
-	logger::logger(__FUNCTION__, "SMS PROCESSED!", "stdout", true);
 
 	string number = message_body[0];
 	string message = message_body[1];
@@ -208,6 +203,12 @@ void Modem::modem_sms_listener ( bool remote_control = false ) {
 				if( !sms_stored ) {
 					// logger::logger(__FUNCTION__, "STORING SMS FAILED", "stderr", true);
 				}
+
+				if ( !this->delete_sms( index ) ) {
+					logger::logger(__FUNCTION__, "FAILED DELETE SMS", "stderr", true);
+					// return false;
+				}
+				logger::logger(__FUNCTION__, "SMS PROCESSED!", "stdout", true);
 			}
 		}
 		else {
