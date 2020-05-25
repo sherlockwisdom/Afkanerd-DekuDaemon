@@ -408,7 +408,7 @@ int main(int argc, char** argv) {
 		release_pending_request_files( configs );
 
 	if( remote_control and (configs.find("STD_NAME_WHITELIST_FILE") == configs.end() or ((string)(configs["STD_NAME_WHITELIST_FILE"])).empty())) {
-		logger::logger(__FUNCTION__, "REMOTE CONTROL TURNED ON BUT NOT WHITE LIST FILE PROVIDED", "stderr", true);
+		logger::logger(__FUNCTION__, "REMOTE CONTROL TURNED ON BUT NO WHITE LIST FILE PROVIDED", "stderr", true);
 		return 1;
 	}
 
