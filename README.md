@@ -36,6 +36,7 @@
 - DIR_SCRIPTS="
 - DIR_ERROR=""
 - STD_NAME_REQUEST_FILE=""
+- STD_NAME_WHITELIST_FILE=""
 - MYSQL_SERVER=""
 - MYSQL_USER=""
 - MYSQL_PASSWORD=""
@@ -66,6 +67,7 @@ make -C src/
 ##### `--ls-locked-files-only`
 ##### `--release-locked-files-only`
 ##### `--release-locked-files`
+##### `--remote-control`
 
 ---
 ##### TODO - The following needs to be built... please help
