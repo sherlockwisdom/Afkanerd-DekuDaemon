@@ -66,6 +66,7 @@ make -C src/
 ##### `--ls-locked-files-only`
 ##### `--release-locked-files-only`
 ##### `--release-locked-files`
+##### `--remote-control`
 
 ---
 ##### TODO - The following needs to be built... please help
