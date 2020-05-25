@@ -105,6 +105,12 @@ map<string,string> Modem::get_sms_message( string message_index ) const {
 	}
 	*/
 
+	if ( !this->delete_sms( message_index ) ) {
+		logger::logger(__FUNCTION__, "FAILED DELETE SMS", "stderr", true);
+		return false;
+	}
+	logger::logger(__FUNCTION__, "SMS PROCESSED!", "stdout", true);
+
 	string number = message_body[0];
 	string message = message_body[1];
 	string timestamp = message_body[2];
@@ -162,11 +168,6 @@ bool Modem::db_store_sms( string message, string number, string index ) {
 	
 	logger::logger(__FUNCTION__, "STORED SMS", "stdout", true);
 	//TODO: should delete the message once it has been executed - THIS IS VERY URGENT, CUS MODEM INFINITE LOOP
-	if ( !this->delete_sms( index ) ) {
-		logger::logger(__FUNCTION__, "FAILED DELETE SMS", "stderr", true);
-		return false;
-	}
-	logger::logger(__FUNCTION__, "SMS PROCESSED!", "stdout", true);
 
 	return true;
 }
