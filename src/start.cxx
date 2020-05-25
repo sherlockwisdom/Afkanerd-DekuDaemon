@@ -407,6 +407,11 @@ int main(int argc, char** argv) {
 	if( release_locked_files ) 
 		release_pending_request_files( configs );
 
+	if( remote_control and (configs.find("STD_NAME_WHITELIST_FILE") == configs.end() or ((string)(configs["STD_NAME_WHITELIST_FILE"])).empty())) {
+		logger::logger(__FUNCTION__, "REMOTE CONTROL TURNED ON BUT NOT WHITE LIST FILE PROVIDED", "stderr", true);
+		return 1;
+	}
+
 	
 	// TODO: Check if other developers variables are passed as args and set before beginning
 
