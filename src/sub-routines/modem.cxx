@@ -671,4 +671,8 @@ Modem::~Modem() {
 			logger::logger(__FUNCTION__, e.what());
 		}
 	}
+
+	// TODO, should remove all pending request once the modem is disconnected
+	logger::logger(__FUNCTION__, this->getInfo() + " - RELEASING PENDING MESSAGES WHILE GOING AWAY" );
+	this->release_pending_messages();
 }
