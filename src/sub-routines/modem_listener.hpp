@@ -50,6 +50,7 @@ class Modems {
 		map<string,string> get_modem_details( map<string, string> modem );
 
 		bool db_insert_modems( map<string,string> modem );
+		bool db_switch_power_modems( map<string,string> modem, string state);
 };
 
 #endif

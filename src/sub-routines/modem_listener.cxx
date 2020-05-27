@@ -119,10 +119,18 @@ bool Modems::db_insert_modems( map<string,string> modem ) {
 	return responds;
 }
 
-void Modems::db_switch_power_modems( map<string,string> modem, string state ) {
+bool Modems::db_switch_power_modems( map<string,string> modem, string state ) {
 	string switch_modem_power_query = "UPDATE __DEKU__.MODEMS SET POWER = '"+state+"' WHERE IMEI='" + modem["imei"] + "'";
 	logger::logger(__FUNCTION__, modem["imei"] + " - Switch modem power state");
-	this->mysqlConnection.query( switch_modem_power_query );
+	bool responds = this->mysqlConnection.query( switch_modem_power_query );
+
+	if( !responds ) {
+		logger::logger(__FUNCTION__, "FAILED UPDATING MODEM POWER STATE", "stderr");
+		logger::logger_errno( errno );
+		logger::logger(__FUNCTION__, this->mysqlConnection.get_error_message(), "stderr");
+	}
+
+	return responds;
 }
 
 map<string,map<string,string>> Modems::get_available_modems() {
