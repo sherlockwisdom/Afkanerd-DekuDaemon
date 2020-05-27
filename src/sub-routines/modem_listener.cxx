@@ -85,7 +85,9 @@ bool Modems::db_iterate_modems_workload( map<string, string> modem ) {
 
 	bool responds = this->mysqlConnection.query( select_workload_query );
 	if( !responds ) {
-		logger::logger(__FUNCTION__, "INSERT MODEM INTO DB FAILED", "stderr", true);
+		logger::logger(__FUNCTION__, "FAILED INSERTING MODEM", "stderr");
+		logger::logger_errno( errno );
+		logger::logger(__FUNCTION__, this->mysqlConnection.get_error_message(), "stderr");
 		return false;
 	}
 
@@ -93,15 +95,25 @@ bool Modems::db_iterate_modems_workload( map<string, string> modem ) {
 	map<string, vector<string>> query_respond = this->mysqlConnection.get_results();
 	if(query_respond.empty()) {
 		// logger::logger(__FUNCTION__, "Modem not in workload - Executing Insert queries");
-		string replace_workload_query = "INSERT INTO __DEKU__.MODEM_WORK_LOAD (IMEI, DATE) "
-			"VALUES (\'" + modem["imei"] + "\', DATE(NOW()))";
+		string replace_workload_query = "INSERT INTO __DEKU__.MODEM_WORK_LOAD (IMEI, WORK_LOAD, DATE) "
+			"VALUES (\'" + modem["imei"] + "\', 0, DATE(NOW()))";
 		responds = this->mysqlConnection.query( replace_workload_query );
+		if( !responds ) {
+			logger::logger(__FUNCTION__, "FAILED INSERTING MODEM", "stderr");
+			logger::logger_errno( errno );
+			logger::logger(__FUNCTION__, this->mysqlConnection.get_error_message(), "stderr");
+		}
 	}
 	else {
 		string update_workload_query = "UPDATE __DEKU__.MODEM_WORK_LOAD SET WORK_LOAD = WORK_LOAD + 1"
 			" WHERE IMEI='" + modem["imei"] + "' and DATE = DATE(NOW())";
 
 		responds = this->mysqlConnection.query( update_workload_query );
+		if( !responds ) {
+			logger::logger(__FUNCTION__, "FAILED INSERTING MODEM", "stderr");
+			logger::logger_errno( errno );
+			logger::logger(__FUNCTION__, this->mysqlConnection.get_error_message(), "stderr");
+		}
 	}
 
 	return responds;

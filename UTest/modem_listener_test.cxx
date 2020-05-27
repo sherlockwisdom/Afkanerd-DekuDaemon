@@ -103,7 +103,7 @@ TEST( Integration, db_switch_power_modems ) {
 	CHECK( switch_db_states == false );
 }
 
-TEST( Integration, db_insert_modem_workload ) {
+TEST( Integration, db_iterate_modem_workload ) {
 	Modems modems( configs, Modems::TEST);
 
 	map<string, string> modem_details;
@@ -113,7 +113,7 @@ TEST( Integration, db_insert_modem_workload ) {
 	modem_details.insert(make_pair("type", type));
 
 	bool insert_into_db_state = modems.db_iterate_modems_workload( modem_details );
-	
+
 	CHECK( insert_into_db_state == true );
 }
 
