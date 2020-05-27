@@ -436,13 +436,8 @@ void Modem::release_pending_messages() {
 // TODO: Remove sms index after messages have been sent
 void Modem::request_listener() {
 	logger::logger(__FUNCTION__, "==========> MODEM REQUEST LISTENER | " + this->getInfo() + " <============");
-	while( 1 ) {
+	while( this->is_available() ) {
 		logger::logger(__FUNCTION__, this->getInfo() + " - Scanning for pending request");
-		if(!this->is_available()) {
-			logger::logger(__FUNCTION__, this->getInfo() + " | Has gone away |", "stdout", true);
-			this->available = false;
-			break;
-		}
 
 		if(!blocking_mutex.try_lock() ) {
 			//logger::logger(__FUNCTION__, this->getInfo() + " - Mutex locked..", "stdout");
@@ -542,6 +537,8 @@ void Modem::request_listener() {
 
 		helpers::sleep_thread( this->get_sleep_time() );
 	}
+
+	logger::logger(__FUNCTION__, this->getInfo() + " | Has gone away |", "stdout", true);
 }
 
 int Modem::get_sleep_time() const {
