@@ -20,10 +20,10 @@ std::string DIR_SUCCESS = "/home/sherlock/Deku/200";
 std::string DIR_ERROR = "/home/sherlock/Deku/404";
 std::string DIR_SCRIPTS = "../scripts";
 std::string STD_NAME_REQUEST_FILE = "request_file.txt";
-std::string MYSQL_SERVER = "";
-std::string MYSQL_USER = "";
-std::string MYSQL_PASSWORD = "";
-std::string MYSQL_DATABASE = "";
+std::string MYSQL_SERVER = "localhost";
+std::string MYSQL_USER = "root";
+std::string MYSQL_PASSWORD = "asshole";
+std::string MYSQL_DATABASE = "__DEKU__";
 
 std::map<string,string> configs {
 	{"DIR_ISP", DIR_ISP},
