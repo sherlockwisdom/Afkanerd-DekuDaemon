@@ -93,7 +93,7 @@ TEST( Integration, db_switch_power_modems ) {
 	bool switch_db_states = modems.db_switch_power_modems( modem_details, modem_state );
 	CHECK( switch_db_states == true );
 
-	modem_state = "unplugged";
+	modem_state = "not_plugged";
 	switch_db_states = modems.db_switch_power_modems( modem_details, modem_state );
 	CHECK( switch_db_states == true );
 
