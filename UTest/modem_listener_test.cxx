@@ -89,9 +89,18 @@ TEST( Integration, db_switch_power_modems ) {
 	modem_details.insert(make_pair("isp", isp));
 	modem_details.insert(make_pair("type", type));
 
-	bool insert_into_db_state = modems.db_insert_modems( modem_details );
-	
-	CHECK( insert_into_db_state == true );
+	std::string modem_state = "plugged";
+	bool switch_db_states = modems.db_switch_power_modems( modem_details, modem_state );
+	CHECK( switch_db_states == true );
+
+	modem_state = "unplugged";
+	switch_db_states = modems.db_switch_power_modems( modem_details, modem_state );
+	CHECK( switch_db_states == true );
+
+	// This test should fail here
+	modem_state = "not_any";
+	switch_db_states = modems.db_switch_power_modems( modem_details, modem_state );
+	CHECK( switch_db_states == false );
 }
 
 int main( int argc, char** argv ) {
