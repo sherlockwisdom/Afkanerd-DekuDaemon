@@ -99,7 +99,7 @@ void Modems::db_insert_modems_workload( map<string, string> modem ) {
 	}
 }
 
-void Modems::db_insert_modems( map<string,string> modem ) {
+bool Modems::db_insert_modems( map<string,string> modem ) {
 	string insert_modem_query = "INSERT INTO __DEKU__.MODEMS (IMEI, TYPE, STATE, POWER) VALUES(\'"
 	+ modem["imei"]
 	+ "','" 
@@ -109,7 +109,9 @@ void Modems::db_insert_modems( map<string,string> modem ) {
 
 	logger::logger(__FUNCTION__, "Inserting modem into DB");
 	// Insert affects rows, but doesn't return anything
-	this->mysqlConnection.query( insert_modem_query );
+	bool responds = this->mysqlConnection.query( insert_modem_query );
+
+	return responds;
 }
 
 void Modems::db_switch_power_modems( map<string,string> modem, string state ) {
