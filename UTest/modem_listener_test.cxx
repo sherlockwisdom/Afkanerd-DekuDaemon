@@ -1,9 +1,10 @@
 // Custom header files
-#include "../src/sub-routines/modem.cxx"
+#include "../src/sub-routines/modem_listener.hpp"
 
 #include "CppUTest/TestHarness_c.h"
 #include "CppUTest/CommandLineTestRunner.h"
 
+map<string,Modem*> Modems::available_modems;
 MySQL mysqlConnection;
 
 string logger::show_state = "TESTING";
@@ -37,7 +38,8 @@ std::map<string,string> configs {
 	{"MYSQL_DATABASE", MYSQL_DATABASE}	
 };
 
-TEST_GROUP( Modem ) {};
+TEST_GROUP( Modems ) {};
+TEST_GROUP( Integration ) {};
 
 TEST( Modems, get_all_indexes ) {
 }
@@ -62,9 +64,16 @@ TEST( Modems, get_modem_details ) {
 
 TEST( Integration, db_insert_modems ) {
 	// db_insert_modems( map<string,string> modems )
-	Modems modems( configs );
+	// Modems STATE = Modems::TEST;
+	Modems modems( configs, Modems::TEST);
 
-	bool insert_into_db_state = modems.db_insert_modems( modems );
+	map<string, string> modem_details;
+	modem_details.insert(make_pair("imei", imei));
+	modem_details.insert(make_pair("index", _index));
+	modem_details.insert(make_pair("isp", isp));
+	modem_details.insert(make_pair("type", type));
+
+	bool insert_into_db_state = modems.db_insert_modems( modem_details );
 	
 	CHECK( insert_into_db_state == true );
 }
