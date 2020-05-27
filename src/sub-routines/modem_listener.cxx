@@ -105,7 +105,7 @@ void Modems::db_insert_modems( map<string,string> modem ) {
 	+ "','" 
 	+ helpers::to_lowercase( modem["type"] ) 
 	+ "','active'," +
-	+ "'plugged')";
+	+ "'plugged') ON DUPLICATE KEY UPDATE STATE = 'active'";
 
 	logger::logger(__FUNCTION__, "Inserting modem into DB");
 	// Insert affects rows, but doesn't return anything
