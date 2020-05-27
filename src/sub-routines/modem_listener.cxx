@@ -175,7 +175,12 @@ void Modems::begin_scanning( bool request_listening = true, bool sms_listening =
 
 				// Thid stores modem in list of modems
 
-				Modems::available_modems.insert(make_pair( modem.first, new Modem(imei, isp, type, index, this->configs, this->mysqlConnection)));
+				try {
+					Modems::available_modems.insert(make_pair( modem.first, new Modem(imei, isp, type, index, this->configs, this->mysqlConnection)));
+				}
+				catch( std::exception& e) {
+					logger::logger(__FUNCTION__, e.what(), "stderr", true);
+				}
 
 				// Forth Starts the modems and let is be free
 				logger::logger(__FUNCTION__, Modems::available_modems[modem.first]->getInfo() + " Starting...");
