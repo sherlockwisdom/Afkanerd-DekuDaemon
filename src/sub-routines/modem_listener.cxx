@@ -79,7 +79,7 @@ void Modems::set_exhaust_count( int modem_exhaust_count ) {
 	this->modem_exhaust_count = modem_exhaust_count;
 }
 
-bool Modems::db_insert_modems_workload( map<string, string> modem ) {
+bool Modems::db_iterate_modems_workload( map<string, string> modem ) {
 	string select_workload_query = "SELECT * FROM __DEKU__.MODEM_WORK_LOAD WHERE IMEI='" + modem["imei"] + "' and DATE = DATE(NOW())";
 	// logger::logger(__FUNCTION__, "Checking for modem in DB workload");
 
@@ -88,6 +88,7 @@ bool Modems::db_insert_modems_workload( map<string, string> modem ) {
 		logger::logger(__FUNCTION__, "INSERT MODEM INTO DB FAILED", "stderr", true);
 		return false;
 	}
+
 
 	map<string, vector<string>> query_respond = this->mysqlConnection.get_results();
 	if(query_respond.empty()) {
@@ -216,7 +217,7 @@ void Modems::begin_scanning( bool request_listening = true, bool sms_listening =
 					// Optional Fith, tries storing the modems in a sql database
 					try {
 						this->db_insert_modems( modem_details );
-						this->db_insert_modems_workload( modem_details );
+						this->db_iterate_modems_workload( modem_details );
 					}
 					catch(std::exception& e) {
 						logger::logger(__FUNCTION__, e.what(), "stderr" );
