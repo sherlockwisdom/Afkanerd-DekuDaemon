@@ -16,7 +16,7 @@ void Modems::handle_sigint( int signal ) {
 }
 
 //class Modems
-Modems::Modems( map<string,string> configs, STATE state = TEST ) {
+Modems::Modems( map<string,string> configs, STATE state ) {
 	signal(SIGINT, handle_sigint);
 	this->state = state;
 	switch( state ) {
@@ -110,6 +110,11 @@ bool Modems::db_insert_modems( map<string,string> modem ) {
 	logger::logger(__FUNCTION__, "Inserting modem into DB");
 	// Insert affects rows, but doesn't return anything
 	bool responds = this->mysqlConnection.query( insert_modem_query );
+	if( !responds ) {
+		logger::logger(__FUNCTION__, "FAILED INSERTING MODEM", "stderr");
+		logger::logger_errno( errno );
+		logger::logger(__FUNCTION__, this->mysqlConnection.get_error_message(), "stderr");
+	}
 
 	return responds;
 }
