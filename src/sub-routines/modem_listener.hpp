@@ -34,8 +34,7 @@ class Modems {
 		void startAllModems();
 		void set_modem_sleep_time( int );
 		void set_exhaust_count( int );
-		void db_insert_modems_workload( map<string,string> modem );
-		
+
 		vector<string> getAllIndexes();
 		vector<string> getAllISP();
 		vector<string> getAllIMEI();
@@ -50,6 +49,8 @@ class Modems {
 
 		bool db_insert_modems( map<string,string> modem );
 		bool db_switch_power_modems( map<string,string> modem, string state);
+		bool db_insert_modems_workload( map<string,string> modem );
+		
 };
 
 #endif

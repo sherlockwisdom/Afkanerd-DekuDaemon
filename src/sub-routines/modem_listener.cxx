@@ -79,24 +79,31 @@ void Modems::set_exhaust_count( int modem_exhaust_count ) {
 	this->modem_exhaust_count = modem_exhaust_count;
 }
 
-void Modems::db_insert_modems_workload( map<string, string> modem ) {
+bool Modems::db_insert_modems_workload( map<string, string> modem ) {
 	string select_workload_query = "SELECT * FROM __DEKU__.MODEM_WORK_LOAD WHERE IMEI='" + modem["imei"] + "' and DATE = DATE(NOW())";
 	// logger::logger(__FUNCTION__, "Checking for modem in DB workload");
 
 	bool responds = this->mysqlConnection.query( select_workload_query );
 	if( !responds ) {
 		logger::logger(__FUNCTION__, "INSERT MODEM INTO DB FAILED", "stderr", true);
-		return;
+		return false;
 	}
 
 	map<string, vector<string>> query_respond = this->mysqlConnection.get_results();
 	if(query_respond.empty()) {
 		// logger::logger(__FUNCTION__, "Modem not in workload - Executing Insert queries");
-		string replace_workload_query = "REPLACE INTO __DEKU__.MODEM_WORK_LOAD (IMEI, DATE) VALUES (\'" + modem["imei"] + "\', NOW())";
-		this->mysqlConnection.query( replace_workload_query );
-
-		return;
+		string replace_workload_query = "INSERT INTO __DEKU__.MODEM_WORK_LOAD (IMEI, DATE) "
+			"VALUES (\'" + modem["imei"] + "\', DATE(NOW()))";
+		responds = this->mysqlConnection.query( replace_workload_query );
 	}
+	else {
+		string update_workload_query = "UPDATE __DEKU__.MODEM_WORK_LOAD SET WORK_LOAD = WORK_LOAD + 1"
+			" WHERE IMEI='" + modem["imei"] + "' and DATE = DATE(NOW())";
+
+		responds = this->mysqlConnection.query( update_workload_query );
+	}
+
+	return responds;
 }
 
 bool Modems::db_insert_modems( map<string,string> modem ) {
