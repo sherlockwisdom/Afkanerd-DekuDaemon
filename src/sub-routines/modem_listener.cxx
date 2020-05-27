@@ -16,7 +16,7 @@ void Modems::handle_sigint( int signal ) {
 }
 
 //class Modems
-Modems::Modems( map<string,string> configs, STATE state ) {
+Modems::Modems( map<string,string> configs, STATE state = TEST ) {
 	signal(SIGINT, handle_sigint);
 	this->state = state;
 	switch( state ) {
