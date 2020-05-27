@@ -11,7 +11,7 @@ string logger::show_state = "TESTING";
 
 std::string imei = "test_imei";
 std::string isp = "test_isp";
-std::string type = "test_type";
+std::string type = "mmcli";
 std::string _index = "test_index";
 
 std::string DIR_ISP = "/home/sherlock/Deku/Utest/isp";
