@@ -403,8 +403,16 @@ void Modem::release_pending_messages() {
 	string pending_filename = ".pending_" + this->getIMEI() + "_*";
 	string path = this->getConfigs()["DIR_ISP"] + "/" + this->getISP() + "/" + pending_filename;
 
-	string ls_pending_files = sys_calls::terminal_stdout("ls -1 " + path );
-	logger::logger(__FUNCTION__, ls_pending_files );
+	map<string,string> ls_output;
+	sys_calls::terminal_stdout(ls_output, "ls -1 " + path );
+	// logger::logger(__FUNCTION__, ls_pending_files );
+	if( ls_output["return"] != "0") {
+		logger::logger(__FUNCTION__, "NO PENDING FILES" );
+		logger::logger(__FUNCTION__, ls_output["data"]);
+		return;
+	}
+
+	string ls_pending_files = ls_output["data"];
 	
 	vector<string> pending_files = helpers::string_split( ls_pending_files, '\n' );
 	if( pending_files.empty()) {
