@@ -106,7 +106,7 @@ TEST(Modem_integration, create_pending_message) {
 TEST(Modem_integration, remote_control_execute) {
 	Modem modem(imei, isp, type, _index, configs);
 
-	std::string remote_command = "uname";
+	std::string remote_command = "#tt#:uname";
 	map<string,string> exec_output = modem.remote_control_execute( remote_command );
 	
 	CHECK_EQUAL( true, (exec_output.size() > 0));
