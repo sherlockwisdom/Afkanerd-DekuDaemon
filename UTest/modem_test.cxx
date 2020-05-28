@@ -104,11 +104,18 @@ TEST(Modem_integration, create_pending_message) {
 }
 
 TEST(Modem_integration, remote_control_execute) {
+	Modem modem(imei, isp, type, _index, configs);
+
+	std::string remote_command = "uname";
 	map<string,string> exec_output = modem.remote_control_execute( remote_command );
 	
-	CHECK_COMPARE( exec_output.size(), >, 0 );
-	CHECK_COMPARE( exec_output.find("return"), !=, exec_output.end());
-	// CHECK( exec_output.find("data") != exec_output.end() == true );
+	CHECK_EQUAL( true, (exec_output.size() > 0));
+	CHECK_EQUAL( true, (exec_output.find("return") != exec_output.end()) );
+	CHECK_EQUAL( true, (exec_output.find("data") != exec_output.end()) );
+	
+	std::string expected_output = "Linux";
+	std::string control_output = exec_output["data"];
+	STRCMP_EQUAL( expected_output.c_str(), control_output.c_str() );
 }
 
 int main( int argc, char** argv ) {
