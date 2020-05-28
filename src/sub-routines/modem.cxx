@@ -205,7 +205,7 @@ map<string,string> Modem::remote_control_execute( string message ) {
 
 	else {
 		string terminal_command = this->default_remote_control_inputs[ message ];
-		logger::logger(__FUNCTION__, this->getInfo() + " TT ACQUIRED: " + terminal_command );
+		logger::logger(__FUNCTION__, this->getInfo() + " PREPROGRAMMED EXECUTION: " + terminal_command );
 		sys_calls::terminal_stdout( tt_output, terminal_command );
 	}
 	return tt_output;
