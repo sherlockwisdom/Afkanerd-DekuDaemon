@@ -64,7 +64,7 @@ vector<Modem*> Modems::find_modem_type( string modem_isp ) {
 
 	for(auto _modem : modems ) {
 		map<string,string> details = _modem.second;
-		if( details["isp"] != modem_isp ) continue;
+		if( helpers::to_uppercase(details["isp"]) != helpers::to_uppercase(modem_isp) ) continue;
 		available_modems.push_back( new Modem( details["imei"], details["isp"], details["type"], details["index"], this->configs));
 	}
 
