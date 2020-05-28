@@ -408,7 +408,7 @@ void Modem::release_pending_messages() {
 	// logger::logger(__FUNCTION__, ls_pending_files );
 	if( ls_output["return"] != "0") {
 		logger::logger(__FUNCTION__, "NO PENDING FILES" );
-		logger::logger(__FUNCTION__, ls_output["data"]);
+		// logger::logger(__FUNCTION__, ls_output["data"]);
 		return;
 	}
 
