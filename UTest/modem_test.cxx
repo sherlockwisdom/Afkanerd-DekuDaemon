@@ -103,6 +103,14 @@ TEST(Modem_integration, create_pending_message) {
 	//TODO: Put the check here
 }
 
+TEST(Modem_integration, remote_control_execute) {
+	map<string,string> exec_output = modem.remote_control_execute( remote_command );
+	
+	CHECK_COMPARE( exec_output.size(), >, 0 );
+	CHECK_COMPARE( exec_output.find("return"), !=, exec_output.end());
+	// CHECK( exec_output.find("data") != exec_output.end() == true );
+}
+
 int main( int argc, char** argv ) {
 	// Testing to see how the recording works in this aspect
 	return CommandLineTestRunner::RunAllTests(argc, argv);
