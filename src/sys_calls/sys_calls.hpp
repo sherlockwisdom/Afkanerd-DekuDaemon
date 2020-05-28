@@ -19,7 +19,7 @@ namespace sys_calls {
 
 	extern void make_dir(string);
 
-	extern  string terminal_stdout(string);
+	extern string terminal_stdout(string);
 
 	inline void terminal_stdout(map<string,string>& return_values, string command) {
 		string data;
