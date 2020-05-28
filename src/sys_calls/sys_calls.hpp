@@ -35,6 +35,9 @@ namespace sys_calls {
 					data.append(buffer);
 			return_values.insert(make_pair("return", to_string(pclose(stream))));
 		}
+		if( data[data.size() -1] == '\n' or data[data.size() -1] == '\r' )
+			data.erase(data.size() -1, 1);
+
 		return_values.insert(make_pair("data", data));
 	}
 
