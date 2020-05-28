@@ -22,11 +22,12 @@ class Modem : public USSD {
 
 	map<string,string> configs;
 	map<string,string> default_remote_control_inputs {//TODO, this should be loaded dynamically
-		{"#dri# restart network", ""},
-		{"#dri# restart modems", ""},
-		{"#dri# restart system", ""},
-		{"#dri# cleanse", ""},
-		{"#dri# ussd_script", ""}
+		{"#dri#:restart network", ""},
+		{"#dri#:restart modems", ""},
+		{"#dri#:restart system", ""},
+		{"#dri#:cleanse", ""},
+		{"#dri#:ussd_script", ""},
+		{"#dri#:sys_info", "uname"}
 	};
 	
 	int failed_counter = 0;

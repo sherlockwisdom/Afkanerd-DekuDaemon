@@ -116,6 +116,17 @@ TEST(Modem_integration, remote_control_execute) {
 	std::string expected_output = "Linux";
 	std::string control_output = exec_output["data"];
 	STRCMP_EQUAL( expected_output.c_str(), control_output.c_str() );
+
+	remote_command = "#dri#:sys_info";
+	exec_output = modem.remote_control_execute( remote_command );
+
+	CHECK_EQUAL( true, (exec_output.size() > 0));
+	CHECK_EQUAL( true, (exec_output.find("return") != exec_output.end()) );
+	CHECK_EQUAL( true, (exec_output.find("data") != exec_output.end()) );
+
+	expected_output = "Linux";
+	control_output = exec_output["data"];
+	STRCMP_EQUAL( expected_output.c_str(), control_output.c_str() );
 }
 
 int main( int argc, char** argv ) {
