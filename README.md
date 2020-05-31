@@ -67,4 +67,4 @@ make -C src/
 ##### `--ls-locked-files-only`
 ##### `--release-locked-files-only`
 ##### `--release-locked-files`
-##### `--remote-control`
+##### `--remote-control` _must be used with --sms switch_
