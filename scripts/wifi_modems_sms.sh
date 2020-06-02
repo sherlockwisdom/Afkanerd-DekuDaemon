@@ -33,6 +33,8 @@ echo -e "\n\e[1;32m"Pull the important stuff"\e[0m\n"
 
 COOKIE=$(grep "SessionID=" ses_tok.xml | cut -b 10-147)
 TOKEN=$(grep "TokInfo" ses_tok.xml | cut -b 10-41)
+
+password_base64=$(printf "$(printf "admin" | shasum -a 256 | cut -d ' ' -f 1)" | base64 | tr -d '\n')
 LOGIN_REQ="<request><Username>admin</Username><Password>admin</Password><password_type>4</password_type></request>"
 
 echo -e "COOKIE: \e[1;34m$COOKIE\e[0m\n"
@@ -41,23 +43,27 @@ echo -e "TOKEN : \e[1;34m$TOKEN\e[0m\n"
 
 echo -e "LOGIN REQ: \e[1;34m$LOGIN_REQ\e[0m\n"
 
+echo -e "password_base64: \e[1;34m$password_base64\e[0m\n"
+
 # Now lets actually login
 curl -d $LOGIN_REQ "http://$MODEM_IP/api/user/login" \
     -H "Cookie: $COOKIE" \
     -H "__RequestVerificationToken: $TOKEN" \
-    -H "Content-Type: text/xml" -H 'Connection: keep-alive'
+    -H "Content-Type: text/xml" \
+    -H 'Connection: keep-alive'
+
 #   --dump-header login_resp_hdr.txt
 
 # Pull the important parts out
 
-SESSION_ID=$(grep "SessionID=" login_resp_hdr.txt | cut -d ':' -f2 | cut -d ';' -f1)
-ADM_TOKEN=$(grep "__RequestVerificationTokenone" login_resp_hdr.txt | cut -d ':' -f2)
+#SESSION_ID=$(grep "SessionID=" login_resp_hdr.txt | cut -d ':' -f2 | cut -d ';' -f1)
+#ADM_TOKEN=$(grep "__RequestVerificationTokenone" login_resp_hdr.txt | cut -d ':' -f2)
 
-echo -e "admin SESSION_ID is: \e[1;34m$SESSION_ID\e[0m\n"
+#echo -e "admin SESSION_ID is: \e[1;34m$SESSION_ID\e[0m\n"
 
-echo -e "admin TOKEN is: \e[1.;34m$ADM_TOKEN\e[0m\n"
+#echo -e "admin TOKEN is: \e[1.;34m$ADM_TOKEN\e[0m\n"
 
-message_data="<request><Index>-1</Index><Phones><Phone>$phone</Phone></Phones><Sca></Sca><Content>hello</Content><Length>5</Length><Reserved>1</Reserved><Date>1</Date></request>"
+#message_data="<request><Index>-1</Index><Phones><Phone>$phone</Phone></Phones><Sca></Sca><Content>hello</Content><Length>5</Length><Reserved>1</Reserved><Date>1</Date></request>"
 
 # Send an SMS
 # curl -X POST -d $message_data "http://$MODEM_IP/api/sms/send-sms" -H "Cookie: $SESSION_ID" -H "__RequestVerificationToken: $ADM_TOKEN" -H "Content-Type: text/xml" #--dump-header send_result.txt
