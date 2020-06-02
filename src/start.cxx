@@ -362,7 +362,7 @@ int main(int argc, char** argv) {
 		for( auto modem_ : available_modems ) {
 			auto modem_details = modems.get_modem_details( modem_.second );
 			
-			if( modem_details.empty() ) continue;;
+			if( modem_details.empty() ) continue;
 
 			Modem modem( modem_details["imei"], modem_details["isp"], modem_details["type"], modem_details["index"], configs);
 
