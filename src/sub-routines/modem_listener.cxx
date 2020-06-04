@@ -237,7 +237,7 @@ void Modems::begin_scanning( bool request_listening = true, bool sms_listening =
 				}
 
 				// Check if sms is required here
-				if( sms_listening and helpers::to_upper(active_modem->getType()) == helpers::to_upper("mmcli")) {
+				if( sms_listening and helpers::to_uppercase(active_modem->getType()) == helpers::to_uppercase("mmcli")) {
 					logger::logger(__FUNCTION__, "SMS LISTENER SET TO START");
 					std::thread tr_modem_sms_listener = std::thread(&Modem::modem_sms_listener, std::ref(active_modem), remote_control);
 					tr_modem_sms_listener.detach();
