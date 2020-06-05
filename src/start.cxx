@@ -425,7 +425,7 @@ int main(int argc, char** argv) {
 
 	tr_modems_scanner.join();
 
-	if( !sms_only )
+	// if( !sms_only )
 	tr_request_listeners.join();
 	
 	return 0;
