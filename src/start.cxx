@@ -423,10 +423,10 @@ int main(int argc, char** argv) {
 	if( !sms_only) 
 	tr_request_listeners = std::thread(request_distribution_listener::request_distribution_listener, configs);
 
-	tr_modems_scanner.join();
 
-	// if( !sms_only )
+	if( request_listening )
 	tr_request_listeners.join();
+	tr_modems_scanner.join();
 	
 	return 0;
 }
