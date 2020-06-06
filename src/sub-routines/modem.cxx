@@ -502,6 +502,7 @@ void Modem::request_listener() {
 			if( this->get_failed_counter() > 0) {
 				logger::logger(__FUNCTION__, "RELEASING ALL PENDING");
 				this->delete_pending_messages();
+				this->db_set_working_state( ACTIVE );
 			}
 			this->reset_failed_counter();
 
@@ -533,6 +534,7 @@ void Modem::request_listener() {
 
 				/// declare modem exhausted
 				// this->set_modem_state(EXHAUSTED);
+				this->db_set_working_state( EXHAUSTED );
 			}
 			
 			else {
