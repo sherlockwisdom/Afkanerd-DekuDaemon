@@ -1,4 +1,5 @@
 // Purpose: Starts all the functions that monitor the hardware and monitors the request files
+#include "version_control.h"
 #include "start_routines.hpp"
 #include "sub-routines/modem_listener.hpp"
 #include "sub-routines/request_distribution_listener.hpp"
@@ -138,6 +139,7 @@ int main(int argc, char** argv) {
 	map<string,string> ussd_only_script;
 
 	if(argc < 2 ) {
+		cout << argv[0] << " Version " << Deku_VERSION_MAJOR << "." << Deku_VERSION_MINOR << endl;
 		logger::logger(__FUNCTION__, "Usage: --c <path_to_config_file>", "stderr", true);
 		return 1;
 	}
