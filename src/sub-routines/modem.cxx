@@ -464,6 +464,7 @@ void Modem::request_listener() {
 			blocking_mutex.unlock();
 
 			helpers::sleep_thread(5);
+			this->release_pending_messages();
 			continue;
 		}
 
