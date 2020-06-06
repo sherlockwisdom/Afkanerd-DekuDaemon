@@ -318,6 +318,9 @@ bool Modem::db_set_working_state( WORKING_STATE working_state )  {
 }
 
 void Modem::start() {
+	//should release all pending mode request from here, then continue
+	this->release_pending_messages();
+
 	std::thread tr_modem_request_listener = std::thread(&Modem::request_listener, this);
 	
 	//TODO: Checks for incoming sms messages here
