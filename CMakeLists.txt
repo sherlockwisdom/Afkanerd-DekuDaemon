@@ -6,4 +6,4 @@ add_executable(Deku src/start.cxx)
 
 configure_file(version_control.h.in version_control.h)
 
-# target_include_directories(Deku PUBLIC "${PROJECT_BINARY_DIR}")
+target_include_directories(Deku PUBLIC "${PROJECT_BINARY_DIR}")

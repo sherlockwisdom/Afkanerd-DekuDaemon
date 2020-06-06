@@ -1,2 +1,0 @@
-#define Deku_VERSION_MAJOR @Deku_VERSION_MAJOR@
-#define Deku_VERSION_MINOR @Deku_VERSION_MINOR@
