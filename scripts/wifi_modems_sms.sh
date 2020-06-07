@@ -34,8 +34,18 @@ echo -e "\n\e[1;32m"Pull the important stuff"\e[0m\n"
 COOKIE=$(grep "SessionID=" ses_tok.xml | cut -b 10-147)
 TOKEN=$(grep "TokInfo" ses_tok.xml | cut -b 10-41)
 
-password_base64=$(printf "$(printf "admin" | shasum -a 256 | cut -d ' ' -f 1)" | base64 | tr -d '\n')
-LOGIN_REQ="<request><Username>admin</Username><Password>admin</Password><password_type>4</password_type></request>"
+# we found the final password sent for login was a combination of the username ,sha-256 hash of the password and the session token
+# then all hashed to sha-256 and converted back to base64 before sending . wandass
+# Credits : https://github.com/gallinapassus/huawei-e5186
+
+username="admin"
+password_sha_256=$(printf "admin" | shasum -a 256 | cut -d ' ' -f 1 | tr -d '\n')
+
+password_base64=$(printf "admin" | base64)
+
+final_password_hash=$(printf "$username$password_sha_256$TOKEN" | shasum -a 256 | cut -d ' ' -f 1 | tr -d '\n' | base64)
+
+LOGIN_REQ="<request><Username>$username</Username><Password>$final_password_hash</Password><password_type>4</password_type></request>"
 
 echo -e "COOKIE: \e[1;34m$COOKIE\e[0m\n"
 
@@ -43,14 +53,23 @@ echo -e "TOKEN : \e[1;34m$TOKEN\e[0m\n"
 
 echo -e "LOGIN REQ: \e[1;34m$LOGIN_REQ\e[0m\n"
 
-echo -e "password_base64: \e[1;34m$password_base64\e[0m\n"
+echo -e "password_sha_256: \e[1;34m$password_sha_256\e[0m\n"
+
+echo -e "final_password_hash: \e[1;34m$final_password_hash\e[0m\n"
 
 # Now lets actually login
-curl -d $LOGIN_REQ "http://$MODEM_IP/api/user/login" \
+curl -v "http://$MODEM_IP/api/user/login" \
+    -H "Content-Type: application/x-www-form-urlencoded; charset=UTF-8" \
     -H "Cookie: $COOKIE" \
     -H "__RequestVerificationToken: $TOKEN" \
-    -H "Content-Type: text/xml" \
-    -H 'Connection: keep-alive'
+    -H "token: $TOKEN" \
+    -H 'Connection: keep-alive' \
+    --data "<?xml version=""1.0"" encoding=""UTF-8""?> \
+    <request> \
+     <Username>$username</Username>\
+     <Password>$final_password_hash</Password>\
+     <password_type>4</password_type> \
+    </request>" --compressed
 
 #   --dump-header login_resp_hdr.txt
 
