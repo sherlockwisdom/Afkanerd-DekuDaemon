@@ -500,12 +500,6 @@ void Modem::request_listener() {
 		/// SMS sent successfully
 		if(  send_sms_status == "done" ) {
 
-			if( this->get_failed_counter() > 0) {
-				logger::logger(__FUNCTION__, "RELEASING ALL PENDING");
-				this->delete_pending_messages();
-				this->db_set_working_state( ACTIVE );
-			}
-			this->reset_failed_counter();
 
 			// this->db_iterate_workload(); // TODO: Allow after running test
 			// this->db_set_working_state( Modem::ACTIVE );
@@ -519,6 +513,13 @@ void Modem::request_listener() {
 				logger::logger(__FUNCTION__, this->getInfo() + " - FAILED MOVED TO 200", "stderr", true);
 				// TODO: Delete file
 			}
+
+			if( this->get_failed_counter() > 0) {
+				logger::logger(__FUNCTION__, "RELEASING ALL PENDING");
+				this->delete_pending_messages();
+				this->db_set_working_state( ACTIVE );
+			}
+			this->reset_failed_counter();
 		}
 
 		/// SMS failed
