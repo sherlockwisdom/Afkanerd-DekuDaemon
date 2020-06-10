@@ -500,7 +500,6 @@ void Modem::request_listener() {
 		/// SMS sent successfully
 		if(  send_sms_status == "done" ) {
 
-
 			// this->db_iterate_workload(); // TODO: Allow after running test
 			// this->db_set_working_state( Modem::ACTIVE );
 			logger::logger(__FUNCTION__, this->getInfo() + " - [" + request["id"] + "] SMS 200", "stdout", true);
@@ -537,6 +536,10 @@ void Modem::request_listener() {
 				/// declare modem exhausted
 				// this->set_modem_state(EXHAUSTED);
 				this->db_set_working_state( EXHAUSTED );
+
+				if( !this->release_request_file( locked_request_filename ) ) {
+					logger::logger(__FUNCTION__, this->getInfo() + " - 400 UNLOCKING FILE", "stderr", true);
+				}
 			}
 			
 			else {
@@ -545,9 +548,6 @@ void Modem::request_listener() {
 			}
 
 			/*
-			if( !this->release_request_file( locked_request_filename ) ) {
-				logger::logger(__FUNCTION__, this->getInfo() + " - 400 UNLOCKING FILE", "stderr", true);
-			}
 			*/
 		}
 
