@@ -50,7 +50,7 @@ vector<Modem*> Modems::find_modem( string modem_index ) {
 	for(auto _modem : modems ) {
 		map<string,string> details = _modem.second;
 		if( details["index"] == modem_index ) {
-			available_modems.push_back( new Modem( details["imei"], details["isp"], details["type"], details["index"], this->configs));
+			available_modems.push_back( new Modem( details["imei"], details["operator_name"], details["type"], details["index"], this->configs));
 			break;
 		}
 	}
@@ -59,13 +59,20 @@ vector<Modem*> Modems::find_modem( string modem_index ) {
 }
 
 vector<Modem*> Modems::find_modem_type( string modem_isp ) {
-	auto modems = this->get_available_modems();
+	map<string, map<string,string>> modems = this->get_available_modems();
 	vector<Modem*> available_modems;
 
 	for(auto _modem : modems ) {
 		map<string,string> details = _modem.second;
-		if( helpers::to_uppercase(details["isp"]) != helpers::to_uppercase(modem_isp) ) continue;
-		available_modems.push_back( new Modem( details["imei"], details["isp"], details["type"], details["index"], this->configs));
+		/*
+		for( auto i : details ) {
+			logger::logger(__FUNCTION__, i.first );
+			logger::logger(__FUNCTION__, i.second );
+		}
+		*/
+		// logger::logger(__FUNCTION__, "Comparing: " + isp + " with " + helpers::to_uppercase(modem_isp));
+		if( helpers::to_uppercase(details["operator_name"]) != helpers::to_uppercase(modem_isp) ) continue;
+		available_modems.push_back( new Modem( details["imei"], details["operator_name"], details["type"], details["index"], this->configs));
 	}
 
 	return available_modems;
