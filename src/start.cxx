@@ -435,12 +435,11 @@ int main(int argc, char** argv) {
 	std::thread tr_modems_scanner = std::thread(&Modems::daemon, std::ref(modems), request_listening, sms_only, remote_control);
 	
 	std::thread tr_request_listeners; 
-	if( !sms_only) 
-	tr_request_listeners = std::thread(request_distribution_listener::request_distribution_listener, configs);
+	if( request_listening ) {
+		tr_request_listeners = std::thread(request_distribution_listener::request_distribution_listener, configs);
+		tr_request_listeners.join();
+	}
 
-
-	if( request_listening )
-	tr_request_listeners.join();
 	tr_modems_scanner.join();
 	
 	return 0;
