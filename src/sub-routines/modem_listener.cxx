@@ -58,7 +58,7 @@ vector<Modem*> Modems::find_modem( string modem_index ) {
 	return available_modems;
 }
 
-vector<Modem*> Modems::find_modem_type( string modem_isp ) {
+vector<Modem*> Modems::find_modem_type( string modem_isp, string type = "all" ) {
 	map<string, map<string,string>> modems = this->get_available_modems();
 	vector<Modem*> available_modems;
 
@@ -72,6 +72,7 @@ vector<Modem*> Modems::find_modem_type( string modem_isp ) {
 		*/
 		// logger::logger(__FUNCTION__, "Comparing: " + isp + " with " + helpers::to_uppercase(modem_isp));
 		if( helpers::to_uppercase(details["operator_name"]) != helpers::to_uppercase(modem_isp) ) continue;
+		if( type != "all" and (!type.empty() and helpers::to_uppercase(details["type"]) != helpers::to_uppercase(type))) continue;
 		available_modems.push_back( new Modem( details["imei"], details["operator_name"], details["type"], details["index"], this->configs));
 	}
 
