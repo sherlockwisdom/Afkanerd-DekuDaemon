@@ -391,21 +391,24 @@ int main(int argc, char** argv) {
 			ussd_only_script.insert(make_pair("type", "all"));
 		}
 
-		vector<Modem*> available_modems = ussd_only_script.find("modem") != ussd_only_script.end() ? modems.find_modem( ussd_only_script["modem"] ) : modems.find_modem_type(ussd_only_script["isp"], ussd_only_script["type"]);
-		logger::logger(__FUNCTION__, "Available Modems: " + to_string( available_modems.size()), "stdout", true);
+		vector<Modem*> av_modems = ussd_only_script.find("modem") != ussd_only_script.end() ? modems.find_modem( ussd_only_script["modem"] ) : modems.find_modem_type(ussd_only_script["isp"], ussd_only_script["type"]);
+		logger::logger(__FUNCTION__, "Available Modems: " + to_string( av_modems.size()), "stdout", true);
+		for( auto _modems : av_modems ) {
+			logger::logger(__FUNCTION__, "Av Modem: " + _modems->getInfo());
+		}
 
 		int retry_count = 0;
-		for( size_t it_modems = 0; it_modems < available_modems.size(); ++it_modems) {
+		for( size_t it_modems = 0; it_modems < av_modems.size(); ++it_modems) {
 			vector<string> commands = helpers::string_split( ussd_only_script["command"], '|' );
-			bool ussd_state = available_modems[it_modems]->initiate_series( commands );
+			bool ussd_state = av_modems[it_modems]->initiate_series( commands );
 			if( !ussd_state and retry_count <= atoi(((string)(ussd_only_script["retry_count"])).c_str()) ) {
-				logger::logger(__FUNCTION__, available_modems[it_modems]->getInfo() + "| " + available_modems[it_modems]->get_reply(), "stderr", true);
+				logger::logger(__FUNCTION__, av_modems[it_modems]->getInfo() + "| " + av_modems[it_modems]->get_reply(), "stderr", true);
+				--it_modems;
 				++retry_count;
 				continue;
 			}
 
-			logger::logger(__FUNCTION__, available_modems[it_modems]->get_response());
-			++it_modems;
+			logger::logger(__FUNCTION__, av_modems[it_modems]->get_response());
 			retry_count = 0;
 		}
 
