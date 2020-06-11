@@ -104,6 +104,9 @@ map<string,string> parse_ussd_request_script( string request_script ) {
 			parsed_commands.insert(make_pair("retry_count", split_token[1]));
 		}
 		else if( split_token[0] == "command") {
+			string command = split_token[1];
+			if(command[0] == '"') command.erase(0,1);
+			if(command[command.size() -1] == '"') command.erase(command.size() -1, 1);
 			parsed_commands.insert(make_pair("command", split_token[1]));
 		}
 		else if( split_token[0] == "modem" ) {
