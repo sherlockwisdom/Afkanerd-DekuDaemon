@@ -44,7 +44,7 @@ Modems::Modems( map<string,string> configs, STATE state ) {
 }
 
 vector<Modem*> Modems::find_modem( string modem_index ) {
-	auto modems = this->get_available_modems();
+	map<string,map<string,string>> modems = this->get_available_modems();
 	vector<Modem*> available_modems;
 
 	for(auto _modem : modems ) {
