@@ -356,7 +356,7 @@ void Modem::db_reset_workload() {
 
 
 bool Modem::is_available() const {
-	vector<string> respond = sys_calls::get_modem_details( this->getConfigs()["DIR_SCRIPTS"], this->index );
+	vector<string> respond = sys_calls::get_modem_details( this->getConfigs()["DIR_SCRIPTS"], this->index, this->configs );
 	return !respond.empty();
 }
 

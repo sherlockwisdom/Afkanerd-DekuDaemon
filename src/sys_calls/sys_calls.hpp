@@ -45,7 +45,7 @@ namespace sys_calls {
 
 	extern vector<string> get_modem_details(string,string,map<string,string>);
 
-	extern map<string,map<string,string>> get_available_modems(string);
+	extern map<string,map<string,string>> get_available_modems(string,map<string,string>);
 }
 
 #endif

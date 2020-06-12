@@ -163,7 +163,7 @@ bool Modems::db_switch_power_modems( map<string,string> modem, string state ) {
 }
 
 map<string,map<string,string>> Modems::get_available_modems() {
-	map<string,map<string,string>> available_modems = sys_calls::get_available_modems( this->configs["DIR_SCRIPTS"] );
+	map<string,map<string,string>> available_modems = sys_calls::get_available_modems( this->configs["DIR_SCRIPTS"], this->configs );
 
 	logger::logger(__FUNCTION__, "Number of Available modems: " + to_string( available_modems.size() ));
 

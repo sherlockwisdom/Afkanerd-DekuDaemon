@@ -137,19 +137,19 @@ namespace sys_calls {
 					isp = "ORANGE";
 				*/
 
-				if( config.find("ISP_EXCHANGE") != config.end()) {
-					string isp_rules = config["ISP_EXCHANGE"];	
+				if( configs.find("ISP_EXCHANGE") != configs.end()) {
+					string isp_rules = configs["ISP_EXCHANGE"];	
 					vector<string> rules = helpers::string_split( isp_rules, ':' );
 					for( auto _isp : rules ) {
 						vector<string> raw_isp = helpers::string_split( _isp, '{');
-						if( raw_isp[1] != '{' or raw_isp[1][isp.size() -1] != '}') {
+						if( raw_isp[1][0] != '{' or raw_isp[1][isp.size() -1] != '}') {
 							logger::logger(__FUNCTION__, "Invalid ISP Exchange", "stderr");
 							continue;
 						}
 						raw_isp[1].erase(0,1);
 						raw_isp[1].erase(raw_isp[1].size() -1, 1);
 
-						vector<string> exchanges = helpers::split( raw_isp[1], ',');
+						vector<string> exchanges = helpers::string_split( raw_isp[1], ',');
 						if( std::find(exchanges.begin(), exchanges.end(), isp) != exchanges.end()) {
 							isp = raw_isp[0];
 						}
@@ -162,7 +162,7 @@ namespace sys_calls {
 		return details;
 	}
 
-	map<string,map<string,string>> get_available_modems( string path_to_script ) {
+	map<string,map<string,string>> get_available_modems( string path_to_script, map<string,string> configs ) {
 		map<string,map<string,string>> available_modems;
 		string list_of_modem_indexes = sys_calls::terminal_stdout( path_to_script + "/modem_information_extraction.sh list");
 		vector<string> modem_indexes = helpers::string_split(list_of_modem_indexes, '\n');
@@ -171,7 +171,7 @@ namespace sys_calls {
 		for(auto& index : modem_indexes ) {
 			logger::logger(__FUNCTION__, "Working with index #" + index);
 			index = helpers::remove_char( index, ' ');
-			vector<string> details = get_modem_details( path_to_script, index );
+			vector<string> details = get_modem_details( path_to_script, index, configs );
 			if( details.size() != 3 ) {
 				logger::logger(__FUNCTION__, "Not enough details for modem index: " + index, "stderr");
 				continue;
