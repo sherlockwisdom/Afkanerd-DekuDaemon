@@ -1,5 +1,6 @@
 // Custom header files
 #include "../src/sys_calls/sys_calls.hpp"
+#include "../src/formatters/logger.hpp"
 
 #include "CppUTest/TestHarness_c.h"
 #include "CppUTest/CommandLineTestRunner.h"
@@ -7,6 +8,8 @@
 
 
 //TODO: Write test to check if ISP_EXCHANGES work
+
+string logger::show_state = "TESTING";
 
 TEST_GROUP(Sys_calls) {};
 
@@ -17,7 +20,7 @@ TEST(Sys_calls, isp_exchange ) {
 	
 	std::string isp_output = sys_calls::isp_exchange( isp_unusual, isp_exchange);
 
-	STRCMP_EQUAL( expected_string, isp_output );
+	STRCMP_EQUAL( expected_string.c_str(), isp_output.c_str() );
 }
 
 TEST(Sys_calls, terminal_stdout_void_invalid) {
