@@ -43,7 +43,7 @@ namespace sys_calls {
 
 	extern bool rename_file(string,string);
 
-	extern vector<string> get_modem_details(string,string);
+	extern vector<string> get_modem_details(string,string,map<string,string>);
 
 	extern map<string,map<string,string>> get_available_modems(string);
 }

@@ -85,7 +85,7 @@ namespace sys_calls {
 		return true;
 	}
 	
-	vector<string> get_modem_details ( string path_to_script, string index ) {
+	vector<string> get_modem_details ( string path_to_script, string index, map<string,string> configs ) {
 		vector<string> details;
 		string type = index.find("192.168") != string::npos ? "ssh" : "mmcli";
 		string modem_information = type == "ssh" ? sys_calls::terminal_stdout("ssh root@"+index+" -oPasswordAuthentication=no deku") : sys_calls::terminal_stdout( path_to_script + "/modem_information_extraction.sh extract " + index );
@@ -130,10 +130,31 @@ namespace sys_calls {
 						isp = isp_id;
 				}
 
+				/*
 				if(isp.find("COVID") != string::npos or isp.find("62401") != string::npos) 
 					isp = "MTN";
 				else if(isp.find("62402") != string::npos)
 					isp = "ORANGE";
+				*/
+
+				if( config.find("ISP_EXCHANGE") != config.end()) {
+					string isp_rules = config["ISP_EXCHANGE"];	
+					vector<string> rules = helpers::string_split( isp_rules, ':' );
+					for( auto _isp : rules ) {
+						vector<string> raw_isp = helpers::string_split( _isp, '{');
+						if( raw_isp[1] != '{' or raw_isp[1][isp.size() -1] != '}') {
+							logger::logger(__FUNCTION__, "Invalid ISP Exchange", "stderr");
+							continue;
+						}
+						raw_isp[1].erase(0,1);
+						raw_isp[1].erase(raw_isp[1].size() -1, 1);
+
+						vector<string> exchanges = helpers::split( raw_isp[1], ',');
+						if( std::find(exchanges.begin(), exchanges.end(), isp) != exchanges.end()) {
+							isp = raw_isp[0];
+						}
+					}
+				}
 				details.push_back( isp );
 				details.push_back(type );// mmcli || ssh
 			}
