@@ -10,6 +10,16 @@
 
 TEST_GROUP(Sys_calls) {};
 
+TEST(Sys_calls, isp_exchange ) {
+	std::string isp_unusual = "#STOPCOVID19";
+	std::string isp_exchange = "MTN{COVID,62401}:ORANGE{62402}";
+	std::string expected_string = "MTN";
+	
+	std::string isp_output = sys_calls::isp_exchange( isp_unusual, isp_exchange);
+
+	STRCMP_EQUAL( expected_string, isp_output );
+}
+
 TEST(Sys_calls, terminal_stdout_void_invalid) {
 	map<string,string> ls_output, ls_output1;
 
