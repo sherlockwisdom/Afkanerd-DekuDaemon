@@ -21,6 +21,16 @@ TEST(Sys_calls, isp_exchange ) {
 	std::string isp_output = sys_calls::isp_exchange( isp_unusual, isp_exchange);
 
 	STRCMP_EQUAL( expected_string.c_str(), isp_output.c_str() );
+
+	isp_unusual = "62402";
+	isp_output = sys_calls::isp_exchange( isp_unusual, isp_exchange);
+	expected_string = "ORANGE";
+	STRCMP_EQUAL( expected_string.c_str(), isp_output.c_str() );
+
+	isp_unusual = "YYYY";
+	isp_output = sys_calls::isp_exchange( isp_unusual, isp_exchange);
+	expected_string = isp_unusual;
+	STRCMP_EQUAL( expected_string.c_str(), isp_output.c_str() );
 }
 
 TEST(Sys_calls, terminal_stdout_void_invalid) {
