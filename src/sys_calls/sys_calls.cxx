@@ -84,6 +84,30 @@ namespace sys_calls {
 		
 		return true;
 	}
+
+	string isp_exchange( string isp, string isp_exchange ) {
+		string isp_rules = configs["ISP_EXCHANGE"];	
+		vector<string> rules = helpers::string_split( isp_rules, ':' );
+	
+		// this stop from checking everything if it's not even available in the rules
+		if(isp_exchange.find( isp ) == string::npos ) return isp;
+		for( auto _isp : rules ) {
+			vector<string> raw_isp = helpers::string_split( _isp, '{');
+			if( raw_isp[1][0] != '{' or raw_isp[1][isp.size() -1] != '}') {
+				logger::logger(__FUNCTION__, "Invalid ISP Exchange", "stderr");
+				continue;
+			}
+			raw_isp[1].erase(0,1);
+			raw_isp[1].erase(raw_isp[1].size() -1, 1);
+
+			vector<string> exchanges = helpers::string_split( raw_isp[1], ',');
+			if( std::find(exchanges.begin(), exchanges.end(), isp) != exchanges.end()) {
+				isp = raw_isp[0];
+				break;
+			}
+		}
+		return isp;
+	}
 	
 	vector<string> get_modem_details ( string path_to_script, string index, map<string,string> configs ) {
 		vector<string> details;
@@ -138,22 +162,7 @@ namespace sys_calls {
 				*/
 
 				if( configs.find("ISP_EXCHANGE") != configs.end()) {
-					string isp_rules = configs["ISP_EXCHANGE"];	
-					vector<string> rules = helpers::string_split( isp_rules, ':' );
-					for( auto _isp : rules ) {
-						vector<string> raw_isp = helpers::string_split( _isp, '{');
-						if( raw_isp[1][0] != '{' or raw_isp[1][isp.size() -1] != '}') {
-							logger::logger(__FUNCTION__, "Invalid ISP Exchange", "stderr");
-							continue;
-						}
-						raw_isp[1].erase(0,1);
-						raw_isp[1].erase(raw_isp[1].size() -1, 1);
-
-						vector<string> exchanges = helpers::string_split( raw_isp[1], ',');
-						if( std::find(exchanges.begin(), exchanges.end(), isp) != exchanges.end()) {
-							isp = raw_isp[0];
-						}
-					}
+					isp = isp_exchange( isp, configs["ISP_EXCHANGE"]);
 				}
 				details.push_back( isp );
 				details.push_back(type );// mmcli || ssh
