@@ -176,12 +176,6 @@ map<string, string> Modems::get_modem_details( map<string, string> modem ) {
 	string type = helpers::to_uppercase(modem["type"] );
 	string index = modem["index"];
 	
-	// TODO: Abstract this to a better solution
-	// TODO: This is very important to work on
-	if(isp.find("COVID") != string::npos or isp.find("62401") != string::npos) 
-		isp = "MTN";
-	else if(isp.find("62402") != string::npos)
-		isp = "ORANGE";
 	if( isp.empty() ) {
 		logger::logger(__FUNCTION__, imei + "|" + index + " - No ISP", "stderr", true);
 		return map<string,string>{};
