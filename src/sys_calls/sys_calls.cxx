@@ -85,25 +85,31 @@ namespace sys_calls {
 		return true;
 	}
 
-	string isp_exchange( string isp, string isp_exchange ) {
-		string isp_rules = configs["ISP_EXCHANGE"];	
+	string isp_exchange( string isp, string isp_rules ) {
 		vector<string> rules = helpers::string_split( isp_rules, ':' );
 	
-		// this stop from checking everything if it's not even available in the rules
-		if(isp_exchange.find( isp ) == string::npos ) return isp;
 		for( auto _isp : rules ) {
 			vector<string> raw_isp = helpers::string_split( _isp, '{');
+			/*
 			if( raw_isp[1][0] != '{' or raw_isp[1][isp.size() -1] != '}') {
 				logger::logger(__FUNCTION__, "Invalid ISP Exchange", "stderr");
 				continue;
 			}
-			raw_isp[1].erase(0,1);
+			*/
+			if( raw_isp[1][raw_isp[1].size() -1] != '}') {
+				logger::logger(__FUNCTION__, "Invalid ISP Exchange", "stderr");
+				continue;
+			}
+			// raw_isp[1].erase(0,1);
 			raw_isp[1].erase(raw_isp[1].size() -1, 1);
+			logger::logger(__FUNCTION__, "Parsed ISP: " + raw_isp[1]);
 
 			vector<string> exchanges = helpers::string_split( raw_isp[1], ',');
-			if( std::find(exchanges.begin(), exchanges.end(), isp) != exchanges.end()) {
-				isp = raw_isp[0];
-				break;
+			for( auto exchange : exchanges ) {
+				if( isp.find( exchange ) != string::npos or exchange.find( isp ) != string::npos) {
+					isp = raw_isp[0];
+					return isp;
+				}
 			}
 		}
 		return isp;

@@ -13,14 +13,14 @@ using namespace std;
 namespace sys_calls {
 	enum FILE_FLAG{EXIST, DEL};
 
-	extern void sys_reboot();
-
 	extern bool file_handlers(string, FILE_FLAG);
-
-	extern void make_dir(string);
+	extern bool rename_file(string,string);
 
 	extern string terminal_stdout(string);
+	extern string isp_exchange(string, string);
 
+	extern void sys_reboot();
+	extern void make_dir(string);
 	inline void terminal_stdout(map<string,string>& return_values, string command) {
 		string data;
 		FILE * stream;
@@ -41,7 +41,7 @@ namespace sys_calls {
 		return_values.insert(make_pair("data", data));
 	}
 
-	extern bool rename_file(string,string);
+
 
 	extern vector<string> get_modem_details(string,string,map<string,string>);
 
