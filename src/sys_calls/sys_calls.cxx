@@ -129,6 +129,11 @@ namespace sys_calls {
 					else
 						isp = isp_id;
 				}
+
+				if(isp.find("COVID") != string::npos or isp.find("62401") != string::npos) 
+					isp = "MTN";
+				else if(isp.find("62402") != string::npos)
+					isp = "ORANGE";
 				details.push_back( isp );
 				details.push_back(type );// mmcli || ssh
 			}
