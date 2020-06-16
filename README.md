@@ -69,3 +69,9 @@ make -C src/
 ##### `--release-locked-files-only`
 ##### `--release-locked-files`
 ##### `--remote-control` _must be used with --sms switch_
+
+
+#### Remote-control commands
+Default input schema: <prefix>:command
+- __Default Prefix:__ #dri#:
+- __Custom commands:__ #tt#:
