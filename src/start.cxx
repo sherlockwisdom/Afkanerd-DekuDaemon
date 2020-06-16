@@ -428,9 +428,9 @@ int main(int argc, char** argv) {
 	}
 
 	
-	// TODO: Check if other developers variables are passed as args and set before beginning
-
-
+	// Check if ISP exchange is present else risk making ISP mistakes in allocatin gmode to message
+	if( configs.find("ISP_EXCHANGE") == configs.end())
+		logger::logger(__FUNCTION__, "WARNING!!!! ISP EXCHANGE NOT FOUND IN CONFIGS SETTINGS, SOME MODEMS MIGHT NOT BE DETECTED CORRECTLY!!", "stdout", true);
 	// TODO: Pass all configs using refreences, so changes get loaded in real time
 	std::thread tr_modems_scanner = std::thread(&Modems::daemon, std::ref(modems), request_listening, sms_only, remote_control);
 	
