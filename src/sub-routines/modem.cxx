@@ -295,10 +295,13 @@ Modem::WORKING_STATE Modem::db_get_working_state() const {
 
 
 void Modem::db_iterate_workload() {
-	string query = "UPDATE __DEKU__.MODEM_WORK_LOAD SET WORK_LOAD = WORK_LOAD + 1 WHERE DATE = DATE(NOW()) AND IMEI = '"+this->imei+"'";
+	string query = "UPDATE __DEKU__.MODEM_WORK_LOAD SET WORK_LOAD = WORK_LOAD + 1 WHERE DATE(DATE) = DATE(NOW()) AND IMEI = '"+this->imei+"'";
 	logger::logger(__FUNCTION__, query);
 
-	this->mysqlConnection.query( query );
+	bool query_state = this->mysqlConnection.query( query );
+	if( !query_state ) {
+		logger::logger(__FUNCTION__, this->getInfo() + " 404 ITERATING WORKLOAD: " + this->mysqlConnection.get_error_message(), "stderr");
+	}
 }
 
 bool Modem::db_set_working_state( WORKING_STATE working_state )  {
@@ -519,6 +522,7 @@ void Modem::request_listener() {
 				this->db_set_working_state( ACTIVE );
 			}
 			this->reset_failed_counter();
+			this->db_iterate_workload();
 		}
 
 		/// SMS failed
