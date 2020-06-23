@@ -411,7 +411,7 @@ int main(int argc, char** argv) {
 				continue;
 			}
 
-			logger::logger(__FUNCTION__, av_modems[it_modems]->get_response());
+			logger::logger(__FUNCTION__, av_modems[it_modems]->get_response(), "stdout", true);
 			retry_count = 0;
 		}
 
