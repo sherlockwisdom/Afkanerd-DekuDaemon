@@ -31,7 +31,7 @@ class Modem : public USSD {
 	};
 	
 	int failed_counter = 0;
-	int sleep_time = 10;
+	int sleep_time = 5;
 	int exhaust_count = 7;
 
 	MySQL mysqlConnection;
