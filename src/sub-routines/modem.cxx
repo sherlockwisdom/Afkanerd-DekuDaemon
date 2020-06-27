@@ -217,7 +217,7 @@ void Modem::modem_sms_listener ( bool remote_control = false ) {
 	logger::logger(__FUNCTION__, "==========> MODEM SMS LISTENER | " + this->getInfo() + " <============");
 	if( remote_control ) 
 		logger::logger(__FUNCTION__, this->getInfo() + "- REMOTE CONTROL ON");
-	while( 1 ) {
+	while( this->is_available() ) {
 		logger::logger(__FUNCTION__, this->getInfo() + " - Checking for SMS messages");
 		vector<map<string,string>> sms_messages = this->get_sms_messages();
 
