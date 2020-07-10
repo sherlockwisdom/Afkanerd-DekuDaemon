@@ -61,6 +61,13 @@ TEST(Modem, set_imei ) {
 TEST(Modem, set_configs ) {
 }
 
+TEST(Modem, create_pending_message) {
+	Modem modem(imei, isp, type, _index, configs);
+
+	// TODO: Finish working on this
+	std::string filename = "default_filename";
+}
+
 TEST(Modem_integration, delete_pending_messages) {
 	Modem modem(imei, isp, type, _index, configs);
 
