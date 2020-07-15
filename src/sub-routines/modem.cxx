@@ -549,7 +549,7 @@ void Modem::request_listener() {
 			else {
 				/// create pending file
 				string random_filename = helpers::random_string();
-				this->create_pending_message( random_filename );
+				this->create_pending_message( open_request_filename );
 			}
 
 			/*
