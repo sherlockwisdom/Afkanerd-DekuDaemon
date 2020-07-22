@@ -552,7 +552,7 @@ void Modem::request_listener() {
 				string new_filename = this->getConfigs()["DIR_ISP"] + "/" + this->getISP() + "/" + random_filename;
 				bool renamed_file = sys_calls::rename_file(full_path_locked_request_filename, new_filename);
 				if( renamed_file ) {
-					this->create_pending_message( new_filename );
+					this->create_pending_message( random_filename );
 				}
 				else {
 					logger::logger(__FUNCTION__, this->getInfo() + " - 400 RENAMING FILE BEFORE PENDING", "stder", true);
