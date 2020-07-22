@@ -368,7 +368,7 @@ string Modem::create_pending_message( string filename ) {
 	//.[pending_[imei]_filename	
 	string full_path = this->getConfigs()["DIR_ISP"] + "/" + this->getISP() + "/";
 
-	string locked_filename = this->getConfigs()["DIR_ISP"] + "/" + this->getISP() + "/." + filename;
+	string locked_filename = full_path + "." + filename;
 	string new_filename = ".pending_" + this->getIMEI() + "_" + filename;
 	string new_filename_path = this->getConfigs()["DIR_ISP"] + "/" + this->getISP() + "/" + new_filename;
 
@@ -549,7 +549,7 @@ void Modem::request_listener() {
 			else {
 				/// create pending file
 				string random_filename = helpers::random_string();
-				string new_filename = this->getConfigs()["DIR_ISP"] + "/" + this->getISP() + "/" + random_filename;
+				string new_filename = this->getConfigs()["DIR_ISP"] + "/" + this->getISP() + "/." + random_filename;
 				bool renamed_file = sys_calls::rename_file(full_path_locked_request_filename, new_filename);
 				if( renamed_file ) {
 					this->create_pending_message( random_filename );
