@@ -541,9 +541,11 @@ void Modem::request_listener() {
 				// this->set_modem_state(EXHAUSTED);
 				this->db_set_working_state( EXHAUSTED );
 
+				/*
 				if( !this->release_request_file( locked_request_filename ) ) {
 					logger::logger(__FUNCTION__, this->getInfo() + " - 400 UNLOCKING FILE", "stderr", true);
 				}
+				*/
 			}
 			
 			else {
