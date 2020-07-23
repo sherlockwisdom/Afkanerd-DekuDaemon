@@ -660,6 +660,7 @@ string Modem::mmcli_send_sms( string message, string number ) {
 
 string Modem::ssh_send_sms( string message, string number ) {
 	logger::logger(__FUNCTION__, this->getInfo() + ": SENDING - [" + message + "] - [" + number + "]");
+	message = helpers::escape_string( message, '\'');
 	string sms_results = sys_calls::terminal_stdout("ssh root@" + this->getIndex() + " -oPasswordAuthentication=no \"sendsms " + number + " '" + message + "'\"" );
 	//logger::logger(__FUNCTION__, sms_results);
 	sms_results = helpers::to_lowercase( sms_results );
