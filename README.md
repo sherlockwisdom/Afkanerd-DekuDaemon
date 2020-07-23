@@ -14,7 +14,6 @@
 > `sudo apt install libmysqld-dev`
 > ###### manjaro
 > `sudo pacman -S mysql`\
-> `sudo pacman -S libmysqld-dev`
 - Doxygen _(optional)_ - https://riptutorial.com/doxygen
  > ###### ubuntu
 > `sudo apt install doxygen`
