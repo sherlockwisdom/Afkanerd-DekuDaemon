@@ -438,7 +438,7 @@ void Modem::release_pending_messages() {
 
 			if( !sys_calls::rename_file( current_path, new_path )) {
 				logger::logger(__FUNCTION__, "FAILED RELEASING FILE", "stderr");
-				logger::logger_errno( errno, __LINE__ );
+				logger::logger_errno( errno, __LINE__, __FUNCTION__ );
 			}
 		}
 		else {
@@ -622,7 +622,7 @@ map<string,string> Modem::request_job( string path_dir_request) {
 	}
 	if(!sys_calls::rename_file(path_dir_request + "/" + filename, path_dir_request + "/." + filename)) {
 		logger::logger(__FUNCTION__, this->getInfo() + " - Failed renaming request file: "+filename, "stderr", true);
-		logger::logger_errno( errno, __LINE__ );
+		logger::logger_errno( errno, __LINE__, __FUNCTION__ );
 		return request;
 	}
 

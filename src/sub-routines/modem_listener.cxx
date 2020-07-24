@@ -95,7 +95,7 @@ bool Modems::db_iterate_modems_workload( map<string, string> modem ) {
 	bool responds = this->mysqlConnection.query( select_workload_query );
 	if( !responds ) {
 		logger::logger(__FUNCTION__, "FAILED INSERTING MODEM", "stderr");
-		logger::logger_errno( errno, __LINE__ );
+		logger::logger_errno( errno, __LINE__, __FUNCTION__ );
 		logger::logger(__FUNCTION__, this->mysqlConnection.get_error_message(), "stderr");
 		return false;
 	}
@@ -109,7 +109,7 @@ bool Modems::db_iterate_modems_workload( map<string, string> modem ) {
 		responds = this->mysqlConnection.query( replace_workload_query );
 		if( !responds ) {
 			logger::logger(__FUNCTION__, "FAILED INSERTING MODEM", "stderr");
-			logger::logger_errno( errno, __LINE__ );
+			logger::logger_errno( errno, __LINE__, __FUNCTION__ );
 			logger::logger(__FUNCTION__, this->mysqlConnection.get_error_message(), "stderr");
 		}
 	}
@@ -120,7 +120,7 @@ bool Modems::db_iterate_modems_workload( map<string, string> modem ) {
 		responds = this->mysqlConnection.query( update_workload_query );
 		if( !responds ) {
 			logger::logger(__FUNCTION__, "FAILED INSERTING MODEM", "stderr");
-			logger::logger_errno( errno, __LINE__ );
+			logger::logger_errno( errno, __LINE__, __FUNCTION__ );
 			logger::logger(__FUNCTION__, this->mysqlConnection.get_error_message(), "stderr");
 		}
 	}
@@ -141,7 +141,7 @@ bool Modems::db_insert_modems( map<string,string> modem ) {
 	bool responds = this->mysqlConnection.query( insert_modem_query );
 	if( !responds ) {
 		logger::logger(__FUNCTION__, "FAILED INSERTING MODEM", "stderr");
-		logger::logger_errno( errno, __LINE__ );
+		logger::logger_errno( errno, __LINE__, __FUNCTION__ );
 		logger::logger(__FUNCTION__, this->mysqlConnection.get_error_message(), "stderr");
 	}
 
@@ -155,7 +155,7 @@ bool Modems::db_switch_power_modems( map<string,string> modem, string state ) {
 
 	if( !responds ) {
 		logger::logger(__FUNCTION__, "FAILED UPDATING MODEM POWER STATE", "stderr");
-		logger::logger_errno( errno, __LINE__ );
+		logger::logger_errno( errno, __LINE__, __FUNCTION__ );
 		logger::logger(__FUNCTION__, this->mysqlConnection.get_error_message(), "stderr");
 	}
 

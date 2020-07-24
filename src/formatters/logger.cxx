@@ -23,7 +23,7 @@ namespace logger {
 		char str_error[256];
 		string error_message = strerror_r( t_errno, str_error, 256);
 		line_num > -1 ?
-		cerr << "[logger_errno] - ERRNO @ " << line_num << ": " << t_errno << ": " << endl : 
+		cerr << "[logger_errno] - ERRNO @ " << line_num << ": " << t_errno << ": " : 
 		cerr << "[logger_errno] - ERRNO " << t_errno << ": ";
 		cerr << error_message << endl;
 	}
