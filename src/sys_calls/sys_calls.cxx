@@ -79,6 +79,7 @@ namespace sys_calls {
 	bool rename_file( string path_filename, string new_path_filename) {
 		if(std::rename( path_filename.c_str(), new_path_filename.c_str()) == -1 ) {
 			logger::logger_errno(errno, __LINE__, __FUNCTION__ );
+			logger::logger(__FUNCTION__, "From: " + path_filename + "\nTo: " + new_path_filename );
 			return false;
 		}
 		

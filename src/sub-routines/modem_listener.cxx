@@ -153,7 +153,7 @@ bool Modems::db_switch_power_modems( map<string,string> modem, string state ) {
 	logger::logger(__FUNCTION__, modem["imei"] + " - Switch modem power state");
 	bool responds = this->mysqlConnection.query( switch_modem_power_query );
 
-	if( !responds ) {
+	if( !responds and errno != 0) {
 		logger::logger(__FUNCTION__, "FAILED UPDATING MODEM POWER STATE", "stderr");
 		logger::logger_errno( errno, __LINE__, __FUNCTION__ );
 		logger::logger(__FUNCTION__, this->mysqlConnection.get_error_message(), "stderr");
