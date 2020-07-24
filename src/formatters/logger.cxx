@@ -19,7 +19,7 @@ namespace logger {
 	}
 
 
-	void logger_errno( int t_errno, int line_num ) {
+	void logger_errno( int t_errno, int line_num, const char* func_name ) {
 		char str_error[256];
 		string error_message = strerror_r( t_errno, str_error, 256);
 		line_num > -1 ?
