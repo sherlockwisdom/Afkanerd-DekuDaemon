@@ -284,7 +284,6 @@ void Modem::iterate_failed_counter() {
 	++this->failed_counter;
 
 	if( this->failed_counter > 3 and this->working_state == Modem::ACTIVE ) { //TODO: make this changeable from systems settings
-		logger::logger(__FUNCTION__, this->getInfo() + "- Modem Exhausted Based On Fail Counter!", "stderr", true);
 		this->working_state = Modem::EXHAUSTED;
 	}
 }
@@ -535,6 +534,7 @@ void Modem::request_listener() {
 
 			if( this->get_failed_counter() >= this->get_exhaust_count() ) {
 				/// release pending files
+				logger::logger(__FUNCTION__, this->getInfo() + "- Modem Exhausted Based On Fail Counter!", "stderr", true);
 				this->release_pending_messages();
 
 				/// declare modem exhausted
