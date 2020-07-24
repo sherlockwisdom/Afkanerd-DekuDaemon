@@ -14,7 +14,7 @@ namespace logger {
 
 	extern void logger( const char* func_name, string output, string output_stream = "stdout", bool show_production = false);
 	
-	extern void logger_errno( int t_errno );
+	extern void logger_errno( int t_errno, int line_num = -1 );
 
 	extern void logger_tester( string func_name, bool output, string output_stream = "stdout" );
 }

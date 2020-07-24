@@ -19,11 +19,13 @@ namespace logger {
 	}
 
 
-	void logger_errno( int t_errno ) {
+	void logger_errno( int t_errno, int line_num ) {
 		char str_error[256];
 		string error_message = strerror_r( t_errno, str_error, 256);
-		cout << "[logger_errno] - ERRNO: " << t_errno << endl;
-		cout << "[logger_errno] - MESSAGE: " << error_message << "=> " << endl;
+		line_num > -1 ?
+		cerr << "[logger_errno] - ERRNO @ " << line_num << ": " << t_errno << ": " << endl : 
+		cerr << "[logger_errno] - ERRNO " << t_errno << ": ";
+		cerr << error_message << endl;
 	}
 
 	void logger_tester( string func_name, bool output, string output_stream ) {
