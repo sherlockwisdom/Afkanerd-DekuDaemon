@@ -534,7 +534,7 @@ void Modem::request_listener() {
 
 			if( this->get_failed_counter() >= this->get_exhaust_count() ) {
 				/// release pending files
-				logger::logger(__FUNCTION__, this->getInfo() + "- Modem Exhausted Based On Fail Counter!", "stderr", true);
+				logger::logger(__FUNCTION__, this->getInfo() + "- BENCHMARK LIMIT REACHED!", "stdout", true);
 				this->release_pending_messages();
 
 				/// declare modem exhausted
