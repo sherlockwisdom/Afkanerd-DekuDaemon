@@ -98,7 +98,7 @@ namespace helpers {
 			logger::logger(__FUNCTION__, "Making dir: " + make_me, "stdout", false);
 			if( i!=0) make_me += "/" + recursive_paths[i];
 			if( mkdir( make_me.c_str(), 0777 ) == -1) {
-				if( errno != 17 ) logger::logger_errno( errno );
+				if( errno != 17 ) logger::logger_errno( errno, __LINE__, __FUNCTION__ );
 			}
 		}
 		

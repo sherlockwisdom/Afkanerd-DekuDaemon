@@ -37,7 +37,7 @@ void release_pending_request_files( map<string,string> configs, bool list_only =
 				string unlocked_file = full_dir + file;
 				if( !sys_calls::rename_file( locked_file, unlocked_file ) ) {
 					logger::logger(__FUNCTION__, "FAILED UNLOCKING FILE: " + locked_file + " -> " + unlocked_file, "stderr", true);
-					logger::logger_errno( errno );
+					logger::logger_errno( errno, __LINE__, __FUNCTION__ );
 					continue;
 				}
 

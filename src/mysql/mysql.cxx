@@ -70,7 +70,7 @@ bool MySQL::has_table( string table ) const {
 	auto list_of_tables = mysql_list_tables(this->mysqlConnection, table.c_str());
 
 	if( list_of_tables == NULL ) {
-		logger::logger_errno( errno );
+		logger::logger_errno( errno, __LINE__, __FUNCTION__ );
 		return false;
 	}
 

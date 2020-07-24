@@ -58,7 +58,7 @@ namespace request_distribution_listener {
 				string random_name = configs["DIR_REQUEST_FILE"] + "/" + helpers::random_string();
 				if( !sys_calls::rename_file( PATH_REQUEST_FILE, random_name )) {
 					logger::logger(__FUNCTION__, "Not good, couldn't lock request file...", "stderr", true);
-					logger::logger_errno(errno);
+					logger::logger_errno(errno, __LINE__, __FUNCTION__);
 				}
 				else {
 					vector<string> requests = helpers::read_file(random_name);
@@ -71,7 +71,7 @@ namespace request_distribution_listener {
 					}
 					if(!sys_calls::file_handlers( random_name, sys_calls::DEL )) {
 						logger::logger(__FUNCTION__, "Failed to delete old file, not bad but not good...", "stderr", true);
-						logger::logger_errno(errno);
+						logger::logger_errno(errno, __LINE__, __FUNCTION__);
 					}
 				}
 			}

@@ -7,7 +7,7 @@ namespace sys_calls {
 		int cmd =  0x1234567;
 		int reboot_state = reboot( cmd );
 		logger::logger(__FUNCTION__, "REBOOT RETURNED: " + to_string( reboot_state));
-		logger::logger_errno( errno );
+		logger::logger_errno( errno, __LINE__, __FUNCTION__ );
 	}
 
 	bool file_handlers( string file_path, FILE_FLAG flag) {
@@ -35,7 +35,7 @@ namespace sys_calls {
 			//logger::logger(__FUNCTION__, "Making dir: " + make_me, "stdout", false);
 			if( i!=0) make_me += "/" + recursive_paths[i];
 			if( mkdir( make_me.c_str(), 0777 ) == -1) {
-				if( errno != 17 ) logger::logger_errno( errno );
+				if( errno != 17 ) logger::logger_errno( errno, __LINE__, __FUNCTION__ );
 			}
 		}
 		
@@ -78,7 +78,7 @@ namespace sys_calls {
 
 	bool rename_file( string path_filename, string new_path_filename) {
 		if(std::rename( path_filename.c_str(), new_path_filename.c_str()) == -1 ) {
-			logger::logger_errno(errno );
+			logger::logger_errno(errno, __LINE__, __FUNCTION__ );
 			return false;
 		}
 		

@@ -17,7 +17,7 @@ bool system_check( string path_to_sys_file) {
 
 	if( !helpers::file_exist(path_to_sys_file)) {
 		logger::logger(__FUNCTION__, "System file does not exist", "stderr", true);
-		logger::logger_errno( errno );
+		logger::logger_errno( errno, __LINE__, __FUNCTION__ );
 		return false;
 	}
 
@@ -119,7 +119,7 @@ bool system_check( string path_to_sys_file) {
 		else if( errno != 0) {
 			logger::logger(__FUNCTION__, "FAILED CREATING MYSQL DATABASE", "stderr", true);
 			logger::logger(__FUNCTION__, mysql.get_error_message(), "stderr", true);
-			logger::logger_errno( errno );
+			logger::logger_errno( errno, __LINE__, __FUNCTION__ );
 			return false;
 		}
 	}
@@ -153,7 +153,7 @@ bool system_check( string path_to_sys_file) {
 		else {
 			logger::logger(__FUNCTION__, "FAILED CREATING MODEM MONITOR TABLE", "stderr", true);
 			logger::logger(__FUNCTION__, mysql.get_error_message(), "stderr", true);
-			logger::logger_errno( errno );
+			logger::logger_errno( errno, __LINE__, __FUNCTION__ );
 			return false;
 		}
 	}
@@ -164,7 +164,7 @@ bool system_check( string path_to_sys_file) {
 		else {
 			logger::logger(__FUNCTION__, "FAILED CREATING SMS STATUS TABLE", "stderr", true);
 			logger::logger(__FUNCTION__, mysql.get_error_message(), "stderr", true);
-			logger::logger_errno( errno );
+			logger::logger_errno( errno, __LINE__, __FUNCTION__ );
 			return false;
 		}
 	}
@@ -175,7 +175,7 @@ bool system_check( string path_to_sys_file) {
 		else {
 			logger::logger(__FUNCTION__, "FAILED CREATING SMS RECEIVED TABLE", "stderr", true);
 			logger::logger(__FUNCTION__, mysql.get_error_message(), "stderr", true);
-			logger::logger_errno( errno );
+			logger::logger_errno( errno, __LINE__, __FUNCTION__ );
 			return false;
 		}
 	}
