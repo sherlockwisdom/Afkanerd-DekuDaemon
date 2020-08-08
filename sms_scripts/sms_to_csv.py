@@ -29,6 +29,8 @@ def use_filter(x):
         if curr_filter[0] == "--phonenumber":
             print(phoneNumber_df)
             print(f"filtered by {args.phonenumber}")
+    else:
+        print(df)
 
 
 # converts the dataframe to csv based on the -f command line argument. By default it saves an unfiltered csv file.
