@@ -653,7 +653,12 @@ string Modem::mmcli_send_sms( string message, string number ) {
 	if( sms_results.find("successfully") != string::npos || sms_results.find("success") != string::npos) return "done";
 
 	else {
-		logger::logger(__FUNCTION__, this->getInfo() + " - SMS Failed log: " + sms_results, "stderr");
+		try {
+			logger::logger(__FUNCTION__, this->getInfo() + " - SMS Failed log: " + sms_results, "stderr");
+		}
+		catch( std::exception& e) {
+			logger::logger(__FUNCTION__, e.what());
+		}
 	}
 	
 	return "failed";
