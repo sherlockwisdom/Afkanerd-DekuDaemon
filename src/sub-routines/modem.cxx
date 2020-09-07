@@ -358,7 +358,13 @@ void Modem::db_reset_workload() {
 
 
 bool Modem::is_available() const {
-	vector<string> respond = sys_calls::get_modem_details( this->getConfigs()["DIR_SCRIPTS"], this->index, this->configs );
+	vector<string> respond;
+	try {
+		respond = sys_calls::get_modem_details( this->getConfigs()["DIR_SCRIPTS"], this->index, this->configs );
+	}
+	catch( std::exception& e) {
+		logger::logger(__FUNCTION__, e.what());
+	}
 	return !respond.empty();
 }
 
