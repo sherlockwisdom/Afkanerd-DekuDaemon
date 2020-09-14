@@ -16,7 +16,7 @@ void init_callback(auto source_object, auto res, auto user_data ) {
 int main() {
 
 	GError* error;
-	GBusType bus_type = G_BUS_TYPE_STARTER;
+	GBusType bus_type = G_BUS_TYPE_SYSTEM;
 	GCancellable* cancellable = g_cancellable_new( );
 	GDBusConnection* connection = g_bus_get_sync( bus_type, cancellable, &error);
 	if ( error != NULL ) {
