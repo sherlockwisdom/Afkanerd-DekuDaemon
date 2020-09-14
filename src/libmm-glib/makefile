@@ -1,2 +1,2 @@
 all:
-	g++ main.cxx -o main.o -std=c++1z
+	g++ -o main.o -Wall `pkg-config --cflags --libs mm-glib` main.cxx -std=c++1z

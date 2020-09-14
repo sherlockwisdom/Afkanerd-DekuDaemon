@@ -2,6 +2,5 @@
 
 #include <libmm-glib.h>
 
-
 int main() {
 }
