@@ -45,14 +45,21 @@ namespace sys_calls {
 	string terminal_stdout(string command) {
 		string data;
 		FILE * stream;
-		const int max_buffer = 1024;
+		const int max_buffer = 1024 * 10; // This isn't good
 		char buffer[max_buffer];
 		command.append(" 2>&1");
 
-		stream = popen(command.c_str(), "r");
-		if (stream) {
-			while (!feof(stream)) if (fgets(buffer, max_buffer, stream) != NULL) data.append(buffer);
-			pclose(stream);
+		try {
+			stream = popen(command.c_str(), "r");
+			if (stream) {
+				while (!feof(stream)) 
+					if (fgets(buffer, max_buffer, stream) != NULL) 
+						data.append(buffer);
+				pclose(stream);
+			}
+		}
+		catch( std::exception& e) {
+			logger::logger(__FUNCTION__, e.what(), "stderr", true);
 		}
 		return data;
 	}
