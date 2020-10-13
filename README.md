@@ -9,9 +9,12 @@
 > ###### manjaro
 > `sudo pacman -S base-devel`
 - MySQL server
- > ###### ubuntu
+> ###### ubuntu
 > `sudo apt install mysql-server`\
 > `sudo apt install libmysqld-dev`
+> ###### Debian
+> `sudo apt install mysql-server`\
+> `sudo apt install libmysqlclient-dev`
 > ###### manjaro
 > `sudo pacman -S mysql`\
 > `sudo pacman -S libmysqld-dev`
@@ -33,13 +36,14 @@
 - DIR_ISP=""
 - DIR_REQUEST_FILE=""
 - DIR_SUCCESS=""
-- DIR_SCRIPTS="
+- DIR_SCRIPTS=""
 - DIR_ERROR=""
 - STD_NAME_REQUEST_FILE=""
 - STD_NAME_WHITELIST_FILE=""
 - MYSQL_SERVER=""
 - MYSQL_USER=""
 - MYSQL_PASSWORD=""
+- MYSQL_DATABASE=""
 ```
 ##### How to build and run
 ```bash

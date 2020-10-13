@@ -104,10 +104,16 @@ map<string,string> parse_ussd_request_script( string request_script ) {
 			parsed_commands.insert(make_pair("retry_count", split_token[1]));
 		}
 		else if( split_token[0] == "command") {
+			string command = split_token[1];
+			if(command[0] == '"') command.erase(0,1);
+			if(command[command.size() -1] == '"') command.erase(command.size() -1, 1);
 			parsed_commands.insert(make_pair("command", split_token[1]));
 		}
 		else if( split_token[0] == "modem" ) {
 			parsed_commands.insert(make_pair("modem", split_token[1]));
+		}
+		else if( split_token[0] == "type") {
+			parsed_commands.insert(make_pair("type", split_token[1]));
 		}
 	}
 
@@ -383,22 +389,29 @@ int main(int argc, char** argv) {
 			logger::logger(__FUNCTION__, "Setting retry count to 0", "stdout", true);
 			ussd_only_script.insert(make_pair("retry_count", "0"));
 		}
+		if( ussd_only_script.find("type") == ussd_only_script.end()) {
+			logger::logger(__FUNCTION__, "Setting modem type", "stdout", true);
+			ussd_only_script.insert(make_pair("type", "all"));
+		}
 
-		vector<Modem*> available_modems = ussd_only_script.find("modem") != ussd_only_script.end() ? modems.find_modem( ussd_only_script["modem"] ) : modems.find_modem_type(ussd_only_script["isp"]);
-		logger::logger(__FUNCTION__, "Available Modems: " + to_string( available_modems.size()), "stdout", true);
+		vector<Modem*> av_modems = ussd_only_script.find("modem") != ussd_only_script.end() ? modems.find_modem( ussd_only_script["modem"] ) : modems.find_modem_type(ussd_only_script["isp"], ussd_only_script["type"]);
+		logger::logger(__FUNCTION__, "Available Modems: " + to_string( av_modems.size()), "stdout", true);
+		for( auto _modems : av_modems ) {
+			logger::logger(__FUNCTION__, "Av Modem: " + _modems->getInfo());
+		}
 
 		int retry_count = 0;
-		for( size_t it_modems = 0; it_modems < available_modems.size(); ++it_modems) {
+		for( size_t it_modems = 0; it_modems < av_modems.size(); ++it_modems) {
 			vector<string> commands = helpers::string_split( ussd_only_script["command"], '|' );
-			bool ussd_state = available_modems[it_modems]->initiate_series( commands );
+			bool ussd_state = av_modems[it_modems]->initiate_series( commands );
 			if( !ussd_state and retry_count <= atoi(((string)(ussd_only_script["retry_count"])).c_str()) ) {
-				logger::logger(__FUNCTION__, available_modems[it_modems]->getInfo() + "| " + available_modems[it_modems]->get_reply(), "stderr", true);
+				logger::logger(__FUNCTION__, av_modems[it_modems]->getInfo() + "| " + av_modems[it_modems]->get_reply(), "stderr", true);
+				--it_modems;
 				++retry_count;
 				continue;
 			}
 
-			logger::logger(__FUNCTION__, available_modems[it_modems]->get_response());
-			++it_modems;
+			logger::logger(__FUNCTION__, av_modems[it_modems]->get_response());
 			retry_count = 0;
 		}
 
@@ -422,12 +435,11 @@ int main(int argc, char** argv) {
 	std::thread tr_modems_scanner = std::thread(&Modems::daemon, std::ref(modems), request_listening, sms_only, remote_control);
 	
 	std::thread tr_request_listeners; 
-	if( !sms_only) 
-	tr_request_listeners = std::thread(request_distribution_listener::request_distribution_listener, configs);
+	if( request_listening ) {
+		tr_request_listeners = std::thread(request_distribution_listener::request_distribution_listener, configs);
+		tr_request_listeners.join();
+	}
 
-
-	if( request_listening )
-	tr_request_listeners.join();
 	tr_modems_scanner.join();
 	
 	return 0;
