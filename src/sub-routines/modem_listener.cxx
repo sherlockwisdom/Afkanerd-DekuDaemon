@@ -231,8 +231,11 @@ void Modems::daemon( bool request_listening = true, bool sms_listening = false, 
 					//
 					// Optional Fith, tries storing the modems in a sql database
 					try {
+						// TODO: this seems unstable for now, causing the code to crash
+						/*
 						this->db_insert_modems( modem_details );
 						this->db_iterate_modems_workload( modem_details );
+						*/
 					}
 					catch(std::exception& e) {
 						logger::logger(__FUNCTION__, e.what(), "stderr" );
