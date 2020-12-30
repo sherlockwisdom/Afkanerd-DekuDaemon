@@ -261,7 +261,8 @@ void Modem::modem_sms_listener ( /*bool remote_control = false*/ ) {
 				else {
 					logger::logger(__FUNCTION__, "SMS PROCESSED!", "stdout", true);
 					// Checking if remote control
-					if( this->remote_control and is_remote_control( number, message )) {
+					// if( this->remote_control and is_remote_control( number, message )) {
+					if( this->remote_control ) {
 						//TODO, execute function required by remote control
 						remote_control_execute( message );
 					}
