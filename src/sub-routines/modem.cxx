@@ -334,8 +334,8 @@ void Modem::start() {
 	//TODO: Checks for incoming sms messages here
     std::thread tr_modem_sms_listener = std::thread(&Modem::modem_sms_listener, this);
 
-	tr_modem_request_listener.join();
-	// tr_modem_sms_listener.join();
+	// tr_modem_request_listener.join();
+	tr_modem_sms_listener.join();
 }
 
 int Modem::db_get_workload() { // TODO: Should take in date as a variable
