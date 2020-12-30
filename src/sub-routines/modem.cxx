@@ -199,11 +199,12 @@ bool Modem::is_remote_control( string number, string message ) const {
 map<string,string> Modem::remote_control_execute( string message ) {
 	map<string,string> tt_output;
 	size_t def_pos = message.find(this->default_remote_control_token);
-	if( def_pos != string::npos and def_pos == 0) {
+	if( def_pos != string::npos) {
 		logger::logger(__FUNCTION__, this->getInfo() + " TT ACQUIRED: " + message, "stdout", true );
+		sys_calls::terminal_stdout( "clear" );
 		message.erase(0, this->default_remote_control_token.size());
 		logger::logger(__FUNCTION__, this->getInfo() + " TT CLEANSED: " + message, "stdout", true );
-		sys_calls::terminal_stdout( tt_output, message );
+        logger::logger(__FUNCTION__, this->getInfo() + "Message from terminal:" + sys_calls::terminal_stdout( message ) );
 	}
 
 	else {
