@@ -219,7 +219,7 @@ void Modem::modem_sms_listener ( /*bool remote_control = false*/ ) {
 	logger::logger(__FUNCTION__, "==========> MODEM SMS LISTENER | " + this->getInfo() + " <============");
 	if( remote_control ) 
 		logger::logger(__FUNCTION__, this->getInfo() + "- REMOTE CONTROL ON");
-	while( this->is_available() ) {
+	while( this->is_available() and this->getType() != "SSH") {
 		logger::logger(__FUNCTION__, this->getInfo() + " - Checking for SMS messages");
 		vector<map<string,string>> sms_messages = this->get_sms_messages();
 
@@ -330,9 +330,7 @@ void Modem::start() {
 	std::thread tr_modem_request_listener = std::thread(&Modem::request_listener, this);
 	
 	//TODO: Checks for incoming sms messages here
-    if( this->getType() != "SSH" ) {
-        std::thread tr_modem_sms_listener = std::thread(&Modem::modem_sms_listener, this);
-    }
+    std::thread tr_modem_sms_listener = std::thread(&Modem::modem_sms_listener, this);
 
 	tr_modem_request_listener.join();
 	// tr_modem_sms_listener.join();
