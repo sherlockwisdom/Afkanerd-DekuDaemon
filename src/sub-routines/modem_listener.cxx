@@ -215,7 +215,7 @@ void Modems::daemon( bool request_listening = true, bool sms_listening = false, 
 				// Thid stores modem in list of modems
 
 				try {
-					Modems::available_modems.insert(make_pair( modem.first, new Modem(imei, isp, type, index, this->configs, this->mysqlConnection)));
+					Modems::available_modems.insert(make_pair( modem.first, new Modem(imei, isp, type, index, this->configs, this->mysqlConnection, remote_control)));
 				}
 				catch( std::exception& e) {
 					logger::logger(__FUNCTION__, e.what(), "stderr", true);
@@ -243,11 +243,13 @@ void Modems::daemon( bool request_listening = true, bool sms_listening = false, 
 				}
 
 				// Check if sms is required here
+                /*
 				if( sms_listening and helpers::to_uppercase(active_modem->getType()) == helpers::to_uppercase("mmcli")) {
 					logger::logger(__FUNCTION__, "SMS LISTENER SET TO START");
 					std::thread tr_modem_sms_listener = std::thread(&Modem::modem_sms_listener, std::ref(active_modem), remote_control);
 					tr_modem_sms_listener.detach();
 				}
+                */
 
 			}
 			else {

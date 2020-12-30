@@ -19,6 +19,7 @@ class Modem : public USSD {
 	string default_remote_control_token = "#tt#:"; //TODO, this should be loaded dynamically
 
 	bool available = true;
+    bool remote_control = false;
 
 	map<string,string> configs;
 	map<string,string> default_remote_control_inputs {//TODO, this should be loaded dynamically
@@ -43,8 +44,8 @@ class Modem : public USSD {
 
 		STATE state;
 		WORKING_STATE working_state;
-		Modem(string imei, string isp, string type, string index, map<string, string> configs, MySQL mysqlConnection );
-		Modem(string imei, string isp, string type, string index, map<string, string> configs );
+		Modem(string imei, string isp, string type, string index, map<string, string> configs, MySQL mysqlConnection, bool remote_control = false);
+		Modem(string imei, string isp, string type, string index, map<string, string> configs, bool remote_control = false);
 		Modem(const Modem& modem);
 		Modem() {}
 		~Modem();
@@ -63,7 +64,7 @@ class Modem : public USSD {
 		void db_iterate_workload();
 		void set_sleep_time( int );
 		void request_listener();
-		void modem_sms_listener( bool remote_control );
+		void modem_sms_listener( );
 		void set_configs( map<string,string> configs );
 		void set_mysql_connection( MySQL );
 		void db_reset_workload();

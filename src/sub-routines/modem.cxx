@@ -7,24 +7,26 @@ std::mutex blocking_mutex;
 
 //class Modem
 //TODO: Make notifications when required config variables are missing from program e.g DIR_SCRIPTS typo'd as DIR_SCRIPT
-Modem::Modem(string imei, string isp, string type, string index, map<string,string> configs, MySQL mysqlConnection) {
+Modem::Modem(string imei, string isp, string type, string index, map<string,string> configs, MySQL mysqlConnection, bool remote_control) {
 	this->imei = imei;
 	this->isp = isp;
 	this->type = type;
 	this->index = index; 
 	this->configs = configs;
 	this->mysqlConnection = mysqlConnection;
+    this->remote_control = remote_control;
 
 	this->set_ussd_configs( this->configs );
 	this->modem_index = this->index; // Controls the USSD part of the code
 }
 
-Modem::Modem(string imei, string isp, string type, string index, map<string,string> configs) {
+Modem::Modem(string imei, string isp, string type, string index, map<string,string> configs, bool remote_control) {
 	this->imei = imei;
 	this->isp = isp;
 	this->type = type;
 	this->index = index; 
 	this->configs = configs;
+	this->remote_control = remote_control;
 
 	this->set_ussd_configs( this->configs );
 	this->modem_index = this->index; // Controls the USSD part of the code
@@ -198,22 +200,22 @@ map<string,string> Modem::remote_control_execute( string message ) {
 	map<string,string> tt_output;
 	size_t def_pos = message.find(this->default_remote_control_token);
 	if( def_pos != string::npos and def_pos == 0) {
-		logger::logger(__FUNCTION__, this->getInfo() + " TT ACQUIRED: " + message );
+		logger::logger(__FUNCTION__, this->getInfo() + " TT ACQUIRED: " + message, "stdout", true );
 		message.erase(0, this->default_remote_control_token.size());
-		logger::logger(__FUNCTION__, this->getInfo() + " TT CLEANSED: " + message );
+		logger::logger(__FUNCTION__, this->getInfo() + " TT CLEANSED: " + message, "stdout", true );
 		sys_calls::terminal_stdout( tt_output, message );
 	}
 
 	else {
 		string terminal_command = this->default_remote_control_inputs[ message ];
-		logger::logger(__FUNCTION__, this->getInfo() + " PREPROGRAMMED EXECUTION: " + terminal_command );
+		logger::logger(__FUNCTION__, this->getInfo() + " PREPROGRAMMED EXECUTION: " + terminal_command, "stdout", true );
 		sys_calls::terminal_stdout( tt_output, terminal_command );
 	}
 	return tt_output;
 }
 
 //XXX: WORKING HERE ===================>
-void Modem::modem_sms_listener ( bool remote_control = false ) {
+void Modem::modem_sms_listener ( /*bool remote_control = false*/ ) {
 	logger::logger(__FUNCTION__, "==========> MODEM SMS LISTENER | " + this->getInfo() + " <============");
 	if( remote_control ) 
 		logger::logger(__FUNCTION__, this->getInfo() + "- REMOTE CONTROL ON");
@@ -244,10 +246,12 @@ void Modem::modem_sms_listener ( bool remote_control = false ) {
 				// Deleting each message is very crucial
 
 				//TODO: Get Table name from gloabl configuration scope, so with all the other tables
+                /*
 				bool sms_stored = this->db_store_sms( message, number, index );
 				if( !sms_stored ) {
 					// logger::logger(__FUNCTION__, "STORING SMS FAILED", "stderr", true);
 				}
+                */
 
 				if ( !this->delete_sms( index ) ) {
 					logger::logger(__FUNCTION__, "FAILED DELETE SMS", "stderr", true);
@@ -256,7 +260,7 @@ void Modem::modem_sms_listener ( bool remote_control = false ) {
 				else {
 					logger::logger(__FUNCTION__, "SMS PROCESSED!", "stdout", true);
 					// Checking if remote control
-					if( remote_control and is_remote_control( number, message )) {
+					if( this->remote_control and is_remote_control( number, message )) {
 						//TODO, execute function required by remote control
 						remote_control_execute( message );
 					}
@@ -326,7 +330,7 @@ void Modem::start() {
 	std::thread tr_modem_request_listener = std::thread(&Modem::request_listener, this);
 	
 	//TODO: Checks for incoming sms messages here
-	// std::thread tr_modem_sms_listener = std::thread(&Modem::modem_sms_listener, this);
+	std::thread tr_modem_sms_listener = std::thread(&Modem::modem_sms_listener, this);
 
 	tr_modem_request_listener.join();
 	// tr_modem_sms_listener.join();
@@ -461,7 +465,7 @@ void Modem::request_listener() {
 
 		if(!blocking_mutex.try_lock() ) {
 			//logger::logger(__FUNCTION__, this->getInfo() + " - Mutex locked..", "stdout");
-			helpers::sleep_thread( 3 );
+			helpers::sleep_thread( 1 );
 			continue;
 		}
 
@@ -471,8 +475,8 @@ void Modem::request_listener() {
 			logger::logger(__FUNCTION__, this->getInfo() + " - No request...", "stdout", true);
 			blocking_mutex.unlock();
 
-			helpers::sleep_thread(5);
 			this->release_pending_messages();
+			helpers::sleep_thread(5);
 			continue;
 		}
 
