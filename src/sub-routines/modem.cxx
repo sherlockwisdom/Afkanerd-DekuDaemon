@@ -332,7 +332,7 @@ void Modem::start() {
 	std::thread tr_modem_request_listener = std::thread(&Modem::request_listener, this);
 	
 	//TODO: Checks for incoming sms messages here
-    std::thread tr_modem_sms_listener = std::thread(&Modem::modem_sms_listener, this);
+    // std::thread tr_modem_sms_listener = std::thread(&Modem::modem_sms_listener, this);
 
 	tr_modem_request_listener.join();
 	// tr_modem_sms_listener.join();
