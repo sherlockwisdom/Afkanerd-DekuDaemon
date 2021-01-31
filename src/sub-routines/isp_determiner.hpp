@@ -55,5 +55,4 @@ namespace isp_determiner {
 	}
 }
 
-
 #endif
